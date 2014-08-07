@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CR</key>
+	<dict>
+		<key>Impact</key>
+		<array>
+			<string>Abrasion</string>
+			<string>Chip</string>
+			<string>Crackle,Impact</string>
+			<string>Crease</string>
+			<string>Crushed</string>
+			<string>Cut</string>
+			<string>Dent</string>
+			<string>Dig</string>
+			<string>Dog-Ear</string>
+			<string>Element Broken</string>
+			<string>Fold</string>
+			<string>Gouge</string>
+			<string>Grinding/Rubbin</string>
+			<string>Puncture</string>
+			<string>Scratch</string>
+			<string>Scuff</string>
+			<string>Shellmark</string>
+			<string>Slipped Hinge</string>
+			<string>Support Failure</string>
+			<string>Tear</string>
+			<string>Mechanical Malfunction</string>
+		</array>
+		<key>Surface Condition</key>
+		<array>
+			<string>Buckling / Cockleing/Dishing/Warping</string>
+			<string>Burnishing</string>
+			<string>Cockleing</string>
+			<string>Crack</string>
+			<string>Cracking</string>
+			<string>Crackle/Drying/Rift</string>
+			<string>Dishing</string>
+			<string>Edge Damage</string>
+			<string>Element Separated</string>
+			<string>Embrittlement</string>
+			<string>Flaking</string>
+			<string>Fraying</string>
+			<string>Hinge Damage</string>
+			<string>Hole</string>
+			<string>Lacuna</string>
+			<string>Lifting/Loose Paint</string>
+			<string>Split</string>
+			<string>Stretcher Marks</string>
+			<string>Wear/worn</string>
+			<string>Inherent to the manufacturing process of the object</string>
+			<string>Normal Wear and Tear</string>
+		</array>
+		<key>Discoloration</key>
+		<array>
+			<string>Adhesive Residue</string>
+			<string>Blanching</string>
+			<string>Bleeding</string>
+			<string>Burn Mark</string>
+			<string>Dirt/Grime/Accretion</string>
+			<string>Dust</string>
+			<string>Faded</string>
+			<string>Fingerprint/Handling Marks</string>
+			<string>Foxing</string>
+			<string>Smear/Smudge</string>
+			<string>Smoke Deposit</string>
+			<string>Spatter</string>
+			<string>Stain/Liquid/Run</string>
+			<string>Water Damage</string>
+		</array>
+		<key>Weathering</key>
+		<array>
+			<string>Bleaching</string>
+			<string>Erosion</string>
+			<string>Bleeding</string>
+			<string>Oxidation</string>
+			<string>Photo Oxidation</string>
+			<string>Rust</string>
+		</array>
+		<key>Infestation</key>
+		<array>
+			<string>Flight Hole</string>
+			<string>Frass</string>
+			<string>Insect Damage</string>
+			<string>Insect Detritus</string>
+			<string>Insect Infestation</string>
+			<string>Mold/Mildew</string>
+		</array>
+	</dict>
+	<key>IR</key>
+	<dict>
+		<key>Impact</key>
+		<array>
+			<string>Abrasion</string>
+			<string>Chip</string>
+			<string>Crackle,Impact</string>
+			<string>Crease</string>
+			<string>Crushed</string>
+			<string>Puncture</string>
+			<string>Scratch</string>
+			<string>Scuff</string>
+			<string>Shellmark</string>
+			<string>Slipped Hinge</string>
+			<string>Support Failure</string>
+			<string>Tear</string>
+			<string>Mechanical Malfunction</string>
+		</array>
+		<key>Surface Condition</key>
+		<array>
+			<string>Buckling / Cockleing/Dishing/Warping</string>
+			<string>Burnishing</string>
+			<string>Cockleing</string>
+			<string>Crack</string>
+			<string>Cracking</string>
+			<string>Lacuna</string>
+			<string>Lifting/Loose Paint</string>
+			<string>Split</string>
+			<string>Stretcher Marks</string>
+			<string>Wear/worn</string>
+			<string>Inherent to the manufacturing process of the object</string>
+			<string>Normal Wear Tear</string>
+		</array>
+		<key>Discoloration</key>
+		<array>
+			<string>Adhesive Residue</string>
+			<string>Blanching</string>
+			<string>Bleeding</string>
+			<string>Burn Mark</string>
+			<string>Dirt/Grime/Accretion</string>
+			<string>Stain/Liquid/Run</string>
+			<string>Water Damage</string>
+		</array>
+		<key>Weathering</key>
+		<array>
+			<string>Bleaching</string>
+			<string>Erosion</string>
+			<string>Photo Oxidation</string>
+			<string>Rust</string>
+		</array>
+		<key>Infestation</key>
+		<array>
+			<string>Flight Hole</string>
+			<string>Frass</string>
+			<string>Mold/Mildew</string>
+		</array>
+	</dict>
+	<key>SR</key>
+	<dict>
+		<key>Impact</key>
+		<array>
+			<string>Impact</string>
+			<string>Surface Condition</string>
+			<string>Discoloration</string>
+			<string>Weathering</string>
+			<string>Infestation</string>
+		</array>
+	</dict>
+	<key>FPPV</key>
+	<dict>
+		<key>Impact</key>
+		<array>
+			<string>Adhesive Failure</string>
+			<string>Adhesive Residue</string>
+			<string>Chip</string>
+			<string>Crushed</string>
+			<string>Cut</string>
+			<string>Delamination</string>
+			<string>Dent</string>
+			<string>Dirt/Grime</string>
+			<string>Discoloration</string>
+			<string>Dust</string>
+			<string>Edge Damage</string>
+			<string>Element Broken</string>
+			<string>Element Missing</string>
+			<string>Evidence of Tampering</string>
+			<string>Fingerprint</string>
+			<string>Infestation</string>
+			<string>Flight Hole</string>
+			<string>Footprint</string>
+			<string>Hardware Damage</string>
+			<string>Impact Damage</string>
+			<string>Improper Label</string>
+			<string>Improperly Crated</string>
+			<string>Improperly Soft-Packed</string>
+			<string>Insect Detrius</string>
+			<string>Joint Separation</string>
+			<string>Metal Hardware Broken</string>
+			<string>Metal Hardware Insecure</string>
+			<string>Metal Hardware Loss</string>
+			<string>Metal Hardware Missing</string>
+			<string>Missing Cleat</string>
+			<string>Missing Screw(s)</string>
+			<string>Missing Skid</string>
+			<string>Puncture</string>
+			<string>Residue</string>
+			<string>Scratch</string>
+			<string>Scuff</string>
+			<string>Shock Watch Activated</string>
+			<string>Tip n Tell Activated</string>
+			<string>Warping</string>
+			<string>Water Damage</string>
+			<string>Worn Gilding</string>
+			<string>Normal Wear and Tear</string>
+		</array>
+	</dict>
+</dict>
+</plist>
