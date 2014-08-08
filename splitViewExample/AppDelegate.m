@@ -62,6 +62,12 @@
 
     
     
+    // Box
+    [BoxSDK sharedSDK].OAuth2Session.clientID = @"14yzd7a5wb17xmsdc0ti2resb5e1pvbr";
+    [BoxSDK sharedSDK].OAuth2Session.clientSecret = @"RHRjNZV04vj5w0ca8BskgEkuFNrTd1Lu";
+    
+
+    
     
     
     return YES;

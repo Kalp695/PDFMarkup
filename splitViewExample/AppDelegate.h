@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <DropboxSDK/DropboxSDK.h>
+#import <BoxSDK/BoxSDK.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate,DBSessionDelegate,DBNetworkRequestDelegate>
 {

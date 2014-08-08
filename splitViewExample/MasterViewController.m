@@ -184,6 +184,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
                                                  name:@"RefreshLefttable"
                                                object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveReloadNotification:)
+                                                 name:@"BoxRefreshLefttable"
+                                               object:nil];
+
+       
+
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveNetworkEdittNotification:)
@@ -203,6 +212,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 -(void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RefreshLefttable" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BoxRefreshLefttable" object:nil];
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NetworkController" object:nil];
 }
 
@@ -228,6 +239,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     NSLog(@"check %@",[arrUseraccounts valueForKey:@"AccountType"]);
+    
+    
     
     [self.tableView reloadData];
     
@@ -372,7 +385,14 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 
 
         }
-        
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"])
+        {
+            cell.imageView.image =[UIImage imageNamed:@"box_small.png"];
+            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            
+            
+        }
+
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -438,6 +458,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
         self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
          self.detailViewController.accountInfo =  @"DropBox";
+            self.detailViewController.indexPathh = indexPath.row;
         self.detailViewController.detailItem = object;
 
         }
@@ -445,6 +466,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
             self.detailViewController.accountInfo =  @"Google";
+            self.detailViewController.detailItem = object;
+        }
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
+            
+            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            self.detailViewController.accountInfo =  @"box";
+            self.detailViewController.indexPathh = indexPath.row;
             self.detailViewController.detailItem = object;
         }
         

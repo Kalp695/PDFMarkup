@@ -35,15 +35,27 @@
     NSMutableDictionary *arrLocalFilepaths;
     
 }
++(DropboxDownloadFileViewControlller*)getSharedInstance;
+
+
 -(NSString*)getDropBoxDirectoryPath:(NSString*)path withfilename:(NSString *)filename;
 -(void)upload:(id)sender;
 
 -(IBAction)btnDownloadPress:(id)sender;
 -(IBAction)back:(id)sender;
+@property (nonatomic, retain) NSString *accountStatus;
+
 
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;
 //@property (nonatomic, readonly) DBRestClient *restClient;
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong)     NSMutableArray * folderPath;
+
+// BOX
+@property (nonatomic, retain) NSString *boxAccessToken;
+@property (nonatomic, assign) int index;
+@property (nonatomic, retain) NSString *boxFolderId;
+@property (nonatomic, retain) NSString *boxFolderName;
+
 
 @end

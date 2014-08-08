@@ -16,7 +16,7 @@
 #import "FolderChooseViewController.h"
 #import "DropboxManager.h"
 #import "DocumentManager.h"
-
+#import "DropboxDownloadFileViewControlller.h"
 static DetailViewController *sharedInstance = nil;
 
 @interface Item : NSObject
@@ -59,6 +59,7 @@ static DetailViewController *sharedInstance = nil;
     BOOL bprocessing;
     BOOL buploading;
     int filecount;
+    NSString *strpdfname;
 
 }
 +(DetailViewController*)getSharedInstance{
@@ -69,7 +70,7 @@ static DetailViewController *sharedInstance = nil;
     return sharedInstance;
 }
 
-@synthesize titleTop,accountInfo;
+@synthesize titleTop,accountInfo,indexPathh;
 @synthesize loadData;
 @synthesize folderPath;
 
@@ -117,12 +118,20 @@ static DetailViewController *sharedInstance = nil;
         UIStoryboard * storyboard = self.storyboard;
         
         DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
-        
+        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"dropbox";
+        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+
         [self.navigationController pushViewController: detail animated: YES];
     }
-    else
+    else if ([accountInfo isEqualToString:@"box"])
     {
+        UIStoryboard * storyboard = self.storyboard;
         
+        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
+        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+        [self.navigationController pushViewController: detail animated: YES];
+
     }
     [self gridViewButton_click:nil] ;
 
@@ -195,6 +204,14 @@ static DetailViewController *sharedInstance = nil;
             item.accounttype = @"google";
 
 
+        }
+        else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
+            
+            item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"name"];
+            item.image = [UIImage imageNamed:@"box_small.png" ];
+            item.accounttype = @"box";
+            
+            
         }
         item.isChecked = NO;
 
@@ -358,6 +375,8 @@ static DetailViewController *sharedInstance = nil;
     sqliteFilesArray = [[NSMutableArray alloc ]init];
     marrDownloadData = [[NSMutableArray alloc] init];
     arrtimer = [[NSMutableArray alloc] init];
+    arrLocalFilepaths = [[NSMutableDictionary alloc] init];
+
 
    // [self gridViewButton_click:nil] ;
     
@@ -583,16 +602,31 @@ static DetailViewController *sharedInstance = nil;
      {
      
      NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] );
-     if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]) {
-     
-         buploading = true;
-         filecount++;
-         
-         
-         
-     [[dbManager restClient] uploadFile:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"] toPath: [DetailViewController  getSharedInstance].folderPath withParentRev:nil fromPath:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
-     
-     }
+         if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]) {
+             
+             buploading = true;
+             filecount++;
+             
+             
+             NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
+             
+             if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
+                 
+                 
+                 strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+             }
+             if ([strpdfname length]>0) {
+                 
+                 strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+                 
+                 
+             }
+             
+             NSLog(@"struploadfiles name %@",strUploadpdfname);
+             
+             [[dbManager restClient] uploadFile:strUploadpdfname toPath: [DetailViewController  getSharedInstance].folderPath withParentRev:nil fromPath:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+             
+         }
      else if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@""])
      {
          bprocessing = true;
@@ -991,7 +1025,6 @@ static DetailViewController *sharedInstance = nil;
 
         [self docDataToDisplay];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
 }
 
 #pragma mark - Rename Files to Dropbox Methods
@@ -1294,9 +1327,6 @@ static DetailViewController *sharedInstance = nil;
     }
     else
     {
-        
-        
-            
             Item * item = [checkableArray objectAtIndex:indexPath.row];
             
             if ([editBarButton.title isEqualToString:@"Cancel"])
@@ -1342,6 +1372,9 @@ static DetailViewController *sharedInstance = nil;
                     [dic setValue:pdfFilePath forKey:@"PdfPath"];
                     [filePathsArray addObject:dic];
                     
+                    [arrLocalFilepaths setObject:loadData forKey:pdfFilePath];
+                    
+                    
                 }
                 else
                 {
@@ -1370,6 +1403,8 @@ static DetailViewController *sharedInstance = nil;
                                 if ([[[filePathsArray objectAtIndex:i] objectForKey:@"PdfName"] isEqualToString:[NSString stringWithFormat:@"/%@",[documenmtsArray objectAtIndex:indexPath.row]]]) {
                                     
                                     [filePathsArray removeObjectAtIndex:i];
+                                    [arrLocalFilepaths removeObjectForKey:[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"]];
+
                                     
                                 }
                             }
@@ -1717,6 +1752,9 @@ static DetailViewController *sharedInstance = nil;
 
                 [dic setValue:pdfFilePath forKey:@"PdfPath"];
                 [filePathsArray addObject:dic];
+                
+                [arrLocalFilepaths setObject:loadData forKey:pdfFilePath];
+
 
             }
             else
@@ -1751,6 +1789,8 @@ static DetailViewController *sharedInstance = nil;
                         if ([[[filePathsArray objectAtIndex:i] objectForKey:@"PdfName"] isEqualToString:[NSString stringWithFormat:@"/%@",[documenmtsArray objectAtIndex:indexPath.row]]]) {
                             
                             [filePathsArray removeObjectAtIndex:i];
+                            [arrLocalFilepaths removeObjectForKey:[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"]];
+
 
                         }
                     }
@@ -1825,10 +1865,21 @@ static DetailViewController *sharedInstance = nil;
                     UIStoryboard * storyboard = self.storyboard;
                     
                     DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
-                    
+                    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"dropbox";
+
                     [self.navigationController pushViewController: detail animated: YES];
                 }
-                
+                if ([item.accounttype isEqualToString:@"box"]) {
+                    
+                    UIStoryboard * storyboard = self.storyboard;
+                    
+                    DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+                    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
+                    [DropboxDownloadFileViewControlller getSharedInstance].index = indexPath.row;
+
+                    [self.navigationController pushViewController: detail animated: YES];
+                }
+
                 
             }
             

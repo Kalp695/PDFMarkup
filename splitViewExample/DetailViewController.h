@@ -47,6 +47,8 @@
     NSMutableString *strdirpath ;
     NSTimer *timer;
     NSMutableArray *arrtimer;
+    NSMutableDictionary *arrLocalFilepaths;
+
     
 
 }
@@ -56,6 +58,7 @@
 
 @property (retain, nonatomic) NSString * titleTop;
 @property (retain, nonatomic) NSString * accountInfo;
+@property (assign, nonatomic) int indexPathh;
 
 @property (strong, nonatomic) id detailItem;
 

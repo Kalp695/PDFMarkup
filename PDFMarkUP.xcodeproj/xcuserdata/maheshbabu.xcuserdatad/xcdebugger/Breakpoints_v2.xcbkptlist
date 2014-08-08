@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "429036323.400949"
+            timestampString = "429171756.16059"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "675"
-            endingLineNumber = "675"
+            startingLineNumber = "693"
+            endingLineNumber = "693"
             landmarkName = "-restClient:createFolderFailedWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "429036323.400949"
+            timestampString = "429171756.16059"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "679"
-            endingLineNumber = "679"
+            startingLineNumber = "697"
+            endingLineNumber = "697"
             landmarkName = "-restClient:createFolderFailedWithError:"
             landmarkType = "5">
          </BreakpointContent>
@@ -81,22 +81,6 @@
             endingLineNumber = "552"
             landmarkName = "-restClient:loadedFile:"
             landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "429036323.400949"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "546"
-            endingLineNumber = "546"
-            landmarkName = "@implementation DetailViewController"
-            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

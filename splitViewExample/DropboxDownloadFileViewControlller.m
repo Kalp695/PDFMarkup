@@ -13,6 +13,10 @@ NSString * folderDocpath;
 #import "FileItemTableCell.h"
 #import "AppDelegate.h"
 #import "DropboxManager.h"
+#import "DocumentManager.h"
+
+static DropboxDownloadFileViewControlller *sharedInstance = nil;
+
 @interface FolderItem : NSObject
 
 @property (retain, nonatomic) NSString *title;
@@ -46,34 +50,171 @@ NSString * folderDocpath;
     
     UIBarButtonItem *editButton;
 
-
+    NSMutableArray *arrUseraccounts;
+    
+    
+    // BOX
+    
+    NSMutableArray * folderItemsArray;
+    NSMutableArray * boxPdfFilesArray;
 }
+
++(DropboxDownloadFileViewControlller*)getSharedInstance{
+    if (!sharedInstance) {
+        sharedInstance = [[super allocWithZone:NULL]init];
+        
+    }
+    return sharedInstance;
+}
+
 @synthesize tbDownload;
 @synthesize loadData;
 @synthesize folderPath;
-
+@synthesize accountStatus;
  NSString *wastepath = nil;
 
-
+// Box
+@synthesize boxAccessToken;
+@synthesize boxFolderId,boxFolderName,index;
 -(void)viewWillAppear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
+    
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(createFolder)
+                                                     name:@"CreateFolderClick"
+                                                   object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DeleteClick) name:@"DeleteClick" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renameFolder) name:@"RenameClick" object:nil];
+
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
+        NSLog(@"Box");
+        arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+        self.title = [[arrUseraccounts objectAtIndex:index] objectForKey:@"name"];
+
+       // BoxFolderViewController *rootVC = (BoxFolderViewController *)self.topViewController;
+      //  rootVC fetchFolderItemsWithFolderID:BoxAPIFolderIDRoot name:@"All Files"];
+        folderItemsArray = [[NSMutableArray alloc]init];
+        boxPdfFilesArray = [[NSMutableArray alloc]init];
+        if (!boxFolderId) {
+            boxFolderId = BoxAPIFolderIDRoot;
+            boxFolderName =@"All Files";
+        }
+        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+
+    }
+}
+- (void)fetchFolderItemsWithFolderID:(NSString *)folderID name:(NSString *)name
+{
+    
+ //  https://api.box.com/2.0/folders/0/items?access_token=fYw4Qab6szMbkFkHCUUPUvlagcYwOpw9
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(createFolder)
-                                                 name:@"CreateFolderClick"
-                                               object:nil];
+    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?access_token=%@",folderID,[[arrUseraccounts objectAtIndex:0] objectForKey:@"acces_token"]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
+                                                  cachePolicy:NSURLCacheStorageAllowed
+                                              timeoutInterval:20];
+    NSURLResponse *response;
+    NSError *error;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DeleteClick) name:@"DeleteClick" object:nil];
+    NSData * data = [NSURLConnection sendSynchronousRequest:request
+                                          returningResponse:&response
+                                                      error:&error];
+   
+    NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
 
-     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renameFolder) name:@"RenameClick" object:nil];
+    for (int i = 0;i <[[userdata objectForKey:@"total_count"]integerValue];i++)
+    {
+        if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"type"] isEqualToString:@"folder"])
+        {
+            [folderItemsArray addObject:userdata];
+            
+        }
+        else if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i]objectForKey:@"type"] isEqualToString:@"file"])
+        {
+            NSString * str =[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"name"];
+            if ([[str pathExtension] isEqualToString:@"pdf"])
+            {
+                [folderItemsArray addObject:userdata];
+                
+            }
+        }
+    }
+    [tbDownload reloadData];
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    /*
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[[NSOperationQueue alloc] init]
+                           completionHandler:^(NSURLResponse *response,
+                                               NSData *data,
+                                               NSError *error) {
+                               
+                               if ([data length] >0 && error == nil) {
+                                   
+                                   
+                                   NSError *myError = nil;
+                                   
+                                 
+                                   NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&myError]];
+                                   
+                                   for (int i = 0;i <[[userdata objectForKey:@"total_count"]integerValue];i++)
+                                   {
+                                       if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"type"] isEqualToString:@"folder"])
+                                       {
+                                           [folderItemsArray addObject:userdata];
+                                           
+                                       }
+                                       else if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i]objectForKey:@"type"] isEqualToString:@"file"])
+                                       {
+                                           NSString * str =[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"name"];
+                                           if ([[str pathExtension] isEqualToString:@"pdf"])
+                                           {
+                                               [folderItemsArray addObject:userdata];
+
+                                           }
+                                       }
+                                   }
+                                   
+                                   NSLog(@"List Of items from box is %@",folderItemsArray);
+                                   
+                                   [tbDownload reloadData];
+
+                                   [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                   
+                                   return ;
+
+                               } else if ([data length] == 0 && error == nil) {
+                                   
+                                   NSLog(@"Nothing was downloaded.");
+                                   
+                               } else if (error != nil) {
+                                   
+                                   NSLog(@"Error = %@", error);
+                               }
+                           }];
+    
+
+    
+*/
+    
     
     
 }
-
 -(void)viewDidDisappear:(BOOL)animated
 {
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
     if (tbDownload.isEditing) {
         [tbDownload setEditing:NO animated:YES];
         editBarButton.title = @"Edit";
@@ -86,14 +227,20 @@ NSString * folderDocpath;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
 
+        NSLog(@"Box");
+    }
 }
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
     if (!loadData) {
         loadData = @"";
     }
@@ -106,19 +253,9 @@ NSString * folderDocpath;
     filePathsArray = [[NSMutableArray alloc ]init];
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     arrtimers = [[NSMutableArray alloc] init];
-
-    self.tbDownload.allowsSelectionDuringEditing=YES;
-
     [self performSelector:@selector(fetchAllDropboxData) withObject:nil afterDelay:.1];
-    
-    editButton = [[UIBarButtonItem alloc]
-                                   initWithTitle:@"Edit"
-                                   style:UIBarButtonItemStyleBordered
-                                   target:self
-                                   action:@selector(editBarButton_clickk:)];
-    editBarButton.title = @"Edit";
-    self.navigationItem.rightBarButtonItem = editButton;
-    
+
+       
     self.title = [[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"];
     
     
@@ -129,8 +266,28 @@ NSString * folderDocpath;
     folderPath =  [[NSMutableArray alloc ]init] ;
     
     arrLocalFilepaths = [[NSMutableDictionary alloc] init];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
+        NSLog(@"Box name");
+        
+       // [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    }
     
+    self.tbDownload.allowsSelectionDuringEditing=YES;
+    
+    
+    editButton = [[UIBarButtonItem alloc]
+                  initWithTitle:@"Edit"
+                  style:UIBarButtonItemStyleBordered
+                  target:self
+                  action:@selector(editBarButton_clickk:)];
+    editBarButton.title = @"Edit";
+    self.navigationItem.rightBarButtonItem = editButton;
+
 }
+
 -(void)editBarButton_clickk:(id)sender
 {
     UIBarButtonItem *btn = (UIBarButtonItem *)sender;
@@ -139,7 +296,8 @@ NSString * folderDocpath;
     if([btn.title isEqualToString:@"Edit"]){
         btn.title=@"Cancel";
         
-        
+        if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+        {
         for (int i =0; i< [marrDownloadData count]; i++) {
             
             DBMetadata *data = [marrDownloadData objectAtIndex:i];
@@ -169,6 +327,38 @@ NSString * folderDocpath;
 
         
     }
+        else
+        {
+            for (int i =0; i< [marrDownloadData count]; i++) {
+                
+                DBMetadata *data = [marrDownloadData objectAtIndex:i];
+                
+                
+                
+                
+                NSLog(@"selected %@",data.path);
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                
+                [tbDownload reloadData];
+                
+            }
+            [tbDownload setEditing:YES animated:YES];
+            [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
+            
+            [filePathsArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
+                                                                object:self];
+
+        }
+    }
+    
     else{
         btn.title=@"Edit";
         [tbDownload setEditing:NO animated:YES];
@@ -583,11 +773,39 @@ NSString * folderDocpath;
 #pragma mark - UITableView Delegate Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [marrDownloadData count];
+    
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+        return [marrDownloadData count];
+
+    }
+    
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+   {
+    NSLog(@"Box");
+       
+       if ([folderItemsArray count]>0)
+       {
+           return [[[folderItemsArray objectAtIndex:0] objectForKey:@"total_count"]integerValue];
+
+       }       else{
+
+           return 0;
+
+       }
+
+   }
+   else
+   {
+       return 0;
+   }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+    
     FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
     
     
@@ -620,10 +838,46 @@ NSString * folderDocpath;
     cell.lblTitle.text = metadata.filename;
     
     return cell;
+    }
+    else
+    {
+        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
+        
+        
+             FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        
+        if (tableView.editing)
+        {
+            [cell setChecked:item.isChecked];
+        }
+        cell.lblTitle.text = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"];
+        
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.btnIcon.hidden = NO;
+        if ([[[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"type"]isEqualToString:@"folder"]) {
+            
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
+            
+        }else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.btnIcon.hidden = NO;
+            cell.imageView.image = [UIImage imageNamed:@"pdf.png"];
+            
+        }
+        
+
+              return cell;
+
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+
+    
     FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
     DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
 
@@ -710,7 +964,26 @@ NSString * folderDocpath;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
 
     }
+    
+    }
+    else
+    {
+       
+        
+        if ([[[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"type"] isEqualToString:@"folder"]) {
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
+            dropboxDownloadFileViewControlller.boxFolderId = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"id"];
+            dropboxDownloadFileViewControlller.boxFolderName = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"];
+            [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
 
+        }
+        
+        
+    }
+    
+    
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

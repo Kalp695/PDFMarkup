@@ -11,14 +11,21 @@
 #import "AppDelegate.h"
 #import "GoogleLoginViewController.h"
 #import "DocumentManager.h"
-
+#import "BoxAuthorizationNavigationController.h"
+#import "JSON.h"
+#import "DropboxDownloadFileViewControlller.h"
 @interface AddAccountViewController ()<DBRestClientDelegate>
+
+- (void)boxAPIAuthenticationDidSucceed:(NSNotification *)notification;
+- (void)boxAPIAuthenticationDidFail:(NSNotification *)notification;
 
 @end
 
 
 @implementation AddAccountViewController
-
+{
+    NSMutableData * responseData;
+}
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -34,7 +41,14 @@
 
 - (void)viewDidLoad
 {
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(boxAPIAuthenticationDidSucceed:)
+                                                 name:BoxOAuth2SessionDidBecomeAuthenticatedNotification
+                                               object:[BoxSDK sharedSDK].OAuth2Session];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(boxAPIAuthenticationDidFail:)
+                                                 name:BoxOAuth2SessionDidReceiveAuthenticationErrorNotification
+                                               object:[BoxSDK sharedSDK].OAuth2Session];
     
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -113,6 +127,18 @@
               [[DBSession sharedSession] linkFromController:self];
        // }
     }
+    else if ([sender tag]==2)
+    {
+        NSURL *authorizationURL = [BoxSDK sharedSDK].OAuth2Session.authorizeURL;
+        NSString *redirectURI = [BoxSDK sharedSDK].OAuth2Session.redirectURIString;
+        BoxAuthorizationViewController *authorizationViewController = [[BoxAuthorizationViewController alloc] initWithAuthorizationURL:authorizationURL redirectURI:redirectURI];
+        BoxAuthorizationNavigationController *loginNavigation = [[BoxAuthorizationNavigationController alloc] initWithRootViewController:authorizationViewController];
+        authorizationViewController.delegate = loginNavigation;
+        loginNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        [self presentViewController:loginNavigation animated:YES completion:nil];
+
+    }
     else if ([sender tag]== 4)
     {
         
@@ -130,12 +156,105 @@
     }
 }
 
--(void)userDetails
+-(void)boxuserDetails:(NSString *)str_access_token
 {
-   
+    
+    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/users/me?access_token=%@",str_access_token];
+    
+    
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
+                                                  cachePolicy:NSURLCacheStorageAllowed
+                                              timeoutInterval:20];
+    
+    
+    NSURLResponse * response = nil;
+    NSError * error = nil;
+    NSData * data = [NSURLConnection sendSynchronousRequest:request
+                                          returningResponse:&response
+                                                      error:&error];
+    
+    if (error == nil)
+    {
+        // Parse data here
+        
+        NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+        NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
+        [userdata setObject:str_access_token forKey:@"acces_token"];
+        
+        [userdata setObject:@"box" forKey:@"AccountType"];
+        
+        [arruseraccounts addObject:userdata];
+        [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+        
+        NSLog(@"check %@",[self.navigationController viewControllers]);
+        [self performSelector:@selector(closeBoxController) withObject:nil afterDelay:1.0];
+
+    }
+    
+//    [NSURLConnection sendAsynchronousRequest:request
+//                                       queue:[[NSOperationQueue alloc] init]
+//                           completionHandler:^(NSURLResponse *response,
+//                                               NSData *data,
+//                                               NSError *error) {
+//                               
+//                               if ([data length] >0 && error == nil) {
+//                                   
+//    
+//                                   NSError *myError = nil;
+//                                   
+//                                                                  } else if ([data length] == 0 && error == nil) {
+//                                   
+//                                   NSLog(@"Nothing was downloaded.");
+//                                   
+//                               } else if (error != nil) {
+//                                   
+//                                   NSLog(@"Error = %@", error);
+//                               }
+//                           }];
+
+
+}
+-(void)closeBoxController
+{
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshLefttable" object:self];
+
+    [self.navigationController popViewControllerAnimated:YES];
+    
+}
+
+#pragma mark - Handle OAuth2 session notifications
+- (void)boxAPIAuthenticationDidSucceed:(NSNotification *)notification
+{
+    NSLog(@"Received OAuth2 successfully authenticated notification");
+    BoxOAuth2Session *session = (BoxOAuth2Session *) [notification object];
+    NSLog(@"Access token  (%@) expires at %@", session.accessToken, session.accessTokenExpiration);
+    
+    NSLog(@"Refresh token (%@)", session.refreshToken);
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    });
+    
+    
+    //[[BoxSDK sharedSDK].usersManager userInfoWithID:BoxAPIUserIDMe requestBuilder:nil success:nil failure:nil];
+
+    [DropboxDownloadFileViewControlller getSharedInstance].boxAccessToken = session.accessToken;
+    [self boxuserDetails:session.accessToken];
+  
 
 }
 
+- (void)boxAPIAuthenticationDidFail:(NSNotification *)notification
+{
+    NSLog(@"Received OAuth2 failed authenticated notification");
+    NSString *oauth2Error = [[notification userInfo] valueForKey:BoxOAuth2AuthenticationErrorKey];
+    NSLog(@"Authentication error  (%@)", oauth2Error);
+    
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        [self dismissViewControllerAnimated:YES completion:nil];
+    });
+}
 
 
 - (void)didReceiveMemoryWarning
