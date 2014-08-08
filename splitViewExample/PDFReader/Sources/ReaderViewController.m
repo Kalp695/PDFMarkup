@@ -37,7 +37,7 @@
 
 static ReaderViewController *sharedInstance = nil;
 
-@interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,ReaderContentViewDelegate,DBSessionDelegate, DBNetworkRequestDelegate,DBRestClientDelegate,ThumbsViewControllerDelegate>
+@interface ReaderViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate,ReaderContentViewDelegate,ThumbsViewControllerDelegate>
 @end
 
 @implementation ReaderViewController
@@ -147,6 +147,7 @@ static ReaderViewController *sharedInstance = nil;
 
 	
 }
+
 
 
 - (void)showDocumentPageNew:(NSInteger)page{
