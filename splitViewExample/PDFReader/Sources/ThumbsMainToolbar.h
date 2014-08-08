@@ -34,6 +34,7 @@
 @required // Delegate protocols
 
 - (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIButton *)button;
+- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar addButton:(UIButton *)button;
 - (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar showControl:(UISegmentedControl *)control;
 
 @end

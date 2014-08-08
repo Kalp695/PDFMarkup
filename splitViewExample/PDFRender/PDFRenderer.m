@@ -421,6 +421,9 @@ UIView *imgView;
         
        
     }
+    
+    //UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 965), nil);
+    
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
     

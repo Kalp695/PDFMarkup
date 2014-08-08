@@ -44,6 +44,7 @@
 @interface ThumbsViewController : UIViewController
 
 @property (nonatomic, unsafe_unretained, readwrite) id <ThumbsViewControllerDelegate> delegate;
+@property (nonatomic, retain) NSString *filePath;
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
 

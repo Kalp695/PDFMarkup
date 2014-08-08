@@ -606,6 +606,8 @@ static ReaderViewController *sharedInstance = nil;
     
 	ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
     
+    [thumbsViewController setFilePath:_pdfFilePath];
+    
 	thumbsViewController.delegate = self; thumbsViewController.title = self.title;
     
     UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:thumbsViewController];
