@@ -98,7 +98,7 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     {
         NSLog(@"Box");
         arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-        self.title = [[arrUseraccounts objectAtIndex:index] objectForKey:@"name"];
+        self.title = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
 
        // BoxFolderViewController *rootVC = (BoxFolderViewController *)self.topViewController;
       //  rootVC fetchFolderItemsWithFolderID:BoxAPIFolderIDRoot name:@"All Files"];
@@ -118,7 +118,7 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
  //  https://api.box.com/2.0/folders/0/items?access_token=fYw4Qab6szMbkFkHCUUPUvlagcYwOpw9
     
     
-    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?access_token=%@",folderID,[[arrUseraccounts objectAtIndex:0] objectForKey:@"acces_token"]];
+    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?access_token=%@",folderID,[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
                                                   cachePolicy:NSURLCacheStorageAllowed
                                               timeoutInterval:20];

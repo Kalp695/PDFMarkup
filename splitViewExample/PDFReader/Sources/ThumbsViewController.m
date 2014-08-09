@@ -31,9 +31,11 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+
 @interface ThumbsViewController () <ThumbsMainToolbarDelegate, ReaderThumbsViewDelegate>
 
 @end
+
 
 @implementation ThumbsViewController
 {
@@ -62,6 +64,7 @@
 #pragma mark Properties
 
 @synthesize delegate;
+@synthesize filePath=_filePath;
 
 #pragma mark UIViewController methods
 
@@ -104,6 +107,10 @@
     UIView *doneItem=[mainToolbar viewWithTag:101];
     UIBarButtonItem *doneItemBar = [[UIBarButtonItem alloc]initWithCustomView:doneItem];
     self.navigationItem.leftBarButtonItem=doneItemBar;
+    
+    UIBarButtonItem *addItemBar = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBarButton_click:)];
+    
+    self.navigationItem.rightBarButtonItem=addItemBar;
 	
 	CGRect thumbsRect = viewRect; UIEdgeInsets insets = UIEdgeInsetsZero;
 
@@ -241,6 +248,73 @@
 {
 	[delegate dismissThumbsViewController:self]; // Dismiss thumbs display
 }
+
+-(void)tappedInToolbar:(ThumbsMainToolbar *)toolbar addButton:(UIButton *)button{
+    
+    
+}
+
+
+-(IBAction)addBarButton_click:(id)sender{
+ 
+    
+    
+    NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"1.pdf"] ;
+    
+    NSString *templatePath =_filePath;
+    
+    CGContextRef context;
+    //create empty pdf file;
+    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    
+    CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
+    
+    //open template file
+    CGPDFDocumentRef templateDocument = CGPDFDocumentCreateWithURL(url);
+    CFRelease(url);
+    
+    //get amount of pages in template
+    size_t count = CGPDFDocumentGetNumberOfPages(templateDocument);
+    
+    //for each page in template
+    for (size_t pageNumber = 1; pageNumber <= count; pageNumber++) {
+        //get bounds of template page
+        CGPDFPageRef templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
+        CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
+        
+        //create empty page with corresponding bounds in new document
+        UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
+        context = UIGraphicsGetCurrentContext();
+        
+        //flip context due to different origins
+        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        //copy content of template page on the corresponding page in new file
+        CGContextDrawPDFPage(context, templatePage);
+        
+        //flip context back
+        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        /* Here you can do any drawings */
+    
+        
+        
+    }
+    
+    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 965), nil);
+    
+    CGPDFDocumentRelease(templateDocument);
+    UIGraphicsEndPDFContext();
+    
+    
+    document = [ReaderDocument withDocumentFilePath:newFilePath password:nil];
+    
+    [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
+    
+}
+
 
 #pragma mark UIThumbsViewDelegate methods
 

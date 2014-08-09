@@ -629,8 +629,23 @@ static DetailViewController *sharedInstance = nil;
          }
      else if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@""])
      {
+         
          bprocessing = true;
-         [[dbManager restClient] createFolder:[NSString stringWithFormat:@"%@/%@",[DetailViewController  getSharedInstance].folderPath,[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"]]];
+         
+         NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
+         
+         if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
+             
+             
+             strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+         }
+         if ([strpdfname length]>0) {
+             
+             strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+             
+             
+         }
+         [[dbManager restClient] createFolder:[NSString stringWithFormat:@"%@/%@",[DetailViewController  getSharedInstance].folderPath,strUploadpdfname]];
      
      }
      }
@@ -661,7 +676,18 @@ static DetailViewController *sharedInstance = nil;
    
     NSLog(@"after file path is %@",strpath);
 
-    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
+    NSString *folderpath = nil;
+     if ([strpdfname length]>0) {
+         
+          folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",strpdfname,strpath]];
+
+     }
+    else
+    {
+         folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
+
+    }
+//    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
     
     NSError *error;
    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:folderpath error:&error];
@@ -679,6 +705,8 @@ static DetailViewController *sharedInstance = nil;
 
             buploading = true;
             filecount++;
+            
+            
             
             
         [[dbManager restClient] uploadFile:[directoryContent objectAtIndex:i] toPath:strdropboxpath withParentRev:nil fromPath:[NSString stringWithFormat:@"%@/%@",folderpath,[directoryContent objectAtIndex:i]]];

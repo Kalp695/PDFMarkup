@@ -59,6 +59,8 @@
 
 		CGFloat titleX = BUTTON_X; CGFloat titleWidth = (viewWidth - (titleX + titleX));
 
+       
+        
 		UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         doneButton.tag=101;
 		doneButton.frame = CGRectMake(BUTTON_X, BUTTON_Y, DONE_BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -68,6 +70,12 @@
 		doneButton.exclusiveTouch = YES;
 
 		[self addSubview:doneButton];
+        
+        
+      
+        
+        
+        /*
 
 		titleX += (DONE_BUTTON_WIDTH + BUTTON_SPACE); titleWidth -= (DONE_BUTTON_WIDTH + BUTTON_SPACE);
 
@@ -93,8 +101,11 @@
 		[self addSubview:showControl]; 
 
 		titleWidth -= (SHOW_CONTROL_WIDTH + BUTTON_SPACE);
+         
 
 #endif // end of READER_BOOKMARKS Option
+         
+         */
 
 		if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad)
 		{
@@ -133,6 +144,10 @@
 - (void)doneButtonTapped:(UIButton *)button
 {
 	[delegate tappedInToolbar:self doneButton:button];
+}
+
+-(IBAction)addButtonTapped:(id)sender{
+    
 }
 
 @end
