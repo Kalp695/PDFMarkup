@@ -170,6 +170,7 @@ static ReaderViewController *sharedInstance = nil;
         
         CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
         
+    
         for (NSInteger number = minValue; number <= maxValue; number++)
         {
             NSNumber *key = [NSNumber numberWithInteger:number]; // # key
@@ -235,6 +236,8 @@ static ReaderViewController *sharedInstance = nil;
             }
             
             viewRect.origin.x += viewRect.size.width;
+            
+            //NSLog(@"theScrollView.bounds=%@",theScrollView.bounds);
         }
         
         
@@ -245,9 +248,11 @@ static ReaderViewController *sharedInstance = nil;
         
         NSURL *fileURL = document.fileURL; NSString *phrase = document.password; NSString *guid = document.guid;
         
+        
+        
         if ([newPageSet containsIndex:page] == YES) // Preview visible page first
         {
-            NSNumber *key = [NSNumber numberWithInteger:page]; // # key
+            NSNumber *key = [NSNumber numberWithInteger:2]; // # key
             
             ReaderContentView *targetView = [contentViews objectForKey:key];
             
@@ -266,6 +271,7 @@ static ReaderViewController *sharedInstance = nil;
              [targetView showPageThumb:fileURL page:number password:phrase guid:guid];
          }
          ];
+        
         
         newPageSet = nil; // Release new page set
         
@@ -275,139 +281,6 @@ static ReaderViewController *sharedInstance = nil;
         
     }
     
-}
-- (void)showDocumentPage:(NSInteger)page
-{
-    if (page != currentPage) // Only if different
-    {
-        NSInteger minValue; NSInteger maxValue;
-        NSInteger maxPage = [document.pageCount integerValue];
-        NSInteger minPage = 1;
-        
-        if ((page < minPage) || (page > maxPage)) return;
-        
-        if (maxPage <= PAGING_VIEWS) // Few pages
-        {
-            minValue = minPage;
-            maxValue = maxPage;
-        }
-        else // Handle more pages
-        {
-            minValue = (page - 1);
-            maxValue = (page + 1);
-            
-            if (minValue < minPage)
-            {minValue++; maxValue++;}
-            else
-                if (maxValue > maxPage)
-                {minValue--; maxValue--;}
-        }
-        
-        NSMutableIndexSet *newPageSet = [NSMutableIndexSet new];
-        
-        NSMutableDictionary *unusedViews = [contentViews mutableCopy];
-        
-        CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
-        
-        for (NSInteger number = minValue; number <= maxValue; number++)
-        {
-            NSNumber *key = [NSNumber numberWithInteger:number]; // # key
-            
-            ReaderContentView *contentView = [contentViews objectForKey:key];
-            
-            if (contentView == nil) // Create a brand new document content view
-            {
-                NSURL *fileURL = document.fileURL; NSString *phrase = document.password; // Document properties
-                
-                contentView = [[ReaderContentView alloc] initWithFrame:viewRect fileURL:fileURL page:number password:phrase];
-                contentView.tag=number;
-                
-                [theScrollView addSubview:contentView]; [contentViews setObject:contentView forKey:key];
-                
-                contentView.message = (id)self; [newPageSet addIndex:number];
-            }
-            else // Reposition the existing content view
-            {
-                contentView.frame = viewRect; [contentView zoomReset];
-                
-                [unusedViews removeObjectForKey:key];
-            }
-            
-            viewRect.origin.x += viewRect.size.width;
-        }
-        
-        [unusedViews enumerateKeysAndObjectsUsingBlock: // Remove unused views
-         ^(id key, id object, BOOL *stop)
-         {
-             [contentViews removeObjectForKey:key];
-             
-             ReaderContentView *contentView = object;
-             
-             [contentView removeFromSuperview];
-         }
-         ];
-        
-        unusedViews = nil; // Release unused views
-        
-        CGFloat viewWidthX1 = viewRect.size.width;
-        CGFloat viewWidthX2 = (viewWidthX1 * 2.0f);
-        
-        CGPoint contentOffset = CGPointZero;
-        
-        if (maxPage >= PAGING_VIEWS)
-        {
-            if (page == maxPage)
-                contentOffset.x = viewWidthX2;
-            else
-                if (page != minPage)
-                    contentOffset.x = viewWidthX1;
-        }
-        else
-            if (page == (PAGING_VIEWS - 1))
-                contentOffset.x = viewWidthX1;
-        
-        if (CGPointEqualToPoint(theScrollView.contentOffset, contentOffset) == false)
-        {
-            theScrollView.contentOffset = contentOffset; // Update content offset
-        }
-        
-        if ([document.pageNumber integerValue] != page) // Only if different
-        {
-            document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
-        }
-        
-        NSURL *fileURL = document.fileURL; NSString *phrase = document.password; NSString *guid = document.guid;
-        
-        if ([newPageSet containsIndex:page] == YES) // Preview visible page first
-        {
-            NSNumber *key = [NSNumber numberWithInteger:page]; // # key
-            
-            ReaderContentView *targetView = [contentViews objectForKey:key];
-            
-            [targetView showPageThumb:fileURL page:page password:phrase guid:guid];
-            
-            [newPageSet removeIndex:page]; // Remove visible page from set
-        }
-        
-        [newPageSet enumerateIndexesWithOptions:NSEnumerationReverse usingBlock: // Show previews
-         ^(NSUInteger number, BOOL *stop)
-         {
-             NSNumber *key = [NSNumber numberWithInteger:number]; // # key
-             
-             ReaderContentView *targetView = [contentViews objectForKey:key];
-             
-             [targetView showPageThumb:fileURL page:number password:phrase guid:guid];
-         }
-         ];
-        
-        newPageSet = nil; // Release new page set
-        
-        
-        
-        [self updateToolbarBookmarkIcon]; // Update bookmark
-        
-        currentPage = page; // Track current page number
-    }
 }
 
 - (void)showDocument:(id)object
@@ -619,16 +492,40 @@ static ReaderViewController *sharedInstance = nil;
 
 #pragma mark ThumbsViewControllerDelegate methods
 
-- (void)dismissThumbsViewController:(ThumbsViewController *)viewController
+- (void)dismissThumbsViewController:(ThumbsViewController *)viewController withDocument:(ReaderDocument *)readerDocument
 {
 	[self updateToolbarBookmarkIcon]; // Update bookmark icon
+    
+    document=readerDocument;
+    currentPage=0;
+    
+    
+    
+     for(UIView *view in [theScrollView subviews])
+     {
+     [view removeFromSuperview];
+     }
+     [contentViews removeAllObjects];
+    
+    //[self updateScrollViewContentViews];
+    
+    [self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
+    
+    //[theScrollView setContentOffset:pt animated:YES];
+    
+    
+    
     
 	[self dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
 
-- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page
+- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument
 {
-	[self showDocumentPageNew:page]; // Show the page
+	
+    theScrollView.contentOffset=CGPointMake(CGRectGetWidth(theScrollView.frame)*(page-1), theScrollView.contentOffset.y);
+    [self showDocumentPageNew:page]; // Show the page
+    
+    //[viewController dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
 
 
@@ -639,23 +536,7 @@ static ReaderViewController *sharedInstance = nil;
 }
 -(IBAction)actionBarButton_click:(id)sender{
     
-    UIViewController *popoverContent=[[UIViewController alloc] init];
-    popDisplayTableView =[[UITableView alloc] initWithFrame:CGRectMake(265, 100, 0, 0)    style:UITableViewStylePlain];
-    
-    UIView *popoverView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 10)];
-    
-    popoverView.backgroundColor=[UIColor whiteColor];
-    
-    popoverContent.view=popoverView;
-    popoverContent.contentSizeForViewInPopover=CGSizeMake(200, 200);
-    popoverContent.view=popDisplayTableView; //Adding tableView to popover
-    popDisplayTableView.delegate=self;
-    popDisplayTableView.dataSource=self;
-    
-    popoverController=[[UIPopoverController alloc]    initWithContentViewController:popoverContent];
-    [popoverController presentPopoverFromRect:CGRectMake(30, 40, 0, 0) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-    
-
+ 
 }
 
 -(IBAction)exportBarButton_click:(id)sender{
@@ -665,12 +546,8 @@ static ReaderViewController *sharedInstance = nil;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:viewcontroller];
 
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentModalViewController:nav animated:YES];
+    [self presentViewController:nav animated:YES completion:nil];
     nav.view.superview.frame = CGRectMake(57,200,500,500);
-    
-
-    
-    
     
     
     // Previous code for preview ;
@@ -832,108 +709,6 @@ static ReaderViewController *sharedInstance = nil;
     
 }
 
-#pragma mark Table View Delegates PopOver
-
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    
-    
-    return [popOverListArray count];
-    
-}
--(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    NSLog(@"count is %d",[popOverListArray count]);
-    return 1;
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *TableIdentifier=@"Cell";
-    
-    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:TableIdentifier];
-    if (cell==nil) {
-        cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableIdentifier];
-    }
-    
-    cell.textLabel.text=[popOverListArray objectAtIndex:indexPath.row];
-    
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    cell.textLabel.textColor=[UIColor blackColor];
-    cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    return cell;
-    
-}
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row == 0)
-    {
-        NSLog(@"DropBox uploading file is %@",_pdfFilePath);
-        
-        NSString *path = _pdfFilePath;
-        path = [path substringFromIndex:[path rangeOfString:@"Documents/"].location + [@"Documents/" length]];
-        path = [path substringToIndex:[path rangeOfString:@".pdf"].location];
-        
-        NSString * name = [NSString stringWithFormat:@"%@.pdf",path ];
-        
-        NSLog(@"name is %@",name);
-        NSLog(@"path is %@",_pdfFilePath);
-
-        popDisplayTableView.hidden = YES;
-
-        DropboxManager *dbManager = [DropboxManager dbManager];
-        [dbManager restClient].delegate = self;
-        
-        [[dbManager restClient] uploadFile:name toPath:@"/" withParentRev:nil fromPath:_pdfFilePath];
-    
-    }
-    else if (indexPath.row == 1)
-    {
-        NSLog(@"Box");
-
-    }
-    else if (indexPath.row == 2)
-    {
-        
-        NSLog(@"Sugar Sync");
-
-    }
-    else if (indexPath.row == 3)
-    {
-        NSLog(@"FTP");
-
-        
-    }
-    else if (indexPath.row == 4)
-    {
-        NSLog(@"Google Drive");
-        
-        
-    }
-    
-    popDisplayTableView.hidden = YES;
-
-}
-
-- (void)restClient:(DBRestClient*)client uploadedFile:(NSString*)destPath from:(NSString*)srcPath
-          metadata:(DBMetadata*)metadata{
-    
-    NSLog(@"uploaded");
-    
-    [popoverController dismissPopoverAnimated:YES];
-    
-    [[[UIAlertView alloc]
-      initWithTitle:@"" message:@"Uploaded"
-      delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil]
-     
-     show];
-    
-    
-    
-}
-
-
 
 
 
@@ -1062,6 +837,7 @@ static ReaderViewController *sharedInstance = nil;
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    
 	__block NSInteger page = 0;
 
 	CGFloat contentOffsetX = scrollView.contentOffset.x;
@@ -1079,6 +855,8 @@ static ReaderViewController *sharedInstance = nil;
 	];
 
 	if (page != 0) [self showDocumentPageNew:page]; // Show the page
+     
+    
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView

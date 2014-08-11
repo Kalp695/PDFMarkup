@@ -35,9 +35,9 @@
 
 @required // Delegate protocols
 
-- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page;
+- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument;
 
-- (void)dismissThumbsViewController:(ThumbsViewController *)viewController;
+- (void)dismissThumbsViewController:(ThumbsViewController *)viewController withDocument:(ReaderDocument*)readerDocument;
 
 @end
 

@@ -246,7 +246,8 @@
 
 - (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIButton *)button
 {
-	[delegate dismissThumbsViewController:self]; // Dismiss thumbs display
+    
+	[delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
 }
 
 -(void)tappedInToolbar:(ThumbsMainToolbar *)toolbar addButton:(UIButton *)button{
@@ -257,9 +258,10 @@
 
 -(IBAction)addBarButton_click:(id)sender{
  
+    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
+    NSLog(@"dict=%@",dict);
     
-    
-    NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"1.pdf"] ;
+    NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     
     NSString *templatePath =_filePath;
     
@@ -298,18 +300,17 @@
         CGContextScaleCTM(context, 1.0, -1.0);
         
         /* Here you can do any drawings */
-    
-        
         
     }
     
-    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 965), nil);
+    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
     
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
+    [[NSFileManager defaultManager] removeItemAtPath:_filePath error:nil];
+    [[NSFileManager defaultManager] moveItemAtPath:newFilePath toPath:_filePath error:nil];
     
-    
-    document = [ReaderDocument withDocumentFilePath:newFilePath password:nil];
+    document = [ReaderDocument withDocumentFilePath:_filePath password:nil];
     
     [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
     
@@ -358,9 +359,10 @@
 {
 	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
 
-	[delegate thumbsViewController:self gotoPage:page]; // Show the selected page
+    [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
+	[delegate thumbsViewController:self gotoPage:page withDocument:document]; // Show the selected page
 
-	[delegate dismissThumbsViewController:self]; // Dismiss thumbs display
+	
 }
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didPressThumbWithIndex:(NSInteger)index
