@@ -447,7 +447,7 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)createNavigationBarItems{
     // create three funky nav bar buttons
-    UIBarButtonItem *actionBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(actionBarButton_click:)];
+    
     editDoneBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(editDoneBarButton_click:)];
     
     UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -463,11 +463,13 @@ static ReaderViewController *sharedInstance = nil;
     UIBarButtonItem *closeBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeButton_click:)];
     UIBarButtonItem *exportBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Export" style:UIBarButtonItemStylePlain target:self action:@selector(exportBarButton_click:)];
     
+    
     // create a spacer
     UIBarButtonItem *space = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
     space.width = 30;
+   
     
-    self.navigationItem.leftBarButtonItems = @[actionBarButton,space, editDoneBarButton,space,thumNailDetails];
+    self.navigationItem.leftBarButtonItems = @[space, editDoneBarButton,space,thumNailDetails];
     self.navigationItem.rightBarButtonItems = @[closeBarButton,space,exportBarButton];
     
     
@@ -534,7 +536,7 @@ static ReaderViewController *sharedInstance = nil;
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
--(IBAction)actionBarButton_click:(id)sender{
+-(IBAction)cameraBarButton_click:(id)sender{
     
  
 }
@@ -620,8 +622,21 @@ static ReaderViewController *sharedInstance = nil;
    
     NSInteger page = [document.pageNumber integerValue];
     
+    NSMutableArray *rightNavIterms;
     if([editDoneBarButton.title isEqualToString:@"Edit"]){
         editDoneBarButton.title=@"Done";
+        
+        UIBarButtonItem *cameraBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraBarButton_click:)];
+        
+        // create a spacer
+        UIBarButtonItem *space = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+        space.width = 30;
+        
+        rightNavIterms=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightNavIterms addObject:space];
+        [rightNavIterms addObject:cameraBarButton];
+        
+        self.navigationItem.rightBarButtonItems=rightNavIterms;
         
         for(UIView *view in [theScrollView subviews]){
             if(view.tag==page && [view isKindOfClass:[ReaderContentView class]]){
@@ -663,6 +678,12 @@ static ReaderViewController *sharedInstance = nil;
         
     }
     else{
+        
+        rightNavIterms=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightNavIterms removeLastObject];
+        [rightNavIterms removeLastObject];
+        
+        self.navigationItem.rightBarButtonItems=rightNavIterms;
         
         for(UIView *view in [self.view subviews]){
             if(view.tag==page && [view isKindOfClass:[ReaderContentView class]]){

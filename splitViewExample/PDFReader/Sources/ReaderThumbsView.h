@@ -26,6 +26,8 @@
 #import <UIKit/UIKit.h>
 
 #import "ReaderThumbView.h"
+#import "CommonFunction.h"
+#import "FRDLivelyButton.h"
 
 @class ReaderThumbsView;
 
@@ -40,6 +42,7 @@
 - (void)thumbsView:(ReaderThumbsView *)thumbsView updateThumbCell:(id)thumbCell forIndex:(NSInteger)index;
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didSelectThumbWithIndex:(NSInteger)index;
+- (void)thumbsView:(FRDLivelyButton *)thumbsViewCross crossButtonThumbWithIndex:(NSInteger)index;
 
 @optional // Delegate protocols
 
@@ -64,5 +67,6 @@
 - (void)refreshVisibleThumbs;
 
 - (CGPoint)insetContentOffset;
+-(void)showHidecrossButtonMakeHide:(BOOL)hide;
 
 @end

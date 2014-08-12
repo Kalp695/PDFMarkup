@@ -41,10 +41,13 @@
 
 @end
 
-@interface ThumbsViewController : UIViewController
+@interface ThumbsViewController : UIViewController{
+    UIBarButtonItem *editDoneItemBar;
+}
 
 @property (nonatomic, unsafe_unretained, readwrite) id <ThumbsViewControllerDelegate> delegate;
 @property (nonatomic, retain) NSString *filePath;
+
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
 

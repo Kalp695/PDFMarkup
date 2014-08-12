@@ -106,7 +106,7 @@
 	mainToolbar.delegate = self;
    
     UIBarButtonItem *closeItemBar = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeBarButton_click:)];
-    UIBarButtonItem *editDoneItemBar = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editDoneBarButton_click:)];
+    editDoneItemBar = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editDoneThumbBarButton_click:)];
     
     UIBarButtonItem *spaceBarButton=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
     spaceBarButton.width=20.0f;
@@ -252,7 +252,16 @@
 }
 
 
--(IBAction)editDoneBarButton_click:(id)sender{
+-(IBAction)editDoneThumbBarButton_click:(id)sender{
+    if([editDoneItemBar.title isEqualToString:@"Edit"]){
+        [editDoneItemBar setTitle:@"Done"];
+        [theThumbsView showHidecrossButtonMakeHide:NO];
+    }
+    else{
+        [editDoneItemBar setTitle:@"Edit"];
+        [theThumbsView showHidecrossButtonMakeHide:YES];
+        
+    }
     
 }
 
@@ -369,12 +378,85 @@
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didSelectThumbWithIndex:(NSInteger)index
 {
-	NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
+    if(![editDoneItemBar .title isEqualToString:@"Done"]){
+        
+        NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
+        [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
+        [delegate thumbsViewController:self gotoPage:page withDocument:document]; // Show the selected page
+        
+    }
 
-    [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
-	[delegate thumbsViewController:self gotoPage:page withDocument:document]; // Show the selected page
 
 	
+}
+
+-(void)thumbsView:(FRDLivelyButton *)thumbsViewCross crossButtonThumbWithIndex:(NSInteger)index{
+    
+    
+    
+    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
+    NSLog(@"dict=%@",dict);
+    
+    NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    
+    NSString *templatePath =_filePath;
+    
+    CGContextRef context;
+    //create empty pdf file;
+    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    
+    CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
+    
+    //open template file
+    CGPDFDocumentRef templateDocument = CGPDFDocumentCreateWithURL(url);
+    CFRelease(url);
+    
+    //get amount of pages in template
+    size_t count = CGPDFDocumentGetNumberOfPages(templateDocument);
+    
+    //for each page in template
+    for (size_t pageNumber = 1; pageNumber <= count; pageNumber++) {
+        if(pageNumber!=index+1)
+        {
+            //get bounds of template page
+            CGPDFPageRef templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
+            CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
+        
+            //create empty page with corresponding bounds in new document
+            UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
+            context = UIGraphicsGetCurrentContext();
+        
+            //flip context due to different origins
+            CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+            CGContextScaleCTM(context, 1.0, -1.0);
+        
+            //copy content of template page on the corresponding page in new file
+            CGContextDrawPDFPage(context, templatePage);
+        
+            //flip context back
+            CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+            CGContextScaleCTM(context, 1.0, -1.0);
+        
+            /* Here you can do any drawings */
+        }
+        
+    }
+    
+    CGPDFDocumentRelease(templateDocument);
+    UIGraphicsEndPDFContext();
+    [[NSFileManager defaultManager] removeItemAtPath:_filePath error:nil];
+    [[NSFileManager defaultManager] moveItemAtPath:newFilePath toPath:_filePath error:nil];
+    
+    document = [ReaderDocument withDocumentFilePath:_filePath password:nil];
+    
+    [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
+    
+    [thumbsViewCross removeFromSuperview];
+    
+    
+    [theThumbsView showHidecrossButtonMakeHide:NO];
+    
+    
 }
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didPressThumbWithIndex:(NSInteger)index
