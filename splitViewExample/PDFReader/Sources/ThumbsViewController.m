@@ -104,13 +104,20 @@
 	mainToolbar = [[ThumbsMainToolbar alloc] initWithFrame:toolbarRect title:toolbarTitle]; // At top
 
 	mainToolbar.delegate = self;
-    UIView *doneItem=[mainToolbar viewWithTag:101];
-    UIBarButtonItem *doneItemBar = [[UIBarButtonItem alloc]initWithCustomView:doneItem];
-    self.navigationItem.leftBarButtonItem=doneItemBar;
+   
+    UIBarButtonItem *closeItemBar = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemStop target:self action:@selector(closeBarButton_click:)];
+    UIBarButtonItem *editDoneItemBar = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStyleBordered target:self action:@selector(editDoneBarButton_click:)];
+    
+    UIBarButtonItem *spaceBarButton=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    spaceBarButton.width=20.0f;
+    
+    self.navigationItem.rightBarButtonItem=closeItemBar;
     
     UIBarButtonItem *addItemBar = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addBarButton_click:)];
     
-    self.navigationItem.rightBarButtonItem=addItemBar;
+    
+    
+    self.navigationItem.leftBarButtonItems=@[addItemBar,spaceBarButton, editDoneItemBar];
 	
 	CGRect thumbsRect = viewRect; UIEdgeInsets insets = UIEdgeInsetsZero;
 
@@ -244,11 +251,16 @@
 	}
 }
 
-- (void)tappedInToolbar:(ThumbsMainToolbar *)toolbar doneButton:(UIButton *)button
-{
+
+-(IBAction)editDoneBarButton_click:(id)sender{
     
-	[delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
 }
+
+-(IBAction)closeBarButton_click:(id)sender{
+    
+    [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
+}
+
 
 -(void)tappedInToolbar:(ThumbsMainToolbar *)toolbar addButton:(UIButton *)button{
     
