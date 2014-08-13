@@ -127,6 +127,7 @@
     UIBezierPath *pencilBezierPath;
     NSTimer *holdTimer;
     UIBarButtonItem *magnifierBarButton;
+    NSString *folderPath;
     
     
     

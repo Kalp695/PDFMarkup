@@ -366,7 +366,8 @@ static ReaderViewController *sharedInstance = nil;
     //NSString *filePath = [pdfs lastObject]; assert(filePath != nil); // Path to last PDF file
     
     NSString *filePath=_pdfFilePath;
-    NSString *folderPath = [commonFunction getFolderPathFromFullPath:filePath];
+    
+    folderPath = [commonFunction getFolderPathFromFullPath:filePath];
     [commonFunction setFolderPath:folderPath];
     document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
     
@@ -727,8 +728,8 @@ static ReaderViewController *sharedInstance = nil;
     cameraImage=cropImage;
     
     
-    NSInteger currentPage=[document.pageNumber integerValue];
-    //[self loadPhoto:[sharedSingleton.pageIndex integerValue] withCurrentPage: currentPage];
+    NSString *currentPDFPage=[[[_pdfFilePath stringByDeletingLastPathComponent] stringByDeletingPathExtension] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    [self loadPhoto:[document.pageNumber integerValue] withCurrentPage:currentPDFPage];
     
     //For Condition Report Front page
     
@@ -776,7 +777,7 @@ static ReaderViewController *sharedInstance = nil;
 
 //load Photo
 
--(void)loadPhoto:(NSInteger)pageIndex withCurrentPage:(NSString*)currentPage{
+-(void)loadPhoto:(NSInteger)pageIndex withCurrentPage:(NSString*)currentPageName{
     
 
     NSInteger image_no=1;
