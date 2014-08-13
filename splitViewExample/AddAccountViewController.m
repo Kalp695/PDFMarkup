@@ -58,7 +58,7 @@
 -(void)viewDidAppear
 {
     
-
+    
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -66,7 +66,7 @@
                                              selector:@selector(receiveDropboxNotification:)
                                                  name:@"isDropboxLinked"
                                                object:nil];
-
+    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -81,7 +81,6 @@
         DropboxManager *dbManager = [DropboxManager dbManager];
         [dbManager restClient].delegate = self;
         [[dbManager restClient] loadAccountInfo];
-      //  [self.restClient loadAccountInfo];
         
     }
     
@@ -93,19 +92,19 @@
     NSDictionary *dicdetails = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[info displayName],[info userId],@"dropbox", nil] forKeys:[NSArray arrayWithObjects:@"username",@"userid",@"AccountType", nil]];
     [AppDelegate sharedInstance].dicUserdetails = [[NSDictionary alloc] initWithDictionary:dicdetails];
     
-   
+    
     NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     [arruseraccounts addObject:dicdetails];
     
     [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
     [[NSUserDefaults standardUserDefaults] setValue:[AppDelegate sharedInstance].dicUserdetails forKey:@"Dropboxuser"];
-   // NSLog(@"dic details %@",[AppDelegate sharedInstance].dicUserdetails);
+    // NSLog(@"dic details %@",[AppDelegate sharedInstance].dicUserdetails);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshLefttable" object:self];
-
+    
     [self.navigationController popViewControllerAnimated:YES];
-
-
+    
+    
 }
 
 -(IBAction)accountsButtonAction:(id)sender
@@ -114,18 +113,18 @@
     {
         NSLog(@"Drop Box");
         
-       // if (![[DBSession sharedSession] isLinked])
-       // {
+        // if (![[DBSession sharedSession] isLinked])
+        // {
         
         for (int i =0; i<[[[AppDelegate sharedInstance] arrDropboxUserids] count]; i++) {
             
-          //  [[DBSession sharedSession] unlinkUserId:[[[AppDelegate sharedInstance] arrDropboxUserids] objectAtIndex:i]];
-
+            //  [[DBSession sharedSession] unlinkUserId:[[[AppDelegate sharedInstance] arrDropboxUserids] objectAtIndex:i]];
+            
             
         }
-
-              [[DBSession sharedSession] linkFromController:self];
-       // }
+        
+        [[DBSession sharedSession] linkFromController:self];
+        // }
     }
     else if ([sender tag]==2)
     {
@@ -137,7 +136,7 @@
         loginNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
         
         [self presentViewController:loginNavigation animated:YES completion:nil];
-
+        
     }
     else if ([sender tag]== 4)
     {
@@ -146,17 +145,14 @@
     }
     else if ([sender tag] == 5)
     {
-        
-        
-        
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         GoogleLoginViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
-       
+        
         [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
     }
 }
 
--(void)boxuserDetails:(NSString *)str_access_token
+-(void)boxuserDetails:(NSString *)str_access_token :(NSString *)str_refresh_token :(NSDate *)expireDate
 {
     
     NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/users/me?access_token=%@",str_access_token];
@@ -173,52 +169,44 @@
                                           returningResponse:&response
                                                       error:&error];
     
+    
     if (error == nil)
     {
-        // Parse data here
         
+        // Parse data here
         NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
         NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
         [userdata setObject:str_access_token forKey:@"acces_token"];
-        
+        [userdata setObject:expireDate forKey:@"expire_date"];
+        [userdata setObject:str_refresh_token forKey:@"refresh_token"];
         [userdata setObject:@"box" forKey:@"AccountType"];
         
         [arruseraccounts addObject:userdata];
+        
         [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
         
         NSLog(@"check %@",[self.navigationController viewControllers]);
         [self performSelector:@selector(closeBoxController) withObject:nil afterDelay:1.0];
-
+        
     }
     
-//    [NSURLConnection sendAsynchronousRequest:request
-//                                       queue:[[NSOperationQueue alloc] init]
-//                           completionHandler:^(NSURLResponse *response,
-//                                               NSData *data,
-//                                               NSError *error) {
-//                               
-//                               if ([data length] >0 && error == nil) {
-//                                   
-//    
-//                                   NSError *myError = nil;
-//                                   
-//                                                                  } else if ([data length] == 0 && error == nil) {
-//                                   
-//                                   NSLog(@"Nothing was downloaded.");
-//                                   
-//                               } else if (error != nil) {
-//                                   
-//                                   NSLog(@"Error = %@", error);
-//                               }
-//                           }];
-
-
+    
 }
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    
+    
+    
+}
+- (void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data
+{
+    
+}
+
 -(void)closeBoxController
 {
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"RefreshLefttable" object:self];
-
+    
     [self.navigationController popViewControllerAnimated:YES];
     
 }
@@ -238,11 +226,13 @@
     
     
     //[[BoxSDK sharedSDK].usersManager userInfoWithID:BoxAPIUserIDMe requestBuilder:nil success:nil failure:nil];
-
+    
     [DropboxDownloadFileViewControlller getSharedInstance].boxAccessToken = session.accessToken;
-    [self boxuserDetails:session.accessToken];
-  
-
+    [DropboxDownloadFileViewControlller getSharedInstance].boxRefreshToken = session.refreshToken ;
+    
+    [self boxuserDetails:session.accessToken :session.refreshToken :session.accessTokenExpiration];
+    
+    
 }
 
 - (void)boxAPIAuthenticationDidFail:(NSNotification *)notification
@@ -264,14 +254,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

@@ -56,6 +56,7 @@
 		18ABDF1F198022B2000C002B /* pdf_Large.png in Resources */ = {isa = PBXBuildFile; fileRef = 18ABDF1E198022B2000C002B /* pdf_Large.png */; };
 		18ADE2E219892B8900CDE991 /* FolderChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ADE2E119892B8900CDE991 /* FolderChooseViewController.m */; };
 		18ADE2E5198950C400CDE991 /* DocumentsEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ADE2E4198950C400CDE991 /* DocumentsEditViewController.m */; };
+		18AE21ED199BEFC60011D972 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */; };
 		653E3B87198183D600788965 /* CommonFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B16198183D600788965 /* CommonFunction.m */; };
 		653E3B88198183D600788965 /* DatabaseCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B18198183D600788965 /* DatabaseCommon.m */; };
@@ -331,6 +332,8 @@
 		18ADE2E119892B8900CDE991 /* FolderChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FolderChooseViewController.m; sourceTree = "<group>"; };
 		18ADE2E3198950C400CDE991 /* DocumentsEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentsEditViewController.h; sourceTree = "<group>"; };
 		18ADE2E4198950C400CDE991 /* DocumentsEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentsEditViewController.m; sourceTree = "<group>"; };
+		18AE21EB199BEFC60011D972 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
+		18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		18CFBD57198CBB370062DA5B /* DocumentChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentChooseViewController.h; sourceTree = "<group>"; };
 		18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentChooseViewController.m; sourceTree = "<group>"; };
 		653E3B15198183D600788965 /* CommonFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonFunction.h; sourceTree = "<group>"; };
@@ -637,6 +640,8 @@
 		18A2AAA11994D50B009D7E3A /* Box Classes */ = {
 			isa = PBXGroup;
 			children = (
+				18AE21EB199BEFC60011D972 /* KeychainItemWrapper.h */,
+				18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */,
 				18A2AAA21994D51D009D7E3A /* BoxAuthorizationNavigationController.h */,
 				18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */,
 				18A2AAAB1994E268009D7E3A /* Json */,
@@ -1472,6 +1477,7 @@
 				653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */,
 				18A0C85F197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m in Sources */,
 				65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */,
+				18AE21ED199BEFC60011D972 /* KeychainItemWrapper.m in Sources */,
 				653E3B8C198183D600788965 /* myShape.m in Sources */,
 				18A0C863197D46D500534CF4 /* MBProgressHUD.m in Sources */,
 				658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */,

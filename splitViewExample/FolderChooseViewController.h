@@ -12,9 +12,17 @@
 @interface FolderChooseViewController : UIViewController<DBRestClientDelegate,UITableViewDelegate,UITableViewDataSource>
 {
     NSMutableArray *marrDownloadData;
-  //  DBRestClient *restClient;
-
+    //  DBRestClient *restClient;
+    NSMutableArray *arrUseraccounts;
+    
 }
++(FolderChooseViewController*)getSharedInstance;
+//BOX
+@property (nonatomic, retain) NSString * accountName;
+@property (nonatomic, assign) int indexCount;
+@property (nonatomic, retain) NSString *boxFolderId;
+@property (nonatomic, retain) NSString *boxFolderName;
+
 
 
 @property (nonatomic, strong) NSString *loadData;

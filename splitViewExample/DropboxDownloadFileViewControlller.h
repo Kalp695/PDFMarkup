@@ -13,14 +13,14 @@
 {
     NSMutableArray *marrDownloadData;
     NSMutableArray *arrmetadata;
-   // DBRestClient *restClient;
+    // DBRestClient *restClient;
     IBOutlet UIButton * downloadingButton;
     NSMutableArray * filePathsArray;
     
     IBOutlet UIBarButtonItem *editBarButton;
-
+    
     NSMutableArray * sqliteRowsArray;
-
+    
     NSMutableArray * sqliteFilesArray;
     NSString *hash;
     NSString *folder_file;
@@ -33,17 +33,19 @@
     BOOL bisprocessing;
     NSString *strrootpath;
     NSMutableDictionary *arrLocalFilepaths;
-    
+    NSString * refreshToken ;
 }
 +(DropboxDownloadFileViewControlller*)getSharedInstance;
+@property (nonatomic, strong) NSString *accountStatus;
 
+@property(nonatomic,strong) NSMutableArray *filePathsArray;
+@property(nonatomic,strong) NSMutableArray *boxFilePathsArray;
 
 -(NSString*)getDropBoxDirectoryPath:(NSString*)path withfilename:(NSString *)filename;
 -(void)upload:(id)sender;
 
 -(IBAction)btnDownloadPress:(id)sender;
 -(IBAction)back:(id)sender;
-@property (nonatomic, retain) NSString *accountStatus;
 
 
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;
@@ -53,6 +55,8 @@
 
 // BOX
 @property (nonatomic, retain) NSString *boxAccessToken;
+@property (nonatomic, retain) NSString *boxRefreshToken;
+
 @property (nonatomic, assign) int index;
 @property (nonatomic, retain) NSString *boxFolderId;
 @property (nonatomic, retain) NSString *boxFolderName;

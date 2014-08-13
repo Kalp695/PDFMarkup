@@ -16,11 +16,13 @@
 
 }
 @property (strong,nonatomic)  NSString *documentStatus;
+@property (strong,nonatomic)  NSString *appdelRefreshToken;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong,nonatomic)  NSMutableArray *arrDropboxUserids;
 @property (strong,nonatomic) NSDictionary *dicUserdetails;
 @property (strong,nonatomic) NSDictionary *dicgoogleUserdetails;
+- (void)setRefreshTokenInKeychain:(NSString *)refreshToken;
 
 + (AppDelegate *)sharedInstance;
 
