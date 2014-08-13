@@ -8,6 +8,15 @@
 
 #import "AppDelegate.h"
 #import <GLKit/GLKit.h>
+#import "KeychainItemWrapper.h"
+
+#define REFRESH_TOKEN_KEY   (@"T4BAPIHmmyJ4J5fXzAfwJFxe7RXeHJhe")
+@interface AppDelegate ()
+
+@property (nonatomic, readwrite, strong) KeychainItemWrapper *keychain;
+- (void)boxAPITokensDidRefresh:(NSNotification *)notification;
+
+@end
 
 @implementation AppDelegate
 @synthesize arrDropboxUserids;
@@ -66,12 +75,36 @@
     [BoxSDK sharedSDK].OAuth2Session.clientID = @"14yzd7a5wb17xmsdc0ti2resb5e1pvbr";
     [BoxSDK sharedSDK].OAuth2Session.clientSecret = @"RHRjNZV04vj5w0ca8BskgEkuFNrTd1Lu";
     
-
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(boxAPITokensDidRefresh:)
+                                                 name:BoxOAuth2SessionDidRefreshTokensNotification
+                                               object:[BoxSDK sharedSDK].OAuth2Session];
     
+    
+    self.keychain = [[KeychainItemWrapper alloc] initWithIdentifier:REFRESH_TOKEN_KEY accessGroup:nil];
+    
+    id storedRefreshToken = [self.keychain objectForKey:(__bridge id)kSecValueData];
+    if (storedRefreshToken)
+    {
+        [BoxSDK sharedSDK].OAuth2Session.refreshToken = storedRefreshToken;
+    }
     
     
     return YES;
 }
+
+- (void)boxAPITokensDidRefresh:(NSNotification *)notification
+{
+    BoxOAuth2Session *OAuth2Session = (BoxOAuth2Session *) notification.object;
+    [self setRefreshTokenInKeychain:OAuth2Session.refreshToken];
+}
+
+- (void)setRefreshTokenInKeychain:(NSString *)refreshToken
+{
+    [self.keychain setObject:@"PDFMarkUp" forKey: (__bridge id)kSecAttrService];
+    [self.keychain setObject:refreshToken forKey:(__bridge id)kSecValueData];
+}
+
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     
    /* NSString *query = url.query;

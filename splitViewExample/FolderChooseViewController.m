@@ -10,15 +10,32 @@
 #import "MBProgressHUD.h"
 #import "DetailViewController.h"
 #import "DropboxManager.h"
+#import "DocumentManager.h"
+#import "AppDelegate.h"
+
+static FolderChooseViewController *sharedInstance = nil;
+
+
 @interface FolderChooseViewController ()
 
 @end
 
 @implementation FolderChooseViewController
 {
+    
+    NSMutableArray * folderItemsArray;
     NSString * folderPath;
 }
-@synthesize loadData,tbDownload;
+
++(FolderChooseViewController*)getSharedInstance{
+    if (!sharedInstance) {
+        sharedInstance = [[super allocWithZone:NULL]init];
+        
+    }
+    return sharedInstance;
+}
+
+@synthesize loadData,tbDownload,accountName,indexCount,boxFolderName,boxFolderId;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,26 +58,85 @@
     
     
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                                                     style:UIBarButtonItemStylePlain
-                                                                    target:self
+                                                               style:UIBarButtonItemStylePlain
+                                                              target:self
                                                               action:@selector(cancelButton_click:)];
     self.navigationItem.rightBarButtonItems =
     [NSArray arrayWithObjects:upload, cancel, nil];
-
     
+    
+    NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
+    
+    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
     if (!loadData) {
         loadData = @"/";
     }
+    [self fetchAllDropboxData];
+    
+    //   }
+    //    else if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"])
+    //    {
+    //        NSLog(@"Box");
+    //        arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+    //        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"name"];
+    //
+    //        folderItemsArray = [[NSMutableArray alloc]init];
+    //        if (!boxFolderId) {
+    //            boxFolderId = BoxAPIFolderIDRoot;
+    //            boxFolderName =@"All Files";
+    //        }
+    //        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+    //
+    //    }
+    
     //folderPath = @"/";
     tbDownload.delegate = self;
     tbDownload.dataSource = self;
-
+    
     self.title = @"Folders";
     marrDownloadData = [[NSMutableArray alloc ]init];
+    
+    
     [super viewDidLoad];
-    [self fetchAllDropboxData];
+    
     // Do any additional setup after loading the view.
 }
+
+- (void)fetchFolderItemsWithFolderID:(NSString *)folderID name:(NSString *)name
+{
+    
+    //  https://api.box.com/2.0/folders/0/items?access_token=fYw4Qab6szMbkFkHCUUPUvlagcYwOpw9
+    
+    
+    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?access_token=%@",folderID,[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"acces_token"]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
+                                                  cachePolicy:NSURLCacheStorageAllowed
+                                              timeoutInterval:20];
+    NSURLResponse *response;
+    NSError *error;
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    NSData * data = [NSURLConnection sendSynchronousRequest:request
+                                          returningResponse:&response
+                                                      error:&error];
+    
+    NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
+    
+    for (int i = 0;i <[[userdata objectForKey:@"total_count"]integerValue];i++)
+    {
+        if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"type"] isEqualToString:@"folder"])
+        {
+            [folderItemsArray addObject:userdata];
+            
+        }
+    }
+    [tbDownload reloadData];
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+}
+
+
 -(IBAction)cancelButton_click:(id)sender
 {
     
@@ -75,8 +151,8 @@
 {
     
     [self dismissModalViewControllerAnimated:YES];
-//    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
-
+    //    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadToFolder"
                                                         object:self];
@@ -85,9 +161,12 @@
 
 -(void)viewWillAppear:(BOOL)animated
 {
-  
+    
     [DetailViewController getSharedInstance].folderPath = loadData;
-
+    
+    
+    
+    
 }
 
 -(void)fetchAllDropboxData
@@ -110,7 +189,7 @@
         if (data.isDirectory)
         {
             [marrDownloadData addObject:data];
-
+            
         }
     }
     [tbDownload reloadData];
@@ -125,7 +204,25 @@
 #pragma mark - UITableView Delegate Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
+    
     return [marrDownloadData count];
+    //   }
+    //    else  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"]) {
+    //        if ([folderItemsArray count]>0)
+    //        {
+    //            return [[[folderItemsArray objectAtIndex:0] objectForKey:@"total_count"]integerValue];
+    //
+    //        }       else{
+    //
+    //            return 0;
+    //
+    //        }
+    //    }
+    //    else
+    //    {
+    //        return 0;
+    //    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -137,10 +234,10 @@
         cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableIdentifier];
     }
     
+    
+    
     DBMetadata * metadata = [marrDownloadData objectAtIndex:indexPath.row];
-    
     cell.textLabel.text=metadata.filename;
-    
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     cell.textLabel.textColor=[UIColor blackColor];
     cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
@@ -150,8 +247,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   
+    
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
     
     DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
     
@@ -170,6 +269,18 @@
     [DetailViewController getSharedInstance].folderPath = metadata.path;
     NSLog(@"Uploading path is %@",metadata.path);
     
+    //   }
+    //    else  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"]) {
+    //
+    //        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+    //        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
+    //        FolderChooseViewController.boxFolderId = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"id"];
+    //        FolderChooseViewController.boxFolderName = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"];
+    //        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+    //
+    //
+    //    }
+    
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -183,14 +294,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

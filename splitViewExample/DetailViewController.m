@@ -119,8 +119,12 @@ static DetailViewController *sharedInstance = nil;
         
         DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"dropbox";
+        [FolderChooseViewController getSharedInstance].accountName = @"dropbox";
+        
+        [FolderChooseViewController getSharedInstance].indexCount = indexPathh;
+        
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
-
+        
         [self.navigationController pushViewController: detail animated: YES];
     }
     else if ([accountInfo isEqualToString:@"box"])
@@ -129,9 +133,11 @@ static DetailViewController *sharedInstance = nil;
         
         DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
+        [FolderChooseViewController getSharedInstance].accountName = @"box";
+        [FolderChooseViewController getSharedInstance].indexCount = indexPathh;
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
         [self.navigationController pushViewController: detail animated: YES];
-
+        
     }
     [self gridViewButton_click:nil] ;
 
@@ -998,7 +1004,22 @@ static DetailViewController *sharedInstance = nil;
 
 #pragma mark - Delete to Dropbox Methods
 
+#pragma mark - Delete to Dropbox Methods
+
 -(void)deleteClick
+{
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete"
+                                                    message:@"Are you sure you want to Delete ?"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Yes"
+                                          otherButtonTitles:@"No",nil];
+    alert.tag = 5;
+    [alert show];
+    
+    
+}
+-(void)confirmDelete
 {
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -1012,20 +1033,20 @@ static DetailViewController *sharedInstance = nil;
     NSString *documentsDirectory = [NSHomeDirectory()
                                     stringByAppendingPathComponent:@"Documents"];
     
-
+    
     NSLog(@"yup %@",filePathsArray);
     for (int k =0; k < [filePathsArray count]; k++)
     {
         
         NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] );
-      
         
-    if ([fileMgr removeItemAtPath:[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] error:&error] != YES)
-        NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-    
-    // Show contents of Documents directory
-    NSLog(@"Documents directory: %@",
-          [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+        
+        if ([fileMgr removeItemAtPath:[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] error:&error] != YES)
+            NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+        
+        // Show contents of Documents directory
+        NSLog(@"Documents directory: %@",
+              [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
     }
     
     
@@ -1037,24 +1058,24 @@ static DetailViewController *sharedInstance = nil;
     //[documentsCollectionView reloadData];
     
     pdfValue = 0;
-       
+    
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
     for (int i =0; i< [checkableArray count]; i++) {
         
         Item *item = (Item *)[checkableArray objectAtIndex:i];
         item.isChecked = NO;
-    
+        
     }
     
     //[documentsTableView reloadData];
-
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DeleteSucess" object:self userInfo:nil];
-
-        [self docDataToDisplay];
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    [self docDataToDisplay];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
 }
-
 #pragma mark - Rename Files to Dropbox Methods
 
 -(void)renameClick
@@ -1191,6 +1212,38 @@ static DetailViewController *sharedInstance = nil;
         
         
     }
+    else if (alertView.tag == 5)
+    {
+        if (buttonIndex ==0 )
+        {
+            [self confirmDelete];
+            
+        }
+        else{
+            [documentsTableView setEditing:NO];
+            editBarButton.title = @"Edit";
+            
+            [filePathsArray removeAllObjects];
+            
+            //[documentsCollectionView reloadData];
+            
+            pdfValue = 0;
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+            for (int i =0; i< [checkableArray count]; i++) {
+                
+                Item *item = (Item *)[checkableArray objectAtIndex:i];
+                item.isChecked = NO;
+                
+            }
+            
+            [self docDataToDisplay];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DeleteSucess" object:self userInfo:nil];
+            
+        }
+    }
+
     
 }
 
@@ -1950,6 +2003,66 @@ static DetailViewController *sharedInstance = nil;
 
 }
 
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == rightTableView)
+    {
+        if (editingStyle == UITableViewCellEditingStyleDelete)
+        {
+            
+            Item* item = [items objectAtIndex:indexPath.row];
+            NSLog(@"remove account %@",item.title);
+            
+            NSLog(@"%@",arrUseraccounts);
+            
+            
+            for (int k=0; k<[arrUseraccounts count]; k++)
+            {
+                if ([item.accounttype isEqualToString:@"box"])
+                {
+                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:k]objectForKey:@"name"]]) {
+                        
+                        [arrUseraccounts removeObjectAtIndex:k];
+                        
+                        NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+                        arrUpdatedUserAccounts = arrUseraccounts;
+                        [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+                        
+                        [BoxSDK sharedSDK].OAuth2Session.accessToken = nil;
+                        [BoxSDK sharedSDK].OAuth2Session.refreshToken = nil;
+                        [appDel setRefreshTokenInKeychain:nil];
+                    }
+                }
+                else if ([item.accounttype isEqualToString:@"dropbox"])
+                {
+                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:k]objectForKey:@"username"]]) {
+                        
+                        //[[DBSession sharedSession] unlinkAll];
+                        [[DBSession sharedSession] unlinkUserId:[[arrUseraccounts objectAtIndex:k]objectForKey:@"userid"]];
+                        
+                        [arrUseraccounts removeObjectAtIndex:k];
+                        
+                        NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+                        arrUpdatedUserAccounts = arrUseraccounts;
+                        [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+                        
+                        
+                    }
+                }
+                
+            }
+            [self viewWillAppear:YES];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"removeAccount" object:nil];
+        }
+        
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"Remove";
+}
 
 
 
