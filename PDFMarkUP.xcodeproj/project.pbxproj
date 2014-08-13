@@ -161,7 +161,6 @@
 		6596916B1993FFA7002BE628 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 659691621993FFA7002BE628 /* ReaderThumbView.m */; };
 		6596916C1993FFA7002BE628 /* ThumbsMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 659691641993FFA7002BE628 /* ThumbsMainToolbar.m */; };
 		6596916F1993FFFA002BE628 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6596916E1993FFFA002BE628 /* UIXToolbarView.m */; };
-		65D59BF1199BCF4C008D4E75 /* UIImage+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */; };
 		65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF4199BD660008D4E75 /* LoadingView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF8199BD6B0008D4E75 /* BFCropInterface.m */; };
 		65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BFA199BD6B0008D4E75 /* BFViewController.m */; };
@@ -171,6 +170,7 @@
 		65D59C08199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D59BFF199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard */; };
 		65D59C09199BD6B0008D4E75 /* node.png in Resources */ = {isa = PBXBuildFile; fileRef = 65D59C01199BD6B0008D4E75 /* node.png */; };
 		65D59C0A199BD6B0008D4E75 /* node@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65D59C02199BD6B0008D4E75 /* node@2x.png */; };
+		65D59C17199BF0C6008D4E75 /* UIImage+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59C15199BF0C6008D4E75 /* UIImage+Compress.m */; };
 		FE1866561989391E001D6A83 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1866551989391E001D6A83 /* DropboxSDK.framework */; };
 		FE4DBF86197EA48E00B7A1B2 /* NetworkMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE4DBF85197EA48E00B7A1B2 /* NetworkMenuController.m */; };
 		FEA61E901992285C00021B15 /* UserAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEA61E8F1992285C00021B15 /* UserAccounts.plist */; };
@@ -481,8 +481,6 @@
 		659691641993FFA7002BE628 /* ThumbsMainToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbsMainToolbar.m; sourceTree = "<group>"; };
 		6596916D1993FFFA002BE628 /* UIXToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIXToolbarView.h; sourceTree = "<group>"; };
 		6596916E1993FFFA002BE628 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
-		65D59BEF199BCF4C008D4E75 /* UIImage+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Compress.h"; path = "../../../../Art-Reports/Art Reports/HeaderFooterNavBar/UIImage+Compress.h"; sourceTree = "<group>"; };
-		65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Compress.m"; path = "../../../../Art-Reports/Art Reports/HeaderFooterNavBar/UIImage+Compress.m"; sourceTree = "<group>"; };
 		65D59BF3199BD660008D4E75 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		65D59BF4199BD660008D4E75 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 		65D59BF7199BD6B0008D4E75 /* BFCropInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFCropInterface.h; sourceTree = "<group>"; };
@@ -495,6 +493,8 @@
 		65D59C00199BD6B0008D4E75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboardCrop_iPad.storyboard; sourceTree = "<group>"; };
 		65D59C01199BD6B0008D4E75 /* node.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = node.png; sourceTree = "<group>"; };
 		65D59C02199BD6B0008D4E75 /* node@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "node@2x.png"; sourceTree = "<group>"; };
+		65D59C15199BF0C6008D4E75 /* UIImage+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Compress.m"; sourceTree = "<group>"; };
+		65D59C16199BF0C6008D4E75 /* UIImage+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Compress.h"; sourceTree = "<group>"; };
 		FE1866551989391E001D6A83 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		FE4DBF84197EA48E00B7A1B2 /* NetworkMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkMenuController.h; sourceTree = "<group>"; };
 		FE4DBF85197EA48E00B7A1B2 /* NetworkMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkMenuController.m; sourceTree = "<group>"; };
@@ -704,8 +704,8 @@
 		653E3B14198183D600788965 /* CommonFunction */ = {
 			isa = PBXGroup;
 			children = (
-				65D59BEF199BCF4C008D4E75 /* UIImage+Compress.h */,
-				65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */,
+				65D59C15199BF0C6008D4E75 /* UIImage+Compress.m */,
+				65D59C16199BF0C6008D4E75 /* UIImage+Compress.h */,
 				653E3B15198183D600788965 /* CommonFunction.h */,
 				653E3B16198183D600788965 /* CommonFunction.m */,
 				653E3B17198183D600788965 /* DatabaseCommon.h */,
@@ -1424,7 +1424,6 @@
 				18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */,
 				659691681993FFA7002BE628 /* ReaderThumbRender.m in Sources */,
 				184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */,
-				65D59BF1199BCF4C008D4E75 /* UIImage+Compress.m in Sources */,
 				653E3B92198183D600788965 /* ReaderContentPage.m in Sources */,
 				658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */,
 				65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */,
@@ -1457,6 +1456,7 @@
 				653E3B8B198183D600788965 /* MagnifierView.m in Sources */,
 				658EF43919797D5600E6FA0A /* MasterViewController.m in Sources */,
 				6596916C1993FFA7002BE628 /* ThumbsMainToolbar.m in Sources */,
+				65D59C17199BF0C6008D4E75 /* UIImage+Compress.m in Sources */,
 				653E3B97198183D600788965 /* ReaderViewController.m in Sources */,
 				18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */,
 				18A2AAA41994D51D009D7E3A /* BoxAuthorizationNavigationController.m in Sources */,
