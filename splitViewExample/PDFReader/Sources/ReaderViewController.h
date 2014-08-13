@@ -37,6 +37,8 @@
 #import "ThumbsViewController.h"
 #import "ReaderThumbCache.h"
 #import "ReaderThumbQueue.h"
+#import "BFViewController.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <DropboxSDK/DropboxSDK.h>
 @class DBRestClient;
 
@@ -55,7 +57,7 @@
 
 @end
 
-@interface ReaderViewController : UIViewController<UITextViewDelegate,UIPopoverControllerDelegate,UIGestureRecognizerDelegate,SelectedTerminologyDelegate,SPUserResizableViewDelegate,closeMagnifierDelegate,ExportDelegate,DBRestClientDelegate>{
+@interface ReaderViewController : UIViewController<UITextViewDelegate,UIPopoverControllerDelegate,UIGestureRecognizerDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SelectedTerminologyDelegate,SPUserResizableViewDelegate,closeMagnifierDelegate,ExportDelegate,DBRestClientDelegate,cropPhotoDelegate>{
     IBOutlet UIToolbar *toolBar;
     CGRect savedPageContentFrame;
     
@@ -102,7 +104,13 @@
     UINavigationController *navHybridController;
     UIBarButtonItem *saveActionBarButton;
     UIPopoverController *popoverController;
+    UIPopoverController *popoverControllerCrop;
     PreviewViewController *previewViewController;
+    UIImagePickerController*imagePicker;
+    UIImage *cameraImage;
+    NSInteger TOCheckLoginViewAppearance;
+    CGFloat xCrop,yCrop, widthCrop, heightCrop;
+    SPUserResizableView *imageResizableView;
     
     
     UILabel *XYLabel;

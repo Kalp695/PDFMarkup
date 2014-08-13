@@ -161,6 +161,16 @@
 		6596916B1993FFA7002BE628 /* ReaderThumbView.m in Sources */ = {isa = PBXBuildFile; fileRef = 659691621993FFA7002BE628 /* ReaderThumbView.m */; };
 		6596916C1993FFA7002BE628 /* ThumbsMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 659691641993FFA7002BE628 /* ThumbsMainToolbar.m */; };
 		6596916F1993FFFA002BE628 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6596916E1993FFFA002BE628 /* UIXToolbarView.m */; };
+		65D59BF1199BCF4C008D4E75 /* UIImage+Compress.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */; };
+		65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF4199BD660008D4E75 /* LoadingView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF8199BD6B0008D4E75 /* BFCropInterface.m */; };
+		65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BFA199BD6B0008D4E75 /* BFViewController.m */; };
+		65D59C05199BD6B0008D4E75 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65D59BFB199BD6B0008D4E75 /* Default@2x.png */; };
+		65D59C06199BD6B0008D4E75 /* dumbo.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 65D59BFC199BD6B0008D4E75 /* dumbo.jpg */; };
+		65D59C07199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D59BFD199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard */; };
+		65D59C08199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65D59BFF199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard */; };
+		65D59C09199BD6B0008D4E75 /* node.png in Resources */ = {isa = PBXBuildFile; fileRef = 65D59C01199BD6B0008D4E75 /* node.png */; };
+		65D59C0A199BD6B0008D4E75 /* node@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 65D59C02199BD6B0008D4E75 /* node@2x.png */; };
 		FE1866561989391E001D6A83 /* DropboxSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE1866551989391E001D6A83 /* DropboxSDK.framework */; };
 		FE4DBF86197EA48E00B7A1B2 /* NetworkMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE4DBF85197EA48E00B7A1B2 /* NetworkMenuController.m */; };
 		FEA61E901992285C00021B15 /* UserAccounts.plist in Resources */ = {isa = PBXBuildFile; fileRef = FEA61E8F1992285C00021B15 /* UserAccounts.plist */; };
@@ -471,6 +481,20 @@
 		659691641993FFA7002BE628 /* ThumbsMainToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThumbsMainToolbar.m; sourceTree = "<group>"; };
 		6596916D1993FFFA002BE628 /* UIXToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIXToolbarView.h; sourceTree = "<group>"; };
 		6596916E1993FFFA002BE628 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
+		65D59BEF199BCF4C008D4E75 /* UIImage+Compress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Compress.h"; path = "../../../../Art-Reports/Art Reports/HeaderFooterNavBar/UIImage+Compress.h"; sourceTree = "<group>"; };
+		65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Compress.m"; path = "../../../../Art-Reports/Art Reports/HeaderFooterNavBar/UIImage+Compress.m"; sourceTree = "<group>"; };
+		65D59BF3199BD660008D4E75 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
+		65D59BF4199BD660008D4E75 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
+		65D59BF7199BD6B0008D4E75 /* BFCropInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFCropInterface.h; sourceTree = "<group>"; };
+		65D59BF8199BD6B0008D4E75 /* BFCropInterface.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFCropInterface.m; sourceTree = "<group>"; };
+		65D59BF9199BD6B0008D4E75 /* BFViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFViewController.h; sourceTree = "<group>"; };
+		65D59BFA199BD6B0008D4E75 /* BFViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BFViewController.m; sourceTree = "<group>"; };
+		65D59BFB199BD6B0008D4E75 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		65D59BFC199BD6B0008D4E75 /* dumbo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = dumbo.jpg; sourceTree = "<group>"; };
+		65D59BFE199BD6B0008D4E75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		65D59C00199BD6B0008D4E75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboardCrop_iPad.storyboard; sourceTree = "<group>"; };
+		65D59C01199BD6B0008D4E75 /* node.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = node.png; sourceTree = "<group>"; };
+		65D59C02199BD6B0008D4E75 /* node@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "node@2x.png"; sourceTree = "<group>"; };
 		FE1866551989391E001D6A83 /* DropboxSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DropboxSDK.framework; sourceTree = "<group>"; };
 		FE4DBF84197EA48E00B7A1B2 /* NetworkMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkMenuController.h; sourceTree = "<group>"; };
 		FE4DBF85197EA48E00B7A1B2 /* NetworkMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkMenuController.m; sourceTree = "<group>"; };
@@ -680,6 +704,8 @@
 		653E3B14198183D600788965 /* CommonFunction */ = {
 			isa = PBXGroup;
 			children = (
+				65D59BEF199BCF4C008D4E75 /* UIImage+Compress.h */,
+				65D59BF0199BCF4C008D4E75 /* UIImage+Compress.m */,
 				653E3B15198183D600788965 /* CommonFunction.h */,
 				653E3B16198183D600788965 /* CommonFunction.m */,
 				653E3B17198183D600788965 /* DatabaseCommon.h */,
@@ -970,6 +996,8 @@
 		658EF42819797D5600E6FA0A /* PDFMarkup */ = {
 			isa = PBXGroup;
 			children = (
+				65D59BF6199BD6B0008D4E75 /* CropDemo */,
+				65D59BF2199BD660008D4E75 /* ActivityIndicatorView */,
 				18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */,
 				FEA61E9519922D9D00021B15 /* file manager  */,
 				FEF2C9C71990F65D0044CE0C /* GTL.xcodeproj */,
@@ -1051,6 +1079,32 @@
 				658EF44D19797D5600E6FA0A /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		65D59BF2199BD660008D4E75 /* ActivityIndicatorView */ = {
+			isa = PBXGroup;
+			children = (
+				65D59BF3199BD660008D4E75 /* LoadingView.h */,
+				65D59BF4199BD660008D4E75 /* LoadingView.m */,
+			);
+			path = ActivityIndicatorView;
+			sourceTree = "<group>";
+		};
+		65D59BF6199BD6B0008D4E75 /* CropDemo */ = {
+			isa = PBXGroup;
+			children = (
+				65D59BF7199BD6B0008D4E75 /* BFCropInterface.h */,
+				65D59BF8199BD6B0008D4E75 /* BFCropInterface.m */,
+				65D59BF9199BD6B0008D4E75 /* BFViewController.h */,
+				65D59BFA199BD6B0008D4E75 /* BFViewController.m */,
+				65D59BFB199BD6B0008D4E75 /* Default@2x.png */,
+				65D59BFC199BD6B0008D4E75 /* dumbo.jpg */,
+				65D59BFD199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard */,
+				65D59BFF199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard */,
+				65D59C01199BD6B0008D4E75 /* node.png */,
+				65D59C02199BD6B0008D4E75 /* node@2x.png */,
+			);
+			path = CropDemo;
 			sourceTree = "<group>";
 		};
 		FEA61E9519922D9D00021B15 /* file manager  */ = {
@@ -1287,6 +1341,7 @@
 				653E3BA8198183D600788965 /* icon_drawline@4x.png in Resources */,
 				658EF42D19797D5600E6FA0A /* InfoPlist.strings in Resources */,
 				189F2630197EB69200ADDF3F /* globe.png in Resources */,
+				65D59C0A199BD6B0008D4E75 /* node@2x.png in Resources */,
 				653E3BB3198183D600788965 /* icon_undo@4x.png in Resources */,
 				653E3BA3198183D600788965 /* icon_angle_left@4x.png in Resources */,
 				189F2636197EB86B00ADDF3F /* trash.png in Resources */,
@@ -1296,12 +1351,14 @@
 				653E3BBA198183D600788965 /* circles.png in Resources */,
 				186D58DF1982ADB0007D0C48 /* email.png in Resources */,
 				653E3BCE198183D600788965 /* yellow1.png in Resources */,
+				65D59C06199BD6B0008D4E75 /* dumbo.jpg in Resources */,
 				653E3B8E198183D600788965 /* Localizable.strings in Resources */,
 				189E783F197D12EC00083F61 /* Google-Drive.png in Resources */,
 				653E3BC6198183D600788965 /* square_blue_2 pt.png in Resources */,
 				FEA61E9A19923D0F00021B15 /* Google_Drive_Small.png in Resources */,
 				658EF4681979BF5300E6FA0A /* Unselected.png in Resources */,
 				18A0C77E197D388D00534CF4 /* blue.png in Resources */,
+				65D59C05199BD6B0008D4E75 /* Default@2x.png in Resources */,
 				18A0C780197D395E00534CF4 /* circularDisclosure.png in Resources */,
 				18A0C77C197D323B00534CF4 /* plusIcon3.png in Resources */,
 				658EF4671979BF5300E6FA0A /* Selected.png in Resources */,
@@ -1313,9 +1370,11 @@
 				653E3BC2198183D600788965 /* red_blue.png in Resources */,
 				189F263C197EC57A00ADDF3F /* rename.png in Resources */,
 				653E3BA0198183D600788965 /* icon_angle_back@4x.png in Resources */,
+				65D59C09199BD6B0008D4E75 /* node.png in Resources */,
 				189F262E197EB68E00ADDF3F /* folder.png in Resources */,
 				18A11D9B197FEA530000D80F /* documentsCell.xib in Resources */,
 				653E3BCA198183D600788965 /* thin_blue_2 pt.png in Resources */,
+				65D59C07199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard in Resources */,
 				653E3BC7198183D600788965 /* thick.png in Resources */,
 				653E3BB8198183D600788965 /* circle.png in Resources */,
 				653E3BBE198183D600788965 /* line_blue_2 pt.png in Resources */,
@@ -1329,6 +1388,7 @@
 				653E3BB6198183D600788965 /* black_blue.png in Resources */,
 				653E3BA1198183D600788965 /* icon_angle_front@4x.png in Resources */,
 				653E3BCC198183D600788965 /* white1.png in Resources */,
+				65D59C08199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard in Resources */,
 				18A11DA2198008B30000D80F /* samplepdf.png in Resources */,
 				653E3BC4198183D600788965 /* right.png in Resources */,
 				653E3BC8198183D600788965 /* thick_blue_3 pt.png in Resources */,
@@ -1360,11 +1420,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				659691651993FFA7002BE628 /* ReaderThumbCache.m in Sources */,
+				65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */,
 				18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */,
 				659691681993FFA7002BE628 /* ReaderThumbRender.m in Sources */,
 				184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */,
+				65D59BF1199BCF4C008D4E75 /* UIImage+Compress.m in Sources */,
 				653E3B92198183D600788965 /* ReaderContentPage.m in Sources */,
 				658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */,
+				65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */,
 				18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */,
 				18A11DA5198016040000D80F /* PdfFilesViewController.m in Sources */,
 				FEF2C9AF1990B87F0044CE0C /* DropboxManager.m in Sources */,
@@ -1408,6 +1471,7 @@
 				659691671993FFA7002BE628 /* ReaderThumbQueue.m in Sources */,
 				653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */,
 				18A0C85F197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m in Sources */,
+				65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */,
 				653E3B8C198183D600788965 /* myShape.m in Sources */,
 				18A0C863197D46D500534CF4 /* MBProgressHUD.m in Sources */,
 				658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */,
@@ -1479,6 +1543,22 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		65D59BFD199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				65D59BFE199BD6B0008D4E75 /* en */,
+			);
+			name = MainStoryboard_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		65D59BFF199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				65D59C00199BD6B0008D4E75 /* en */,
+			);
+			name = MainStoryboardCrop_iPad.storyboard;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1515,7 +1595,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 			};
@@ -1578,6 +1658,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PDFMarkUP;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1606,6 +1687,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PDFMarkUP;
 				PROVISIONING_PROFILE = "";
+				VALID_ARCHS = "armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

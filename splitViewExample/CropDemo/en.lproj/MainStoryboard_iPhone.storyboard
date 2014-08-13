@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+    <dependencies>
+        <deployment defaultVersion="1552" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="5">
+            <objects>
+                <viewController id="2" customClass="BFViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iGK-NJ-H3p"/>
+                        <viewControllerLayoutGuide type="bottom" id="fnp-Eq-dPL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xta-gj-FNh">
+                                <rect key="frame" x="30" y="430" width="81" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="81" id="E8c-MA-Rwx"/>
+                                </constraints>
+                                <state key="normal" title="Crop">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cropPressed:" destination="2" eventType="touchUpInside" id="5HV-FI-9Xx"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x7G-N2-ukc">
+                                <rect key="frame" x="232" y="430" width="53" height="30"/>
+                                <state key="normal" title="Original">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="originalPressed:" destination="2" eventType="touchUpInside" id="YHh-7D-PSr"/>
+                                </connections>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hBq-LH-pAP">
+                                <rect key="frame" x="20" y="20" width="280" height="360"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="360" id="sPa-WZ-ZEN"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Xta-gj-FNh" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="30" id="67p-PC-xWA"/>
+                            <constraint firstAttribute="bottom" secondItem="Xta-gj-FNh" secondAttribute="bottom" constant="20" symbolic="YES" id="9sO-OW-Xt5"/>
+                            <constraint firstAttribute="bottom" secondItem="x7G-N2-ukc" secondAttribute="bottom" constant="20" symbolic="YES" id="NGy-pv-YhO"/>
+                            <constraint firstAttribute="trailing" secondItem="x7G-N2-ukc" secondAttribute="trailing" constant="35" id="QV1-Gd-aqf"/>
+                            <constraint firstItem="hBq-LH-pAP" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" id="WxI-VR-LZX"/>
+                            <constraint firstAttribute="trailing" secondItem="hBq-LH-pAP" secondAttribute="trailing" constant="20" symbolic="YES" id="gpP-bO-S8I"/>
+                            <constraint firstItem="hBq-LH-pAP" firstAttribute="top" secondItem="3" secondAttribute="top" constant="20" symbolic="YES" id="jeO-iZ-JUr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="displayImage" destination="hBq-LH-pAP" id="eLx-F2-uwR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-214" y="125"/>
+        </scene>
+    </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>

@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "DatabaseCommon.h"
+#import "UIImage+Compress.h"
 
 @interface CommonFunction : NSObject{
     DatabaseCommon *databaseCommon;
@@ -28,6 +29,13 @@ float distanceBetweenTwo_Points(CGPoint a, CGPoint b) ;
 -(NSString*)getDoumentPath;
 -(NSString*)getFileNameFromPath:(NSString*)strPath;
 -(NSString*)getFolderPathFromFullPath:(NSString*)filePath;
+-(CGRect)getimageFrame:(int)image_no inWidth:(CGFloat)width inHeight:(CGFloat)height;
+-(NSInteger)getNewImageFileNameIndex:(NSString*)directoryPath inPageIndex:(NSInteger)index;
+-(UIImage *)writeImageWithPath:(NSString*)directoryPath inImageName:(NSString*)imageName inImageno:(int)imageNo inImage: (UIImage *)img inWidth:  (int)Width inHeight:(int)Height;
+-(NSMutableArray*)saveAndGetImageFrame:(NSMutableArray*)frameArr inPageName:(NSString*)pageName inAppend:(BOOL)append inDirectoryPath:(NSString*)directoryPath inImageID:(int)imageID;
+-(NSString*)saveAndGetImageCaptionWithIndex:(int)index nCaptionText:(NSString*)caption inDirectoryPath:(NSString*)directoryPath;
+-(CGRect)getImageFrameFromImage_no:(NSMutableArray*)frameArr inImageID :(int)imageID;
+-(NSString*)saveAndGetFooterWithIndex:(NSString*)text;
 
 @property(nonatomic,retain) NSString *folderPath;
 

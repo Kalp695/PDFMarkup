@@ -538,8 +538,316 @@ static ReaderViewController *sharedInstance = nil;
 }
 -(IBAction)cameraBarButton_click:(id)sender{
     
+    
+   UIActionSheet * optionMenu = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:nil  destructiveButtonTitle:@"Take Photo" otherButtonTitles:@"Choose Existing", nil];
+    [optionMenu showFromBarButtonItem:sender animated:YES];
  
 }
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    [actionSheet dismissWithClickedButtonIndex:0 animated:YES];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+	
+    //UIView *navButton=(UIView*)actionSheet.superview;
+	if (buttonIndex == 0) {
+        
+        // Create a bool variable "camera" and call isSourceTypeAvailable to see if camera exists on device
+        BOOL camera = [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera];
+        
+        imagePicker =
+        [[UIImagePickerController alloc] init];
+        
+        // If there is a camera, then display the world throught the viewfinder
+        if(camera)
+        {
+            // Since I'm not actually taking a picture, is a delegate function necessary?
+            imagePicker.delegate = self;
+            
+            imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            
+            [self presentViewController:imagePicker animated:YES completion:nil];
+            
+            //NSLog(@"Camera is available");
+        }
+        
+        // Otherwise, do nothing.
+        else{
+            //NSLog(@"No camera available");
+        }
+        
+    }
+    
+    else if (buttonIndex == 1) {
+        
+        imagePicker =
+        [[UIImagePickerController alloc] init];
+        
+        imagePicker.delegate = self;
+        
+        imagePicker.sourceType =
+        UIImagePickerControllerSourceTypePhotoLibrary;
+        
+        imagePicker.mediaTypes = [NSArray arrayWithObjects:
+                                  (NSString *) kUTTypeImage,
+                                  (NSString *) kUTTypeMovie, nil];
+        
+        
+        
+        if(popoverController!=nil)
+            [popoverController dismissPopoverAnimated:YES];
+        
+        popoverController = [[UIPopoverController alloc] initWithContentViewController:imagePicker];
+        popoverController.delegate = self;
+        
+        [popoverController presentPopoverFromRect:actionSheet.frame inView:actionSheet permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        
+        
+    }
+    
+}
+
+
+-(IBAction)imagePickerCancelPressed:(id)sender{
+    [self clearPopupView];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)img editingInfo:(NSDictionary *)editInfo {
+    
+    
+    
+    if(imagePicker.sourceType == UIImagePickerControllerSourceTypeCamera){
+    
+    }
+    
+    //saveImage = [[UIAlertView alloc] initWithTitle:@"Loading..." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:nil];
+    
+    
+    NSData *dataForJPEGFile = [NSData dataWithData:UIImageJPEGRepresentation(img, 0.0001)];
+    cameraImage=[UIImage imageWithData:dataForJPEGFile];
+    
+    [self loadPhotoToCrop:cameraImage inImage_no:-1];
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    
+    
+}
+
+
+
+
+//load photo to crop
+-(void)loadPhotoToCrop:(UIImage*)originalImage inImage_no:(int)image_no{
+    //crop photo
+    
+    
+    cameraImage=originalImage;
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboardCrop_iPad" bundle:nil];
+    
+    BFViewController *bfviewController = [storyboard instantiateViewControllerWithIdentifier:@"BFViewController"];
+    UINavigationController *bfNavController=[[UINavigationController alloc]initWithRootViewController:bfviewController];
+    [bfviewController setOriginalImage:originalImage];
+    [bfviewController setUseImage:originalImage];
+    xCrop= 150;
+    yCrop=150, widthCrop=520, heightCrop=600;
+    
+    bfviewController.view.frame=CGRectMake(xCrop, yCrop, widthCrop, heightCrop);
+    bfviewController.delegate=self;
+    popoverControllerCrop = [[UIPopoverController alloc]initWithContentViewController:bfNavController];
+    
+    [self CropViewPopOverDisplay];
+    
+    //end photo crop
+    
+    
+}
+//end load photo to crop
+
+
+
+//crop window
+
+-(void)CropViewPopOverDisplay
+
+{
+    if(TOCheckLoginViewAppearance==0)
+	{
+        [popoverControllerCrop setDelegate:self];
+        [popoverControllerCrop setPopoverContentSize:CGSizeMake(widthCrop, heightCrop) animated:YES];
+        
+        [popoverControllerCrop presentPopoverFromRect:CGRectMake(xCrop, yCrop, widthCrop, heightCrop) inView:[[UIApplication sharedApplication] keyWindow] permittedArrowDirections:0  animated:YES];
+        
+        /*
+         if([loginBarButtonItem.title isEqualToString:@"Logout"]){
+         
+         [loginBarButtonItem setTitle:@"Login"];
+         
+         
+         }
+         */
+    }
+    
+}
+
+
+-(void)CropViewPopOverHide
+{
+    
+    [popoverControllerCrop dismissPopoverAnimated:YES];
+    
+    
+    
+}
+
+
+//end crop window
+
+-(SPUserResizableView *)getResizableImage:(UIImage*)smallImage withFrame:(CGRect)imageFrame{
+    
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:smallImage];
+    
+    imageResizableView = [[SPUserResizableView alloc] initWithFrame:imageFrame];
+    imageResizableView.contentView = imageView;
+    imageResizableView.contentMode=UIViewContentModeScaleAspectFit;
+    
+    return imageResizableView;
+}
+
+
+
+//crop photo delegate
+-(void)cropPhoto:(UIImage *)cropImage{
+    
+    
+    
+    cameraImage=cropImage;
+    
+    
+    NSInteger currentPage=[document.pageNumber integerValue];
+    //[self loadPhoto:[sharedSingleton.pageIndex integerValue] withCurrentPage: currentPage];
+    
+    //For Condition Report Front page
+    
+    
+    
+    
+        
+        //[_photodelegate photoLoaded:imageResizableView inPageName:currentPage];
+    
+    
+    
+    cameraImage=nil;
+    [self clearPopupView];
+    
+    
+    [popoverControllerCrop dismissPopoverAnimated:YES];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0 target:self selector: @selector(didFinishSaving:) userInfo:nil repeats:NO];
+    
+}
+
+
+
+
+-(IBAction)didFinishSaving:(id)sender{
+    
+
+    [popoverController dismissPopoverAnimated:YES];
+    
+    
+    
+}
+
+//end crop photo delgate
+
+//crop photo cancel delegate
+-(void)cancelCropPhoto{
+    [popoverControllerCrop dismissPopoverAnimated:YES];
+    popoverControllerCrop=nil;
+    [self clearPopupView];
+}
+
+//end crop photo delegate
+
+
+//load Photo
+
+-(void)loadPhoto:(NSInteger)pageIndex withCurrentPage:(NSString*)currentPage{
+    
+
+    NSInteger image_no=1;
+    
+    
+    CGFloat width=  cameraImage.size.width;
+    CGFloat height=  cameraImage.size.height;
+    
+    
+    CGRect imageFrame=CGRectNull;
+    UIImage *smallImage=nil;
+    
+        if(abs(width-height)<=50)
+            imageFrame = CGRectMake(140, 100, 400, 400);
+        else if(width<height)
+            imageFrame = CGRectMake(187.5, 100, (width/height)*400>=300?300:(width/height)*400, (height/width)*300>=400?400:(height/width)*300);
+        else     if(width>height)
+            imageFrame = CGRectMake(125.5, 143,  (width/height)*300>=400?400:(width/height)*300, (height/width)*400>=300?300:(height/width)*400);
+    
+    
+    //saving image
+
+    
+    image_no=[commonFunction getNewImageFileNameIndex:_pdfFilePath inPageIndex:pageIndex];
+    
+    smallImage=[commonFunction writeImageWithPath:_pdfFilePath inImageName:@"" inImageno: image_no inImage:cameraImage inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+    
+    
+    //saving frame
+    imageResizableView=[self getResizableImage:smallImage withFrame:imageFrame];
+    imageResizableView.tag=image_no;
+    
+    NSMutableArray *frameArr=[[NSMutableArray alloc]init];
+    CGRect frame=imageResizableView.frame;
+    
+    
+        frame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+    
+    
+    
+    NSData *frameObject;
+    frameObject=[NSData dataWithBytes:&(frame) length:sizeof(CGRect)];
+    [frameArr addObject:frameObject];
+    [commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
+    
+    imageResizableView.tag=image_no;
+}
+
+
+//end load Photo
+
+
+
+- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverCtrl {
+    
+    
+    if(popoverController && popoverControllerCrop==nil){
+        [popoverCtrl dismissPopoverAnimated:YES];
+        popoverCtrl=nil;
+        [self clearPopupView];
+        return YES;
+    }
+    else
+        return NO;
+    
+}
+
+
+
+
+
 
 -(IBAction)exportBarButton_click:(id)sender{
  
@@ -2382,10 +2690,6 @@ static ReaderViewController *sharedInstance = nil;
     
 }
 
-
-- (BOOL)popoverControllerShouldDismissPopover:(UIPopoverController *)popoverController {
-    return NO;
-}
 
 
 -(IBAction)SaveAction:(id)sender{

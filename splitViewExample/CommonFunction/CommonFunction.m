@@ -231,6 +231,360 @@
 
 
 
+
+-(CGRect)getimageFrame:(int)image_no inWidth:(CGFloat)width inHeight:(CGFloat)height{
+    int imageWidth=250;
+    int imageHeight=300;
+    int marginX=90;
+    int marginY=100;
+    int imageWidthMargin=100;
+    int imageHeightMargin=90;
+    CGRect frame;
+    CGFloat xCoordinate,yCoordinate;
+    xCoordinate=0.0f;
+    yCoordinate=100.0f;
+    if(abs(width-height)<=50){
+        
+        if(image_no==1){
+            xCoordinate=marginX;
+            yCoordinate=marginY;
+            
+        }
+        
+        else if(image_no==2){
+            xCoordinate=marginX+imageWidth+imageWidthMargin;
+            yCoordinate=marginY;
+        }
+        
+        else if(image_no==3){
+            xCoordinate=marginX;
+            yCoordinate=marginY+imageHeight+imageHeightMargin;
+        }
+        
+        else if(image_no==4){
+            xCoordinate=marginX + imageWidth+imageWidthMargin;
+            yCoordinate=marginY + imageHeight+imageHeightMargin;
+        }
+        
+    }
+    
+    
+    else if(width<height){
+        
+        
+        if(image_no==1){
+            xCoordinate=marginX;
+            yCoordinate=marginY;
+            
+        }
+        
+        else if(image_no==2){
+            xCoordinate=marginX+imageWidth+imageWidthMargin;
+            yCoordinate=marginY;
+        }
+        
+        else if(image_no==3){
+            xCoordinate=marginX;
+            yCoordinate=marginY+imageHeight+imageHeightMargin;
+        }
+        
+        else if(image_no==4){
+            xCoordinate= marginX+imageWidth+imageWidthMargin;
+            yCoordinate= marginY+imageHeight+imageHeightMargin;
+        }
+        
+    }
+    else if(width>height){
+        
+        
+        
+        if(image_no==1){
+            xCoordinate=marginX;
+            yCoordinate=marginY;
+            
+        }
+        else if(image_no==2){
+            xCoordinate=marginX+imageWidth+imageWidthMargin;
+            yCoordinate=marginY;
+        }
+        
+        else if(image_no==3){
+            xCoordinate=marginX;
+            yCoordinate=marginY+imageHeight+imageHeightMargin;
+        }
+        
+        else if(image_no==4){
+            xCoordinate= marginX+imageWidth+imageWidthMargin;
+            yCoordinate=marginY + imageHeight+imageHeightMargin;
+        }
+        
+    }
+    
+    
+    frame=CGRectMake(xCoordinate, yCoordinate, width*(3.0f/4.0f),height*(3.0f/4.0f));
+    
+    return frame;
+}
+
+
+
+
+-(NSInteger)getNewImageFileNameIndex:(NSString*)directoryPath inPageIndex:(NSInteger)index{
+    
+    NSString *plistPath = [NSString stringWithFormat:@"%@/imagenumber.plist",directoryPath];
+    NSNumber *fileNum;
+    index=index-1;
+    NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
+    if(array==nil){
+        
+        array=[[NSMutableArray alloc]initWithObjects:[NSNumber numberWithInt:0],//page1
+               [NSNumber numberWithInt:0],//page2Front
+               [NSNumber numberWithInt:0],//Page2Back
+               [NSNumber numberWithInt:0],//Page3Left
+               [NSNumber numberWithInt:0],//Page3Right
+               [NSNumber numberWithInt:0],//Page4
+               [NSNumber numberWithInt:0],//Page5
+               nil];
+        fileNum=[array objectAtIndex:index];
+        fileNum=[NSNumber numberWithInt:( [fileNum intValue] +1)];
+        [array replaceObjectAtIndex:index withObject:fileNum];
+        
+    }
+    else{
+        fileNum=[array objectAtIndex:index];
+        fileNum=[NSNumber numberWithInt:( [fileNum intValue] +1)];
+        
+        //array=[[NSMutableArray alloc]initWithObjects:fileNum, nil];
+        [array replaceObjectAtIndex:index withObject:fileNum];
+        
+        fileNum=[array objectAtIndex:index];
+    }
+    
+    [array writeToFile:plistPath atomically:YES];
+    
+    return ([fileNum intValue]);
+}
+
+
+
+-(UIImage *)writeImageWithPath:(NSString*)directoryPath inImageName:(NSString*)imageName inImageno:(int)imageNo inImage: (UIImage *)img inWidth:  (int)Width inHeight:(int)Height{
+    
+  
+    
+    
+    
+    NSString* path=[NSString stringWithFormat:@"%@/%@_big_%d.jpg",directoryPath,imageName, imageNo];
+    //NSString* path = [NSHomeDirectory() stringByAppendingString:file];
+    
+    BOOL ok = [[NSFileManager defaultManager] createFileAtPath:path
+                                                      contents:nil attributes:nil];
+    
+    //NSLog(@"path while creating=%@",path);
+    
+    if (!ok) {
+        NSLog(@"Error creating file %@", path);
+    } else {
+        NSFileHandle* myFileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
+        
+        [myFileHandle writeData:UIImageJPEGRepresentation(img, 0.5)];
+        [myFileHandle closeFile];
+    }
+    /*
+     UIGraphicsBeginImageContext(CGSizeMake(Width,Height));
+     [img drawInRect:CGRectMake(0,0,Width, Height)];
+     UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+     img=newImage;
+     UIGraphicsEndImageContext();
+     */
+    
+    //NSData *imageData = UIImageJPEGRepresentation(img, 0.01f);
+    //NSInteger yourImgSize = [imageData length];
+    
+    //NSLog(@"before compression yourImgSize=%fkb",yourImgSize/1000.0f);
+    
+    
+    
+    //img=[img convertToGrayscale];
+    
+    
+    img   = [img compressImage:img];
+    
+    
+    
+    //imageData = UIImageJPEGRepresentation(img, 0.01f);
+    //yourImgSize = [imageData length];
+    
+    
+    //NSLog(@"after compression yourImgSize=%fkb",yourImgSize/1000.0f);
+    
+    path=[NSString stringWithFormat:@"%@/%@_small_%d.jpg",directoryPath,imageName, imageNo];
+    //path = [NSHomeDirectory() stringByAppendingString:file];
+    
+    ok = [[NSFileManager defaultManager] createFileAtPath:path
+                                                 contents:nil attributes:nil];
+    
+    //NSLog(@"path while creating=%@",path);
+    
+    if (!ok) {
+        NSLog(@"Error creating file %@", path);
+    } else {
+        NSFileHandle* myFileHandle = [NSFileHandle fileHandleForWritingAtPath:path];
+        
+        [myFileHandle writeData:UIImageJPEGRepresentation(img, 0.01f)];
+        [myFileHandle closeFile];
+    }
+    
+    
+    return img;
+    
+}
+
+
+-(NSMutableArray*)saveAndGetImageFrame:(NSMutableArray*)frameArr inPageName:(NSString*)pageName inAppend:(BOOL)append inDirectoryPath:(NSString*)directoryPath inImageID:(int)imageID{
+    
+    NSString *plistPath = [NSString stringWithFormat:@"%@/%@.plist",directoryPath,pageName];
+    NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
+    
+    if(frameArr==nil){
+        
+        frameArr=array;
+        //array=[[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:imageID],@"imageID",[frameArr objectAtIndex:0],@"frame", nil],nil];
+        //[array writeToFile:plistPath atomically:YES];
+        return frameArr;
+    }
+    if(append==YES && array!=nil){
+        
+        [array addObject:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:imageID],@"imageID",[frameArr objectAtIndex:0],@"frame", nil]];
+        [array writeToFile:plistPath atomically:YES];
+        frameArr=array;
+    }
+    else if(array==nil){
+        array=[[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:imageID],@"imageID",[frameArr objectAtIndex:0],@"frame", nil],nil];
+        [array writeToFile:plistPath atomically:YES];
+        frameArr=array;
+    }
+    else
+        [frameArr writeToFile:plistPath atomically:YES];
+    
+    return frameArr;
+    
+}
+
+
+
+-(CGRect)getImageFrameFromImage_no:(NSMutableArray*)frameArr inImageID :(int)imageID{
+    
+    NSDictionary *dict;
+    
+    CGRect imageFrame;
+    for( dict in frameArr){
+        if(![dict isKindOfClass:[NSDictionary class]]){
+            imageFrame=CGRectNull;
+            return imageFrame;
+        }
+        if(imageID==[(NSNumber*)[dict objectForKey:@"imageID"] intValue])
+            
+            imageFrame = *(CGRect*)[[dict objectForKey:@"frame"] bytes];
+        
+    }
+    
+    return imageFrame;
+    
+}
+
+
+
+
+
+
+-(NSString*)saveAndGetImageCaptionWithIndex:(int)index nCaptionText:(NSString*)caption inDirectoryPath:(NSString*)directoryPath{
+    
+    NSString *plistPath = [NSString stringWithFormat:@"%@/caption.plist",directoryPath];
+    NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
+    
+    if(array==nil){
+        
+        
+        //array=[[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:index],@"index",[NSNull null],@"caption", nil],nil];
+        array=[[NSMutableArray alloc]initWithObjects:@"", nil];
+    }
+    else{
+        if(index==[array count]+1 && [caption isEqualToString:@""]){
+            
+            //array=[[NSMutableArray alloc]initWithObjects:fileNum, nil];
+            
+            //[array addObject:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:index],@"index",[NSNull null],@"caption", nil]];
+            [array addObject:@""];
+            
+        }
+        else if(caption!=nil){
+            
+            if([array count]<index){
+                for(int i=(int)[array count];i<index;i++){
+                    [array addObject:@""];
+                }
+            }
+            
+            [array replaceObjectAtIndex:index-1 withObject:caption];
+            
+            
+        }
+        
+        else if(caption==nil){
+            
+            
+            
+            if([array count]>=index)
+                
+                caption=[array objectAtIndex:index-1];
+            
+            return caption;
+            
+        }
+    }
+    
+    [array writeToFile:plistPath atomically:YES];
+    
+    
+    return caption;
+}
+
+
+
+-(NSString*)saveAndGetFooterWithIndex:(NSString*)text{
+    
+    NSString *docsDir = [NSHomeDirectory() stringByAppendingPathComponent:  @"Documents"];
+    
+    NSString *plistPath=[NSString stringWithFormat:@"%@/footer.plist",docsDir];
+    
+    NSMutableArray *array =[[NSMutableArray alloc] initWithContentsOfFile:plistPath];
+    
+    
+    
+    
+    
+    if(array==nil && ![text isEqualToString:@""]){
+        
+        
+        //array=[[NSMutableArray alloc]initWithObjects:[[NSMutableDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInt:index],@"index",[NSNull null],@"caption", nil],nil];
+        array=[[NSMutableArray alloc]initWithObjects:text, nil];
+    }
+    else if(![text isEqualToString:@""]){
+        
+        array=[[NSMutableArray alloc]initWithObjects:text, nil];
+    }
+    
+    if(array!=nil){
+        [array writeToFile:plistPath atomically:YES];
+        
+        text=[array objectAtIndex:0];
+    }
+    return text;
+}
+
+
+
+
 /*************************end***********************/
 
 
