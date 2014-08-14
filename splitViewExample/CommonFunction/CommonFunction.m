@@ -176,6 +176,61 @@
 /****************************************End*******************************/
 
 
+
+
+
+#pragma mark - File Saving
+- (NSString *) pathForFileDataFileWithFilename:(NSString *)filename {
+    
+    
+    NSString *folder = [self getDirectoryPath];
+    folder = [folder stringByExpandingTildeInPath];
+    
+    NSString *_fileExtension = @".fileData";
+    return [folder stringByAppendingPathComponent:[filename stringByAppendingString:_fileExtension]];
+}
+/****************************************Save Data To Disk*******************************/
+- (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(PDFFileName*)pdfFileName {
+    NSString * path = [self pathForDataFileWithFilename:filename];
+    
+    NSMutableData *data = [[NSMutableData alloc] init];
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+    
+    [archiver encodeObject:pdfFileName forKey:@"pdfFileName"];
+    [archiver finishEncoding];
+    
+    if(![data writeToFile:path atomically:YES]) {
+        NSLog(@"Didn't work!");
+    }
+    
+}
+
+/****************************************End*******************************/
+
+
+/****************************************Load Data From Disk*******************************/
+- (PDFFileName*) loadFileDataFromDiskWithFilename:(NSString *)filename {
+    
+    PDFFileName *pdfFileName;
+    NSString * path = [self pathForDataFileWithFilename:filename];
+    
+    if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        NSData *data = [[NSData alloc] initWithContentsOfFile:path];
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        
+        pdfFileName = [unarchiver decodeObjectForKey:@"pdfFileName"];
+               //[self drawShapes:@"Shape"];
+    }
+    
+    return pdfFileName;
+}
+
+/****************************************End*******************************/
+
+
+
+
+
 - (void)deleteFileWithFilename:(NSString *) filename withrowID:(NSString*)rowID {
     NSString *path = [self pathForDataFileWithFilename:filename];
     
@@ -329,9 +384,9 @@
 
 
 
--(NSInteger)getNewImageFileNameIndex:(NSString*)directoryPath inPageIndex:(NSInteger)index{
+-(NSInteger)getNewImageFileNameIndexWithFileName: (NSString*)fileName withPath:(NSString*)directoryPath inPageIndex:(NSInteger)index{
     
-    NSString *plistPath = [NSString stringWithFormat:@"%@/imagenumber.plist",directoryPath];
+    NSString *plistPath = [NSString stringWithFormat:@"%@/%@.plist",fileName, directoryPath];
     NSNumber *fileNum;
     index=index-1;
     NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
@@ -367,7 +422,7 @@
 
 
 
--(UIImage *)writeImageWithPath:(NSString*)directoryPath inImageName:(NSString*)imageName inImageno:(int)imageNo inImage: (UIImage *)img inWidth:  (int)Width inHeight:(int)Height{
+-(UIImage *)writeImageWithFileName: (NSString*)fileName withPath:(NSString*)directoryPath inImageName:(NSString*)imageName inImageno:(int)imageNo inImage: (UIImage *)img inWidth:  (int)Width inHeight:(int)Height{
     
   
     
@@ -440,9 +495,9 @@
 }
 
 
--(NSMutableArray*)saveAndGetImageFrame:(NSMutableArray*)frameArr inPageName:(NSString*)pageName inAppend:(BOOL)append inDirectoryPath:(NSString*)directoryPath inImageID:(int)imageID{
+-(NSMutableArray*)saveAndGetImageFrame:(NSMutableArray*)frameArr inFileName:(NSString*)fileName inAppend:(BOOL)append inDirectoryPath:(NSString*)directoryPath inImageID:(int)imageID{
     
-    NSString *plistPath = [NSString stringWithFormat:@"%@/%@.plist",directoryPath,pageName];
+    NSString *plistPath = [NSString stringWithFormat:@"%@/%@.plist",directoryPath,fileName];
     NSMutableArray *array = [[NSMutableArray alloc] initWithContentsOfFile:plistPath];
     
     if(frameArr==nil){

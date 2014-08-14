@@ -442,6 +442,10 @@ static ReaderViewController *sharedInstance = nil;
     popOverListArray = [[NSMutableArray alloc ]initWithObjects:@"DropBox",@"Box",@"Sugar Sync",@"FTP",@"Google Drive", nil];
     
     
+    NSString *pdfFileNameStr=[[[_pdfFilePath stringByDeletingLastPathComponent] stringByDeletingPathExtension] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    
+    PDFFileName *pdfFileName=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+    
     
 }
 
@@ -799,11 +803,7 @@ static ReaderViewController *sharedInstance = nil;
     
     
     //saving image
-
     
-    image_no=[commonFunction getNewImageFileNameIndex:_pdfFilePath inPageIndex:pageIndex];
-    
-    smallImage=[commonFunction writeImageWithPath:_pdfFilePath inImageName:@"" inImageno: image_no inImage:cameraImage inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
     
     
     //saving frame
@@ -821,7 +821,7 @@ static ReaderViewController *sharedInstance = nil;
     NSData *frameObject;
     frameObject=[NSData dataWithBytes:&(frame) length:sizeof(CGRect)];
     [frameArr addObject:frameObject];
-    [commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
+    //[commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
     
     imageResizableView.tag=image_no;
 }
