@@ -15,6 +15,9 @@ NSString * folderDocpath;
 #import "DropboxManager.h"
 #import "DocumentManager.h"
 
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
 @interface FolderItem : NSObject
@@ -152,34 +155,79 @@ NSString *wastepath = nil;
 }
 -(void)createNewAccesToken
 {
-    //    NSString * accessToken = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
-    NSString * refreshTken = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"];
-    NSString* clientId =[BoxSDK sharedSDK].OAuth2Session.clientID;
-    NSString* clientSecret = [BoxSDK sharedSDK].OAuth2Session.clientSecret;
+    /*
+     curl https://api.box.com/2.0/folders \
+     -H "Authorization: Bearer ACCESS_TOKEN" \
+     -d '{"name":"New Folder", "parent": {"id": "0"}}' \
+     -X POST
+     */
+    
+    /*
+     
+     curl https://www.box.com/api/oauth2/token
+     -d 'grant_type=refresh_token&refresh_token={valid refresh token}&client_id={your_client_id}&client_secret={your_client_secret}'
+     -X POST
+     
+     */
     
     
-    NSString *str =  [NSString stringWithFormat:@"https://www.box.com/api/oauth2/token?grant_type=%@&refresh_token=%@&client_id=%@&client_secret=%@",refreshTken,refreshTken,clientId,clientSecret];
+    NSString * refresh =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"];
+    
+    NSString* clientId =[NSString stringWithFormat:@"{%@}",[BoxSDK sharedSDK].OAuth2Session.clientID];
+    NSString* clientSecret =[NSString stringWithFormat:@"{%@}", [BoxSDK sharedSDK].OAuth2Session.clientSecret];
+    
+    //
+    //    NSDictionary *cid = [[NSDictionary alloc] initWithObjectsAndKeys:tempString,@"name",[NSDictionary dictionaryWithObject:boxFolderId forKey:@"id"],@"parent", nil];
+    //    NSError *error;
+    //    NSData *postData = [NSJSONSerialization dataWithJSONObject:cid options:0 error:&error];
+    //
+    //    NSMutableData *data = [[NSMutableData alloc] initWithData:postData];
+    
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token"]];
+    //
+    //    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",refresh,clientId,clientSecret]]];
+    //    [postParams setRequestMethod:@"POST"];
+    
+    //[postParams setPostBody:data];
+    //[postParams setPostValue:@"refresh_token" forKey:@"grant_type"];
     
     
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
-                                                  cachePolicy:NSURLCacheStorageAllowed
-                                              timeoutInterval:20];
+    [postParams setPostValue:refresh forKey:@"refresh_token"];
+    [postParams setPostValue:clientId forKey:@"client_id"];
+    [postParams setPostValue:clientSecret forKey:@"client_secret"];
     
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:request
-                                          returningResponse:&response
-                                                      error:&error];
+    [postParams startAsynchronous];
+    postParams.delegate = self ;
+    postParams.userInfo = [NSDictionary dictionaryWithObject:@"accessToken" forKey:@"id"];
+    
+    NSLog(@"Url is ---> %@",postParams.url);
+    NSLog(@"response string is-----> %@",postParams.responseString);
     
     
-    if (error == nil)
-    {
-        NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
-        
-        NSLog(@"new acess token details %@",userdata);
-        
-        
-    }
+    
+    
+    //    NSString *str =  [NSString stringWithFormat:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",refreshTken,clientId,clientSecret];
+    //
+    //
+    //    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
+    //                                                  cachePolicy:NSURLCacheStorageAllowed
+    //                                              timeoutInterval:20];
+    //
+    //    NSURLResponse * response = nil;
+    //    NSError * error = nil;
+    //    NSData * data = [NSURLConnection sendSynchronousRequest:request
+    //                                          returningResponse:&response
+    //                                                      error:&error];
+    //
+    //
+    //    if (error == nil)
+    //    {
+    //        NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
+    //
+    //        NSLog(@"new acess token details %@",userdata);
+    //
+    //
+    //    }
     
     
     
@@ -402,8 +450,8 @@ NSString *wastepath = nil;
                                                                 object:self];
             
         }
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+        // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        //  [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         
         [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -1124,7 +1172,6 @@ NSString *wastepath = nil;
     }
     else
     {
-        
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         if (tableView.editing)
         {
@@ -1148,7 +1195,6 @@ NSString *wastepath = nil;
         else
         {
             
-            UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
             NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
             
             if (item.isChecked == YES)
@@ -1163,6 +1209,8 @@ NSString *wastepath = nil;
                     [dic setObject:[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"id"] forKey:@"folderId"];
                     [dic setObject:[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"] forKey:@"folderName"];
                     [dic setObject:[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"type"] forKey:@"type"];
+                    [dic setObject:[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"etag"] forKey:@"etag"];
+                    
                     [boxFilePathsArray addObject:dic];
                 }
             }
@@ -1180,13 +1228,10 @@ NSString *wastepath = nil;
                             [self.boxFilePathsArray removeObjectAtIndex:i];
                         }
                     }
-                    
-                    
                 }
-            
         }
         
-        NSLog(@"Filepaths array is %@",boxFilePathsArray);
+        NSLog(@"boxFilePathsArray array is %@",boxFilePathsArray);
         
         if ([boxFilePathsArray count]==1)
         {
@@ -1195,18 +1240,13 @@ NSString *wastepath = nil;
         else if([boxFilePathsArray count]>1)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"MultipleFiles" object:self];
-            
         }
         else
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
-            
         }
         
     }
-    
-    
-    
     
 }
 
@@ -1214,8 +1254,6 @@ NSString *wastepath = nil;
 {
 	return UITableViewCellEditingStyleNone;
 }
-
-
 
 #pragma mark - Action Methods
 -(IBAction)btnDownloadPress:(id)sender
@@ -1289,6 +1327,7 @@ NSString *wastepath = nil;
             }
         }
     }
+    
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         NSLog(@"vvv%@",boxFilePathsArray);
@@ -1499,6 +1538,8 @@ NSString *wastepath = nil;
 
 -(void)createFolder
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Folder"
                                                     message:@"Enter folder name"
                                                    delegate:self
@@ -1511,39 +1552,87 @@ NSString *wastepath = nil;
 }
 -(void)folder
 {
-    
-    
-    
-    DropboxManager *dbManager = [DropboxManager dbManager];
-    [dbManager restClient].delegate = self;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    // For error information
-    
-    [[dbManager restClient] createFolder:tempString];
-    
-    
-    [tbDownload setEditing:NO];
-    editButton.title = @"Edit";
-    
-    [filePathsArray removeAllObjects];
-    
-    pdfValue = 0;
-    
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-    
-    for (int i =0; i< [arrmetadata count]; i++) {
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
         
-        FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
-        item.isChecked = NO;
+        DropboxManager *dbManager = [DropboxManager dbManager];
+        [dbManager restClient].delegate = self;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        // For error information
+        
+        [[dbManager restClient] createFolder:tempString];
+        
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        
+        [filePathsArray removeAllObjects];
+        
+        pdfValue = 0;
+        
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        
+        for (int i =0; i< [arrmetadata count]; i++) {
+            
+            FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+        }
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
+        
+        /*
+         curl https://api.box.com/2.0/folders \
+         -H "Authorization: Bearer ACCESS_TOKEN" \
+         -d '{"name":"New Folder", "parent": {"id": "0"}}' \
+         -X POST
+         */
+        
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        
+        NSString * accessToken =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
+        
+        NSDictionary *cid = [[NSDictionary alloc] initWithObjectsAndKeys:tempString,@"name",[NSDictionary dictionaryWithObject:boxFolderId forKey:@"id"],@"parent", nil];
+        NSError *error;
+        NSData *postData = [NSJSONSerialization dataWithJSONObject:cid options:0 error:&error];
+        
+        NSMutableData *data = [[NSMutableData alloc] initWithData:postData];
+        
+        ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.box.com/2.0/folders?access_token=%@",accessToken]]];
+        [postParams setPostBody:data];
+        [postParams setRequestMethod:@"POST"];
+        [postParams startAsynchronous];
+        postParams.delegate = self ;
+        postParams.userInfo = [NSDictionary dictionaryWithObject:@"CreateFolder" forKey:@"id"];
+        
+        NSLog(@"Url is ---> %@",postParams.url);
+        NSLog(@"response string is-----> %@",postParams.responseString);
+        
+        
+        
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        
+        pdfValue = 0;
+        
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        
+        for (int i =0; i< [arrmetadata count]; i++) {
+            
+            FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+        }
         
     }
-    
-    
-    
-    
 }
+
 // Folder is the metadata for the newly created folder
-- (void)restClient:(DBRestClient*)client createdFolder:(DBMetadata*)folder{
+- (void)restClient:(DBRestClient*)client createdFolder:(DBMetadata*)folder
+{
     NSLog(@"Created Folder Path %@",folder.path);
     NSLog(@"Created Folder name %@",folder.filename);
     [marrDownloadData removeAllObjects];
@@ -1567,6 +1656,45 @@ NSString *wastepath = nil;
     
 }
 
+#pragma mark - ASIHTTP Delegate
+
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"CreateFolder"])
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSLog(@"response is %@",request.responseString);
+        [self viewWillAppear:YES];
+        [tbDownload reloadData];
+        
+    }
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"DeleteFolder"])
+    {
+        NSLog(@"response is %@",request.responseString);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+        [self viewWillAppear:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [tbDownload reloadData];
+        
+    }
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
+    {
+        NSLog(@"response is %@",request.responseString);
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+    }
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+}
+
+
+-(void)requestFailed:(id)sender;
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+}
 #pragma mark - Rename Folder
 
 -(void)renameFolder
@@ -1729,6 +1857,7 @@ NSString *wastepath = nil;
 
 -(void)DeleteClick
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete"
                                                     message:@"Are you sure you want to Delete ?"
@@ -1761,11 +1890,14 @@ NSString *wastepath = nil;
     {
         
         NSString * access = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
+        NSLog(@"%@",boxFilePathsArray);
         for (int k =0; k < [boxFilePathsArray count]; k++)
         {
             NSString*fid = [[boxFilePathsArray objectAtIndex:k] objectForKey:@"folderId"];
+            NSString * type = [[boxFilePathsArray objectAtIndex:k]objectForKey:@"type"];
+            NSString * etag = [[boxFilePathsArray objectAtIndex:k]objectForKey:@"etag"];
             
-            [self deleteBoxItem:access :fid];
+            [self deleteBoxItem:access :fid :type :etag];
             
         }
     }
@@ -1775,61 +1907,57 @@ NSString *wastepath = nil;
     
     [filePathsArray removeAllObjects];
     [boxFilePathsArray removeAllObjects];
-    //[documentsCollectionView reloadData];
+    
     
     pdfValue = 0;
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
-    for (int i =0; i< [arrmetadata count]; i++) {
-        
+    for (int i =0; i< [arrmetadata count]; i++)
+    {
         FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
         item.isChecked = NO;
-        
     }
     
 }
--(void)deleteBoxItem:(NSString *)str_access_token :(NSString *)folder_id
+
+-(void)deleteBoxItem:(NSString *)str_access_token :(NSString *)folder_id :(NSString *)type :(NSString *)etag
 {
     /*
      https://api.box.com/2.0/folders/FOLDER_ID?recursive=true  \
      -H "Authorization: Bearer ACCESS_TOKEN" \
      -X DELETE
      */
+    /*
+     https://api.box.com/2.0/files/FILE_ID  \
+     -H "Authorization: Bearer ACCESS_TOKEN" \
+     -H "If-Match: a_unique_value" \
+     -X DELETE
+     */
     
-    
-    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@?recursive=true&access_token=%@",folder_id,str_access_token];
-    
-    
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
-                                                  cachePolicy:NSURLCacheStorageAllowed
-                                              timeoutInterval:20];
-    
-    
-    NSURLResponse * response = nil;
-    NSError * error = nil;
-    NSData * data = [NSURLConnection sendSynchronousRequest:request
-                                          returningResponse:&response
-                                                      error:&error];
-    
-    
-    if (error == nil)
+    NSString *str;
+    if ([type isEqualToString:@"folder"])
     {
+        str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@?recursive=true&access_token=%@",folder_id,str_access_token];
         
-        // Parse data here
-        NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
-        
-        NSLog(@"%@",userdata);
     }
+    else
+    {
+        str =  [NSString stringWithFormat:@"https://api.box.com/2.0/files/%@&access_token=%@&If-Match=%@",folder_id,str_access_token,etag];
+        
+    }
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
+    [postParams setRequestMethod:@"DELETE"];
+    [postParams startAsynchronous];
+    postParams.delegate = self ;
+    postParams.userInfo = [NSDictionary dictionaryWithObject:@"DeleteFolder" forKey:@"id"];
     
-    //  [arrmetadata removeAllObjects];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    NSLog(@"Url is ---> %@",postParams.url);
+    NSLog(@"response string is-----> %@",postParams.responseString);
     
     
 }
+
 - (void)restClient:(DBRestClient*)client deletedPath:(NSString *)path
 {
     [marrDownloadData removeAllObjects];

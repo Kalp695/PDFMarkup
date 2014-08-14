@@ -17,7 +17,7 @@
     NSMutableArray * documenmtsArray;
     NSString * renameText;
     NSString * exportText;
-
+    
 }
 @synthesize loadData,tbDownload;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -35,16 +35,25 @@
     
     UIBarButtonItem * save = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemSave target:self action:@selector(saveBarButton_click:)];
     
-  
+    
     UIBarButtonItem *createFolder = [[UIBarButtonItem alloc] initWithTitle:@"Create Folder"
-                                                             style:UIBarButtonItemStylePlain
-                                                            target:self
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
                                                                     action:@selector(createFolder)];
     self.navigationItem.rightBarButtonItems =
     [NSArray arrayWithObjects:save, createFolder, nil];
     
+    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+                                                               style:UIBarButtonItemStylePlain
+                                                              target:self
+                                                              action:@selector(documentCacel:)];
+    self.navigationItem.leftBarButtonItems =
+    [NSArray arrayWithObjects:cancel, nil];
+    
+    
+    
     exportText = @"Report";
-
+    
     
     if (!loadData) {
         loadData = @"";
@@ -52,7 +61,7 @@
     }
     else{
         pathLabel.text = loadData;
-
+        
     }
     [self docDataToDisplay];
     [super viewDidLoad];
@@ -67,7 +76,7 @@
                                                    delegate:self
                                           cancelButtonTitle:@"Cancel"
                                           otherButtonTitles:@"Done",nil];
-
+    
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     alert.tag = 2;
     [alert show];
@@ -91,7 +100,7 @@
                                                        delegate:nil
                                               cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
-
+        
         [alert show];
         
         
@@ -123,8 +132,8 @@
         exportText  =[alertView textFieldAtIndex:0].text;
         [self savePdf];
     }
-
-     if (alertView.tag == 2)
+    
+    if (alertView.tag == 2)
     {
         if (buttonIndex == 0)
         {
@@ -204,10 +213,10 @@
     [tbDownload reloadData];
     
 }
--(IBAction)cancel:(id)sender
+-(IBAction)documentCacel:(id)sender
 {
     [self dismissModalViewControllerAnimated:YES];
-
+    
 }
 -(void)savePdf
 {
@@ -229,12 +238,12 @@
                                                    delegate:self
                                           cancelButtonTitle:@"Cancel"
                                           otherButtonTitles:@"Done",nil];
-   // [alert textFieldAtIndex:0].text = exportText;
+    // [alert textFieldAtIndex:0].text = exportText;
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     alert.tag = 1;
     [alert show];
     [[alert textFieldAtIndex:0] setText:exportText];
-
+    
     
     
 }
@@ -266,7 +275,7 @@
 {
     
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
-
+    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
     DocumentChooseViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DocumentChooseViewController"];
     if (loadData) {
@@ -280,9 +289,9 @@
         
     }
     pathLabel.text = loadData;
-
+    
     [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
-
+    
     
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -297,14 +306,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

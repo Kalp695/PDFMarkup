@@ -190,6 +190,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
                                                object:nil];
 
        
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(removeAccount)
+                                                 name:@"removeAccount"
+                                               object:nil];
 
     
     
@@ -208,9 +213,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     
 }
-
+-(void)removeAccount
+{
+    arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+    [self.tableView reloadData];
+    
+}
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"removeAccount" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RefreshLefttable" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BoxRefreshLefttable" object:nil];
 
