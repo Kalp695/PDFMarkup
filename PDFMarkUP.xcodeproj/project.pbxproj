@@ -640,8 +640,6 @@
 			children = (
 				18A0C85D197D46AC00534CF4 /* DropboxDownloadFileViewControlller.h */,
 				18A0C85E197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m */,
-				18A0C86A197D476700534CF4 /* DropboxCell.h */,
-				18A0C86B197D476700534CF4 /* DropboxCell.m */,
 			);
 			name = "DropBox Download Controller";
 			sourceTree = "<group>";
@@ -808,6 +806,8 @@
 		18B84F01199D35A500F9E383 /* Table view cell xibs */ = {
 			isa = PBXGroup;
 			children = (
+				18A0C86A197D476700534CF4 /* DropboxCell.h */,
+				18A0C86B197D476700534CF4 /* DropboxCell.m */,
 				18A0C777197D230F00534CF4 /* FileItemCell.xib */,
 				18A11D9A197FEA530000D80F /* documentsCell.xib */,
 			);
@@ -1153,12 +1153,12 @@
 				18A0C85C197D465600534CF4 /* DropBox Download Controller */,
 				18B84EFE199D350300F9E383 /* Upload Documents */,
 				18B84EFF199D355600F9E383 /* Export documents */,
-				18B84F01199D35A500F9E383 /* Table view cell xibs */,
 				18B84F00199D358D00F9E383 /* Add Account */,
 				18A2AAA11994D50B009D7E3A /* Box Classes */,
 				18AF561A1986482900CAA234 /* Downloading Menu Left */,
 				18AF56191986481200CAA234 /* Uploading Menu Left */,
 				18B84F02199D35C800F9E383 /* Table view classes */,
+				18B84F01199D35A500F9E383 /* Table view cell xibs */,
 				18A0C869197D46F700534CF4 /* DB */,
 				18A2E0B019813ED9002B4E64 /* Images */,
 				189F262A197EB66C00ADDF3F /* New Images */,
