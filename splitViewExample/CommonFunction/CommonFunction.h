@@ -37,8 +37,8 @@ float distanceBetweenTwo_Points(CGPoint a, CGPoint b) ;
 -(NSString*)saveAndGetImageCaptionWithIndex:(int)index nCaptionText:(NSString*)caption inDirectoryPath:(NSString*)directoryPath;
 -(CGRect)getImageFrameFromImage_no:(NSMutableArray*)frameArr inImageID :(int)imageID;
 -(NSString*)saveAndGetFooterWithIndex:(NSString*)text;
-- (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(PDFFileName*)pdfFileName;
-- (PDFFileName*) loadFileDataFromDiskWithFilename:(NSString *)filename;
+- (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(NSMutableArray*)imageCollection;
+- (NSMutableArray*) loadFileDataFromDiskWithFilename:(NSString *)filename;
 
 
 @property(nonatomic,retain) NSString *folderPath;

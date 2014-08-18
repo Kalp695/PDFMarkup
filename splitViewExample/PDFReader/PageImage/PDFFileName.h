@@ -13,8 +13,9 @@
     
 }
 
-@property NSString *name;
-@property NSMutableArray *page;;
+@property(nonatomic,retain) NSString *name;
+@property(nonatomic,strong) NSMutableArray *page;;
+-(id)initCopy:(PDFFileName *)input;
 
 
 @end
@@ -25,8 +26,10 @@
 
 }
 
-@property UIImage *image;
-@property CGRect frame;
+
+@property(nonatomic,strong) UIImage *image;
+@property(nonatomic,assign) CGRect frame;
+-(id)initCopy:(PDFPage *)input;
 
 
 @end

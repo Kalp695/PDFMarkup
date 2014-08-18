@@ -186,17 +186,17 @@
     NSString *folder = [self getDirectoryPath];
     folder = [folder stringByExpandingTildeInPath];
     
-    NSString *_fileExtension = @".fileData";
+    NSString *_fileExtension = @".ImagePad";
     return [folder stringByAppendingPathComponent:[filename stringByAppendingString:_fileExtension]];
 }
 /****************************************Save Data To Disk*******************************/
-- (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(PDFFileName*)pdfFileName {
-    NSString * path = [self pathForDataFileWithFilename:filename];
+- (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(NSMutableArray*)imageCollection {
+    NSString * path = [self pathForFileDataFileWithFilename:filename];
     
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
     
-    [archiver encodeObject:pdfFileName forKey:@"pdfFileName"];
+    [archiver encodeObject:imageCollection forKey:@"pdfPage"];
     [archiver finishEncoding];
     
     if(![data writeToFile:path atomically:YES]) {
@@ -209,20 +209,20 @@
 
 
 /****************************************Load Data From Disk*******************************/
-- (PDFFileName*) loadFileDataFromDiskWithFilename:(NSString *)filename {
+- (NSMutableArray*) loadFileDataFromDiskWithFilename:(NSString *)filename {
     
-    PDFFileName *pdfFileName;
-    NSString * path = [self pathForDataFileWithFilename:filename];
+    NSMutableArray *imageCollection;
+    NSString * path = [self pathForFileDataFileWithFilename:filename];
     
     if([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         NSData *data = [[NSData alloc] initWithContentsOfFile:path];
         NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
         
-        pdfFileName = [unarchiver decodeObjectForKey:@"pdfFileName"];
+        imageCollection = [unarchiver decodeObjectForKey:@"pdfPage"];
                //[self drawShapes:@"Shape"];
     }
     
-    return pdfFileName;
+    return imageCollection;
 }
 
 /****************************************End*******************************/

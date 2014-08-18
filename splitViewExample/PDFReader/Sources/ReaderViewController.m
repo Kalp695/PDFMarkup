@@ -161,7 +161,9 @@ static ReaderViewController *sharedInstance = nil;
         NSString *fileName=[commonFunction getFileNameFromPath:_pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",fileName,page]];
         
-        
+        NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"_%d",page]];
+        imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+       
         NSInteger maxValue = [document.pageCount integerValue];
         NSInteger minValue = 1;
         
@@ -205,6 +207,14 @@ static ReaderViewController *sharedInstance = nil;
                 NSString *strFileName=[commonFunction getFileNameFromPath:_pdfFilePath];
                 _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",strFileName, number]];
                 
+               
+                
+                
+                
+                
+              
+
+                
                 int j=0;
                 for(myShape *i in _collection){
                     [self drawShapesSubroutine:i inLayerName:@"Shape"];
@@ -220,9 +230,28 @@ static ReaderViewController *sharedInstance = nil;
                     NSString *strFileName=[commonFunction getFileNameFromPath:_pdfFilePath];
                     _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_1",strFileName]];
                     
+                    
                 }
                 
                 //end Loading shapes
+                
+                
+                //Load images on page
+                
+                NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"_%d",number]];
+                imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+                    int i=1;
+                    for(pdfPageObject in imageCollection){
+                        UIImageView *imgView = [[UIImageView alloc]initWithFrame:pdfPageObject.frame];
+                        imgView.image=pdfPageObject.image;
+                        [[contentViews objectForKey:key] addSubview:imgView];
+
+                        i++;
+                    }
+                
+
+                
+                //End load images on page
                 
                 
                 
@@ -334,6 +363,10 @@ static ReaderViewController *sharedInstance = nil;
     _currentShape = [[myShape alloc] init];
     ///_currentShape.pencilBezierPath=[UIBezierPath bezierPath];
     _currentColor = 0;
+    
+    if(imageCollection==nil)
+        imageCollection=[[NSMutableArray alloc] init];
+    
     if(_collection == nil && _undo_collection==nil) {
         _collection = [[NSMutableArray alloc] init];
         _undo_collection = [[NSMutableArray alloc] init];
@@ -442,18 +475,20 @@ static ReaderViewController *sharedInstance = nil;
     popOverListArray = [[NSMutableArray alloc ]initWithObjects:@"DropBox",@"Box",@"Sugar Sync",@"FTP",@"Google Drive", nil];
     
     
-    NSString *pdfFileNameStr=[[[_pdfFilePath stringByDeletingLastPathComponent] stringByDeletingPathExtension] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
     
-    PDFFileName *pdfFileName=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+   imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
     
     
 }
 
 
+
+
 -(void)createNavigationBarItems{
     // create three funky nav bar buttons
     
-    editDoneBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(editDoneBarButton_click:)];
+    pdfEditDoneBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit PDF" style:UIBarButtonItemStylePlain target:self action:@selector(pdfEditDoneBarButton_click:)];
     
     UIButton *thumbsButton = [UIButton buttonWithType:UIButtonTypeCustom];
     thumbsButton.tag=102;
@@ -462,6 +497,7 @@ static ReaderViewController *sharedInstance = nil;
     [thumbsButton addTarget:self action:@selector(thumbNailDetails_click:) forControlEvents:UIControlEventTouchUpInside];
     thumbsButton.autoresizingMask = UIViewAutoresizingNone;
     thumbsButton.exclusiveTouch = YES;
+    
 
     
     UIBarButtonItem *thumNailDetails = [[UIBarButtonItem alloc]initWithCustomView:thumbsButton];
@@ -474,7 +510,7 @@ static ReaderViewController *sharedInstance = nil;
     space.width = 30;
    
     
-    self.navigationItem.leftBarButtonItems = @[space, editDoneBarButton,space,thumNailDetails];
+    self.navigationItem.leftBarButtonItems = @[space, pdfEditDoneBarButton,space,thumNailDetails];
     self.navigationItem.rightBarButtonItems = @[closeBarButton,space,exportBarButton];
     
     
@@ -732,8 +768,7 @@ static ReaderViewController *sharedInstance = nil;
     cameraImage=cropImage;
     
     
-    NSString *currentPDFPage=[[[_pdfFilePath stringByDeletingLastPathComponent] stringByDeletingPathExtension] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
-    [self loadPhoto:[document.pageNumber integerValue] withCurrentPage:currentPDFPage];
+    [self loadPhoto:[document.pageNumber integerValue]];
     
     //For Condition Report Front page
     
@@ -781,7 +816,7 @@ static ReaderViewController *sharedInstance = nil;
 
 //load Photo
 
--(void)loadPhoto:(NSInteger)pageIndex withCurrentPage:(NSString*)currentPageName{
+-(void)loadPhoto:(NSInteger)pageIndex{
     
 
     NSInteger image_no=1;
@@ -792,7 +827,7 @@ static ReaderViewController *sharedInstance = nil;
     
     
     CGRect imageFrame=CGRectNull;
-    UIImage *smallImage=nil;
+    
     
         if(abs(width-height)<=50)
             imageFrame = CGRectMake(140, 100, 400, 400);
@@ -804,26 +839,40 @@ static ReaderViewController *sharedInstance = nil;
     
     //saving image
     
+    image_no=[imageCollection count]+1;
+    pdfPageObject=[[PDFPage alloc]init];
+    imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+    [self loadImageToConentPageview:cameraImage withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
+    [imageCollection addObject:pdfPageObject];
+    
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
     
     
+}
+
+
+-(void)loadImageToConentPageview:(UIImage*)image withFrame:(CGRect)imageFrame withImageNo:(NSInteger)image_no withDrawingPad:(ReaderContentView*)contentViewPad{
+    
+    UIImage *smallImage=nil;
+    
+    pdfPageObject.image=image;
+    pdfPageObject.frame=imageFrame;
+
+    smallImage=[image compressedImage];
     //saving frame
     imageResizableView=[self getResizableImage:smallImage withFrame:imageFrame];
     imageResizableView.tag=image_no;
+        if(imageCollection==nil)
+        imageCollection=[[NSMutableArray alloc]init];
+   
     
-    NSMutableArray *frameArr=[[NSMutableArray alloc]init];
-    CGRect frame=imageResizableView.frame;
-    
-    
-        frame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
-    
-    
-    
-    NSData *frameObject;
-    frameObject=[NSData dataWithBytes:&(frame) length:sizeof(CGRect)];
-    [frameArr addObject:frameObject];
     //[commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
     
     imageResizableView.tag=image_no;
+    
+    [contentViewPad addSubview:imageResizableView];
+
 }
 
 
@@ -925,15 +974,16 @@ static ReaderViewController *sharedInstance = nil;
     
 }
 
--(IBAction)editDoneBarButton_click:(id)sender{
-   editDoneBarButton =(UIBarButtonItem*)sender;
 
-   
+
+-(IBAction)pdfEditDoneBarButton_click:(id)sender{
+   pdfEditDoneBarButton =(UIBarButtonItem*)sender;
+
     NSInteger page = [document.pageNumber integerValue];
     
-    NSMutableArray *rightNavIterms;
-    if([editDoneBarButton.title isEqualToString:@"Edit"]){
-        editDoneBarButton.title=@"Done";
+    NSMutableArray *rightNavItems, *leftNavItems;
+    if([pdfEditDoneBarButton.title isEqualToString:@"Edit PDF"]){
+        pdfEditDoneBarButton.title=@"Done";
         
         UIBarButtonItem *cameraBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraBarButton_click:)];
         
@@ -941,11 +991,21 @@ static ReaderViewController *sharedInstance = nil;
         UIBarButtonItem *space = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
         space.width = 30;
         
-        rightNavIterms=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
-        [rightNavIterms addObject:space];
-        [rightNavIterms addObject:cameraBarButton];
+        photoEditDoneBarButton = [[UIBarButtonItem alloc]initWithTitle:@"Edit Photo" style:UIBarButtonItemStylePlain target:self action:@selector(photoEditDoneBarButton_click:)];
         
-        self.navigationItem.rightBarButtonItems=rightNavIterms;
+        
+        rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightNavItems addObject:space];
+        [rightNavItems addObject:cameraBarButton];
+        
+    
+        self.navigationItem.rightBarButtonItems=rightNavItems;
+        
+        leftNavItems=(NSMutableArray*)[self.navigationItem.leftBarButtonItems mutableCopy];
+        [leftNavItems addObject:space];
+        [leftNavItems addObject:photoEditDoneBarButton];
+        
+        self.navigationItem.leftBarButtonItems=leftNavItems;
         
         for(UIView *view in [theScrollView subviews]){
             if(view.tag==page && [view isKindOfClass:[ReaderContentView class]]){
@@ -988,11 +1048,17 @@ static ReaderViewController *sharedInstance = nil;
     }
     else{
         
-        rightNavIterms=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
-        [rightNavIterms removeLastObject];
-        [rightNavIterms removeLastObject];
+        rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+        [rightNavItems removeLastObject];
+        [rightNavItems removeLastObject];
         
-        self.navigationItem.rightBarButtonItems=rightNavIterms;
+        self.navigationItem.rightBarButtonItems=rightNavItems;
+        
+        leftNavItems=(NSMutableArray*)[self.navigationItem.leftBarButtonItems mutableCopy];
+        [leftNavItems removeLastObject];
+        [leftNavItems removeLastObject];
+        
+        self.navigationItem.leftBarButtonItems=leftNavItems;
         
         for(UIView *view in [self.view subviews]){
             if(view.tag==page && [view isKindOfClass:[ReaderContentView class]]){
@@ -1004,7 +1070,7 @@ static ReaderViewController *sharedInstance = nil;
         contentPageView.frame=savedPageContentFrame;
         [theScrollView addSubview:contentPageView];
         theScrollView.hidden=NO;
-        editDoneBarButton.title=@"Edit";
+        pdfEditDoneBarButton.title=@"Edit PDF";
         toolBar.hidden=YES;
         [self clearSelectedRectangleWithDotView];
         
@@ -1018,8 +1084,6 @@ static ReaderViewController *sharedInstance = nil;
                 [sPUserResizableViewNote hideEditingHandles];
                 sPUserResizableViewNote.userInteractionEnabled=NO;
                 
-                //sPUserResizableViewNote.frame=[contentPageView convertRect:sPUserResizableViewNote.frame toView:_drawingPad];
-                //[_drawingPad addSubview:sPUserResizableViewNote];
             }
         }
 
@@ -1031,6 +1095,74 @@ static ReaderViewController *sharedInstance = nil;
     _currentShape.endPoint=CGPointZero;
    
    [self.view bringSubviewToFront:toolBar];
+    
+}
+
+
+-(IBAction)photoEditDoneBarButton_click:(id)sender{
+    
+    //Load images on page
+    
+    for(UIView *view in [contentPageView subviews]){
+        if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
+            _drawingPad=view;
+        }
+    }
+    
+    
+
+   
+    
+    int i=1;
+    
+    //End load images on page
+
+    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%@",document.pageNumber]];
+    imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+    
+    for( SPUserResizableView *spView in [contentPageView subviews]){
+        if([spView isKindOfClass:[SPUserResizableView class]] ||[spView isKindOfClass:[UIImageView class]])
+         {
+          [spView removeFromSuperview];
+         }
+    }
+    
+    
+    
+    
+    if([photoEditDoneBarButton.title isEqualToString:@"Edit Photo"]){
+        
+        for(UIView *view in [_drawingPad subviews]){
+            if([view isKindOfClass:[UIImageView class]]){
+                [view removeFromSuperview];
+            }
+        }
+        
+        for(pdfPageObject in imageCollection){
+            
+            [self loadImageToConentPageview:pdfPageObject.image withFrame:pdfPageObject.frame withImageNo:i withDrawingPad:contentPageView];
+            i++;
+            
+        }
+
+        photoEditDoneBarButton.title=@"Done";
+        
+    }
+    else
+    {
+        
+        
+        for(pdfPageObject in imageCollection){
+         
+            UIImageView *imgView = [[UIImageView alloc]initWithFrame:pdfPageObject.frame];
+            imgView.image=pdfPageObject.image;
+            
+            [_drawingPad addSubview:imgView];
+        
+        }
+        
+        photoEditDoneBarButton.title=@"Edit Photo";
+    }
     
 }
 
@@ -1878,7 +2010,7 @@ static ReaderViewController *sharedInstance = nil;
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
-    if([editDoneBarButton.title isEqualToString:@"Edit"])
+    if([pdfEditDoneBarButton.title isEqualToString:@"Edit"])
         return;
 		
     // Receiving the touch event
@@ -1983,7 +2115,7 @@ static ReaderViewController *sharedInstance = nil;
 
 - (void)contentView:(ReaderContentView *)contentView touchesMoved:(NSSet *)touches{
     
-    if([editDoneBarButton.title isEqualToString:@"Edit"])
+    if([pdfEditDoneBarButton.title isEqualToString:@"Edit"])
         return;
     
     
@@ -2061,7 +2193,7 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)contentView:(ReaderContentView *)contentView touchesEnded:(NSSet *)touches{
     
-    if([editDoneBarButton.title isEqualToString:@"Edit"])
+    if([pdfEditDoneBarButton.title isEqualToString:@"Edit"])
         return;
     
     
@@ -2852,14 +2984,14 @@ static ReaderViewController *sharedInstance = nil;
 -(SPUserResizableView *)getResizableLabel:(UILabel*)label withFrame:(CGRect)labelFrame{
     
     
-    SPUserResizableView *imageResizableView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(labelFrame.origin.x-18.00, labelFrame.origin.y-18.00, labelFrame.size.width+25, labelFrame.size.height+25)];
-    [imageResizableView setFixBorder:YES];
+    SPUserResizableView *imgResizableView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(labelFrame.origin.x-18.00, labelFrame.origin.y-18.00, labelFrame.size.width+25, labelFrame.size.height+25)];
+    [imgResizableView setFixBorder:YES];
     UIImageView *imageView = [[UIImageView alloc] init];
     label.frame=CGRectMake(5, 5, labelFrame.size.width, labelFrame.size.height);
     [imageView addSubview:label];
-    imageResizableView.contentView = imageView;
-    imageResizableView.delegate = self;
-    [imageResizableView setFixBorder:YES];
+    imgResizableView.contentView = imageView;
+    imgResizableView.delegate = self;
+    [imgResizableView setFixBorder:YES];
     
     
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideEditingHandles:)];
@@ -2873,7 +3005,7 @@ static ReaderViewController *sharedInstance = nil;
      initWithTarget:self
      action:@selector(tapDetected:)];
     doubleTap.numberOfTapsRequired = 2;
-    [imageResizableView addGestureRecognizer:doubleTap];
+    [imgResizableView addGestureRecognizer:doubleTap];
     
     [_lastEditedView hideEditingHandles];
     
@@ -2882,7 +3014,7 @@ static ReaderViewController *sharedInstance = nil;
     [self userResizableViewDidEndEditing:imageResizableView];
     
     
-    return imageResizableView;
+    return imgResizableView;
 }
 
 

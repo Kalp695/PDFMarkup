@@ -97,7 +97,8 @@
     self = [[PDFPage alloc] init];
     if(self) {
         _image= [aDecoder decodeObjectForKey:@"image"];
-        _frame=[aDecoder decodeCGRectForKey:@"frame"] ;
+        NSValue *frameValue=[aDecoder decodeObjectForKey:@"frame"] ;
+        _frame=[frameValue CGRectValue];
     }
     return self;
 }

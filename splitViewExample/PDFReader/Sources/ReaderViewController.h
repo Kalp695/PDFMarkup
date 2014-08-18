@@ -128,7 +128,9 @@
     NSTimer *holdTimer;
     UIBarButtonItem *magnifierBarButton;
     NSString *folderPath;
-    
+    PDFFileName *pdfFileNameObject;
+    PDFPage *pdfPageObject;
+    NSMutableArray *imageCollection;
     
     
     
@@ -139,7 +141,8 @@
     
     
      ReaderContentView *contentPageView;
-    UIBarButtonItem *editDoneBarButton;
+    UIBarButtonItem *pdfEditDoneBarButton;
+    UIBarButtonItem *photoEditDoneBarButton;
     NSString *reportID;
     
     
