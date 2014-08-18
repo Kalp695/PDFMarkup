@@ -56,39 +56,40 @@ static FolderChooseViewController *sharedInstance = nil;
                                                                target:self
                                                                action:@selector(chooseBarButton_click:)];
     
-    
-    self.navigationItem.rightBarButtonItems =
-    [NSArray arrayWithObjects:upload, nil];
-    
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(cancelButton_click:)];
-    self.navigationItem.leftBarButtonItems =
-    [NSArray arrayWithObjects:cancel, nil];
-    NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
+    self.navigationItem.rightBarButtonItems =
+    [NSArray arrayWithObjects:upload,cancel, nil];
     
-    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
-    if (!loadData) {
-        loadData = @"/";
+   
+       NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
+    arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
+        if (!loadData) {
+            loadData = @"/";
+        }
+        [self fetchAllDropboxData];
+
     }
-    [self fetchAllDropboxData];
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+        NSLog(@"Box");
+        
+        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"name"];
+        
+        folderItemsArray = [[NSMutableArray alloc]init];
+        if (!boxFolderId) {
+            boxFolderId = BoxAPIFolderIDRoot;
+            boxFolderName =@"All Files";
+        }
+        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+  
+    }
     
-    //   }
-    //    else if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"])
-    //    {
-    //        NSLog(@"Box");
-    //        arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-    //        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"name"];
-    //
-    //        folderItemsArray = [[NSMutableArray alloc]init];
-    //        if (!boxFolderId) {
-    //            boxFolderId = BoxAPIFolderIDRoot;
-    //            boxFolderName =@"All Files";
-    //        }
-    //        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
-    //
-    //    }
     
     //folderPath = @"/";
     tbDownload.delegate = self;
@@ -109,7 +110,9 @@ static FolderChooseViewController *sharedInstance = nil;
     //  https://api.box.com/2.0/folders/0/items?access_token=fYw4Qab6szMbkFkHCUUPUvlagcYwOpw9
     
     
-    NSString *str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?access_token=%@",folderID,[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"acces_token"]];
+    NSString *str=  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@/items?limit=2000&offset=0&access_token=%@",folderID,[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"acces_token"]];
+    
+    
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
                                                   cachePolicy:NSURLCacheStorageAllowed
                                               timeoutInterval:20];
@@ -123,25 +126,37 @@ static FolderChooseViewController *sharedInstance = nil;
     
     NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
     
-    for (int i = 0;i <[[userdata objectForKey:@"total_count"]integerValue];i++)
+    int totalcount =[[userdata objectForKey:@"total_count"]integerValue];
+    int limit =[[userdata objectForKey:@"limit"]integerValue];
+    int rowCount = 0;
+    if (totalcount>limit)
     {
-        if ([[[[userdata objectForKey:@"entries"] objectAtIndex:i] objectForKey:@"type"] isEqualToString:@"folder"])
+        rowCount = limit;
+    }
+    else
+    {
+        rowCount = totalcount;
+    }
+    for (int p = 0;p <rowCount;p++)
+    {
+        if ([[[[userdata objectForKey:@"entries"] objectAtIndex:p] objectForKey:@"type"] isEqualToString:@"folder"])
         {
-            [folderItemsArray addObject:userdata];
+            
+            [folderItemsArray addObject: [[userdata objectForKey:@"entries"] objectAtIndex:p]];
             
         }
+        
     }
-    [tbDownload reloadData];
+        [tbDownload reloadData];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
     
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
     
 }
 
 
 -(IBAction)cancelButton_click:(id)sender
 {
-    
-    
     [self dismissModalViewControllerAnimated:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCancel"
                                                         object:self];
@@ -205,25 +220,14 @@ static FolderChooseViewController *sharedInstance = nil;
 #pragma mark - UITableView Delegate Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
-    
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
     return [marrDownloadData count];
-    //   }
-    //    else  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"]) {
-    //        if ([folderItemsArray count]>0)
-    //        {
-    //            return [[[folderItemsArray objectAtIndex:0] objectForKey:@"total_count"]integerValue];
-    //
-    //        }       else{
-    //
-    //            return 0;
-    //
-    //        }
-    //    }
-    //    else
-    //    {
-    //        return 0;
-    //    }
+    }
+    else
+    {
+        return [folderItemsArray count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -235,7 +239,9 @@ static FolderChooseViewController *sharedInstance = nil;
         cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableIdentifier];
     }
     
-    
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
+
     
     DBMetadata * metadata = [marrDownloadData objectAtIndex:indexPath.row];
     cell.textLabel.text=metadata.filename;
@@ -243,6 +249,15 @@ static FolderChooseViewController *sharedInstance = nil;
     cell.textLabel.textColor=[UIColor blackColor];
     cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+        cell.textLabel.text=[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell.textLabel.textColor=[UIColor blackColor];
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     return cell;
 }
 
@@ -251,7 +266,8 @@ static FolderChooseViewController *sharedInstance = nil;
     
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
     
     DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
     
@@ -270,17 +286,18 @@ static FolderChooseViewController *sharedInstance = nil;
     [DetailViewController getSharedInstance].folderPath = metadata.path;
     NSLog(@"Uploading path is %@",metadata.path);
     
-    //   }
-    //    else  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"box"]) {
-    //
-    //        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-    //        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
-    //        FolderChooseViewController.boxFolderId = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"id"];
-    //        FolderChooseViewController.boxFolderName = [[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"];
-    //        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
-    //
-    //
-    //    }
+       }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+    
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+            FolderChooseViewController.boxFolderId = [[folderItemsArray  objectAtIndex:indexPath.row] objectForKey:@"id"];
+            FolderChooseViewController.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+            [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+    
+    
+        }
     
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath

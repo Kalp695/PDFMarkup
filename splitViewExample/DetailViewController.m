@@ -126,7 +126,6 @@ static DetailViewController *sharedInstance = nil;
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"dropbox";
         [FolderChooseViewController getSharedInstance].accountName = @"dropbox";
         
-        [FolderChooseViewController getSharedInstance].indexCount = indexPathh;
         
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
         
@@ -139,7 +138,6 @@ static DetailViewController *sharedInstance = nil;
         DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
         [FolderChooseViewController getSharedInstance].accountName = @"box";
-        [FolderChooseViewController getSharedInstance].indexCount = indexPathh;
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
         [self.navigationController pushViewController: detail animated: YES];
         
@@ -555,11 +553,38 @@ static DetailViewController *sharedInstance = nil;
 {
     pdfValue = 0;
     
-    [self chooseFolder];
-    // NSLog(@"DropBox uploading files array is %@",[[filePathsArray objectAtIndex:pdfValue]objectForKey:@"PdfName"] );
+    NSLog(@"useraccounts is %@",arrUseraccounts);
+    if ([arrUseraccounts count]>0)
+    {
+
+        [self popOver];
+    }
+    else
+    {
+       UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"No network available to upload" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+  //  [self chooseFolder];
+  //  NSLog(@"DropBox uploading files array is %@",[[filePathsArray objectAtIndex:pdfValue]objectForKey:@"PdfName"] );
     
 }
+-(void)popOver
+{
+    UIViewController *popoverContent=[[UIViewController alloc] init];
+    popDisplayTableView =[[UITableView alloc] initWithFrame:CGRectMake(265, 100, 0, 0)    style:UITableViewStylePlain];
+    UIView *popoverView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, 200, 10)];
+    
+    popoverView.backgroundColor=[UIColor whiteColor];
+    
+    popoverContent.view=popoverView;
+    popoverContent.contentSizeForViewInPopover=CGSizeMake(200, 200);
+    popoverContent.view=popDisplayTableView; //Adding tableView to popover
+    popDisplayTableView.delegate=self;
+    popDisplayTableView.dataSource=self;
+    popoverController=[[UIPopoverController alloc]    initWithContentViewController:popoverContent];
+    [popoverController presentPopoverFromRect:CGRectMake(0, 360, 0, 0) inView:self.view permittedArrowDirections:UIPopoverArrowDirectionLeft animated:YES];
 
+}
 -(void)uploadCancel
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1018,12 +1043,9 @@ static DetailViewController *sharedInstance = nil;
     
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
     [self presentModalViewController:nav animated:YES];
-    //superView of viewController's view is modalViewController's view, which we were after
+
     nav.view.superview.frame = CGRectMake(57,200,500,500);
     
-    // The navigation controller is now owned by the current view controller
-    // and the root view controller is owned by the navigation controller,
-    // so both objects should be released to prevent over-retention.
     
     
     
@@ -1661,7 +1683,7 @@ static DetailViewController *sharedInstance = nil;
     }
     else if (tableView == popDisplayTableView)
     {
-        return [popOverListArray count];
+        return [arrUseraccounts count];
     }
     
     else
@@ -1736,13 +1758,27 @@ static DetailViewController *sharedInstance = nil;
         if (cell==nil) {
             cell=[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:TableIdentifier];
         }
-        DBMetadata *metadata = [popOverListArray objectAtIndex:indexPath.row];
+        UIImageView * imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 35, 35)];
+        [cell.contentView addSubview:imageView];
+        UILabel * nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 12, 100, 35)];
+        [cell.contentView addSubview:nameLabel];
         
-        cell.textLabel.text=metadata.filename;
+        if([[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+        {
+            nameLabel.text=[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"username"];
+            imageView.image = [UIImage imageNamed:@"Dropbox-small.png"];
+
+        }
+        else if([[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"AccountType"]isEqualToString:@"box"])
+        {
+            nameLabel.text=[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"name"];
+            imageView.image = [UIImage imageNamed:@"box_small.png"];
+
+        }
         
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-        cell.textLabel.textColor=[UIColor blackColor];
-        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        nameLabel.textColor=[UIColor blackColor];
+        nameLabel.font=[UIFont fontWithName:@"Helvetica" size:14];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         return cell;
         
@@ -1941,19 +1977,10 @@ static DetailViewController *sharedInstance = nil;
     }
     else if (tableView == popDisplayTableView)
     {
-        DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
-        
-        if (metadata.isDirectory)
-        {
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            DetailViewController *detailViewController = [storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
-            detailViewController.loadData = metadata.path;
-            [self.navigationController pushViewController:detailViewController animated:YES];
-            
-            
-            
-        }
-        
+        //popDisplayTableView .hidden = YES;
+        [popoverController dismissPopoverAnimated:TRUE];
+        [FolderChooseViewController getSharedInstance].indexCount = indexPath.row;
+        [self chooseFolder];
     }
     else
     {
