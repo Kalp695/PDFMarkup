@@ -134,6 +134,7 @@ NSString *wastepath = nil;
     }
     
 }
+
 -(BOOL)checkExpiredBoxToken
 {
     //    NSLog(@"expire_date %@",[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"expire_date"]);
@@ -171,27 +172,17 @@ NSString *wastepath = nil;
      */
     
     
-    NSString * refresh =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"];
     
-    NSString* clientId =[NSString stringWithFormat:@"{%@}",[BoxSDK sharedSDK].OAuth2Session.clientID];
-    NSString* clientSecret =[NSString stringWithFormat:@"{%@}", [BoxSDK sharedSDK].OAuth2Session.clientSecret];
+     NSString* refresh =[NSString stringWithFormat:@"%@",[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"]];
+
+    NSString* clientId =[NSString stringWithFormat:@"%@",[BoxSDK sharedSDK].OAuth2Session.clientID];
+    NSString* clientSecret =[NSString stringWithFormat:@"%@", [BoxSDK sharedSDK].OAuth2Session.clientSecret];
     
-    //
-    //    NSDictionary *cid = [[NSDictionary alloc] initWithObjectsAndKeys:tempString,@"name",[NSDictionary dictionaryWithObject:boxFolderId forKey:@"id"],@"parent", nil];
-    //    NSError *error;
-    //    NSData *postData = [NSJSONSerialization dataWithJSONObject:cid options:0 error:&error];
-    //
-    //    NSMutableData *data = [[NSMutableData alloc] initWithData:postData];
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"https://www.box.com/api/oauth2/token?"]];
     
-    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token"]];
-    //
-    //    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",refresh,clientId,clientSecret]]];
-    //    [postParams setRequestMethod:@"POST"];
+    [postParams setRequestMethod:@"POST"];
     
-    //[postParams setPostBody:data];
-    //[postParams setPostValue:@"refresh_token" forKey:@"grant_type"];
-    
-    
+    [postParams setPostValue:@"refresh_token" forKey:@"grant_type"];
     [postParams setPostValue:refresh forKey:@"refresh_token"];
     [postParams setPostValue:clientId forKey:@"client_id"];
     [postParams setPostValue:clientSecret forKey:@"client_secret"];
@@ -1943,8 +1934,9 @@ NSString *wastepath = nil;
     }
     else
     {
-        str =  [NSString stringWithFormat:@"https://api.box.com/2.0/files/%@&access_token=%@&If-Match=%@",folder_id,str_access_token,etag];
-        
+        str =  [NSString stringWithFormat:@"https://api.box.com/2.0/files/%@?access_token=%@&If-Match=%@",folder_id,str_access_token,etag];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+
     }
     ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
     [postParams setRequestMethod:@"DELETE"];
