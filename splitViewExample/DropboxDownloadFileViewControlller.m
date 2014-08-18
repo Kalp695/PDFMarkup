@@ -14,6 +14,7 @@ NSString * folderDocpath;
 #import "AppDelegate.h"
 #import "DropboxManager.h"
 #import "DocumentManager.h"
+#import "JSON.h"
 
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
@@ -129,7 +130,6 @@ NSString *wastepath = nil;
         refreshToken = [BoxSDK sharedSDK].OAuth2Session.refreshToken;
         fetching = YES;
         [self checkExpiredBoxToken];
-        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
         
     }
     
@@ -137,31 +137,31 @@ NSString *wastepath = nil;
 
 -(BOOL)checkExpiredBoxToken
 {
-    //    NSLog(@"expire_date %@",[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"expire_date"]);
+    
+    NSInteger secRemaining ;
     
     NSDate* date1 = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"expire_date"];
     NSDate* date2 = [NSDate date];
     NSTimeInterval distanceBetweenDates = [date1 timeIntervalSinceDate:date2];
     double secondsInAnHour = 60;
-    NSInteger minsRemaining = distanceBetweenDates / secondsInAnHour;
-    //  NSLog(@"access token expires in %d mins",minsRemaining);
+    secRemaining = distanceBetweenDates / secondsInAnHour;
     
-    if (minsRemaining <2)
+    NSLog(@"access token expires in %d mins",secRemaining);
+    
+    if (secRemaining <2)
     {
         NSLog(@"Time to create new access token");
         [self createNewAccesToken];
     }
-    
-    return minsRemaining;
+    else
+    {
+        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+        
+    }
+    return secRemaining;
 }
 -(void)createNewAccesToken
 {
-    /*
-     curl https://api.box.com/2.0/folders \
-     -H "Authorization: Bearer ACCESS_TOKEN" \
-     -d '{"name":"New Folder", "parent": {"id": "0"}}' \
-     -X POST
-     */
     
     /*
      
@@ -172,9 +172,9 @@ NSString *wastepath = nil;
      */
     
     
+    NSString* refresh =[NSString stringWithFormat:@"%@",[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"]];
     
-     NSString* refresh =[NSString stringWithFormat:@"%@",[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"refresh_token"]];
-
+    
     NSString* clientId =[NSString stringWithFormat:@"%@",[BoxSDK sharedSDK].OAuth2Session.clientID];
     NSString* clientSecret =[NSString stringWithFormat:@"%@", [BoxSDK sharedSDK].OAuth2Session.clientSecret];
     
@@ -1672,8 +1672,45 @@ NSString *wastepath = nil;
     if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
     {
         NSLog(@"response is %@",request.responseString);
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
+        NSLog(@"%@",[request.responseString JSONValue] );
         
+        NSLog(@"old access token is  -> %@", [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"]);
+        
+        NSLog(@"new access token is  -> %@", [[arrJson objectAtIndex:0]objectForKey:@"access_token"]);
+        
+        
+        NSMutableDictionary *newDict = [[NSMutableDictionary alloc] init];
+        NSDictionary *oldDict = (NSDictionary *)[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index];
+        [newDict addEntriesFromDictionary:oldDict];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"access_token"] forKey:@"acces_token"];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"refresh_token"] forKey:@"refresh_token"];
+        
+        NSDate *datePlusOneMinute = [[NSDate date] dateByAddingTimeInterval:[[[arrJson objectAtIndex:0]objectForKey:@"expires_in"]integerValue]];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"expires_in"] forKey:@"request_time"];
+        [newDict setObject:datePlusOneMinute forKey:@"expire_date"];
+        
+        [newDict setObject:@"updated" forKey:@"tokenStatus"];
+        
+        [arrUseraccounts replaceObjectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index withObject:newDict];
+        
+        [arrUseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [self viewWillAppear:YES];
+        [tbDownload reloadData];
+    }
+    else if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"RenameFolder"])
+    {
+        [arrmetadata removeAllObjects];
+        NSLog(@"response is %@",request.responseString);
+        
+        [self viewWillAppear:YES];
+        [tbDownload reloadData];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1706,40 +1743,86 @@ NSString *wastepath = nil;
     // For error information
     
     
-    NSString *newDirectoryName;
-    if ([[[filePathsArray objectAtIndex:0]pathExtension]isEqualToString:@""])
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
-        newDirectoryName =tempString;
         
-    }
-    else
-    {
-        if ([[tempString pathExtension]isEqualToString:@""])
+        NSString *newDirectoryName;
+        if ([[[filePathsArray objectAtIndex:0]pathExtension]isEqualToString:@""])
         {
-            newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+            newDirectoryName =tempString;
+            
         }
         else
         {
-            newDirectoryName = tempString;
+            if ([[tempString pathExtension]isEqualToString:@""])
+            {
+                newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+            }
+            else
+            {
+                newDirectoryName = tempString;
+            }
         }
+        NSString *oldPath = [filePathsArray objectAtIndex:0];
+        NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newDirectoryName];
+        DropboxManager *dbManager = [DropboxManager dbManager];
+        [dbManager restClient].delegate = self;
+        for (int k =0; k < [filePathsArray count]; k++)
+        {
+            
+            [[dbManager restClient] moveFrom:oldPath toPath:newPath];
+        }
+        
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        
+        [filePathsArray removeAllObjects];
     }
-    NSString *oldPath = [filePathsArray objectAtIndex:0];
-    NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newDirectoryName];
-    DropboxManager *dbManager = [DropboxManager dbManager];
-    [dbManager restClient].delegate = self;
-    for (int k =0; k < [filePathsArray count]; k++)
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         
-        [[dbManager restClient] moveFrom:oldPath toPath:newPath];
+        
+        // https://developers.box.com/docs/#folders-update-information-about-a-folder
+        
+        NSString *newDirectoryName;
+        NSString *str;
+        NSString*fid = [[boxFilePathsArray objectAtIndex:0] objectForKey:@"folderId"];
+        NSString * type = [[boxFilePathsArray objectAtIndex:0]objectForKey:@"type"];
+        NSString * str_access_token = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
+        
+        if ([type isEqualToString:@"folder"])
+        {
+            newDirectoryName =tempString;
+            
+            str =  [NSString stringWithFormat:@"https://api.box.com/2.0/folders/%@?access_token=%@",fid,str_access_token];
+            
+        }
+        else
+        {
+            newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+            
+            str =  [NSString stringWithFormat:@"https://api.box.com/2.0/files/%@?access_token=%@",fid,str_access_token];
+            
+        }
+        
+        NSDictionary *cid = [[NSDictionary alloc] initWithObjectsAndKeys:newDirectoryName,@"name", nil];
+        NSError *error;
+        NSData *postData = [NSJSONSerialization dataWithJSONObject:cid options:0 error:&error];
+        NSMutableData *data = [[NSMutableData alloc] initWithData:postData];
+        
+        ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
+        //[postParams setPostValue:newDirectoryName forKey:@"name"];
+        [postParams setPostBody:data];
+        [postParams setRequestMethod:@"PUT"];
+        [postParams startAsynchronous];
+        postParams.delegate = self ;
+        postParams.userInfo = [NSDictionary dictionaryWithObject:@"RenameFolder" forKey:@"id"];
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        [boxFilePathsArray removeAllObjects];
     }
-    
-    
-    [tbDownload setEditing:NO];
-    editButton.title = @"Edit";
-    
-    [filePathsArray removeAllObjects];
-    
-    
     pdfValue = 0;
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -1935,8 +2018,8 @@ NSString *wastepath = nil;
     else
     {
         str =  [NSString stringWithFormat:@"https://api.box.com/2.0/files/%@?access_token=%@&If-Match=%@",folder_id,str_access_token,etag];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
-
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+        
     }
     ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
     [postParams setRequestMethod:@"DELETE"];

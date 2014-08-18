@@ -57,14 +57,15 @@ static FolderChooseViewController *sharedInstance = nil;
                                                                action:@selector(chooseBarButton_click:)];
     
     
+    self.navigationItem.rightBarButtonItems =
+    [NSArray arrayWithObjects:upload, nil];
+    
     UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
                                                                style:UIBarButtonItemStylePlain
                                                               target:self
                                                               action:@selector(cancelButton_click:)];
-    self.navigationItem.rightBarButtonItems =
-    [NSArray arrayWithObjects:upload, cancel, nil];
-    
-    
+    self.navigationItem.leftBarButtonItems =
+    [NSArray arrayWithObjects:cancel, nil];
     NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
     
     //  if ([[FolderChooseViewController getSharedInstance].accountName isEqualToString:@"dropbox"]) {
