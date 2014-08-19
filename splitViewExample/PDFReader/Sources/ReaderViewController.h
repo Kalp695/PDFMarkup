@@ -58,26 +58,10 @@
 @end
 
 @interface ReaderViewController : UIViewController<UITextViewDelegate,UIPopoverControllerDelegate,UIGestureRecognizerDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,SelectedTerminologyDelegate,SPUserResizableViewDelegate,closeMagnifierDelegate,ExportDelegate,DBRestClientDelegate,cropPhotoDelegate>{
-    IBOutlet UIToolbar *toolBar;
+    
     CGRect savedPageContentFrame;
     
-    IBOutlet UIButton *colorBlackButton;
-    IBOutlet UIButton *colorRedButton;
-    IBOutlet UIButton *colorYellowButton;
-    IBOutlet UIButton *colorWhiteButton;
-    //end color
-    
-    
-    IBOutlet UIButton *buttonline;
-    IBOutlet UIButton *buttoncircle;
-    IBOutlet UIButton *buttonrectangle;
-    IBOutlet UIBarButtonItem *barButtonpencil;
-    IBOutlet UIBarButtonItem *barButtonmagnifier;
-    
-    IBOutlet UIButton *button1xWidth;
-    IBOutlet UIButton *button2xWidth;
     CAShapeLayer *buttonLineLayer;
-    IBOutlet UIBarButtonItem *buttonDeleteShape;
     CommonFunction *commonFunction;
     
     /*******************Drwaing Shape*********************/
@@ -134,7 +118,7 @@
     
     
     
-    id<SelectedDelegate> _delegate;
+    
     
     TermsVC *termsSubController;
     /**********************End***********************/
@@ -142,7 +126,7 @@
     
      ReaderContentView *contentPageView;
     UIBarButtonItem *pdfEditDoneBarButton;
-    UIBarButtonItem *photoEditDoneBarButton;
+   IBOutlet UIBarButtonItem *photoEditDoneBarButton;
     NSString *reportID;
     
     
@@ -181,12 +165,35 @@
 @property (nonatomic, retain) SPUserResizableView *lastEditedView;
 
 
+@property (weak, nonatomic) IBOutlet UIToolbar *toolBar;
+@property (weak, nonatomic) IBOutlet UIButton *colorBlackButton;
+@property (weak, nonatomic) IBOutlet UIButton *colorRedButton;
+@property (weak, nonatomic) IBOutlet UIButton *colorYellowButton;
+@property (weak, nonatomic) IBOutlet UIButton *colorWhiteButton;
+//end color
+
+
+@property (weak, nonatomic) IBOutlet UIButton *buttonline;
+@property (weak, nonatomic) IBOutlet UIButton *buttoncircle;
+@property (weak, nonatomic) IBOutlet UIButton *buttonrectangle;
+@property (weak, nonatomic)IBOutlet UIBarButtonItem *barButtonpencil;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *barButtonmagnifier;
+
+@property (weak, nonatomic) IBOutlet UIButton *button1xWidth;
+@property (weak, nonatomic) IBOutlet UIButton *button2xWidth;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *buttonDeleteShape;
+
+
+
 @property (nonatomic, weak, readwrite) id <ReaderViewControllerDelegate> delegate;
+@property(nonatomic,weak) id<SelectedDelegate> _delegate;;
 
 @property (strong, nonatomic) NSString *pdfFilePath;
 @property (strong, nonatomic) NSString *savedFolderPath;
 @property (strong, nonatomic) NSString *pdfName;
 
+-(IBAction)photoEditDoneBarButton_click:(id)sender;
 - (id)initWithReaderDocument:(ReaderDocument *)object;
+
 
 @end
