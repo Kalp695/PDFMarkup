@@ -1255,7 +1255,7 @@ NSString *wastepath = nil;
     
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
-        NSLog(@"vvv%@",boxFilePathsArray);
+        NSLog(@"box files array %@",boxFilePathsArray);
         
         [self downloadfrombox];
         
