@@ -44,7 +44,7 @@ typedef struct SPUserResizableViewAnchorPoint {
     id <SPUserResizableViewDelegate> delegate;
 }
 
-@property (nonatomic, assign) id <SPUserResizableViewDelegate> delegate;
+@property (nonatomic, weak) id <SPUserResizableViewDelegate> delegate;
 
 @property (nonatomic, assign) BOOL fixBorder;
 

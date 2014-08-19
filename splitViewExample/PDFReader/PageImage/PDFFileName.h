@@ -26,7 +26,7 @@
 
 }
 
-
+@property int image_no;
 @property(nonatomic,strong) UIImage *image;
 @property(nonatomic,assign) CGRect frame;
 -(id)initCopy:(PDFPage *)input;

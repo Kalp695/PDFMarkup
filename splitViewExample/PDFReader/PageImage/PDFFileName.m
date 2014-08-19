@@ -66,6 +66,7 @@
 
 @synthesize image=_image;
 @synthesize frame=_frame;
+@synthesize image_no=_image_no;
 #pragma mark - Init codes
 -(id)init {
     self = [super init];
@@ -83,6 +84,7 @@
     if(self) {
         _image=input.image;
         _frame=input.frame;
+        _image_no=input.image_no;
     }
     
     return self;
@@ -97,6 +99,7 @@
     self = [[PDFPage alloc] init];
     if(self) {
         _image= [aDecoder decodeObjectForKey:@"image"];
+        _image_no= [aDecoder decodeIntForKey:@"image_no"];
         NSValue *frameValue=[aDecoder decodeObjectForKey:@"frame"] ;
         _frame=[frameValue CGRectValue];
     }
@@ -104,6 +107,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeInt:_image_no forKey:@"image_no"];
     [aCoder encodeObject:_image forKey:@"image"];
     [aCoder encodeObject:[NSValue valueWithCGRect:_frame] forKey:@"frame"];
 }

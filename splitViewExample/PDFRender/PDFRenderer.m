@@ -339,7 +339,21 @@ UIView *imgView;
 
 
 
+-(void)drawPhotosWithPDFFilePath:(NSString*)pdfFilePath withPage_no:(int)pageNumber{
+     CommonFunction *commonFunction=[[CommonFunction alloc]init];
+    NSString *folderPath = [commonFunction getFolderPathFromFullPath:pdfFilePath];
+    [commonFunction setFolderPath:folderPath];
 
+    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%d",pageNumber]];
+    
+    NSMutableArray *imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+    
+    for(PDFPage *pdfPageObject in imageCollection){
+        [self drawImage:pdfPageObject.image inRect:pdfPageObject.frame];
+        
+    }
+    
+}
 
 -(void)drawPDFWithReportID:(NSString*)reportID withPDFFilePath:(NSString*)pdfFilePath withSavePDFFilePath:(NSString*)savepdfFilePath
 {
@@ -416,6 +430,8 @@ UIView *imgView;
         
         NSString *fileName=[commonFunction getFileNameFromPath:pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%zd",fileName, pageNumber]];
+        
+        [self drawPhotosWithPDFFilePath:pdfFilePath withPage_no:pageNumber];
         
         [self drawShapes];
         

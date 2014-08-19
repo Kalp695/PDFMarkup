@@ -111,6 +111,7 @@ static ReaderViewController *sharedInstance = nil;
 
 
 
+
 #pragma mark Support methods
 
 - (void)updateScrollViewContentSize
@@ -221,7 +222,7 @@ static ReaderViewController *sharedInstance = nil;
                 imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
                 int i=1;
                 for(pdfPageObject in imageCollection){
-                    UIImageView *imgView = [[UIImageView alloc]initWithFrame:pdfPageObject.frame];
+                    UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
                     imgView.image=pdfPageObject.image;
                     for(UIView *view in [[contentViews objectForKey:key] subviews]){
                         if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
@@ -889,6 +890,7 @@ static ReaderViewController *sharedInstance = nil;
     
     image_no=[imageCollection count]+1;
     pdfPageObject=[[PDFPage alloc]init];
+    pdfPageObject.image_no=image_no;
     imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
     [self loadImageToConentPageview:cameraImage withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
     [imageCollection addObject:pdfPageObject];
@@ -910,6 +912,7 @@ static ReaderViewController *sharedInstance = nil;
     smallImage=[image compressedImage];
     //saving frame
     imageResizableView=[self getResizableImage:smallImage withFrame:imageFrame];
+    
     imageResizableView.tag=image_no;
         if(imageCollection==nil)
         imageCollection=[[NSMutableArray alloc]init];
@@ -918,6 +921,7 @@ static ReaderViewController *sharedInstance = nil;
     //[commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
     
     imageResizableView.tag=image_no;
+    imageResizableView.delegate=self;
     
     [contentViewPad addSubview:imageResizableView];
 
@@ -1134,20 +1138,8 @@ static ReaderViewController *sharedInstance = nil;
         toolBar.hidden=YES;
         [self clearSelectedRectangleWithDotView];
         
-        for(UIView *view in [contentPageView subviews]){
-            if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-                _drawingPad=view;
-            }
-            
-            else if([view isKindOfClass:[SPUserResizableView class]]){
-                SPUserResizableView *sPUserResizableViewNote=(SPUserResizableView*)view;
-                [sPUserResizableViewNote hideEditingHandles];
-                sPUserResizableViewNote.userInteractionEnabled=NO;
-                
-            }
-        }
-
-        
+        photoEditDoneBarButton.title=@"Done";
+        [self photoEditDoneBarButton_click:nil];
         
     }
     
@@ -1188,7 +1180,9 @@ static ReaderViewController *sharedInstance = nil;
         
         for(pdfPageObject in imageCollection){
             
+            
             [self loadImageToConentPageview:pdfPageObject.image withFrame:pdfPageObject.frame withImageNo:i withDrawingPad:contentPageView];
+            NSLog(@"imageResizableView.frame=%@",NSStringFromCGRect(imageResizableView.frame));
             i++;
             
         }
@@ -1202,7 +1196,9 @@ static ReaderViewController *sharedInstance = nil;
         
         for(pdfPageObject in imageCollection){
          
-            UIImageView *imgView = [[UIImageView alloc]initWithFrame:pdfPageObject.frame];
+            NSLog(@"pdfPageObject.frame=%@", NSStringFromCGRect(pdfPageObject.frame));
+            UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
+            imgView.contentMode=UIViewContentModeScaleAspectFit;
             imgView.image=pdfPageObject.image;
             
             [_drawingPad addSubview:imgView];
@@ -2376,7 +2372,6 @@ static ReaderViewController *sharedInstance = nil;
 
     _currentShape.shape = _currentShapeType;
     _currentShape.lineWidth = _currentLineWidth;
-    _currentShape.isDashed = _dashedLineSelector.on;
     _currentShape.color =_currentColor ;
 }
 
@@ -2397,7 +2392,7 @@ static ReaderViewController *sharedInstance = nil;
             //NSLog(@"Selected!");
             i.selected = TRUE;  // Sets the shape's select parameter to TRUE
             _lineWidthSegment.selectedSegmentIndex = i.lineWidth-1;   // Sets the line width slider to the shape's line width
-            _dashedLineSelector.on = i.isDashed;    // Sets the dashed line selector to shape's dashed state
+           
             //[_colorPicker selectRow:i.color inComponent:0 animated:YES];    // Sets the color picker to the color of the selected shape
             hidden = FALSE; // Show the color picker
             selectedIndex = [_collection indexOfObject:i];  // Store the selected index for dragging :)
@@ -3083,10 +3078,23 @@ static ReaderViewController *sharedInstance = nil;
     for(i in _collection){
         if([_lastEditedView isEqual:i.noteSPUserResizableView]|| _lastEditedView.tag == i.noteSPUserResizableView.tag){
             i.noteSPUserResizableView=_lastEditedView;
+            
             //NSLog(@"lastEditedView.frame=%@",NSStringFromCGRect(lastEditedView.frame));
             break;
         }
     }
+    
+    for( pdfPageObject in imageCollection){
+        if(pdfPageObject.image_no==_lastEditedView.tag){
+            pdfPageObject.frame=_lastEditedView.frame;
+        }
+    
+    
+    }
+    
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
+
     
     
     [NSTimer scheduledTimerWithTimeInterval:0.0
