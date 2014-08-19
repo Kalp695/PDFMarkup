@@ -55,6 +55,7 @@
 +(DetailViewController*)getSharedInstance;
 
 @property(nonatomic,retain)  NSString * folderPath;
+@property(nonatomic,retain)  NSString * folderID;
 
 @property (retain, nonatomic) NSString * titleTop;
 @property (retain, nonatomic) NSString * accountInfo;
@@ -77,7 +78,8 @@
 @property(nonatomic,retain) IBOutlet UITableView * documentsTableView;
 @property(nonatomic,retain) IBOutlet UIButton * documentsGridButton;
 
-
+//box
+@property (nonatomic, strong)     NSMutableArray * boxUploadingArray;
 
 
 @end

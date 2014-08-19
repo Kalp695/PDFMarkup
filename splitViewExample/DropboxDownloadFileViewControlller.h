@@ -56,7 +56,7 @@
 // BOX
 @property (nonatomic, retain) NSString *boxAccessToken;
 @property (nonatomic, retain) NSString *boxRefreshToken;
-
+-(BOOL)checkExpiredBoxToken;
 @property (nonatomic, assign) int index;
 @property (nonatomic, retain) NSString *boxFolderId;
 @property (nonatomic, retain) NSString *boxFolderName;

@@ -83,6 +83,7 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
 @synthesize loadData;
 @synthesize folderPath;
 @synthesize accountStatus;
+
 NSString *wastepath = nil;
 
 // Box
@@ -150,6 +151,7 @@ NSString *wastepath = nil;
     
     if (secRemaining <2)
     {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         NSLog(@"Time to create new access token");
         [self createNewAccesToken];
     }
@@ -193,34 +195,6 @@ NSString *wastepath = nil;
     
     NSLog(@"Url is ---> %@",postParams.url);
     NSLog(@"response string is-----> %@",postParams.responseString);
-    
-    
-    
-    
-    //    NSString *str =  [NSString stringWithFormat:@"https://www.box.com/api/oauth2/token?grant_type=refresh_token&refresh_token=%@&client_id=%@&client_secret=%@",refreshTken,clientId,clientSecret];
-    //
-    //
-    //    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
-    //                                                  cachePolicy:NSURLCacheStorageAllowed
-    //                                              timeoutInterval:20];
-    //
-    //    NSURLResponse * response = nil;
-    //    NSError * error = nil;
-    //    NSData * data = [NSURLConnection sendSynchronousRequest:request
-    //                                          returningResponse:&response
-    //                                                      error:&error];
-    //
-    //
-    //    if (error == nil)
-    //    {
-    //        NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
-    //
-    //        NSLog(@"new acess token details %@",userdata);
-    //
-    //
-    //    }
-    
-    
     
     
     
@@ -311,9 +285,7 @@ NSString *wastepath = nil;
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",name ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show ];
         
-        
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
         
         for (int i =0; i< [folderItemsArray count]; i++) {
             
@@ -335,14 +307,8 @@ NSString *wastepath = nil;
         }
         
         
-        //  FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:indexPath];
-        //  item.isChecked = !item.isChecked;
-        
-        //        if ([[[filePathsArray objectAtIndex:pdfCount] objectForKey:@"folderName"] isEqualToString:name] )
-        //        {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         fetching = YES;
-        //   }
         
     }
     else
@@ -387,34 +353,6 @@ NSString *wastepath = nil;
         }
         
         
-        
-        
-        
-        //        if ([boxDownloadingType isEqualToString:@"file"])
-        //        {
-        //            if (filesCount == [filePathsArray count])
-        //            {
-        //                [MBProgressHUD hideHUDForView:self.view animated:YES];
-        //                [filePathsArray removeAllObjects];
-        //                [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-        //                [self.navigationController popViewControllerAnimated:YES];
-        //            }
-        //
-        //        }
-        //        if (filesCount >= [filePathsArray count])
-        //        {
-        //        if ((boxFilesItemsArray == nil || [boxFilesItemsArray count] == 0)) {
-        //
-        //                [MBProgressHUD hideHUDForView:self.view animated:YES];
-        //                [filePathsArray removeAllObjects];
-        //                [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-        //                [self.navigationController popViewControllerAnimated:YES];
-        //
-        //
-        //
-        //            }
-        //
-        //        }
     }
 }
 
@@ -707,6 +645,7 @@ NSString *wastepath = nil;
 
 -(void)checkProcess
 {
+    
     if (bisprocessing) {
     }
     else
@@ -827,16 +766,11 @@ NSString *wastepath = nil;
             bisprocessing = false;
         }
         else{
-            
             bisprocessing = false;
             // [[self restClient] loadFile:metadata.path intoPath:strDirPath];
             NSDictionary *dic = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:metadata.path,strDirPath, nil] forKeys:[NSArray arrayWithObjects:@"dropboxpath",@"documentspath", nil]];
-            
             [arrdownlaodfiels addObject:dic];
-            
         }
-        
-        
         
         for (DBMetadata* child in [metadata.contents reverseObjectEnumerator]) {
             NSString *path = child.path;
@@ -1321,7 +1255,7 @@ NSString *wastepath = nil;
     
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
-        NSLog(@"vvv%@",boxFilePathsArray);
+        NSLog(@"box files array %@",boxFilePathsArray);
         
         [self downloadfrombox];
         
@@ -1517,6 +1451,7 @@ NSString *wastepath = nil;
     
     if ([boxFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
     {
+        
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [boxFilePathsArray removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
@@ -1671,6 +1606,8 @@ NSString *wastepath = nil;
     }
     if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
     {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
         NSLog(@"response is %@",request.responseString);
         NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
         NSLog(@"%@",[request.responseString JSONValue] );

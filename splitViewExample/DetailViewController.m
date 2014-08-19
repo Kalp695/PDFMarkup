@@ -65,7 +65,8 @@ static DetailViewController *sharedInstance = nil;
     BOOL buploading;
     int filecount;
     NSString *strpdfname;
-    
+    NSString * boxParentId;
+    NSString * boxFolderPaths;
 }
 +(DetailViewController*)getSharedInstance{
     if (!sharedInstance) {
@@ -78,7 +79,8 @@ static DetailViewController *sharedInstance = nil;
 @synthesize titleTop,accountInfo,indexPathh;
 @synthesize loadData;
 @synthesize folderPath;
-
+@synthesize folderID;
+@synthesize boxUploadingArray;
 @synthesize documentsGridButton,documentsTableView;
 @synthesize arrUseraccounts;
 
@@ -321,10 +323,11 @@ static DetailViewController *sharedInstance = nil;
     if (!loadData) {
         loadData = @"";
     }
+    boxFolderPaths = [[NSString alloc]init];
     appDel = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     NSLog(@"doc status %@",appDel.documentStatus);
     
-    
+    boxUploadingArray = [[NSMutableArray alloc]init];
     if ([appDel.documentStatus isEqualToString:@"GridView"])
     {
         [documentView bringSubviewToFront:documentsCollectionView];
@@ -602,129 +605,383 @@ static DetailViewController *sharedInstance = nil;
 -(void)uploadToFolder
 {
     
-    /*
-     //for box
-     curl https://upload.box.com/api/2.0/files/content \
-     -H "Authorization: Bearer ACCESS_TOKEN" \
-     -F filename=@FILE_NAME \
-     -F parent_id=PARENT_FOLDER_ID
-     
-     
-     BoxFileBlock fileBlock = ^(BoxFile *file)
-     {
-     
-     dispatch_sync(dispatch_get_main_queue(), ^{
-     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"File Upload Successful" message:[NSString stringWithFormat:@"File has id: %@", file.modelID] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-     [alertView show];
-     });
-     };
-     
-     BoxAPIJSONFailureBlock failureBlock = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, NSDictionary *JSONDictionary)
-     {
-     BOXLog(@"status code: %i", response.statusCode);
-     BOXLog(@"upload response JSON: %@", JSONDictionary);
-     };
-     
-     BoxFilesRequestBuilder *builder = [[BoxFilesRequestBuilder alloc] init];
-     builder.name = @"box.png";
-     builder.parentID = BoxAPIFolderIDRoot;
-     
-     NSString *path = [[NSBundle mainBundle] pathForResource:@"box.png" ofType:nil];
-     NSInputStream *inputStream = [NSInputStream inputStreamWithFileAtPath:path];
-     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-     long long contentLength = [[fileAttributes objectForKey:NSFileSize] longLongValue];
-     
-     [[BoxSDK sharedSDK].filesManager uploadFileWithInputStream:inputStream contentLength:contentLength MIMEType:nil requestBuilder:builder success:fileBlock failure:failureBlock progress:nil];
-     
-     */
+    NSLog(@"%@",filePathsArray);
     
-    
-    
-    for (int i = 0; i<[arrtimer count]; i++) {
         
-        NSTimer *timerobj  = (NSTimer *)[arrtimer objectAtIndex:i];
-        [timerobj invalidate];
-        timerobj = nil;
-    }
-    timer = [NSTimer scheduledTimerWithTimeInterval: 1
-                                             target: self
-                                           selector: @selector(checkProcess)
-                                           userInfo: nil
-                                            repeats: YES];
-    [arrtimer addObject:timer];
-    
-    filecount = 0;
-    
-    NSLog(@"folder path is %@", [DetailViewController  getSharedInstance].folderPath);
-    if ([DetailViewController getSharedInstance].folderPath == nil)
-    {
-        [DetailViewController getSharedInstance].folderPath = @"/";
-    }
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-    
-    
-    uploadPdfCheck = FALSE;
-    
-    NSLog(@"yup %@",filePathsArray);
-    
-    DropboxManager *dbManager = [DropboxManager dbManager];
-    [dbManager restClient].delegate = self;
-    
-    for (int k =0; k < [filePathsArray count]; k++)
-    {
-        
-        NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] );
-        if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]) {
+        for (int i = 0; i<[arrtimer count]; i++) {
             
-            buploading = true;
-            filecount++;
-            
-            
-            NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
-            
-            if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
-                
-                
-                strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
-            }
-            if ([strpdfname length]>0) {
-                
-                strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
-                
-                
-            }
-            
-            NSLog(@"struploadfiles name %@",strUploadpdfname);
-            
-            [[dbManager restClient] uploadFile:strUploadpdfname toPath: [DetailViewController  getSharedInstance].folderPath withParentRev:nil fromPath:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
-            
+            NSTimer *timerobj  = (NSTimer *)[arrtimer objectAtIndex:i];
+            [timerobj invalidate];
+            timerobj = nil;
         }
-        else if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@""])
+        timer = [NSTimer scheduledTimerWithTimeInterval: 1
+                                                 target: self
+                                               selector: @selector(checkProcess)
+                                               userInfo: nil
+                                                repeats: YES];
+        [arrtimer addObject:timer];
+        
+        filecount = 0;
+        
+    
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        
+        uploadPdfCheck = FALSE;
+        
+        NSLog(@"yup %@",filePathsArray);
+        
+        DropboxManager *dbManager = [DropboxManager dbManager];
+        [dbManager restClient].delegate = self;
+        
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
+        NSLog(@"folder path is %@", [DetailViewController  getSharedInstance].folderPath);
+        if ([DetailViewController getSharedInstance].folderPath == nil)
         {
-            
-            bprocessing = true;
-            
-            NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
-            
-            if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
+            [DetailViewController getSharedInstance].folderPath = @"/";
+        }
+        
+        for (int k =0; k < [filePathsArray count]; k++)
+        {
+            NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] );
+            if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]) {
                 
+                buploading = true;
+                filecount++;
                 
-                strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+                NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
+                
+                if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
+                    
+                    
+                    strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+                }
+                if ([strpdfname length]>0) {
+                    
+                    strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+                    
+                }
+                
+                NSLog(@"struploadfiles name %@",strUploadpdfname);
+                
+                [[dbManager restClient] uploadFile:strUploadpdfname toPath: [DetailViewController  getSharedInstance].folderPath withParentRev:nil fromPath:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+                
             }
-            if ([strpdfname length]>0) {
+            else if ([[[[filePathsArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@""])
+            {
                 
-                strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+                bprocessing = true;
                 
+                NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
+                
+                if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]] length]>0) {
+                    
+                    
+                    strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:k]objectForKey:@"PdfPath"]];
+                }
+                if ([strpdfname length]>0) {
+                    
+                    strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+                    
+                    
+                }
+                [[dbManager restClient] createFolder:[NSString stringWithFormat:@"%@/%@",[DetailViewController  getSharedInstance].folderPath,strUploadpdfname]];
                 
             }
-            [[dbManager restClient] createFolder:[NSString stringWithFormat:@"%@/%@",[DetailViewController  getSharedInstance].folderPath,strUploadpdfname]];
+        }
+
+    }
+    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+          // https://developers.box.com/docs/#files-upload-a-file
+
+       
+          if ([[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"])
+          {
+              
+              NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
+              NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+              NSArray* words = [[nameArray objectAtIndex:1] componentsSeparatedByCharactersInSet :[NSCharacterSet whitespaceCharacterSet]];
+              NSString* nospacestring = [words componentsJoinedByString:@""];
+              NSString * filename = [NSString stringWithFormat:@"@%@",nospacestring];
+              
+              if (boxParentId == nil) {
+                  boxParentId =[DetailViewController  getSharedInstance].folderID;
+              }
+
+              NSString * docfilepath = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfPath"];
+              [self uploadFileToBox:0 :filename :boxParentId :docfilepath];
+              
+          }
+         else
+         {
+             
+             NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
+             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+             NSString * filename = [NSString stringWithFormat:@"%@",[nameArray objectAtIndex:1]];
+             if (boxParentId == nil) {
+                 boxParentId =[DetailViewController  getSharedInstance].folderID;
+             }
+             [self uploadFolderToBox:0 :filename :boxParentId];
+         }
+    
+    }
+  
+    
+}
+-(void)uploadFileToBox:(int)sender :(NSString *)fileName :(NSString *)parentId :(NSString *)filePath
+{
+    
+    buploading = true;
+    filecount++;
+    
+    NSLog(@"sender %d",sender);
+
+    
+    
+    NSString * accessToken =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
+    
+    NSString *str =  [NSString stringWithFormat:@"https://upload.box.com/api/2.0/files/content?access_token=%@&filename=%@&parent_id=%@",accessToken,fileName,parentId];
+    
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
+    postParams.delegate = self ;
+    postParams.userInfo = [NSDictionary dictionaryWithObject:@"upload" forKey:@"id"];
+    [postParams setFile:filePath forKey:@"filename"];
+    
+    [postParams startAsynchronous];
+    NSLog(@"pdf file");
+
+}
+-(void)uploadFolderToBox:(int)sender :(NSString *)fileName :(NSString *)parentId
+{
+    
+    NSLog(@"folder ");
+    
+    bprocessing = true;
+    
+    NSString *strUploadpdfname = [[filePathsArray objectAtIndex:sender]objectForKey:@"PdfName"];
+    
+    if ([[arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:sender]objectForKey:@"PdfPath"]] length]>0) {
+        
+        
+        strpdfname = [arrLocalFilepaths objectForKey:[[filePathsArray objectAtIndex:sender]objectForKey:@"PdfPath"]];
+    }
+    if ([strpdfname length]>0) {
+        
+        strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+        
+        
+    }
+    
+     NSString * accessToken =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
+    
+    NSDictionary *cid = [[NSDictionary alloc] initWithObjectsAndKeys:fileName,@"name",[NSDictionary dictionaryWithObject:parentId forKey:@"id"],@"parent", nil];
+    NSError *error;
+    NSData *postData = [NSJSONSerialization dataWithJSONObject:cid options:0 error:&error];
+    
+    NSMutableData *data = [[NSMutableData alloc] initWithData:postData];
+    
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://api.box.com/2.0/folders?access_token=%@",accessToken]]];
+    [postParams setPostBody:data];
+    [postParams setRequestMethod:@"POST"];
+    postParams.delegate = self ;
+    postParams.userInfo = [NSDictionary dictionaryWithObject:@"CreateFolder" forKey:@"id"];
+    [postParams startAsynchronous];
+
+}
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"upload"])
+    {
+        NSLog(@"response is %@",request.responseString);
+        NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
+        NSLog(@"%@",arrJson);
+        if ([[[arrJson objectAtIndex:0]objectForKey:@"message"]isEqualToString:@"Item with the same name already exists"]) {
             
         }
+
+        if ([filePathsArray count]>0) {
+            
+            [filePathsArray removeObjectAtIndex:0];
+            
+        }
+        if ([filePathsArray count]>0) {
+            [self uploadToFolder];
+            
+        }
+        else
+        {
+            [self performSelector:@selector(closeBoxUploadControllerr) withObject:nil afterDelay:0];
+            
+        }
+
+        
+
+    }
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"CreateFolder"])
+    {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+       // NSLog(@"response is %@",request.responseString);
+        NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
+        NSLog(@"%@",arrJson);
+        
+        NSString * childFolderName = [[arrJson objectAtIndex:0]objectForKey:@"name"];
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *strpath;
+        
+        NSLog(@"check folder path %@",[DetailViewController  getSharedInstance].folderPath);
+       // NSLog(@"check before folder path %@",folder.path);
+        if ([[DetailViewController  getSharedInstance].folderPath isEqualToString:@"/"]) {
+            strpath  = [NSString stringWithFormat:@"/%@",childFolderName];
+        }
+        else
+        {
+            strpath  = [[NSString stringWithFormat:@"/%@",childFolderName] stringByReplacingOccurrencesOfString:[DetailViewController  getSharedInstance].folderPath withString:@""];
+            
+        }
+        
+
+        NSLog(@"check folder path %@",[DetailViewController  getSharedInstance].folderPath);
+        NSLog(@"check before folder path %@",childFolderName);
+        if ([[DetailViewController  getSharedInstance].folderPath isEqualToString:@"/"]){
+            strpath  = [NSString stringWithFormat:@"/%@",childFolderName];
+        }
+        else
+        {
+            strpath  = [[NSString stringWithFormat:@"/%@",childFolderName] stringByReplacingOccurrencesOfString:[DetailViewController  getSharedInstance].folderPath withString:@""];
+            
+        }
+        
+        NSLog(@"after file path is %@",strpath);
+        
+        NSString *folderpath = nil;
+        if ([boxFolderPaths length]>0) {
+            
+            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",boxFolderPaths,strpath]];
+            
+        }
+        else
+        {
+            folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
+            
+        }
+        //    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
+        
+        NSError *error;
+        NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:folderpath error:&error];
+        
+             
+        arrFolderdoc = [[NSMutableArray alloc] init];
+        NSLog(@"directory is %@",directoryContent);
+        
+        for (int i =0; i<[directoryContent count]; i++) {
+            
+            NSString *strdropboxpath = [NSString stringWithFormat:@"%@/%@",folderpath,[directoryContent objectAtIndex:i]];
+
+            if ([[[directoryContent objectAtIndex:i] pathExtension] isEqualToString:@"pdf"]) {
+                
+                buploading = true;
+                filecount++;
+                
+                NSMutableDictionary * dic = [[NSMutableDictionary alloc] init ];
+                [dic setObject:strdropboxpath forKey:@"PdfPath"];
+                [dic setObject:[NSString stringWithFormat:@"/%@",[directoryContent objectAtIndex:i]] forKey:@"PdfName"];
+                [boxUploadingArray addObject: dic];
+                
+            }
+            else if ([[[directoryContent objectAtIndex:i] pathExtension] isEqualToString:@""])
+            {
+                NSMutableDictionary * dic = [[NSMutableDictionary alloc] init ];
+                [dic setObject:strdropboxpath forKey:@"PdfPath"];
+                [dic setObject:[NSString stringWithFormat:@"/%@",[directoryContent objectAtIndex:i]] forKey:@"PdfName"];
+                [boxUploadingArray addObject: dic];
+                
+                
+            }
+            
+        }
+        
+        if ([filePathsArray count]>0) {
+            
+            [filePathsArray removeObjectAtIndex:0];
+            
+        }
+        if ([filePathsArray count]>0) {
+            
+            [self uploadToFolder];
+        }
+        else
+        {
+            boxParentId = [[arrJson objectAtIndex:0]objectForKey:@"id"];
+            boxFolderPaths = [boxFolderPaths stringByAppendingPathComponent:childFolderName];
+            [self performSelector:@selector(closeBoxUploadControllerr) withObject:nil afterDelay:0];
+            
+        }
+
+        
+    }
+}
+-(void)closeBoxUploadControllerr
+{
+    
+    if ([boxUploadingArray count]>0)
+    {
+        [filePathsArray removeAllObjects];
+        //  boxFilePath = root;
+        for (int k = 0; k<[boxUploadingArray count]; k++)
+        {
+            NSLog(@"%d",[boxUploadingArray count]);
+            NSString *   bfolderName =  [[boxUploadingArray objectAtIndex:k]objectForKey:@"PdfName"];
+            NSString *    bfolderPath =  [[boxUploadingArray objectAtIndex:k]objectForKey:@"PdfPath"];
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            [dic setObject:bfolderName forKey:@"PdfName"];
+            [dic setObject:bfolderPath forKey:@"PdfPath"];
+         
+            [filePathsArray addObject:dic];
+            
+            
+        }
+        
+        
+        [boxUploadingArray removeAllObjects];
+        [self uploadToFolder];
+        
+    }
+    
+    if ([filePathsArray count]==0 && [boxUploadingArray count]==0)
+    {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [documentsTableView setEditing:NO];
+                editBarButton.title = @"Edit";
+        
+                [filePathsArray removeAllObjects];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
+        
+                [documentsCollectionView reloadData];
+        
+                for (int i =0; i< [checkableArray count]; i++) {
+        
+                    Item *item = (Item *)[checkableArray objectAtIndex:i];
+                    item.isChecked = NO;
+        
+                }
+        
+                [documentsTableView reloadData];
+                [self.navigationController popViewControllerAnimated:YES];
+        
     }
     
 }
+
 // Folder is the metadata for the newly created folder
 - (void)restClient:(DBRestClient*)client createdFolder:(DBMetadata*)folder{
     NSLog(@"Created Folder Path %@",folder.path);
@@ -732,7 +989,6 @@ static DetailViewController *sharedInstance = nil;
     
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
     NSString *documentsDirectory = [paths objectAtIndex:0];
     NSString *strpath;
     
@@ -1196,8 +1452,17 @@ static DetailViewController *sharedInstance = nil;
             NSLog(@"Rename Text is %@",renameText );
             
             // Rename the file, by moving the file
-            NSString *filePath2 = [documentsDirectory
-                                   stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.pdf",renameText]];
+            NSString *filePath2;
+            if (loadData != nil)
+            {
+                filePath2 = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,[NSString stringWithFormat:@"%@.pdf",renameText]];
+            }
+            else
+            {
+                filePath2  = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.pdf",renameText]];
+                
+            }
+
             
             // Attempt the move
             if ([fileMgr moveItemAtPath:[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] toPath:filePath2 error:&error] != YES)
@@ -1330,7 +1595,17 @@ static DetailViewController *sharedInstance = nil;
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:renameText];
+    NSLog(@"%@",loadData);
+    NSString *dataPath;
+    if (loadData != nil)
+    {
+        dataPath = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,renameText];
+    }
+    else
+    {
+      dataPath  = [documentsDirectory stringByAppendingPathComponent:renameText];
+
+    }
     NSError * error;
     if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
         [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
@@ -1980,6 +2255,16 @@ static DetailViewController *sharedInstance = nil;
         //popDisplayTableView .hidden = YES;
         [popoverController dismissPopoverAnimated:TRUE];
         [FolderChooseViewController getSharedInstance].indexCount = indexPath.row;
+        if([[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+        {
+        [FolderChooseViewController getSharedInstance].accountName = @"dropbox";
+        }
+        else
+        {
+            [FolderChooseViewController getSharedInstance].accountName = @"box";
+
+        }
+
         [self chooseFolder];
     }
     else
