@@ -46,8 +46,6 @@ static FolderChooseViewController *sharedInstance = nil;
     return self;
 }
 
-
-
 - (void)viewDidLoad
 {
     
@@ -72,6 +70,8 @@ static FolderChooseViewController *sharedInstance = nil;
         if (!loadData) {
             loadData = @"/";
         }
+        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"username"];
+
         [self fetchAllDropboxData];
 
     }
@@ -79,13 +79,15 @@ static FolderChooseViewController *sharedInstance = nil;
     {
         NSLog(@"Box");
         
-        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"name"];
         
+        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
+
         folderItemsArray = [[NSMutableArray alloc]init];
         if (!boxFolderId) {
             boxFolderId = BoxAPIFolderIDRoot;
             boxFolderName =@"All Files";
         }
+
         [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
   
     }
@@ -95,7 +97,7 @@ static FolderChooseViewController *sharedInstance = nil;
     tbDownload.delegate = self;
     tbDownload.dataSource = self;
     
-    self.title = @"Folders";
+  //  self.title = @"Folders";
     marrDownloadData = [[NSMutableArray alloc ]init];
     
     
@@ -104,6 +106,24 @@ static FolderChooseViewController *sharedInstance = nil;
     // Do any additional setup after loading the view.
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
+        [DetailViewController getSharedInstance].folderPath = loadData;
+
+    }
+    
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+        [DetailViewController getSharedInstance].folderPath = @"/";
+        
+        [DetailViewController getSharedInstance].folderID = boxFolderId;
+
+    }
+    
+    
+}
 - (void)fetchFolderItemsWithFolderID:(NSString *)folderID name:(NSString *)name
 {
     
@@ -175,15 +195,6 @@ static FolderChooseViewController *sharedInstance = nil;
     
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
-    
-    [DetailViewController getSharedInstance].folderPath = loadData;
-    
-    
-    
-    
-}
 
 -(void)fetchAllDropboxData
 {
@@ -286,7 +297,7 @@ static FolderChooseViewController *sharedInstance = nil;
     [DetailViewController getSharedInstance].folderPath = metadata.path;
     NSLog(@"Uploading path is %@",metadata.path);
     
-       }
+    }
     else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
     
@@ -294,10 +305,13 @@ static FolderChooseViewController *sharedInstance = nil;
             FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
             FolderChooseViewController.boxFolderId = [[folderItemsArray  objectAtIndex:indexPath.row] objectForKey:@"id"];
             FolderChooseViewController.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+     [DetailViewController getSharedInstance].folderID=   boxFolderId;
+        [DetailViewController getSharedInstance].folderPath = [NSString stringWithFormat:@"%@/%@",[DetailViewController getSharedInstance].folderPath,boxFolderName];
+
             [self.navigationController pushViewController:FolderChooseViewController animated:YES];
     
     
-        }
+    }
     
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
