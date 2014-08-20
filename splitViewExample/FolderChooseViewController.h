@@ -23,7 +23,6 @@
 @property (nonatomic, retain) NSString *boxFolderId;
 @property (nonatomic, retain) NSString *boxFolderName;
 
-@property(nonatomic,retain) NSMutableArray * localArray;
 
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;

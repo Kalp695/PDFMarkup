@@ -22,6 +22,10 @@
 @property (strong,nonatomic)  NSMutableArray *arrDropboxUserids;
 @property (strong,nonatomic) NSDictionary *dicUserdetails;
 @property (strong,nonatomic) NSDictionary *dicgoogleUserdetails;
+
+@property (strong,nonatomic)  NSMutableArray *boxSelectedFiles;
+
+
 - (void)setRefreshTokenInKeychain:(NSString *)refreshToken;
 
 + (AppDelegate *)sharedInstance;

@@ -698,8 +698,8 @@ static DetailViewController *sharedInstance = nil;
     {
           // https://developers.box.com/docs/#files-upload-a-file
 
-       
-          if ([[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"])
+           NSString * extension = @"pdf";
+          if ([[[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
           {
               
               NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
@@ -974,8 +974,14 @@ static DetailViewController *sharedInstance = nil;
                     item.isChecked = NO;
         
                 }
-        
+                [[[UIAlertView alloc]
+                  initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
+                 delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]
+         
+                   show];
+
                 [documentsTableView reloadData];
+        
                 [self.navigationController popViewControllerAnimated:YES];
         
     }
@@ -1245,11 +1251,10 @@ static DetailViewController *sharedInstance = nil;
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
         [[[UIAlertView alloc]
-          initWithTitle:@"" message:@"Uploaded"
+          initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
           delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]
          
          show];
-        
         
         [documentsTableView setEditing:NO];
         editBarButton.title = @"Edit";

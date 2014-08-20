@@ -37,7 +37,6 @@ static FolderChooseViewController *sharedInstance = nil;
 
 @synthesize loadData,tbDownload,accountName,indexCount,boxFolderName,boxFolderId;
 
-@synthesize localArray;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -49,7 +48,6 @@ static FolderChooseViewController *sharedInstance = nil;
 
 - (void)viewDidLoad
 {
-    localArray = [[NSMutableArray alloc]init];
     UIBarButtonItem * upload = [[UIBarButtonItem alloc] initWithTitle:@"Upload"
                                                                 style:UIBarButtonItemStylePlain
                                                                target:self

@@ -34,7 +34,10 @@
     NSString *strrootpath;
     NSMutableDictionary *arrLocalFilepaths;
     NSString * refreshToken ;
+    
 }
+- (BOOL)connected;
+
 +(DropboxDownloadFileViewControlller*)getSharedInstance;
 @property (nonatomic, strong) NSString *accountStatus;
 
