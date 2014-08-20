@@ -580,7 +580,7 @@ static DetailViewController *sharedInstance = nil;
     popoverView.backgroundColor=[UIColor whiteColor];
     
     popoverContent.view=popoverView;
-    popoverContent.contentSizeForViewInPopover=CGSizeMake(200, 200);
+    popoverContent.contentSizeForViewInPopover=CGSizeMake(250, 300);
     popoverContent.view=popDisplayTableView; //Adding tableView to popover
     popDisplayTableView.delegate=self;
     popDisplayTableView.dataSource=self;
@@ -698,8 +698,8 @@ static DetailViewController *sharedInstance = nil;
     {
           // https://developers.box.com/docs/#files-upload-a-file
 
-       
-          if ([[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"])
+           NSString * extension = @"pdf";
+          if ([[[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
           {
               
               NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
@@ -803,6 +803,7 @@ static DetailViewController *sharedInstance = nil;
         NSLog(@"%@",arrJson);
         if ([[[arrJson objectAtIndex:0]objectForKey:@"message"]isEqualToString:@"Item with the same name already exists"]) {
             
+            NSLog(@"already exists");
         }
 
         if ([filePathsArray count]>0) {
@@ -828,8 +829,13 @@ static DetailViewController *sharedInstance = nil;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
        // NSLog(@"response is %@",request.responseString);
         NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
-        NSLog(@"%@",arrJson);
-        
+        if ([[[arrJson objectAtIndex:0]objectForKey:@"message"]isEqualToString:@"Item with the same name already exists"]) {
+            
+            NSLog(@"already exists");
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"File already exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+            
+        }
         NSString * childFolderName = [[arrJson objectAtIndex:0]objectForKey:@"name"];
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -974,8 +980,19 @@ static DetailViewController *sharedInstance = nil;
                     item.isChecked = NO;
         
                 }
+//        UIAlertView * alert =  [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
+//                         delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [alert show];
         
+        
+//                [[[UIAlertView alloc]
+//                  initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
+//                 delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]
+//         
+//                   show];
+
                 [documentsTableView reloadData];
+        
                 [self.navigationController popViewControllerAnimated:YES];
         
     }
@@ -1245,11 +1262,10 @@ static DetailViewController *sharedInstance = nil;
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         
         [[[UIAlertView alloc]
-          initWithTitle:@"" message:@"Uploaded"
+          initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
           delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil]
          
          show];
-        
         
         [documentsTableView setEditing:NO];
         editBarButton.title = @"Edit";
@@ -2252,9 +2268,9 @@ static DetailViewController *sharedInstance = nil;
     }
     else if (tableView == popDisplayTableView)
     {
-        //popDisplayTableView .hidden = YES;
         [popoverController dismissPopoverAnimated:TRUE];
         [FolderChooseViewController getSharedInstance].indexCount = indexPath.row;
+        [AppDelegate sharedInstance].accountIndex = indexPath.row;
         if([[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
         {
         [FolderChooseViewController getSharedInstance].accountName = @"dropbox";

@@ -24,7 +24,6 @@
 @property (nonatomic, retain) NSString *boxFolderName;
 
 
-
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;
 -(IBAction)chooseBarButton_click:(id)sender;

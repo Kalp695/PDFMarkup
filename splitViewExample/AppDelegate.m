@@ -22,6 +22,8 @@
 @synthesize arrDropboxUserids;
 @synthesize dicUserdetails;
 @synthesize documentStatus;
+@synthesize boxSelectedFiles;
+@synthesize accountIndex;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
@@ -39,7 +41,7 @@
   //  NSString *dropBoxAppKey = @"uw5h7hzofid6igu";
 //	NSString *dropBoxAppSecret = @"u4x5e08gi7yqz2z";
     NSString *root = kDBRootDropbox;
-	
+	boxSelectedFiles = [[NSMutableArray alloc]init];
     DBSession* session =
     [[DBSession alloc] initWithAppKey:dropBoxAppKey appSecret:dropBoxAppSecret root:root];
 	session.delegate = self;

@@ -13,6 +13,8 @@
 		184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 184C093C197CDB1C00740DD0 /* LeftTableViewCell.m */; };
 		184C094B197CF1B100740DD0 /* AddAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184C094A197CF1B100740DD0 /* AddAccountViewController.m */; };
 		186D58DF1982ADB0007D0C48 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 186D58DE1982ADB0007D0C48 /* email.png */; };
+		189A604019A4C42100408AEF /* CheckInternet.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A603F19A4C42100408AEF /* CheckInternet.m */; };
+		189A604519A4DEA800408AEF /* BoxHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A604419A4DEA800408AEF /* BoxHelperClass.m */; };
 		189E783E197D12EC00083F61 /* SugarSync.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E7839197D12EC00083F61 /* SugarSync.png */; };
 		189E783F197D12EC00083F61 /* Google-Drive.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E783A197D12EC00083F61 /* Google-Drive.png */; };
 		189E7840197D12EC00083F61 /* Dropbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E783B197D12EC00083F61 /* Dropbox.png */; };
@@ -41,7 +43,6 @@
 		18A11D9B197FEA530000D80F /* documentsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A11D9A197FEA530000D80F /* documentsCell.xib */; };
 		18A11D9D197FF6C80000D80F /* folder_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A11D9C197FF6C80000D80F /* folder_large.png */; };
 		18A11DA0197FFF8D0000D80F /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A11D9F197FFF8D0000D80F /* DocumentViewController.m */; };
-		18A11DA2198008B30000D80F /* samplepdf.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A11DA1198008B30000D80F /* samplepdf.png */; };
 		18A11DA5198016040000D80F /* PdfFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A11DA4198016040000D80F /* PdfFilesViewController.m */; };
 		18A2AAA41994D51D009D7E3A /* BoxAuthorizationNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */; };
 		18A2AAA71994D60D009D7E3A /* libBoxSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2AA981994D465009D7E3A /* libBoxSDK.a */; };
@@ -287,6 +288,10 @@
 		184C0949197CF1B100740DD0 /* AddAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAccountViewController.h; sourceTree = "<group>"; };
 		184C094A197CF1B100740DD0 /* AddAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAccountViewController.m; sourceTree = "<group>"; };
 		186D58DE1982ADB0007D0C48 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
+		189A603E19A4C42100408AEF /* CheckInternet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckInternet.h; sourceTree = "<group>"; };
+		189A603F19A4C42100408AEF /* CheckInternet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckInternet.m; sourceTree = "<group>"; };
+		189A604319A4DEA800408AEF /* BoxHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxHelperClass.h; sourceTree = "<group>"; };
+		189A604419A4DEA800408AEF /* BoxHelperClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoxHelperClass.m; sourceTree = "<group>"; };
 		189E7839197D12EC00083F61 /* SugarSync.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SugarSync.png; sourceTree = "<group>"; };
 		189E783A197D12EC00083F61 /* Google-Drive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Google-Drive.png"; sourceTree = "<group>"; };
 		189E783B197D12EC00083F61 /* Dropbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dropbox.png; sourceTree = "<group>"; };
@@ -319,7 +324,6 @@
 		18A11D9C197FF6C80000D80F /* folder_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_large.png; sourceTree = "<group>"; };
 		18A11D9E197FFF8D0000D80F /* DocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
 		18A11D9F197FFF8D0000D80F /* DocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
-		18A11DA1198008B30000D80F /* samplepdf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = samplepdf.png; sourceTree = "<group>"; };
 		18A11DA3198016040000D80F /* PdfFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PdfFilesViewController.h; sourceTree = "<group>"; };
 		18A11DA4198016040000D80F /* PdfFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PdfFilesViewController.m; sourceTree = "<group>"; };
 		18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoxSDK.xcodeproj; path = "box-ios-sdk-v2-master 2/BoxSDK.xcodeproj"; sourceTree = SOURCE_ROOT; };
@@ -612,7 +616,6 @@
 				189E783D197D12EC00083F61 /* box.png */,
 				189F2624197EB1D200ADDF3F /* pdf.png */,
 				18ABDF1E198022B2000C002B /* pdf_Large.png */,
-				18A11DA1198008B30000D80F /* samplepdf.png */,
 			);
 			name = "Network Images";
 			sourceTree = "<group>";
@@ -685,6 +688,8 @@
 				18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */,
 				18A2AAA21994D51D009D7E3A /* BoxAuthorizationNavigationController.h */,
 				18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */,
+				189A604319A4DEA800408AEF /* BoxHelperClass.h */,
+				189A604419A4DEA800408AEF /* BoxHelperClass.m */,
 				18A2AAAB1994E268009D7E3A /* Json */,
 			);
 			name = "Box Classes";
@@ -772,6 +777,8 @@
 				18B84EE4199D33CD00F9E383 /* ASINetworkQueue.h */,
 				18B84EE5199D33CD00F9E383 /* ASINetworkQueue.m */,
 				18B84EE6199D33CD00F9E383 /* ASIProgressDelegate.h */,
+				189A603E19A4C42100408AEF /* CheckInternet.h */,
+				189A603F19A4C42100408AEF /* CheckInternet.m */,
 			);
 			name = "ASI HTTP";
 			sourceTree = "<group>";
@@ -1520,7 +1527,6 @@
 				653E3BA1198183D600788965 /* icon_angle_front@4x.png in Resources */,
 				653E3BCC198183D600788965 /* white1.png in Resources */,
 				65D59C08199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard in Resources */,
-				18A11DA2198008B30000D80F /* samplepdf.png in Resources */,
 				653E3BC4198183D600788965 /* right.png in Resources */,
 				653E3BC8198183D600788965 /* thick_blue_3 pt.png in Resources */,
 				653E3BC1198183D600788965 /* red1.png in Resources */,
@@ -1559,8 +1565,10 @@
 				658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */,
 				65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */,
 				18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */,
+				189A604019A4C42100408AEF /* CheckInternet.m in Sources */,
 				18A11DA5198016040000D80F /* PdfFilesViewController.m in Sources */,
 				FEF2C9AF1990B87F0044CE0C /* DropboxManager.m in Sources */,
+				189A604519A4DEA800408AEF /* BoxHelperClass.m in Sources */,
 				653E3B96198183D600788965 /* ReaderDocumentOutline.m in Sources */,
 				6596916A1993FFA7002BE628 /* ReaderThumbsView.m in Sources */,
 				653E3B91198183D600788965 /* ReaderConstants.m in Sources */,
