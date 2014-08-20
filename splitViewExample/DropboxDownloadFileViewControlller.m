@@ -15,7 +15,7 @@ NSString * folderDocpath;
 #import "DropboxManager.h"
 #import "DocumentManager.h"
 #import "JSON.h"
-
+#import "FolderChooseViewController.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 
@@ -67,7 +67,7 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     NSMutableArray * boxInsideFolderArray;
     NSString * root;
     NSString * boxFilePath;
-    
+    NSMutableArray * boxSelectedFilesArray;
     BOOL fetching;
 }
 
@@ -1138,6 +1138,7 @@ NSString *wastepath = nil;
                     
                     [boxFilePathsArray addObject:dic];
                 }
+                [FolderChooseViewController getSharedInstance].localArray = boxFilePathsArray ;
             }
             
             else
@@ -1157,6 +1158,9 @@ NSString *wastepath = nil;
         }
         
         NSLog(@"boxFilePathsArray array is %@",boxFilePathsArray);
+        
+      
+        
         
         if ([boxFilePathsArray count]==1)
         {
@@ -1256,6 +1260,8 @@ NSString *wastepath = nil;
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         NSLog(@"box files array %@",boxFilePathsArray);
+        NSLog(@"boxSelectedFilesArray is %@",boxSelectedFilesArray);
+        NSLog(@"temp array is %@",[FolderChooseViewController getSharedInstance].localArray);
         
         [self downloadfrombox];
         
@@ -1270,88 +1276,97 @@ NSString *wastepath = nil;
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    NSLog(@"%@",boxFilePathsArray);
-    filename = [[boxFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
-    
-    if ([sqliteRowsArray containsObject:filename])
+    NSLog(@"%@",[FolderChooseViewController getSharedInstance].localArray);
+    if ([[FolderChooseViewController getSharedInstance].localArray count]>0)
     {
-        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-        [alert show ];
+        filename = [[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"folderName"];
         
-        
-        
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
-        for (int i =0; i< [marrDownloadData count]; i++) {
+        if ([sqliteRowsArray containsObject:filename])
+        {
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show ];
             
             
-            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-            FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
             
-            FolderItem* item = [arrmetadata objectAtIndex:i];
-            item.isChecked = NO;
-            [cell setChecked:item.isChecked];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
             
-            [tbDownload reloadData];
+            for (int i =0; i< [marrDownloadData count]; i++) {
+                
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                
+                [tbDownload reloadData];
+                
+            }
+            
+            [[FolderChooseViewController getSharedInstance].localArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             
         }
-        
-        [boxFilePathsArray removeAllObjects];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
-        
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        
+        else
+        {
+            
+            pdfCount = pdfCount + 1;
+            filesCount = filesCount + 1;
+            NSLog(@"files is %@",[[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"folderName"]);
+            NSString * folderId =[[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"folderId"];
+            NSString * folderName =[[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"folderName"];
+            NSString * type =[[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"type"];
+            
+            if ([[[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"path"] length]>0) {
+                root = [[[FolderChooseViewController getSharedInstance].localArray objectAtIndex:0]objectForKey:@"path"];
+            }
+            
+            if ([type isEqualToString:@"folder"])
+            {
+                boxDownloadingType = @"folder";
+                [self downloadFilesWithFolderID:folderId name:folderName];
+                boxFolderPath =[NSString stringWithFormat:@"/%@",folderName];
+                root = [root stringByAppendingString:boxFolderPath];
+                [self downloadableFolderFiles:folderId name:folderName];
+                [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                
+            }
+            
+            else
+            {
+                boxDownloadingType = @"file";
+                boxFolderPath = @"";
+                itemCount = 0;
+                [self downloadFilesWithFolderID:folderId name:folderName];
+                
+                if ([[FolderChooseViewController getSharedInstance].localArray count]>0) {
+                    
+                    [[FolderChooseViewController getSharedInstance].localArray removeObjectAtIndex:0];
+                    root = @"";
+                    
+                }
+                if ([[FolderChooseViewController getSharedInstance].localArray count]>0) {
+                    [self downloadfrombox];
+                    
+                }
+                else
+                {
+                    [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
+                    
+                }
+                
+            }
+        }
+
     }
     else
     {
-        
-        pdfCount = pdfCount + 1;
-        filesCount = filesCount + 1;
-        NSLog(@"files is %@",[[boxFilePathsArray objectAtIndex:0]objectForKey:@"folderName"]);
-        NSString * folderId =[[boxFilePathsArray objectAtIndex:0]objectForKey:@"folderId"];
-        NSString * folderName =[[boxFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
-        NSString * type =[[boxFilePathsArray objectAtIndex:0]objectForKey:@"type"];
-        
-        if ([[[boxFilePathsArray objectAtIndex:0]objectForKey:@"path"] length]>0) {
-            root = [[boxFilePathsArray objectAtIndex:0]objectForKey:@"path"];
-        }
-        
-        if ([type isEqualToString:@"folder"])
-        {
-            boxDownloadingType = @"folder";
-            [self downloadFilesWithFolderID:folderId name:folderName];
-            boxFolderPath =[NSString stringWithFormat:@"/%@",folderName];
-            root = [root stringByAppendingString:boxFolderPath];
-            [self downloadableFolderFiles:folderId name:folderName];
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            
-        }
-        
-        else
-        {
-            boxDownloadingType = @"file";
-            boxFolderPath = @"";
-            itemCount = 0;
-            [self downloadFilesWithFolderID:folderId name:folderName];
-            
-            if ([boxFilePathsArray count]>0) {
-                
-                [boxFilePathsArray removeObjectAtIndex:0];
-                root = @"";
-                
-            }
-            if ([boxFilePathsArray count]>0) {
-                [self downloadfrombox];
-                
-            }
-            else
-            {
-                [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
-                
-            }
-            
-        }
+        [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
+
     }
 }
 
@@ -1398,13 +1413,13 @@ NSString *wastepath = nil;
             }
         }
         
-        if ([boxFilePathsArray count]>0) {
+        if ([[FolderChooseViewController getSharedInstance].localArray count]>0) {
             
-            [boxFilePathsArray removeObjectAtIndex:0];
+            [[FolderChooseViewController getSharedInstance].localArray removeObjectAtIndex:0];
             root = @"";
             
         }
-        if ([boxFilePathsArray count]>0) {
+        if ([[FolderChooseViewController getSharedInstance].localArray count]>0) {
             [self downloadfrombox];
             
         }
@@ -1422,7 +1437,7 @@ NSString *wastepath = nil;
     
     if ([boxFilesItemsArray count]>0)
     {
-        [boxFilePathsArray removeAllObjects];
+        [[FolderChooseViewController getSharedInstance].localArray removeAllObjects];
         
         NSLog(@"%@",root);
         //  boxFilePath = root;
@@ -1438,7 +1453,7 @@ NSString *wastepath = nil;
             [dic setObject:folderName forKey:@"folderName"];
             [dic setObject:type forKey:@"type"];
             [dic setObject:[[boxFilesItemsArray objectAtIndex:k]objectForKey:@"path"] forKey:@"path"];
-            [boxFilePathsArray addObject:dic];
+            [[FolderChooseViewController getSharedInstance].localArray addObject:dic];
             
             
         }
@@ -1449,11 +1464,11 @@ NSString *wastepath = nil;
         
     }
     
-    if ([boxFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
+    if ([[FolderChooseViewController getSharedInstance].localArray count]==0 && [boxFilesItemsArray count]==0)
     {
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        [boxFilePathsArray removeAllObjects];
+        [[FolderChooseViewController getSharedInstance].localArray removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [self.navigationController popViewControllerAnimated:YES];
         
