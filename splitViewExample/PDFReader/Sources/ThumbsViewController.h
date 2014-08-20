@@ -27,6 +27,7 @@
 
 #import "ThumbsMainToolbar.h"
 #import "ReaderThumbsView.h"
+#import "PDFRenderer.h"
 
 @class ReaderDocument;
 @class ThumbsViewController;

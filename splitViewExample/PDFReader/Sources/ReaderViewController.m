@@ -569,7 +569,16 @@ static ReaderViewController *sharedInstance = nil;
     
     if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
     
+    NSString *tempFilePath = [[_pdfFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    
+    PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+    [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:tempFilePath];
+    
+    document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
+    
+    
 	ThumbsViewController *thumbsViewController = [[ThumbsViewController alloc] initWithReaderDocument:document];
+    
     
     [thumbsViewController setFilePath:_pdfFilePath];
     
@@ -587,10 +596,11 @@ static ReaderViewController *sharedInstance = nil;
 - (void)dismissThumbsViewController:(ThumbsViewController *)viewController withDocument:(ReaderDocument *)readerDocument
 {
 	[self updateToolbarBookmarkIcon]; // Update bookmark icon
+    [self deleteTempPDFFile];
+    document = [ReaderDocument withDocumentFilePath:_pdfFilePath password:nil];
     
-    document=readerDocument;
     currentPage=0;
-    
+    readerDocument=nil;
     
     
      for(UIView *view in [theScrollView subviews])
@@ -611,9 +621,19 @@ static ReaderViewController *sharedInstance = nil;
 	[self dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
 
+
+-(void)deleteTempPDFFile{
+    NSString *tempFilePath = [[_pdfFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    
+    [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
+}
+
 - (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument
 {
-	
+    [self deleteTempPDFFile];
+	document = [ReaderDocument withDocumentFilePath:_pdfFilePath password:nil];
+    
+    readerDocument=nil;
     theScrollView.contentOffset=CGPointMake(CGRectGetWidth(theScrollView.frame)*(page-1), theScrollView.contentOffset.y);
     [self showDocumentPageNew:page]; // Show the page
     

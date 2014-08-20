@@ -17,6 +17,6 @@
 @end
 @interface disclButton : UIButton
 
-@property id<disclButtonDelegate>delegate;
+@property(nonatomic,weak) id<disclButtonDelegate>delegate;
 
 @end

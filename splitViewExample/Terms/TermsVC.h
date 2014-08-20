@@ -29,6 +29,6 @@
     
 }
 
-@property (nonatomic, retain) id<SelectedTerminologyDelegate> delegate;
+@property (nonatomic, weak) id<SelectedTerminologyDelegate> delegate;
 
 @end

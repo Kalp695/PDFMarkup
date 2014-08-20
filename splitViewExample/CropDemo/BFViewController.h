@@ -16,7 +16,7 @@
 @end
 
 @interface BFViewController : UIViewController{
-        id<cropPhotoDelegate> _delegate;
+       __weak id<cropPhotoDelegate> _delegate;
         IBOutlet UIButton *cropButton;
         IBOutlet UIButton *useButton;
         IBOutlet UIButton *originalButton;
@@ -28,7 +28,7 @@
 @property (nonatomic, strong) UIImage *originalImage;
 @property (nonatomic, strong) UIImage *useImage;
 @property (nonatomic, strong) BFCropInterface *cropper;
-@property (nonatomic, retain) id<cropPhotoDelegate> delegate;
+@property (nonatomic, weak) id<cropPhotoDelegate> delegate;
 
 - (IBAction)cropPressed:(id)sender;
 - (IBAction)originalPressed:(id)sender;

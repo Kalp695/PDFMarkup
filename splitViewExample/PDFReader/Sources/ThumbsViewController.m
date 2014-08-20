@@ -331,7 +331,13 @@
     [[NSFileManager defaultManager] removeItemAtPath:_filePath error:nil];
     [[NSFileManager defaultManager] moveItemAtPath:newFilePath toPath:_filePath error:nil];
     
-    document = [ReaderDocument withDocumentFilePath:_filePath password:nil];
+    PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+    
+    NSString *tempFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath];
+
+    
+    document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
     
     [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
     
@@ -448,9 +454,10 @@
     [[NSFileManager defaultManager] removeItemAtPath:_filePath error:nil];
     [[NSFileManager defaultManager] moveItemAtPath:newFilePath toPath:_filePath error:nil];
     
-    document = [ReaderDocument withDocumentFilePath:_filePath password:nil];
     
-    [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
+    PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+    
+    
     
     [thumbsViewCross removeFromSuperview];
     
@@ -483,6 +490,16 @@
     //End Rename
     
     /* End Deleting .ImagePad*/
+    
+    
+    NSString *tempFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath];
+    
+    
+    document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
+    
+    
+    [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
     
     
 }
