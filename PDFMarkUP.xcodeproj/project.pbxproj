@@ -14,6 +14,7 @@
 		184C094B197CF1B100740DD0 /* AddAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184C094A197CF1B100740DD0 /* AddAccountViewController.m */; };
 		186D58DF1982ADB0007D0C48 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 186D58DE1982ADB0007D0C48 /* email.png */; };
 		189A604019A4C42100408AEF /* CheckInternet.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A603F19A4C42100408AEF /* CheckInternet.m */; };
+		189A604519A4DEA800408AEF /* BoxHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A604419A4DEA800408AEF /* BoxHelperClass.m */; };
 		189E783E197D12EC00083F61 /* SugarSync.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E7839197D12EC00083F61 /* SugarSync.png */; };
 		189E783F197D12EC00083F61 /* Google-Drive.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E783A197D12EC00083F61 /* Google-Drive.png */; };
 		189E7840197D12EC00083F61 /* Dropbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E783B197D12EC00083F61 /* Dropbox.png */; };
@@ -289,6 +290,8 @@
 		186D58DE1982ADB0007D0C48 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
 		189A603E19A4C42100408AEF /* CheckInternet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckInternet.h; sourceTree = "<group>"; };
 		189A603F19A4C42100408AEF /* CheckInternet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckInternet.m; sourceTree = "<group>"; };
+		189A604319A4DEA800408AEF /* BoxHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxHelperClass.h; sourceTree = "<group>"; };
+		189A604419A4DEA800408AEF /* BoxHelperClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoxHelperClass.m; sourceTree = "<group>"; };
 		189E7839197D12EC00083F61 /* SugarSync.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SugarSync.png; sourceTree = "<group>"; };
 		189E783A197D12EC00083F61 /* Google-Drive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Google-Drive.png"; sourceTree = "<group>"; };
 		189E783B197D12EC00083F61 /* Dropbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dropbox.png; sourceTree = "<group>"; };
@@ -685,6 +688,8 @@
 				18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */,
 				18A2AAA21994D51D009D7E3A /* BoxAuthorizationNavigationController.h */,
 				18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */,
+				189A604319A4DEA800408AEF /* BoxHelperClass.h */,
+				189A604419A4DEA800408AEF /* BoxHelperClass.m */,
 				18A2AAAB1994E268009D7E3A /* Json */,
 			);
 			name = "Box Classes";
@@ -1563,6 +1568,7 @@
 				189A604019A4C42100408AEF /* CheckInternet.m in Sources */,
 				18A11DA5198016040000D80F /* PdfFilesViewController.m in Sources */,
 				FEF2C9AF1990B87F0044CE0C /* DropboxManager.m in Sources */,
+				189A604519A4DEA800408AEF /* BoxHelperClass.m in Sources */,
 				653E3B96198183D600788965 /* ReaderDocumentOutline.m in Sources */,
 				6596916A1993FFA7002BE628 /* ReaderThumbsView.m in Sources */,
 				653E3B91198183D600788965 /* ReaderConstants.m in Sources */,

@@ -12,6 +12,10 @@
 #import "DropboxManager.h"
 #import "DocumentManager.h"
 #import "AppDelegate.h"
+#import "JSON.h"
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+
 
 static FolderChooseViewController *sharedInstance = nil;
 
@@ -86,8 +90,20 @@ static FolderChooseViewController *sharedInstance = nil;
             boxFolderId = BoxAPIFolderIDRoot;
             boxFolderName =@"All Files";
         }
+        if ([self checkExpiredBoxToken] <2)
+        {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            NSLog(@"Time to create new access token");
+            [self createNewAccesToken];
+        }
+        else
+        {
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            
+            [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+            
+        }
 
-        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
   
     }
     
@@ -123,6 +139,59 @@ static FolderChooseViewController *sharedInstance = nil;
     
     
 }
+-(BOOL)checkExpiredBoxToken
+{
+    
+    NSInteger secRemaining ;
+    
+    NSDate* date1 = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"expire_date"];
+    NSDate* date2 = [NSDate date];
+    NSTimeInterval distanceBetweenDates = [date1 timeIntervalSinceDate:date2];
+    double secondsInAnHour = 60;
+    secRemaining = distanceBetweenDates / secondsInAnHour;
+    
+    NSLog(@"access token expires in %d mins",secRemaining);
+    
+    return secRemaining;
+}
+-(void)createNewAccesToken
+{
+    
+    /*
+     
+     curl https://www.box.com/api/oauth2/token
+     -d 'grant_type=refresh_token&refresh_token={valid refresh token}&client_id={your_client_id}&client_secret={your_client_secret}'
+     -X POST
+     
+     */
+    
+    
+    NSString* refresh =[NSString stringWithFormat:@"%@",[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"refresh_token"]];
+    
+    
+    NSString* clientId =[NSString stringWithFormat:@"%@",[BoxSDK sharedSDK].OAuth2Session.clientID];
+    NSString* clientSecret =[NSString stringWithFormat:@"%@", [BoxSDK sharedSDK].OAuth2Session.clientSecret];
+    
+    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:@"https://www.box.com/api/oauth2/token?"]];
+    
+    [postParams setRequestMethod:@"POST"];
+    
+    [postParams setPostValue:@"refresh_token" forKey:@"grant_type"];
+    [postParams setPostValue:refresh forKey:@"refresh_token"];
+    [postParams setPostValue:clientId forKey:@"client_id"];
+    [postParams setPostValue:clientSecret forKey:@"client_secret"];
+    
+    [postParams startAsynchronous];
+    postParams.delegate = self ;
+    postParams.userInfo = [NSDictionary dictionaryWithObject:@"accessToken" forKey:@"id"];
+    
+    NSLog(@"Url is ---> %@",postParams.url);
+    NSLog(@"response string is-----> %@",postParams.responseString);
+    
+    
+    
+}
+
 - (void)fetchFolderItemsWithFolderID:(NSString *)folderID name:(NSString *)name
 {
     
@@ -137,7 +206,6 @@ static FolderChooseViewController *sharedInstance = nil;
                                               timeoutInterval:20];
     NSURLResponse *response;
     NSError *error;
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     NSData * data = [NSURLConnection sendSynchronousRequest:request
                                           returningResponse:&response
@@ -172,7 +240,43 @@ static FolderChooseViewController *sharedInstance = nil;
     
     
 }
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
 
+    if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
+    {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        NSLog(@"response is %@",request.responseString);
+        NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
+        NSLog(@"%@",[request.responseString JSONValue] );
+        
+        NSLog(@"old access token is  -> %@", [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"acces_token"]);
+        
+        NSLog(@"new access token is  -> %@", [[arrJson objectAtIndex:0]objectForKey:@"access_token"]);
+        
+        
+        NSMutableDictionary *newDict = [[NSMutableDictionary alloc] init];
+        NSDictionary *oldDict = (NSDictionary *)[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount];
+        [newDict addEntriesFromDictionary:oldDict];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"access_token"] forKey:@"acces_token"];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"refresh_token"] forKey:@"refresh_token"];
+        
+        NSDate *datePlusOneMinute = [[NSDate date] dateByAddingTimeInterval:[[[arrJson objectAtIndex:0]objectForKey:@"expires_in"]integerValue]];
+        [newDict setObject:[[arrJson objectAtIndex:0]objectForKey:@"expires_in"] forKey:@"request_time"];
+        [newDict setObject:datePlusOneMinute forKey:@"expire_date"];
+        
+        [newDict setObject:@"updated" forKey:@"tokenStatus"];
+        
+        [arrUseraccounts replaceObjectAtIndex:[FolderChooseViewController getSharedInstance].indexCount withObject:newDict];
+        
+        [arrUseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [self viewWillAppear:YES];
+        [tbDownload reloadData];
+    }
+}
 
 -(IBAction)cancelButton_click:(id)sender
 {

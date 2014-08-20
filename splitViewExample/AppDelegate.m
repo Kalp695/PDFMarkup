@@ -23,6 +23,7 @@
 @synthesize dicUserdetails;
 @synthesize documentStatus;
 @synthesize boxSelectedFiles;
+@synthesize accountIndex;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     

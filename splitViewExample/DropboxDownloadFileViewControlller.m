@@ -18,7 +18,7 @@ NSString * folderDocpath;
 #import "FolderChooseViewController.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
-
+#import "BoxHelperClass.h"
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
 @interface FolderItem : NSObject
@@ -163,7 +163,7 @@ NSString *wastepath = nil;
     
     NSLog(@"access token expires in %d mins",secRemaining);
     
-       return secRemaining;
+    return secRemaining;
 }
 -(void)createNewAccesToken
 {
@@ -1199,12 +1199,16 @@ NSString *wastepath = nil;
 {
     
 }
+-(void)spinner
+{
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+}
 -(IBAction)multipleFileDownload:(id)sender
 {
     fetching = NO;
-    
+    [self performSelector:@selector(spinner) withObject:nil];
     [self docDataToDisplay];
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
@@ -1296,8 +1300,6 @@ NSString *wastepath = nil;
         {
             UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show ];
-            
-            
             
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             
