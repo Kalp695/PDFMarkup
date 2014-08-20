@@ -73,6 +73,50 @@
     return theFileName;
 }
 
+-(NSMutableArray*)getAllFilesWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext{
+    
+    NSMutableArray *allFiles=[[NSMutableArray alloc]init];
+    NSArray *dirContents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:dirPath error:nil];
+    for (NSString *tString in dirContents) {
+        if ([tString hasPrefix:fileName] && [tString hasSuffix:ext]) {
+            [allFiles addObject:tString];
+            // do stuff
+            
+        }
+    }
+    
+    return allFiles;
+}
+
+
+
+-(void)renameFileWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext withCurrentIndex:(NSInteger)currentIndex withCount:(NSInteger)totalCount{
+    
+    
+    NSString *oldFileName,*oldFilePath,*newFileName,*newFilePath;
+    for(int i=currentIndex;i<=totalCount;i++)
+    {
+
+        oldFileName=[NSString stringWithFormat:@"%@_%d.%@",fileName,i+1,ext];
+        oldFilePath=[dirPath stringByAppendingPathComponent:oldFileName];
+        
+        newFileName=[NSString stringWithFormat:@"%@_%d.%@",fileName,i,ext];
+        newFilePath=[dirPath stringByAppendingPathComponent:newFileName];
+        
+        
+        [[NSFileManager defaultManager] moveItemAtPath:oldFilePath toPath:newFilePath error:nil];
+        
+        if([[NSFileManager defaultManager] fileExistsAtPath:oldFilePath])
+        {
+             [[NSFileManager defaultManager] removeItemAtPath:oldFilePath error:nil];
+        }
+            
+        
+    }
+    
+
+}
+
 
 -(NSString*)getCurrentDate{
     NSDate *currentDate=[NSDate date];
@@ -237,6 +281,23 @@
     //NSLog(@"%@",path);
     
     [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    
+}
+
+- (void)deleteFileWithFilePath:(NSString *) filenPath {
+    NSString *path = [self pathForDataFileWithFilename:filenPath];
+    
+    //NSLog(@"%@",path);
+    
+    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    
+}
+
+- (void)deleteFile:(NSString *) filenPath {
+
+    
+    //NSLog(@"%@",path);
+    [[NSFileManager defaultManager] removeItemAtPath:filenPath error:nil];
     
 }
 

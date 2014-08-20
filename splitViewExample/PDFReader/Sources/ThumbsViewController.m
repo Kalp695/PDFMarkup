@@ -444,6 +444,7 @@
     
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
+    
     [[NSFileManager defaultManager] removeItemAtPath:_filePath error:nil];
     [[NSFileManager defaultManager] moveItemAtPath:newFilePath toPath:_filePath error:nil];
     
@@ -453,8 +454,35 @@
     
     [thumbsViewCross removeFromSuperview];
     
-    
     [theThumbsView showHidecrossButtonMakeHide:NO];
+    CommonFunction *commonFunction=[[CommonFunction alloc]init];
+    NSString *folderPath=[commonFunction getFolderPathFromFullPath:_filePath];
+    
+    /* Deleting and Rename .DrawingPad*/
+    NSString *padFileName=[commonFunction getFileNameFromPath:_filePath];
+    NSString *fileName=[NSString stringWithFormat:@"%@_%d.DrawingPad",padFileName,index+1];
+    NSString *filePath=[[commonFunction getFolderPathFromFullPath:_filePath] stringByAppendingPathComponent:fileName];
+    [commonFunction deleteFile:filePath];
+    
+    //Rename
+    [commonFunction renameFileWithFilePath:folderPath WithFileName:padFileName withExtension:@"DrawingPad" withCurrentIndex:index+1 withCount:[document.pageCount integerValue]];
+    
+    //End Rename
+    
+    /* End Deleting .DrawingPad*/
+    
+    /* Deleting .ImagePad*/
+    
+    fileName=[NSString stringWithFormat:@"%@_%d.ImagePad",padFileName,index+1];
+    filePath=[[commonFunction getFolderPathFromFullPath:_filePath] stringByAppendingPathComponent:fileName];
+    [commonFunction deleteFile:filePath];
+    
+    //Rename
+    [commonFunction renameFileWithFilePath:folderPath WithFileName:padFileName withExtension:@"ImagePad" withCurrentIndex:index+1 withCount:[document.pageCount integerValue]];
+    
+    //End Rename
+    
+    /* End Deleting .ImagePad*/
     
     
 }

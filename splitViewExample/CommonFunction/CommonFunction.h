@@ -39,6 +39,10 @@ float distanceBetweenTwo_Points(CGPoint a, CGPoint b) ;
 -(NSString*)saveAndGetFooterWithIndex:(NSString*)text;
 - (void) saveFileDataToDiskWithFilename:(NSString *)filename withCollection:(NSMutableArray*)imageCollection;
 - (NSMutableArray*) loadFileDataFromDiskWithFilename:(NSString *)filename;
+- (void)deleteFileWithFilePath:(NSString *) filenPath;
+-(NSMutableArray*)getAllFilesWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext;
+-(void)renameFileWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext withCurrentIndex:(NSInteger)currentIndex withCount:(NSInteger)totalCount;
+- (void)deleteFile:(NSString *) filenPath;
 
 
 @property(nonatomic,retain) NSString *folderPath;
