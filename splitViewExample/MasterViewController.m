@@ -476,13 +476,20 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
             
             self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"Google";
+            self.detailViewController.accountInfo =  @"google";
             self.detailViewController.detailItem = object;
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
             
             self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
             self.detailViewController.accountInfo =  @"box";
+            self.detailViewController.indexPathh = indexPath.row;
+            self.detailViewController.detailItem = object;
+        }
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"]) {
+            
+            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            self.detailViewController.accountInfo =  @"sugarsync";
             self.detailViewController.indexPathh = indexPath.row;
             self.detailViewController.detailItem = object;
         }

@@ -22,6 +22,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 
+#import "GTLUploadParameters.h"
 static DetailViewController *sharedInstance = nil;
 
 @interface Item : NSObject
@@ -144,6 +145,40 @@ static DetailViewController *sharedInstance = nil;
         [self.navigationController pushViewController: detail animated: YES];
         
     }
+    else if ([accountInfo isEqualToString:@"google"])
+    {
+        UIStoryboard * storyboard = self.storyboard;
+        
+        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"google";
+        [FolderChooseViewController getSharedInstance].accountName = @"google";
+        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+        [self.navigationController pushViewController: detail animated: YES];
+        
+    }
+    else if ([accountInfo isEqualToString:@"sugarsync"])
+    {
+        UIStoryboard * storyboard = self.storyboard;
+        
+        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
+        [FolderChooseViewController getSharedInstance].accountName = @"sugarsync";
+        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+        [self.navigationController pushViewController: detail animated: YES];
+        
+    }
+    else if ([accountInfo isEqualToString:@"ftp"])
+    {
+        UIStoryboard * storyboard = self.storyboard;
+        
+        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"ftp";
+        [FolderChooseViewController getSharedInstance].accountName = @"ftp";
+        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+        [self.navigationController pushViewController: detail animated: YES];
+        
+    }
+
     [self gridViewButton_click:nil] ;
     
 }
@@ -230,34 +265,6 @@ static DetailViewController *sharedInstance = nil;
         
         
     }
-    //    if ([[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] isKindOfClass:[NSArray class]]) {
-    //        for (int i = 0; i<[[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] count]; i++) {
-    //            if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
-    //
-    //            Item *item = [[Item alloc] init];
-    //            item.title = [[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"];
-    //            item.isChecked = NO;
-    //            item.image = [UIImage imageNamed:@"Dropbox.png" ];
-    //            [items addObject:item];
-    //            }
-    //
-    //        }
-    //
-    //    }
-    //    else
-    //    {
-    //        if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
-    //
-    //            Item *item = [[Item alloc] init];
-    //            item.title = [[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"];
-    //            item.isChecked = NO;
-    //            item.image = [UIImage imageNamed:@"Dropbox.png" ];
-    //            [items addObject:item];
-    //        }
-    //    }
-    
-    
-    
     
     Item *item = [[Item alloc] init];
     item.title = @"Add Account";
@@ -728,6 +735,17 @@ static DetailViewController *sharedInstance = nil;
              [self uploadFolderToBox:0 :filename :boxParentId];
          }
     
+    }
+    else
+    {
+        NSString * docfilepath = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfPath"];
+
+        NSString *filePath = docfilepath;
+        NSString *mimeType = @"text/plain";
+        NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:filePath];
+        GTLUploadParameters *uploadParameters = [GTLUploadParameters uploadParametersWithFileHandle:file
+                                                                                          MIMEType:mimeType];
+        
     }
   
     
@@ -2330,6 +2348,37 @@ static DetailViewController *sharedInstance = nil;
                     
                     [self.navigationController pushViewController: detail animated: YES];
                 }
+                if ([item.accounttype isEqualToString:@"google"]) {
+                    
+                    UIStoryboard * storyboard = self.storyboard;
+                    
+                    DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+                    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"google";
+                    [DropboxDownloadFileViewControlller getSharedInstance].index = indexPath.row;
+                    
+                    [self.navigationController pushViewController: detail animated: YES];
+                }
+                if ([item.accounttype isEqualToString:@"sugarsync"]) {
+                    
+                    UIStoryboard * storyboard = self.storyboard;
+                    
+                    DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+                    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
+                    [DropboxDownloadFileViewControlller getSharedInstance].index = indexPath.row;
+                    
+                    [self.navigationController pushViewController: detail animated: YES];
+                }
+                if ([item.accounttype isEqualToString:@"ftp"]) {
+                    
+                    UIStoryboard * storyboard = self.storyboard;
+                    
+                    DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+                    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"ftp";
+                    [DropboxDownloadFileViewControlller getSharedInstance].index = indexPath.row;
+                    
+                    [self.navigationController pushViewController: detail animated: YES];
+                }
+
                 
                 
             }
@@ -2419,6 +2468,14 @@ static DetailViewController *sharedInstance = nil;
                         
                         
                     }
+                }
+                else if ([item.accounttype isEqualToString:@"google"])
+                {
+                    [arrUseraccounts removeObjectAtIndex:k];
+                    
+                    NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+                    arrUpdatedUserAccounts = arrUseraccounts;
+                    [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
                 }
                 
             }

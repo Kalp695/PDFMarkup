@@ -10,6 +10,8 @@
 #import <DropboxSDK/DropboxSDK.h>
 #import "DropboxManager.h"
 #import <GLKit/GLKit.h>
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "GTLDrive.h"
 
 @class DBRestClient;
 
