@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CoreText/CoreText.h>
 #import "PDFFileName.h"
+#import "UIImage+Compress.h"
 
 
 
@@ -27,7 +28,7 @@
     CGContextRef context;
 
 }
--(void)drawPDFWithReportID:(NSString*)reportID withPDFFilePath:(NSString*)pdfFilePath withSavePDFFilePath:(NSString*)savepdfFilePath;
+-(void)drawPDFWithReportID:(NSString*)reportID withPDFFilePath:(NSString*)pdfFilePath withSavePDFFilePath:(NSString*)savepdfFilePath withPreview:(BOOL)preview;
 
 
 @end

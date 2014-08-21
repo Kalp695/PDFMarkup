@@ -184,7 +184,7 @@ static ReaderViewController *sharedInstance = nil;
         NSString *fileName=[commonFunction getFileNameFromPath:_pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",fileName,page]];
         
-        NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"_%d",page]];
+        NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"Small_%d",page]];
         imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
         
        
@@ -218,7 +218,7 @@ static ReaderViewController *sharedInstance = nil;
                 
                 //Load images on page
                 
-                NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"_%d",number]];
+                NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"Small_%d",number]];
                 imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
                 int i=1;
                 for(pdfPageObject in imageCollection){
@@ -572,7 +572,7 @@ static ReaderViewController *sharedInstance = nil;
     NSString *tempFilePath = [[_pdfFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     
     PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
-    [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:tempFilePath];
+    [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:tempFilePath withPreview:YES];
     
     document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
     
@@ -908,15 +908,34 @@ static ReaderViewController *sharedInstance = nil;
     
     //saving image
     
+    if(imageCollection==nil)
+        imageCollection=[[NSMutableArray alloc]init];
+    
     image_no=[imageCollection count]+1;
     pdfPageObject=[[PDFPage alloc]init];
     pdfPageObject.image_no=image_no;
+    pdfPageObject.image=[cameraImage compressedImage];
     imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
-    [self loadImageToConentPageview:cameraImage withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
-    [imageCollection addObject:pdfPageObject];
+    pdfPageObject.frame=imageFrame;
     
-    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+    
+    [imageCollection addObject:pdfPageObject];
     [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
+    
+    pdfPageObject.image=[pdfPageObject.image compressedImageToSmallSize];
+    
+    
+    
+    [imageCollection removeLastObject];
+    [imageCollection addObject:pdfPageObject];
+    [self loadImageToConentPageview:pdfPageObject.image withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
+    
+    currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
+    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
+    
+    //[imageCollection removeAllObjects];
+    //pdfPageObject=nil;
     
     
 }
@@ -924,14 +943,14 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)loadImageToConentPageview:(UIImage*)image withFrame:(CGRect)imageFrame withImageNo:(NSInteger)image_no withDrawingPad:(ReaderContentView*)contentViewPad{
     
-    UIImage *smallImage=nil;
+
     
     pdfPageObject.image=image;
     pdfPageObject.frame=imageFrame;
 
-    smallImage=[image compressedImage];
+
     //saving frame
-    imageResizableView=[self getResizableImage:smallImage withFrame:imageFrame];
+    imageResizableView=[self getResizableImage:image withFrame:imageFrame];
     
     imageResizableView.tag=image_no;
         if(imageCollection==nil)
@@ -1037,7 +1056,7 @@ static ReaderViewController *sharedInstance = nil;
         NSString *appFile = [filePathh stringByAppendingPathComponent:theFileName];
         
         PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
-        [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:appFile];
+        [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:appFile withPreview:NO];
         
     }
     
@@ -1186,7 +1205,7 @@ static ReaderViewController *sharedInstance = nil;
     
     //End load images on page
 
-    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%@",document.pageNumber]];
+    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
     imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
     
     [self clearMarkupView];
@@ -1219,7 +1238,7 @@ static ReaderViewController *sharedInstance = nil;
             NSLog(@"pdfPageObject.frame=%@", NSStringFromCGRect(pdfPageObject.frame));
             UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
             imgView.contentMode=UIViewContentModeScaleAspectFit;
-            imgView.image=pdfPageObject.image;
+            imgView.image=pdfPageObject.image ;
             
             [_drawingPad addSubview:imgView];
         
@@ -1227,6 +1246,9 @@ static ReaderViewController *sharedInstance = nil;
         
         photoEditDoneBarButton.title=@"Edit";
     }
+    
+    //[imageCollection removeAllObjects];
+   // pdfPageObject=nil;
     
 }
 
@@ -3112,10 +3134,8 @@ static ReaderViewController *sharedInstance = nil;
     
     }
     
-    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
     [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
-
-    
     
     [NSTimer scheduledTimerWithTimeInterval:0.0
                                      target:self

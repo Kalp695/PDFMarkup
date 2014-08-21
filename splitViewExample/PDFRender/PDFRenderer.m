@@ -339,23 +339,32 @@ UIView *imgView;
 
 
 
--(void)drawPhotosWithPDFFilePath:(NSString*)pdfFilePath withPage_no:(int)pageNumber{
+-(void)drawPhotosWithPDFFilePath:(NSString*)pdfFilePath withPage_no:(int)pageNumber withPreview:(BOOL)preview{
      CommonFunction *commonFunction=[[CommonFunction alloc]init];
     NSString *folderPath = [commonFunction getFolderPathFromFullPath:pdfFilePath];
     [commonFunction setFolderPath:folderPath];
 
-    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%d",pageNumber]];
+    NSString *pdfFileNameStr;
+    if(preview==YES)
+    {
+        pdfFileNameStr=[[commonFunction getFileNameFromPath:pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"Small_%d",pageNumber]];
+    }
+    else if(preview==NO)
+    {
+        pdfFileNameStr=[[commonFunction getFileNameFromPath:pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"Big_%d",pageNumber]];
+        
+    }
     
     NSMutableArray *imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
     
     for(PDFPage *pdfPageObject in imageCollection){
-        [self drawImage:pdfPageObject.image inRect:pdfPageObject.frame];
-        
+
+         [self drawImage:pdfPageObject.image inRect:pdfPageObject.frame];
     }
     
 }
 
--(void)drawPDFWithReportID:(NSString*)reportID withPDFFilePath:(NSString*)pdfFilePath withSavePDFFilePath:(NSString*)savepdfFilePath
+-(void)drawPDFWithReportID:(NSString*)reportID withPDFFilePath:(NSString*)pdfFilePath withSavePDFFilePath:(NSString*)savepdfFilePath withPreview:(BOOL)preview
 {
     
     
@@ -431,7 +440,7 @@ UIView *imgView;
         NSString *fileName=[commonFunction getFileNameFromPath:pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%zd",fileName, pageNumber]];
         
-        [self drawPhotosWithPDFFilePath:pdfFilePath withPage_no:pageNumber];
+        [self drawPhotosWithPDFFilePath:pdfFilePath withPage_no:pageNumber withPreview:preview];
         
         [self drawShapes];
         

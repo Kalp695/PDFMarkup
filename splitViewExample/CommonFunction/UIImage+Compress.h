@@ -12,6 +12,8 @@
     
 }
 
+- (UIImage *)compressedImageToSmallSize;
 - (UIImage *)compressedImage;
 - (UIImage *)compressImage:(UIImage *)image;
+
 @end

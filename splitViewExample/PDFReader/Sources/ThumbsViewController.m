@@ -334,7 +334,7 @@
     PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
     
     NSString *tempFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
-    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath];
+    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath withPreview:YES];
 
     
     document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
@@ -480,7 +480,11 @@
     
     /* Deleting .ImagePad*/
     
-    fileName=[NSString stringWithFormat:@"%@_%d.ImagePad",padFileName,index+1];
+    fileName=[NSString stringWithFormat:@"%@Big_%d.ImagePad",padFileName,index+1];
+    filePath=[[commonFunction getFolderPathFromFullPath:_filePath] stringByAppendingPathComponent:fileName];
+    [commonFunction deleteFile:filePath];
+    
+    fileName=[NSString stringWithFormat:@"%@Small_%d.ImagePad",padFileName,index+1];
     filePath=[[commonFunction getFolderPathFromFullPath:_filePath] stringByAppendingPathComponent:fileName];
     [commonFunction deleteFile:filePath];
     
@@ -493,7 +497,7 @@
     
     
     NSString *tempFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
-    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath];
+    [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath withPreview:YES];
     
     
     document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];

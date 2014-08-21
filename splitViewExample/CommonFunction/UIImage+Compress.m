@@ -12,14 +12,26 @@
 
 @implementation UIImage (Compress)
 - (UIImage *)compressedImage {
+    NSData *imageData = UIImageJPEGRepresentation(self, 0.5f);
+   UIImage *newImage=[UIImage imageWithData:imageData];
+    
+    return newImage;
+    
+}
+
+
+- (UIImage *)compressedImageToSmallSize
+{
     CGSize imageSize = self.size;
     CGFloat width = imageSize.width;
     CGFloat height = imageSize.height;
-    
+   
+    /*
     if (width <= MAX_IMAGEPIX && height <= MAX_IMAGEPIX) {
         // no need to compress.
         return self;
     }
+     */
     
     if (width == 0 || height == 0) {
         // void zero exception
@@ -50,12 +62,37 @@
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     
+    
+    
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
+    
+    NSData *imageData = UIImageJPEGRepresentation(newImage, 0.5f);
+    newImage=[UIImage imageWithData:imageData];
+    NSInteger yourImgSize = [imageData length];
+    
+    NSLog(@"before compression yourImgSize=%fkb",yourImgSize/1000.0f);
+
+    
+    /*
+    UIGraphicsBeginImageContext(CGSizeMake(Width,Height));
+    [newImage drawInRect:CGRectMake(0,0,Width, Height)];
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    imageData = UIImageJPEGRepresentation(newImage, 0.01f);
+    newImage=[UIImage imageWithData:imageData];
+    yourImgSize = [imageData length];
+    
+    
+    NSLog(@"after compression yourImgSize=%fkb",yourImgSize/1000.0f);
+     */
+
     
     return newImage;
     
 }
+
 
 
 - (UIImage *)compressImage:(UIImage *)image{
