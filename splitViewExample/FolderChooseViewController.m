@@ -90,20 +90,7 @@ static FolderChooseViewController *sharedInstance = nil;
             boxFolderId = BoxAPIFolderIDRoot;
             boxFolderName =@"All Files";
         }
-        if ([self checkExpiredBoxToken] <2)
-        {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            NSLog(@"Time to create new access token");
-            [self createNewAccesToken];
-        }
-        else
-        {
-            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            
-            [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
-            
-        }
-
+        [self checkExpiredBoxToken];
   
     }
     
@@ -151,7 +138,20 @@ static FolderChooseViewController *sharedInstance = nil;
     secRemaining = distanceBetweenDates / secondsInAnHour;
     
     NSLog(@"access token expires in %d mins",secRemaining);
-    
+    if (secRemaining <2)
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        NSLog(@"Time to create new access token");
+        [self createNewAccesToken];
+    }
+    else
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+        
+    }
+
     return secRemaining;
 }
 -(void)createNewAccesToken
@@ -273,7 +273,7 @@ static FolderChooseViewController *sharedInstance = nil;
         [arrUseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        [self viewWillAppear:YES];
+        [self viewDidLoad];
         [tbDownload reloadData];
     }
 }
@@ -297,7 +297,6 @@ static FolderChooseViewController *sharedInstance = nil;
                                                         object:self];
     
 }
-
 
 -(void)fetchAllDropboxData
 {

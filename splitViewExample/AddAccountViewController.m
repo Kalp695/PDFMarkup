@@ -14,6 +14,12 @@
 #import "BoxAuthorizationNavigationController.h"
 #import "JSON.h"
 #import "DropboxDownloadFileViewControlller.h"
+
+static NSString *const kKeychainItemName = @"Google Drive Quickstart";
+static NSString *const kClientID = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";
+static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
+
+
 @interface AddAccountViewController ()<DBRestClientDelegate>
 
 - (void)boxAPIAuthenticationDidSucceed:(NSNotification *)notification;
@@ -67,10 +73,18 @@
                                                  name:@"isDropboxLinked"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(closeBoxController)
+                                                 name:@"googleSucces"
+                                               object:nil];
+
+    
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"isDropboxLinked" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"googleSucces" object:nil];
+
 }
 
 -(void)receiveDropboxNotification:(NSNotification *)notification
@@ -145,10 +159,14 @@
     }
     else if ([sender tag] == 5)
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        GoogleLoginViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
         
-        [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
+        googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        [self presentViewController:googleLoginViewController animated:YES completion:nil];
+//     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
     }
 }
 

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <DropboxSDK/DropboxSDK.h>
-
-@interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate>
+#import "GTLDrive.h"
+#import "ASIHTTPRequest.h"
+@interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate,ASIHTTPRequestDelegate>
 {
     NSMutableArray *marrDownloadData;
     NSMutableArray *arrmetadata;
@@ -63,6 +64,11 @@
 @property (nonatomic, assign) int index;
 @property (nonatomic, retain) NSString *boxFolderId;
 @property (nonatomic, retain) NSString *boxFolderName;
+
+
+// GDrive
+@property (nonatomic,retain) NSMutableArray *driveFiles;
+@property (nonatomic, retain) GTLServiceDrive *driveService;
 
 
 @end

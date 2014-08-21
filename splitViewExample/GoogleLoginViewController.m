@@ -8,12 +8,32 @@
 
 #import "GoogleLoginViewController.h"
 #import "DocumentManager.h"
+#import "JSON.h"
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+#import "GTLDrive.h"
+#import "DropboxDownloadFileViewControlller.h"
+static GoogleLoginViewController *sharedInstance = nil;
+
 
 NSString *client_id = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";;
 NSString *secret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 NSString *callbakc =  @"http://localhost";;
 NSString *scope = @"https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.google.com/reader/api/0/subscription";
 NSString *visibleactions = @"http://schemas.google.com/AddActivity";
+
+static NSString *const kKeychainItemName = @"Google Drive Quickstart";
+
+
+
+/*
+NSString *client_id = @"1097593838790-s7c05tng19qomqppsskg1efm9hbar20d.apps.googleusercontent.com";
+NSString *secret = @"Or56jmVPdi3umzE_3bmti0eD";
+NSString *callbakc =  @"http://localhost";;
+NSString *scope = @"https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.google.com/reader/api/0/subscription";
+NSString *visibleactions = @"http://schemas.google.com/AddActivity";
+*/
 
 
 @interface GoogleLoginViewController ()
@@ -23,7 +43,15 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
 
 @implementation GoogleLoginViewController
 
++(GoogleLoginViewController*)getSharedInstance{
+    if (!sharedInstance) {
+        sharedInstance = [[super allocWithZone:NULL]init];
+        
+    }
+    return sharedInstance;
+}
 @synthesize webview,isLogin,isReader;
+@synthesize driveService;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -34,16 +62,50 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     }
     return self;
 }
+//- (GTLServiceDrive *)driveService {
+//    static GTLServiceDrive *service = nil;
+//    
+//    if (!service) {
+//        service = [[GTLServiceDrive alloc] init];
+//        
+//        // Have the service object set tickets to fetch consecutive pages
+//        // of the feed so we do not need to manually fetch them.
+//        service.shouldFetchNextPages = YES;
+//        
+//        // Have the service object set tickets to retry temporary error conditions
+//        // automatically.
+//        service.retryEnabled = YES;
+//    }
+//    return service;
+//}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.driveService = [[GTLServiceDrive alloc] init];
+    self.driveService.authorizer = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName
+                                                                                         clientID:client_id
+                                                                                     clientSecret:secret];
+    
+      GTMOAuth2Authentication *credentials;
+     credentials = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName
+                                                                        clientID:client_id
+                                                                    clientSecret:secret];
+
+    
     NSString *url = [NSString stringWithFormat:@"https://accounts.google.com/o/oauth2/auth?response_type=code&client_id=%@&redirect_uri=%@&scope=%@&data-requestvisibleactions=%@",client_id,callbakc,scope,visibleactions];
+    
+    
     
     [webview loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
 }
 
+-(IBAction)googleCancelButton_click:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
+
+}
 - (BOOL)webView:(UIWebView*)webView shouldStartLoadWithRequest:(NSURLRequest*)request navigationType:(UIWebViewNavigationType)navigationType {
     //    [indicator startAnimating];
     if ([[[request URL] host] isEqualToString:@"localhost"]) {
@@ -81,6 +143,8 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     return YES;
 }
 
+
+
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 
 {
@@ -102,71 +166,98 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     NSError *myError = nil;
     NSDictionary *tokenData = [NSJSONSerialization JSONObjectWithData:receivedData options:NSJSONReadingMutableLeaves error:&myError];
 
-   // NSString *response = [[NSString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
-   // SBJsonParser *jResponse = [[SBJsonParser alloc]init];
-   // NSDictionary *tokenData = [jResponse objectWithString:response];
-    //  WebServiceSocket *dconnection = [[WebServiceSocket alloc] init];
-    //   dconnection.delegate = self;
     
-   
-    [self getUserdetails:[tokenData objectForKey:@"access_token"]];
+
+    self.driveService.authorizer = tokenData;
+    [DropboxDownloadFileViewControlller getSharedInstance].driveService.authorizer = tokenData;
+    NSLog(@"Token data is %@",[DropboxDownloadFileViewControlller getSharedInstance].driveService.authorizer);
+
+    [self getUserdetails:[tokenData objectForKey:@"access_token"] :[tokenData objectForKey:@"expires_in"] :[tokenData objectForKey:@"refresh_token"]];
      [[NSUserDefaults standardUserDefaults] setValue:[tokenData objectForKey:@"access_token"] forKey:@"google_accesstoken"];
-    //  NSString *pdata = [NSString stringWithFormat:@"type=3&token=%@&secret=123&login=%@",[tokenData accessToken.secret,self.isLogin];
-    //  [dconnection fetch:1 withPostdata:pdata withGetData:@"" isSilent:NO];
     
-    
-//    [self.navigationController popToRootViewControllerAnimated:YES];
- 
+}
+- (BOOL)isAuthorized
+{
+    return [((GTMOAuth2Authentication *)self.driveService.authorizer) canAuthorize];
+}
+// Creates the auth controller for authorizing access to Google Drive.
+- (GTMOAuth2ViewControllerTouch *)createAuthController
+{
+    GTMOAuth2ViewControllerTouch *authController;
+    authController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:kGTLAuthScopeDriveFile
+                                                                clientID:client_id
+                                                            clientSecret:secret
+                                                        keychainItemName:kKeychainItemName
+                                                                delegate:self
+                                                        finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+    return authController;
+}
+
+// Handle completion of the authorization process, and updates the Drive service
+// with the new credentials.
+- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
+      finishedWithAuth:(GTMOAuth2Authentication *)authResult
+                 error:(NSError *)error
+{
+    if (error != nil)
+    {
+        self.driveService.authorizer = nil;
+    }
+    else
+    {
+        self.driveService.authorizer = authResult;
+        NSLog(@"Auth result is %@",authResult);
+
+    }
 }
 
 
--(void)getUserdetails:(NSString *)str_access_token
+-(void)getUserdetails:(NSString *)str_access_token :(NSString *)expires_in :(NSString *)refresh_token
 {
     
+    
   //  https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=ya29.WABjxDd0eWUD3RsAAABKxUt_bVWN2VsWX2l8VavY_FsJxUuqQfptWY1UMYYiww
+    
+ 
     NSString *str =  [NSString stringWithFormat:@"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=%@",str_access_token];
     
     
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
                                                   cachePolicy:NSURLCacheStorageAllowed
                                               timeoutInterval:20];
+    NSURLResponse *response;
+    NSError *error;
     
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[[NSOperationQueue alloc] init]
-                           completionHandler:^(NSURLResponse *response,
-                                               NSData *data,
-                                               NSError *error) {
-                               
-                               if ([data length] >0 && error == nil) {
-                                   
-                                 
-                                   
-                                    NSError *myError = nil;
-                                   
-                                   NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-                                   NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&myError]];
-                                   [userdata setObject:@"google" forKey:@"AccountType"];
-                                   
-                                   [arruseraccounts addObject:userdata];
-                                   [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
-                                   
-                                   NSLog(@"check %@",[self.navigationController viewControllers]);
-                                   [self performSelector:@selector(closeController) withObject:nil afterDelay:1.0];
-                               } else if ([data length] == 0 && error == nil) {
-                                   
-                                   NSLog(@"Nothing was downloaded.");
-                                   
-                               } else if (error != nil) {
-                                  
-                                   NSLog(@"Error = %@", error);
-                               }
-                           }];
+    NSData * data = [NSURLConnection sendSynchronousRequest:request
+                                          returningResponse:&response
+                                                      error:&error];
+     NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+    
+    NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
+    if (error == nil)
+    {
+    NSLog(@"userdata is %@",userdata);
+    [userdata setObject:@"google" forKey:@"AccountType"];
+    [userdata setObject:str_access_token forKey:@"acces_token"];
+    [userdata setObject:expires_in forKey:@"expire_date"];
+    [userdata setObject:refresh_token forKey:@"refresh_token"];
+    [arruseraccounts addObject:userdata];
+    [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+       
+    [self performSelector:@selector(closeGoogleController) withObject:nil afterDelay:1.0];
 
+    }
+    
 }
-
--(void)closeController
+-(void)closeGoogleController
 {
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    [self dismissModalViewControllerAnimated:YES];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"googleSucces" object:self];
+    
+   // [self.navigationController popViewControllerAnimated:YES];
+
 
 }
 
