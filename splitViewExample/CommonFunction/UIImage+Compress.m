@@ -12,7 +12,7 @@
 
 @implementation UIImage (Compress)
 - (UIImage *)compressedImage {
-    NSData *imageData = UIImageJPEGRepresentation(self, 0.5f);
+    NSData *imageData = UIImageJPEGRepresentation(self, 0.7f);
    UIImage *newImage=[UIImage imageWithData:imageData];
     
     return newImage;

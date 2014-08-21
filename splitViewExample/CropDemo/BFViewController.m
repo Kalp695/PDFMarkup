@@ -17,6 +17,7 @@
 #define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/256.0f green:(g)/256.0f blue:(b)/256.0f alpha:1.0f]
 
 @synthesize delegate=_delegate;
+@synthesize image_no;
 
 - (void)viewDidLoad
 {
@@ -225,7 +226,7 @@
 
 -(void)sendCropImage{
     if(_delegate!=nil){
-        [_delegate cropPhoto:self.useImage];
+        [_delegate cropPhoto:self.useImage withImageNo:image_no];
         // remove crop interface from superview
         [self.cropper removeFromSuperview];
         self.cropper = nil;

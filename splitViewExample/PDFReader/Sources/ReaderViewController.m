@@ -184,8 +184,8 @@ static ReaderViewController *sharedInstance = nil;
         NSString *fileName=[commonFunction getFileNameFromPath:_pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",fileName,page]];
         
-        NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"Small_%d",page]];
-        imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+        
+        imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:page];
         
        
         NSInteger maxValue = [document.pageCount integerValue];
@@ -218,8 +218,7 @@ static ReaderViewController *sharedInstance = nil;
                 
                 //Load images on page
                 
-                NSString *pdfFileNameStr=[fileName stringByAppendingString:[NSString stringWithFormat:@"Small_%d",number]];
-                imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+                imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:number];
                 int i=1;
                 for(pdfPageObject in imageCollection){
                     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
@@ -523,10 +522,7 @@ static ReaderViewController *sharedInstance = nil;
     
     popOverListArray = [[NSMutableArray alloc ]initWithObjects:@"DropBox",@"Box",@"Sugar Sync",@"FTP",@"Google Drive", nil];
     
-    
-    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"_%d",[document.pageNumber integerValue]]];
-    
-   imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+   imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
     
     
 }
@@ -749,7 +745,7 @@ static ReaderViewController *sharedInstance = nil;
 
 
 //load photo to crop
--(void)loadPhotoToCrop:(UIImage*)originalImage inImage_no:(int)image_no{
+-(void)loadPhotoToCrop:(UIImage*)originalImage inImage_no:(NSInteger)image_no{
     //crop photo
     
     
@@ -761,6 +757,7 @@ static ReaderViewController *sharedInstance = nil;
     UINavigationController *bfNavController=[[UINavigationController alloc]initWithRootViewController:bfviewController];
     [bfviewController setOriginalImage:originalImage];
     [bfviewController setUseImage:originalImage];
+    [bfviewController setImage_no:image_no];
     xCrop= 150;
     yCrop=150, widthCrop=520, heightCrop=600;
     
@@ -830,14 +827,14 @@ static ReaderViewController *sharedInstance = nil;
 
 
 //crop photo delegate
--(void)cropPhoto:(UIImage *)cropImage{
+-(void)cropPhoto:(UIImage *)cropImage withImageNo:(int)image_no{
     
     
     
     cameraImage=cropImage;
     
     
-    [self loadPhoto:[document.pageNumber integerValue]];
+    [self loadPhoto:[document.pageNumber integerValue] withImageNo:image_no];
     
     //For Condition Report Front page
     
@@ -885,10 +882,7 @@ static ReaderViewController *sharedInstance = nil;
 
 //load Photo
 
--(void)loadPhoto:(NSInteger)pageIndex{
-    
-
-    NSInteger image_no=1;
+-(void)loadPhoto:(NSInteger)pageIndex withImageNo:(NSInteger)image_no{
     
     
     CGFloat width=  cameraImage.size.width;
@@ -911,35 +905,81 @@ static ReaderViewController *sharedInstance = nil;
     if(imageCollection==nil)
         imageCollection=[[NSMutableArray alloc]init];
     
-    image_no=[imageCollection count]+1;
-    pdfPageObject=[[PDFPage alloc]init];
-    pdfPageObject.image_no=image_no;
-    pdfPageObject.image=[cameraImage compressedImage];
-    imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
-    pdfPageObject.frame=imageFrame;
     
-    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+    if(image_no==-1)
+    {
+        
+        image_no=[imageCollection count]+1;
+        
+        imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+        
+        pdfPageObject=[[PDFPage alloc]init];
+        pdfPageObject.image_no=image_no;
+        pdfPageObject.image=[cameraImage compressedImage];
+        
+        pdfPageObject.frame=imageFrame;
+        
+        [imageCollection addObject:pdfPageObject];
+        
+        [self saveImagesToDiskWithBigSmall:@"Big" withImageColelction:imageCollection];
+        
+        pdfPageObject.image=[pdfPageObject.image compressedImageToSmallSize];
+        
+        [imageCollection removeLastObject];
+        [imageCollection addObject:pdfPageObject];
+        [self loadImageToConentPageview:pdfPageObject.image withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
+        
+        [self saveImagesToDiskWithBigSmall:@"Small" withImageColelction:imageCollection];
+        
+        //[imageCollection removeAllObjects];
+        //pdfPageObject=nil;
+
+    }
+    else if(image_no>0)
+    {
+        imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+        
+        NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
+        for(pdfPageObject in imageCollection){
+            if(pdfPageObject.image_no==image_no){
+                pdfPageObject.image=[cameraImage compressedImage];
+                pdfPageObject.frame=imageFrame;
+                [self saveImagesToDiskWithBigSmall:@"Big" withImageColelction:imageCollectionBig];
+                
+                break;
+            }
+        }
+        [imageCollectionBig removeAllObjects];
+        imageCollectionBig=nil;
+        
+
+        
+        for(pdfPageObject in imageCollection){
+            if(pdfPageObject.image_no==image_no){
+                [_lastEditedView removeFromSuperview];
+                pdfPageObject.image=[[cameraImage compressedImage] compressedImageToSmallSize];
+                pdfPageObject.frame=imageFrame;
+                [self loadImageToConentPageview:pdfPageObject.image withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
+                [self saveImagesToDiskWithBigSmall:@"Small" withImageColelction:imageCollection];
+                
+                break;
+            }
+        }
+        
+    }
     
-    [imageCollection addObject:pdfPageObject];
-    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
-    
-    pdfPageObject.image=[pdfPageObject.image compressedImageToSmallSize];
     
     
-    
-    [imageCollection removeLastObject];
-    [imageCollection addObject:pdfPageObject];
-    [self loadImageToConentPageview:pdfPageObject.image withFrame:imageFrame withImageNo:image_no withDrawingPad:contentPageView];
-    
-    currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
-    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
-    
-    //[imageCollection removeAllObjects];
-    //pdfPageObject=nil;
     
     
 }
 
+
+-(void)saveImagesToDiskWithBigSmall:(NSString*)type withImageColelction:(NSMutableArray*)imageCollectionSmallBig{
+    
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"%@_%d",type,[document.pageNumber integerValue]]];
+     [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionSmallBig];
+}
 
 -(void)loadImageToConentPageview:(UIImage*)image withFrame:(CGRect)imageFrame withImageNo:(NSInteger)image_no withDrawingPad:(ReaderContentView*)contentViewPad{
     
@@ -961,7 +1001,7 @@ static ReaderViewController *sharedInstance = nil;
     
     imageResizableView.tag=image_no;
     imageResizableView.delegate=self;
-    
+    _lastEditedView=imageResizableView;
     [contentViewPad addSubview:imageResizableView];
 
 }
@@ -1038,27 +1078,50 @@ static ReaderViewController *sharedInstance = nil;
 - (void)receiveExportNotification:(NSNotification *) notification
 {
     
-    //   NSString *filePath=_pdfFilePath;
-    //   NSString* theFileName = [NSString stringWithFormat:@"%@.pdf",[[filePath lastPathComponent] stringByDeletingPathExtension]];
-    NSString *filePath1=_pdfFilePath;
-    //NSString* theFileName1 = [NSString stringWithFormat:@"%@.pdf",[[filePath1 lastPathComponent] stringByDeletingPathExtension]];
+    dispatch_queue_t queue=dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue,
+                   ^{
+                      
+                      
+                       
+                       dispatch_sync(queue,
+                                     ^{
+                                         
+                                         
+                                         //   NSString *filePath=_pdfFilePath;
+                                         //   NSString* theFileName = [NSString stringWithFormat:@"%@.pdf",[[filePath lastPathComponent] stringByDeletingPathExtension]];
+                                         NSString *filePath1=_pdfFilePath;
+                                         //NSString* theFileName1 = [NSString stringWithFormat:@"%@.pdf",[[filePath1 lastPathComponent] stringByDeletingPathExtension]];
+                                         
+                                         if([[NSFileManager defaultManager] fileExistsAtPath:filePath1])
+                                         {
+                                             //NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath1];
+                                             NSString* theFileName = [NSString stringWithFormat:@"%@.pdf",[ReaderViewController getSharedInstance].pdfName];
+                                             
+                                             
+                                             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+                                             NSString *documentsPath = [paths objectAtIndex:0];
+                                             NSString *filePathh = [documentsPath stringByAppendingPathComponent:[ReaderViewController getSharedInstance].savedFolderPath];
+                                             NSString *appFile = [filePathh stringByAppendingPathComponent:theFileName];
+                                             
+                                             PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+                                             [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:appFile withPreview:NO];
+                                             
+                                         }
+                                         
+
+                                         
+                                         
+                                     }
+                                     );
+                   }
+                   );
     
-    if([[NSFileManager defaultManager] fileExistsAtPath:filePath1])
-    {
-        //NSData *data = [[NSFileManager defaultManager] contentsAtPath:filePath1];
-        NSString* theFileName = [NSString stringWithFormat:@"%@.pdf",[ReaderViewController getSharedInstance].pdfName];
-        
-        
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsPath = [paths objectAtIndex:0];
-        NSString *filePathh = [documentsPath stringByAppendingPathComponent:[ReaderViewController getSharedInstance].savedFolderPath];
-        NSString *appFile = [filePathh stringByAppendingPathComponent:theFileName];
-        
-        PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
-        [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:appFile withPreview:NO];
-        
-    }
+
+    
+    
+    
+    
     
     
       //  [[NSFileManager defaultManager] createDirectoryAtPath:appFile withIntermediateDirectories:NO attributes:nil error:&error];
@@ -1205,8 +1268,8 @@ static ReaderViewController *sharedInstance = nil;
     
     //End load images on page
 
-    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
-    imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+    
+    imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
     
     [self clearMarkupView];
     
@@ -1227,6 +1290,7 @@ static ReaderViewController *sharedInstance = nil;
         }
 
         photoEditDoneBarButton.title=@"Done";
+        [self ShowPhotoMenuInView:_lastEditedView];
         
     }
     else
@@ -1250,6 +1314,15 @@ static ReaderViewController *sharedInstance = nil;
     //[imageCollection removeAllObjects];
    // pdfPageObject=nil;
     
+}
+
+
+-(NSMutableArray*)getImageCollectionWithSmallBig:(NSString*)type withPageNumber:(NSInteger)page_no{
+    
+    NSString *pdfFileNameStr=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"%@_%d",type,page_no]];
+   NSMutableArray *imgCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
+
+    return imgCollection;
 }
 
 
@@ -3129,13 +3202,41 @@ static ReaderViewController *sharedInstance = nil;
     for( pdfPageObject in imageCollection){
         if(pdfPageObject.image_no==_lastEditedView.tag){
             pdfPageObject.frame=_lastEditedView.frame;
+            break;
         }
-    
-    
     }
     
     NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
     [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
+    
+    dispatch_queue_t queue=dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+      dispatch_async(queue,
+                     ^{
+                         __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
+                         
+                        dispatch_sync(queue,
+                                      ^{
+                                          
+                                          
+                                          for( pdfPageObject in imageCollectionBig){
+                                              if(pdfPageObject.image_no==_lastEditedView.tag){
+                                                  pdfPageObject.frame=_lastEditedView.frame;
+                                                  break;
+                                              }
+                                          }
+                                          
+                                          NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+                                          [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionBig];
+
+                                          
+                                       }
+                                     );
+                     }
+                   );
+    
+    
+    [self ShowPhotoMenuInView:_lastEditedView];
+    
     
     [NSTimer scheduledTimerWithTimeInterval:0.0
                                      target:self
@@ -3364,6 +3465,182 @@ static ReaderViewController *sharedInstance = nil;
     }
     return nil;
 }
+
+
+#pragma show save delete and crop on photo
+
+
+-(void)ShowPhotoMenuInView :(UIView*)spView{
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        UIMenuController *menuController = [UIMenuController sharedMenuController];
+        UIMenuItem *resetMenuItem = [[UIMenuItem alloc] initWithTitle:@"Save" action:@selector(menuItemClicked:)];
+        
+        UIMenuItem *deleteMenuItem = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(menuDeleteItemClicked:)];
+        UIMenuItem *copyMenuItem = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(imageCopy:)];
+        
+        UIMenuItem *cropMenuItem = [[UIMenuItem alloc] initWithTitle:@"Crop" action:@selector(imageCrop:)];
+        
+        
+        NSAssert([self becomeFirstResponder], @"Sorry, UIMenuController will not work with %@ since it cannot become first responder", self);
+        [menuController setMenuItems:[NSArray arrayWithObjects:resetMenuItem,deleteMenuItem,copyMenuItem,cropMenuItem, nil]];
+        
+        [menuController setTargetRect:CGRectMake(40.0f, 0.0f, 200.0f, 50.0f) inView:spView];
+        [menuController setMenuVisible:YES animated:YES];
+    }];
+}
+
+- (void) imageCopy:(id) sender {
+    // called when copy clicked in menu
+    
+    
+   }
+
+- (void) menuItemClicked:(id) sender {
+    // called when Item clicked in menu
+    
+    UIImage *savedImage;
+    
+    UIImageWriteToSavedPhotosAlbum(savedImage, self,
+                                   nil, nil);
+    
+}
+
+
+- (void) menuDoneItemClicked:(id) sender {
+    // called when Item clicked in menu
+    
+}
+
+- (void) imageCrop:(id) sender {
+    // called when copy clicked in menu
+    
+    UIImage *savedImage=nil;
+    NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
+    
+    for(pdfPageObject in imageCollectionBig){
+        if(pdfPageObject.image_no==_lastEditedView.tag){
+            savedImage=pdfPageObject.image;
+            break;
+        }
+    }
+    [imageCollectionBig removeAllObjects];
+    imageCollectionBig=nil;
+    
+    
+    
+    
+    //CGRect imageFrame = CGRectMake(134.5, 170, 400, 400);
+    //cameraImage=cropImage;
+    NSData *dataForJPEGFile = [NSData dataWithData:UIImageJPEGRepresentation(savedImage, 1.0)];
+    savedImage=[UIImage imageWithData:dataForJPEGFile];
+    
+    
+    //NSString *pageNameForImage=[manageFile getPageName:[sharedSingleton.pageIndex intValue]];
+    //UIImage *smallImage=[manageFile writeImageWithPath:sharedSingleton.directoryPath inImageName:pageNameForImage inImageno: 1 inImage:savedImage inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
+    
+    
+    
+    
+    [self loadPhotoToCrop:savedImage inImage_no:_lastEditedView.tag];
+    //NSData *data = [NSData dataWithData:UIImageJPEGRepresentation(savedImage, 1.00)];
+    //[pasteboard setData:data forPasteboardType:@"public.jpeg"];
+}
+
+
+- (void) menuDeleteItemClicked:(id) sender {
+    // called when Delete item clicked in menu
+    
+    
+    for( pdfPageObject in imageCollection){
+        if(pdfPageObject.image_no==_lastEditedView.tag){
+            pdfPageObject.frame=_lastEditedView.frame;
+            break;
+        }
+    }
+    
+    [imageCollection removeObject:pdfPageObject];
+    
+    NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
+    [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
+    
+    dispatch_queue_t queue=dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue,
+                   ^{
+                       
+                       __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
+                       
+                       dispatch_sync(queue,
+                                     ^{
+                                         
+                                         
+                                         for( pdfPageObject in imageCollectionBig){
+                                             if(pdfPageObject.image_no==_lastEditedView.tag){
+                                                 pdfPageObject.frame=_lastEditedView.frame;
+                                                 break;
+                                             }
+                                         }
+                                         [imageCollectionBig removeObject:pdfPageObject];
+                                         
+                                         NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+                                         [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionBig];
+                                         
+                                         
+                                     }
+                                     );
+                   }
+                   );
+    
+
+    
+    [_lastEditedView removeFromSuperview];
+    
+    
+    
+}
+
+
+- (BOOL) canPerformAction:(SEL)selector withSender:(id) sender {
+    
+
+    
+    if (selector == @selector(menuItemClicked:)||selector == @selector(menuDeleteItemClicked:)   || selector == @selector(imageCopy:)||(selector == @selector(imageCrop:))) {
+        return YES;
+    }
+    
+    
+    return NO;
+}
+
+- (BOOL) canBecomeFirstResponder {
+    return YES;
+}
+
+/*
+ 
+ - (void)willHideEditMenu:(id)sender {
+ //LogDebug(@"Will hide edit menu: %d", [UIMenuController sharedMenuController].menuVisible);
+ //[UIMenuController sharedMenuController].menuVisible = YES;
+ //[NSTimer scheduledTimerWithTimeInterval:0.00 target:self selector:@selector(showMenu:) userInfo:nil repeats:NO];
+ 
+ }
+ 
+ - (void)didHideEditMenu:(id)sender {
+ //LogDebug(@"Did hide edit menu: %d", [UIMenuController sharedMenuController].menuVisible);
+ //[NSTimer scheduledTimerWithTimeInterval:0.00 target:self selector:@selector(showMenu:) userInfo:nil repeats:NO];
+ //[UIMenuController sharedMenuController].menuVisible = YES;
+ //[self ShowPhotoMenuInView:_lastEditedView withTitle:@"Done"];
+ 
+ 
+ }
+ */
+
+-(IBAction)showMenu:(id)sender{
+    if([[[UIMenuController sharedMenuController] menuItems] count]==1){
+        
+    }
+}
+
 
 
 

@@ -11,7 +11,7 @@
 #import "LoadingView.h"
 
 @protocol cropPhotoDelegate
-- (void)cropPhoto:(UIImage *)cropImage;
+- (void)cropPhoto:(UIImage *)cropImage withImageNo:(int)image_no;
 - (void)cancelCropPhoto;
 @end
 
@@ -27,6 +27,7 @@
 @property (nonatomic, strong) IBOutlet UIImageView *displayImage;
 @property (nonatomic, strong) UIImage *originalImage;
 @property (nonatomic, strong) UIImage *useImage;
+@property  (nonatomic, assign) NSInteger image_no;
 @property (nonatomic, strong) BFCropInterface *cropper;
 @property (nonatomic, weak) id<cropPhotoDelegate> delegate;
 
