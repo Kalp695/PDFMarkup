@@ -14,16 +14,20 @@
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "GTLDrive.h"
 #import "DropboxDownloadFileViewControlller.h"
+#import "KeychainItemWrapper.h"
+
 static GoogleLoginViewController *sharedInstance = nil;
 
 
-NSString *client_id = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";;
-NSString *secret = @"tp1UdMtjm_ExEPnKKYGd55Al";
-NSString *callbakc =  @"http://localhost";;
+NSString *client_id = @"879626031062-a2dg654a283hekudfv86ga205mriso24.apps.googleusercontent.com";
+NSString *secret = @"ajRru9ga-PqaK9zPMntknmpr";
+
+NSString *callbakc =  @"http://localhost";
 NSString *scope = @"https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.google.com/reader/api/0/subscription";
 NSString *visibleactions = @"http://schemas.google.com/AddActivity";
 
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
+
 
 
 
@@ -37,7 +41,7 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
 
 
 @interface GoogleLoginViewController ()
-
+@property BOOL isAuthorized;
 @end
 
 
@@ -52,6 +56,7 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
 }
 @synthesize webview,isLogin,isReader;
 @synthesize driveService;
+@synthesize isAuthorized = _isAuthorized;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -166,11 +171,27 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     NSError *myError = nil;
     NSDictionary *tokenData = [NSJSONSerialization JSONObjectWithData:receivedData options:NSJSONReadingMutableLeaves error:&myError];
 
-    
+    GTMOAuth2Authentication * auth = [[GTMOAuth2Authentication alloc]init];
+    auth.accessToken = [tokenData objectForKey:@"access_token"];
+    auth.refreshToken = [tokenData objectForKey:@"refresh_token"];
+    auth.expiresIn = [tokenData objectForKey:@"expires_in"];
+    [[self driveService] setAuthorizer:auth];
 
-    self.driveService.authorizer = tokenData;
-    [DropboxDownloadFileViewControlller getSharedInstance].driveService.authorizer = tokenData;
+    GTLServiceDrive  * plusService = [[GTLServiceDrive alloc] init] ;
+    plusService.retryEnabled = YES;
+    
+    // 2. Set a valid |GTMOAuth2Authentication| object as the authorizer.
+    [plusService setAuthorizer:auth];
+
+    
+    KeychainItemWrapper *keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"PDFMarkup" accessGroup:nil];
+    [keychain setObject:auth.accessToken forKey:(__bridge id)(kSecAttrAccount)];
+    [keychain setObject:auth.refreshToken forKey:(__bridge id)(kSecValueData)];
+
+    
+    [DropboxDownloadFileViewControlller getSharedInstance].driveService = driveService;
     NSLog(@"Token data is %@",[DropboxDownloadFileViewControlller getSharedInstance].driveService.authorizer);
+    NSLog(@"Token data is %@",driveService.authorizer);
 
     [self getUserdetails:[tokenData objectForKey:@"access_token"] :[tokenData objectForKey:@"expires_in"] :[tokenData objectForKey:@"refresh_token"]];
      [[NSUserDefaults standardUserDefaults] setValue:[tokenData objectForKey:@"access_token"] forKey:@"google_accesstoken"];
@@ -181,44 +202,42 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     return [((GTMOAuth2Authentication *)self.driveService.authorizer) canAuthorize];
 }
 // Creates the auth controller for authorizing access to Google Drive.
-- (GTMOAuth2ViewControllerTouch *)createAuthController
-{
-    GTMOAuth2ViewControllerTouch *authController;
-    authController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:kGTLAuthScopeDriveFile
-                                                                clientID:client_id
-                                                            clientSecret:secret
-                                                        keychainItemName:kKeychainItemName
-                                                                delegate:self
-                                                        finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    return authController;
-}
+//- (GTMOAuth2ViewControllerTouch *)createAuthController
+//{
+//    GTMOAuth2ViewControllerTouch *authController;
+//    authController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:kGTLAuthScopeDriveFile
+//                                                                clientID:client_id
+//                                                            clientSecret:secret
+//                                                        keychainItemName:kKeychainItemName
+//                                                                delegate:self
+//                                                        finishedSelector:@selector(viewController:finishedWithAuth:error:)];
+//    return authController;
+//}
 
 // Handle completion of the authorization process, and updates the Drive service
 // with the new credentials.
-- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
-      finishedWithAuth:(GTMOAuth2Authentication *)authResult
-                 error:(NSError *)error
-{
-    if (error != nil)
-    {
-        self.driveService.authorizer = nil;
-    }
-    else
-    {
-        self.driveService.authorizer = authResult;
-        NSLog(@"Auth result is %@",authResult);
-
-    }
-}
+//- (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
+//      finishedWithAuth:(GTMOAuth2Authentication *)authResult
+//                 error:(NSError *)error
+//{
+//    if (error != nil)
+//    {
+//        self.driveService.authorizer = nil;
+//    }
+//    else
+//    {
+//        self.driveService.authorizer = authResult;
+//        NSLog(@"Auth result is %@",authResult);
+//
+//    }
+//}
 
 
 -(void)getUserdetails:(NSString *)str_access_token :(NSString *)expires_in :(NSString *)refresh_token
 {
     
-    
   //  https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=ya29.WABjxDd0eWUD3RsAAABKxUt_bVWN2VsWX2l8VavY_FsJxUuqQfptWY1UMYYiww
-    
- 
+
     NSString *str =  [NSString stringWithFormat:@"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=%@",str_access_token];
     
     

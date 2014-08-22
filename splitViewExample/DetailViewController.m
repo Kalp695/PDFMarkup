@@ -23,6 +23,12 @@
 #import "ASIFormDataRequest.h"
 
 #import "GTLUploadParameters.h"
+
+#import "GTLDrive.h"
+#import "GTMOAuth2ViewControllerTouch.h"
+
+static NSString *const kKeychainItemName = @"Google Drive Quickstart";
+
 static DetailViewController *sharedInstance = nil;
 
 @interface Item : NSObject
@@ -45,6 +51,8 @@ static DetailViewController *sharedInstance = nil;
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+@property (nonatomic, retain) GTLServiceDrive *driveService;
+
 - (void)configureView;
 @end
 
@@ -84,7 +92,7 @@ static DetailViewController *sharedInstance = nil;
 @synthesize boxUploadingArray;
 @synthesize documentsGridButton,documentsTableView;
 @synthesize arrUseraccounts;
-
+@synthesize driveService;
 #pragma mark - Managing the detail item
 
 - (void)setDetailItem:(id)newDetailItem
@@ -988,6 +996,8 @@ static DetailViewController *sharedInstance = nil;
                 editBarButton.title = @"Edit";
         
                 [filePathsArray removeAllObjects];
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
         
                 [documentsCollectionView reloadData];
@@ -998,6 +1008,7 @@ static DetailViewController *sharedInstance = nil;
                     item.isChecked = NO;
         
                 }
+
 //        UIAlertView * alert =  [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"Files Uploaded Successfully"
 //                         delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
 //        [alert show];
@@ -1011,7 +1022,7 @@ static DetailViewController *sharedInstance = nil;
 
                 [documentsTableView reloadData];
         
-                [self.navigationController popViewControllerAnimated:YES];
+               // [self.navigationController popViewControllerAnimated:YES];
         
     }
     
@@ -1413,7 +1424,6 @@ static DetailViewController *sharedInstance = nil;
     
     pdfValue = 0;
     
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
     for (int i =0; i< [checkableArray count]; i++) {
         
@@ -1425,7 +1435,8 @@ static DetailViewController *sharedInstance = nil;
     //[documentsTableView reloadData];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DeleteSucess" object:self userInfo:nil];
-    
+    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+
     [self docDataToDisplay];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
@@ -2472,7 +2483,10 @@ static DetailViewController *sharedInstance = nil;
                 else if ([item.accounttype isEqualToString:@"google"])
                 {
                     [arrUseraccounts removeObjectAtIndex:k];
-                    
+                    [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
+                    [[self driveService] setAuthorizer:nil];
+                   // self.isAuthorized = NO;
+
                     NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
                     arrUpdatedUserAccounts = arrUseraccounts;
                     [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];

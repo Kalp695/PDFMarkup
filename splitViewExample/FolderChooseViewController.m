@@ -371,6 +371,14 @@ static FolderChooseViewController *sharedInstance = nil;
         cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    {
+        cell.textLabel.text=[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell.textLabel.textColor=[UIColor blackColor];
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
     return cell;
 }
 
