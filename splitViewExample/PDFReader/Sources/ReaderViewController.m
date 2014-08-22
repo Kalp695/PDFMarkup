@@ -139,7 +139,7 @@ static ReaderViewController *sharedInstance = nil;
 		}
 	];
 
-	__block CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
+  	__block CGRect viewRect = CGRectZero; viewRect.size = theScrollView.bounds.size;
 
 	__block CGPoint contentOffset = CGPointZero; NSInteger page = [document.pageNumber integerValue];
 
@@ -256,9 +256,6 @@ static ReaderViewController *sharedInstance = nil;
                 _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",strFileName, number]];
                 
                
-                
-                
-                
                 
               
 
@@ -565,6 +562,10 @@ static ReaderViewController *sharedInstance = nil;
     
     if (printInteraction != nil) [printInteraction dismissAnimated:NO]; // Dismiss
     
+    if([pdfEditDoneBarButton.title isEqualToString:@"Done"]){
+        [self pdfEditDoneBarButton_click:pdfEditDoneBarButton];
+    }
+    
     NSString *tempFilePath = [[_pdfFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     
     PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
@@ -594,7 +595,7 @@ static ReaderViewController *sharedInstance = nil;
 	[self updateToolbarBookmarkIcon]; // Update bookmark icon
     [self deleteTempPDFFile];
     document = [ReaderDocument withDocumentFilePath:_pdfFilePath password:nil];
-    
+    document.pageNumber = [NSNumber numberWithInteger:currentPage]; // Update page number
     currentPage=0;
     readerDocument=nil;
     
@@ -608,6 +609,7 @@ static ReaderViewController *sharedInstance = nil;
     //[self updateScrollViewContentViews];
     
     [self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
+    
     
     //[theScrollView setContentOffset:pt animated:YES];
     
@@ -631,6 +633,11 @@ static ReaderViewController *sharedInstance = nil;
     
     readerDocument=nil;
     theScrollView.contentOffset=CGPointMake(CGRectGetWidth(theScrollView.frame)*(page-1), theScrollView.contentOffset.y);
+   
+    document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
+   
+
+    
     [self showDocumentPageNew:page]; // Show the page
     
     //[viewController dismissViewControllerAnimated:YES completion:nil]; // Dismiss
@@ -908,8 +915,16 @@ static ReaderViewController *sharedInstance = nil;
     
     if(image_no==-1)
     {
+        if([imageCollection count]>0){
+            pdfPageObject=[imageCollection lastObject];
+            image_no=pdfPageObject.image_no+1;
+        }
+        else
+        {
+          image_no=1;
+        }
         
-        image_no=[imageCollection count]+1;
+        
         
         imageFrame=[commonFunction getimageFrame:image_no inWidth:imageFrame.size.width inHeight:imageFrame.size.height];
         
@@ -1008,12 +1023,12 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)clearMarkupView{
     for(UIView *view in [_drawingPad subviews]){
-        if(([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]]))
+        if((([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]])) && (view.tag<1000))
             [view removeFromSuperview];
     }
     
     for(UIView *view in [contentPageView subviews]){
-        if(([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]]))
+        if((([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]])) && (view.tag<1000))
             [view removeFromSuperview];
     }
 
@@ -1152,6 +1167,12 @@ static ReaderViewController *sharedInstance = nil;
     if([pdfEditDoneBarButton.title isEqualToString:@"Edit"]){
         pdfEditDoneBarButton.title=@"Done";
         
+        [_collection removeAllObjects];
+        _collection=nil;
+        NSString *fileName=[commonFunction getFileNameFromPath:_pdfFilePath];
+        _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",fileName,page]];
+
+        
         UIBarButtonItem *cameraBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraBarButton_click:)];
         
         // create a spacer
@@ -1233,6 +1254,8 @@ static ReaderViewController *sharedInstance = nil;
             }
         }
         
+        
+        
         contentPageView.frame=savedPageContentFrame;
         [theScrollView addSubview:contentPageView];
         theScrollView.hidden=NO;
@@ -1264,7 +1287,7 @@ static ReaderViewController *sharedInstance = nil;
     }
     
    
-    int i=1;
+  
     
     //End load images on page
 
@@ -1283,9 +1306,8 @@ static ReaderViewController *sharedInstance = nil;
         for(pdfPageObject in imageCollection){
             
             
-            [self loadImageToConentPageview:pdfPageObject.image withFrame:pdfPageObject.frame withImageNo:i withDrawingPad:contentPageView];
-            NSLog(@"imageResizableView.frame=%@",NSStringFromCGRect(imageResizableView.frame));
-            i++;
+            [self loadImageToConentPageview:pdfPageObject.image withFrame:pdfPageObject.frame withImageNo:pdfPageObject.image_no withDrawingPad:contentPageView];
+           
             
         }
 
@@ -1299,7 +1321,6 @@ static ReaderViewController *sharedInstance = nil;
         
         for(pdfPageObject in imageCollection){
          
-            NSLog(@"pdfPageObject.frame=%@", NSStringFromCGRect(pdfPageObject.frame));
             UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
             imgView.contentMode=UIViewContentModeScaleAspectFit;
             imgView.image=pdfPageObject.image ;
@@ -3235,7 +3256,10 @@ static ReaderViewController *sharedInstance = nil;
                    );
     
     
-    [self ShowPhotoMenuInView:_lastEditedView];
+    if(_lastEditedView.tag<1000)
+    {
+     [self ShowPhotoMenuInView:_lastEditedView];
+    }
     
     
     [NSTimer scheduledTimerWithTimeInterval:0.0
@@ -3493,13 +3517,54 @@ static ReaderViewController *sharedInstance = nil;
 - (void) imageCopy:(id) sender {
     // called when copy clicked in menu
     
+    UIImage *savedImage=nil;
+    NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
     
+    for(pdfPageObject in imageCollectionBig){
+        if(pdfPageObject.image_no==_lastEditedView.tag){
+            savedImage=pdfPageObject.image;
+            break;
+        }
+    }
+    [imageCollectionBig removeAllObjects];
+    imageCollectionBig=nil;
+    
+    
+    
+    
+    //CGRect imageFrame = CGRectMake(134.5, 170, 400, 400);
+    //cameraImage=cropImage;
+    NSData *dataForJPEGFile = [NSData dataWithData:UIImageJPEGRepresentation(savedImage, 1.0)];
+    savedImage=[UIImage imageWithData:dataForJPEGFile];
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    [pasteboard setData:dataForJPEGFile forPasteboardType:@"public.jpeg"];
+    
+
    }
 
 - (void) menuItemClicked:(id) sender {
     // called when Item clicked in menu
     
-    UIImage *savedImage;
+    
+    UIImage *savedImage=nil;
+    NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
+    
+    for(pdfPageObject in imageCollectionBig){
+        if(pdfPageObject.image_no==_lastEditedView.tag){
+            savedImage=pdfPageObject.image;
+            break;
+        }
+    }
+    [imageCollectionBig removeAllObjects];
+    imageCollectionBig=nil;
+    
+    
+    
+    
+    //CGRect imageFrame = CGRectMake(134.5, 170, 400, 400);
+    //cameraImage=cropImage;
+    NSData *dataForJPEGFile = [NSData dataWithData:UIImageJPEGRepresentation(savedImage, 1.0)];
+    savedImage=[UIImage imageWithData:dataForJPEGFile];
     
     UIImageWriteToSavedPhotosAlbum(savedImage, self,
                                    nil, nil);
