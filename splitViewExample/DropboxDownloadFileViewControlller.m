@@ -23,28 +23,12 @@ NSString * folderDocpath;
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "GoogleLoginViewController.h"
 #import "KeychainItemWrapper.h"
+#import "DriveHelperClass.h"
+#import "DriveConstants.h"
+
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
-static NSString *const kKeychainItemName = @"Google Drive Quickstart";
 
- //NEW
-//NSString *clientid = @"879626031062-c8nbgptfp05vsbbl5leg1281r0dnpnav.apps.googleusercontent.com";
-//NSString *clientsecret = @"_os033TfvtRQwleJWXH_iGbM";
-
-NSString *clientid = @"879626031062-a2dg654a283hekudfv86ga205mriso24.apps.googleusercontent.com";
-NSString *clientsecret = @"ajRru9ga-PqaK9zPMntknmpr";
-
-
-
-/*
-// old
-NSString *clientid = @"879626031062-8a2nnn1rc296rrebo2nlr9dhjchc951l.apps.googleusercontent.com";
-NSString *clientsecret = @"Xq9r7kUePIxfeDcmQsA2Wjrn";
-*/
- /*
-static NSString *const kClientId = @"879626031062-a2dg654a283hekudfv86ga205mriso24.apps.googleusercontent.com";
-static NSString *const kClientSecret = @"ajRru9ga-PqaK9zPMntknmpr";
-*/
 
 @interface FolderItem : NSObject
 
@@ -112,7 +96,6 @@ static NSString *const kClientSecret = @"ajRru9ga-PqaK9zPMntknmpr";
 @synthesize loadData;
 @synthesize folderPath;
 @synthesize accountStatus;
-@synthesize driveFiles;
 NSString *wastepath = nil;
 
 // Box
@@ -122,7 +105,8 @@ NSString *wastepath = nil;
 @synthesize boxFilePathsArray;
 
 // Drive
-@synthesize driveService;
+@synthesize driveFiles;
+@synthesize driveFilesArray,driveFilesId,driveFilePathsArray;
 
 @synthesize boxFolderId,boxFolderName,index;
 -(void)viewWillAppear:(BOOL)animated
@@ -140,16 +124,16 @@ NSString *wastepath = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renameFolder) name:@"RenameClick" object:nil];
     
+    arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
-
+        
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         NSLog(@"Box");
-        arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-     self.title = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+        self.title = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
         
         
         folderItemsArray = [[NSMutableArray alloc]init];
@@ -164,9 +148,16 @@ NSString *wastepath = nil;
     }
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
-        [self fetchDataFromDrive];
-        [self loadDriveFiles];
-       // [[self class ]retrieveAllFilesWithService:[DropboxDownloadFileViewControlller getSharedInstance].driveService completionBlock:nil];
+        self.driveFiles = [[NSMutableArray alloc]init];
+        driveFilesArray = [[NSMutableArray alloc]init];
+        driveFilePathsArray = [[NSMutableArray alloc]init];
+        NSLog(@"google Drive");
+        if (!driveFilesId)
+        {
+            driveFilesId = @"root";
+        }
+        [self loadDriveFiles:driveFilesId];
+        // [[self class ]retrieveAllFilesWithService:[DropboxDownloadFileViewControlller getSharedInstance].driveService completionBlock:nil];
     }
 }
 #pragma mark - View lifecycle
@@ -197,7 +188,7 @@ NSString *wastepath = nil;
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
-        NSLog(@"google Drive");
+        
         
     }
     
@@ -299,206 +290,71 @@ NSString *wastepath = nil;
     
     
 }
-#pragma mark - googleDrive Methods
-- (GTLServiceDrive *)driveService {
-    static GTLServiceDrive *service = nil;
-    
-    if (!service) {
-        service = [[GTLServiceDrive alloc] init];
-        
-        // Have the service object set tickets to fetch consecutive pages
-        // of the feed so we do not need to manually fetch them.
-        service.shouldFetchNextPages = YES;
-        
-        // Have the service object set tickets to retry temporary error conditions
-        // automatically.
-        service.retryEnabled = YES;
-    }
-    return service;
-}
+#pragma mark Drive Methods
 
--(void)fetchDataFromDrive
-{
+- (void)loadDriveFiles:(NSString *)folderId {
     
-//    GTLServiceDrive *driveServic = [GTLQueryDrive queryForFilesList];
-//    NSString *id = @"root";
-//    
-//    GTLQueryDrive *query = [GTLQueryDrive queryForFilesGetWithFileId:id];
-//    [driveServic executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-//                                                         GTLDriveFile *file,
-//                                                         NSError *error) {
-//        if (error == nil) {
-//            NSLog(@"Have file");
-//            // Process metadata
-//        } else {
-//            NSLog(@"An error occurred: %@", error);
-//        }
-//    }];
-    
-    
-    
-//    self.driveService.authorizer = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeychainItemName
-//                                                                                         clientID:clientid
-//                                                                                     clientSecret:clientsecret];
-    
-    KeychainItemWrapper *keychain = [[KeychainItemWrapper alloc] initWithIdentifier:@"PDFMarkup" accessGroup:nil];
-    NSString *authToken = [keychain objectForKey:(__bridge id)(kSecAttrAccount)];
-    NSString *authRefresh = [keychain objectForKey:(__bridge id)(kSecValueData)];
-    NSLog(@"auth is %@ , %@",authToken,authRefresh);
-
-    
-    GTMOAuth2Authentication * auth = [[GTMOAuth2Authentication alloc]init];
-    auth.accessToken = authToken;
-    auth.refreshToken = authRefresh;
-    [[self driveService] setAuthorizer:auth];
-    if ([auth canAuthorize]) {
-        [self isAuthorizedWithAuthentication:auth];
+    if([DriveHelperClass getSharedInstance].driveService.authorizer == nil)
+    {
+        [DriveHelperClass getSharedInstance].driveService = [[GTLServiceDrive alloc] init];
+        [DriveHelperClass getSharedInstance].driveService.authorizer = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeyChainItemName
+                                                                                                                             clientID:kClientID
+                                                                                                                         clientSecret:kClientSecret];
     }
-    NSLog(@"%@",[DropboxDownloadFileViewControlller getSharedInstance].driveService.authorizer);
     
+    NSLog(@"drive service %@",[DriveHelperClass getSharedInstance].driveService.authorizer);
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
-    query.q = [NSString stringWithFormat:@"'%@' IN parents", @"root"];
+    // or mimeType ='text/directory'
+    query.q = @"mimeType = 'application/pdf' or mimeType ='text/plain' or mimeType ='text/directory'";
+    query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
-    [driveService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-                                                              GTLDriveFileList *files,
-                                                              NSError *error) {
-        if (error == nil)
-        {
-            if (self.driveFiles == nil) {
-                self.driveFiles = [[NSMutableArray alloc] init];
-            }
-            [self.driveFiles removeAllObjects];
-            [self.driveFiles addObjectsFromArray:files.items];
-            [tbDownload reloadData];
-        }
-        
-    }];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     
-//    NSString* currentFolderID = @"root";//folder id for the Google Drive root directory
-//    GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
-//    NSString* queryQ = [NSString stringWithFormat: @"trashed = false and '%@' in parents", currentFolderID];
-//    query.q  = queryQ;
-//    GTLServiceDrive * _googleService;
-//    [_googleService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-//                                                           GTLDriveFileList *files,
-//                                                           NSError *error)
-//     {
-//         if (error == nil)
-//         {
-//              NSLog(@"data from gDrive is %@",files.items);
-//         }
-//     }];
-  
-    
-    NSString * driveFolderId = @"root";
-    NSString *scopee = @"https://www.googleapis.com/auth/drive.file";
-
-    NSString *str=  [NSString stringWithFormat:@"https://www.googleapis.com/drive/v2/files?q=%@inparents&scope=%@",driveFolderId,scopee];
-    
-    
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:str]
-                                                  cachePolicy:NSURLCacheStorageAllowed
-                                              timeoutInterval:20];
-    NSURLResponse *response;
-    NSError *error;
-    
-    NSData * data = [NSURLConnection sendSynchronousRequest:request
-                                          returningResponse:&response
-                                                      error:&error];
-    
-    NSMutableDictionary *userdata = [[NSMutableDictionary alloc] initWithDictionary:[NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableLeaves error:&error]];
-    NSLog(@"gjghjgj %@",userdata);
-
-    
-//    ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://www.googleapis.com/drive/v2/files?q=%@inparents&scope=%@",driveFolderId,scopee]]];
-//    //[postParams setPostBody:data];
-//    [postParams setRequestMethod:@"GET"];
-//    [postParams startAsynchronous];
-//    postParams.delegate = self ;
-//    postParams.userInfo = [NSDictionary dictionaryWithObject:@"drive" forKey:@"id"];
-//
-    
-    
-}
-- (void)loadDriveFiles {
-    
-     fileFetchStatusFailure = NO;
-    
-    //for more info about fetching the files check this link
-    //https://developers.google.com/drive/v2/reference/children/list
-    
-    GTLQueryDrive *query2 = [GTLQueryDrive queryForFilesList];
-    //query2.maxResults = 1000;
-
-    
-    // queryTicket can be used to track the status of the request.
-    [driveService executeQuery:query2
-                  completionHandler:^(GTLServiceTicket *ticket,
-                                      GTLDriveChildList *children, NSError *error) {
-                      GTLBatchQuery *batchQuery = [GTLBatchQuery batchQuery];
-                      //incase there is no files under this folder then we can avoid the fetching process
-                      if (!children.items.count) {
-                          [self.driveFiles removeAllObjects];
-                          [fileNames removeAllObjects];
-                          [self performSelectorOnMainThread:@selector(reloadTableDataFromMainThread) withObject:nil waitUntilDone:NO];
-                          return ;
-                      }
-                      
-                      if (error == nil) {
-                          int totalChildren = children.items.count;
-                          count = 0;
-                          
-                          [self.driveFiles removeAllObjects];
-                          //[fileNames removeAllObjects];                                                    //http://stackoverflow.com/questions/14603432/listing-all-files-from-specified-folders-in-google-drive-through-ios-google-driv/14610713#14610713
-                          for (GTLDriveChildReference *child in children) {
-                              GTLQuery *query = [GTLQueryDrive queryForFilesGetWithFileId:child.identifier];
-                              query.completionBlock = ^(GTLServiceTicket *ticket, GTLDriveFile *file, NSError *error) {
-                                  
-                                  //increment count inside this call is very important. Becasue the execute query call is asynchronous
-                                  // count ++;
-                                  NSLog(@"Google Drive: retrieving children info: %d", count);
-                                  if (error == nil) {
-                                      if (file != nil) { //checking the file resource is available or not
-                                          //only add the file info if that file was not in trash
-                                          if (file.labels.trashed.intValue != 1 )
-                                              [self addFileMetaDataInfo:file numberOfChilderns:totalChildren];
-                                      }
-                                      
-                                      //the process passed all the files then we need to sort the reterived files
-                                      if (count == totalChildren) {
-                                          NSLog(@"Google Drive: processed all children, now stopping HUDView - 1");
-                                          [self performSelectorOnMainThread:@selector(reloadTableDataFromMainThread) withObject:nil waitUntilDone:NO];
-                                      }
-                                  } else {
-                                      //the file resource was not found
-                                      NSLog(@"Google Drive: error occurred while retrieving file info: %@", error);
-                                      
-                                      if (count == totalChildren) {
-                                          NSLog(@"Google Drive: processed all children, now stopping HUDView - 2");
-                                          [self performSelectorOnMainThread:@selector(reloadTableDataFromMainThread)
-                                                                 withObject:nil waitUntilDone:NO];
-                                      }
-                                  }
-                              };
-                              //add the query into batch query. Since we no need to iterate the google server for each child.
-                              [batchQuery addQuery:query];
-                          }
-                          //finally execute the batch query. Since the file reterive process is much faster because it will get all file metadata info at once
-                          [self.driveService executeQuery:batchQuery
-                                        completionHandler:^(GTLServiceTicket *ticket,
-                                                            GTLDriveFile *file,
-                                                            NSError *error) {
-                                        }];
-                          
-                          NSLog(@"\nGoogle Drive: file count in the folder: %d", children.items.count);
-                      } else {
-                          NSLog(@"Google Drive: error occurred while retrieving children list from parent folder: %@", error);
-                      }
-                  }];
-    
-    
-    
+    [[DriveHelperClass getSharedInstance].driveService executeQuery:query
+                                                  completionHandler:^(GTLServiceTicket *ticket,
+                                                                      GTLDriveFileList *files,
+                                                                      NSError *error) {
+                                                      if (!error) {
+                                                          [self.driveFiles addObjectsFromArray:files.items];
+                                                          for (int i =0;i<[driveFiles count]; i++)
+                                                          {
+                                                              GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
+                                                              NSString * str = file.title;
+                                                              NSString * strExtension = @"pdf";
+                                                              if ([[str pathExtension]isEqualToString:@""]||[[[str pathExtension] lowercaseString]isEqualToString:strExtension])
+                                                              {
+                                                                  NSLog(@"file id %@ ",file.identifier);
+                                                                  NSLog(@"file title %d is %@",i,str);
+                                                                  
+                                                                  NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                                                                  [dic setObject:file.identifier
+                                                                          forKey:@"id"];
+                                                                  [dic setObject:str                                                                        forKey:@"title"];
+                                                                  [dic setObject:str                                                                        forKey:@"mimetype"];
+                                                                  [dic setObject:file.description                                                                        forKey:@"description"];
+                                                                  
+                                                                  
+                                                                  [driveFilesArray addObject:dic];
+                                                                  
+                                                              }
+                                                              
+                                                              FolderItem *item = [[FolderItem alloc] init];
+                                                              item.isChecked = NO;
+                                                              [arrmetadata addObject:item];
+                                                              
+                                                              [tbDownload reloadData];
+                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                              
+                                                          }
+                                                          
+                                                      } else {
+                                                          
+                                                          NSLog(@"An error occurred: %@", error);
+                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                      }
+                                                  }];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];   
     
 }
 -(void)addFileMetaDataInfo:(GTLDriveFile*)file numberOfChilderns:(int)totalChildren
@@ -540,11 +396,7 @@ NSString *wastepath = nil;
         [self.driveFiles addObject:dict];
     }
 }
-- (void)isAuthorizedWithAuthentication:(GTMOAuth2Authentication *)auth
-{
-  
-    [[self driveService] setAuthorizer:auth];
-}
+
 
 + (void)retrieveAllFilesWithService:(GTLServiceDrive *)service
                     completionBlock:(void (^)(NSArray *, NSError *))completionBlock {
@@ -1223,12 +1075,12 @@ NSString *wastepath = nil;
         }
         
     }
-     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
-        return [driveFiles count];
+        return [driveFilesArray count];
         
     }
-
+    
     else
     {
         return 0;
@@ -1274,7 +1126,7 @@ NSString *wastepath = nil;
         return cell;
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
-
+        
     {
         FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
         
@@ -1316,24 +1168,28 @@ NSString *wastepath = nil;
         {
             [cell setChecked:item.isChecked];
         }
-        cell.lblTitle.text = [driveFiles objectAtIndex:indexPath.row];
+        cell.lblTitle.text = [[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"];
         
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.btnIcon.hidden = NO;
-//        if ([[[driveFiles objectAtIndex:indexPath.row]objectForKey:@"type"]isEqualToString:@"folder"]) {
-//            
-//            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-//            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
-//            
-//        }else {
+        
+        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"];
+        if ([[str pathExtension]isEqualToString:@"pdf"])
+        {
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.btnIcon.hidden = NO;
             cell.imageView.image = [UIImage imageNamed:@"pdf.png"];
+        }
+        else
+        {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
             
-     //   }
+        }
+        
         return cell;
     }
-
+    
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1422,7 +1278,7 @@ NSString *wastepath = nil;
         
         
     }
-    else
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         if (tableView.editing)
@@ -1489,7 +1345,7 @@ NSString *wastepath = nil;
         
         NSLog(@"boxFilePathsArray array is %@",boxFilePathsArray);
         
-      
+        
         
         
         if ([boxFilePathsArray count]==1)
@@ -1504,6 +1360,87 @@ NSString *wastepath = nil;
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
         }
+        
+    }
+    else
+    {
+        
+        FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        if (tableView.editing)
+        {
+            FileItemTableCell *cell = (FileItemTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+            item.isChecked = !item.isChecked;
+            
+            folder_file=[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"];
+            [cell setChecked:item.isChecked];
+        }
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"];
+        if ([[str pathExtension]isEqualToString:@""]&& !tableView.editing)
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
+            dropboxDownloadFileViewControlller.driveFilesId = [[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"id"];
+            [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        }
+        else
+        {
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            
+            if (item.isChecked == YES)
+            {
+                //selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [downloadingButton setTitle:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"] forState:UIControlStateDisabled];
+                
+                pdfValue = pdfValue+1;
+                
+                if (![driveFilePathsArray containsObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"name"]])
+                {
+                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"id"] forKey:@"folderId"];
+                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"folderName"];
+                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"mimetype"] forKey:@"mimetype"];
+                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"description"] forKey:@"description"];
+                    [driveFilePathsArray addObject:dic];
+                }
+                //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
+            }
+            
+            else
+            {
+                if (item.isChecked == NO)
+                {
+                    pdfValue = pdfValue-1;
+                    
+                    
+                    for (int i =0; i<[self.driveFilePathsArray count]; i++)
+                    {
+                        
+                        if ([[[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"] isEqualToString:[[driveFilePathsArray objectAtIndex:i]objectForKey:@"folderName"]]) {
+                            [self.driveFilePathsArray removeObjectAtIndex:i];
+                        }
+                    }
+                    //[AppDelegate sharedInstance].boxSelectedFiles = boxFilePathsArray;
+                }
+            }
+        }
+        
+        NSLog(@"boxFilePathsArray array is %@",driveFilePathsArray);
+        
+        if ([driveFilePathsArray count]==1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SingleFile" object:self];
+        }
+        else if([driveFilePathsArray count]>1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MultipleFiles" object:self];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+        }
+        
         
     }
     
@@ -1522,14 +1459,14 @@ NSString *wastepath = nil;
 -(void)spinner
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+    
 }
 -(IBAction)multipleFileDownload:(id)sender
 {
     fetching = NO;
     [self performSelector:@selector(spinner) withObject:nil];
     [self docDataToDisplay];
-
+    
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         
@@ -1693,12 +1630,12 @@ NSString *wastepath = nil;
                 
             }
         }
-
+        
     }
     else
     {
         [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
-
+        
     }
 }
 
@@ -1715,7 +1652,7 @@ NSString *wastepath = nil;
     
     NSURLResponse * response = nil;
     NSError * error = nil;
-
+    
     NSData * data = [NSURLConnection sendSynchronousRequest:request
                                           returningResponse:&response
                                                       error:&error];
@@ -1901,6 +1838,54 @@ NSString *wastepath = nil;
         }
         
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        GTLDriveFile *folderObj = [GTLDriveFile object];
+        folderObj.title = tempString;
+        folderObj.mimeType = @"application/vnd.google-apps.folder";
+        
+        // To create a folder in a specific parent folder, specify the identifier
+        // of the parent:
+        // _resourceId is the identifier from the parent folder
+        if (driveFilesId.length && ![driveFilesId isEqualToString:@"0"]) {
+            GTLDriveParentReference *parentRef = [GTLDriveParentReference object];
+            parentRef.identifier = driveFilesId;
+            folderObj.parents = [NSArray arrayWithObject:parentRef];
+        }
+        
+        GTLQueryDrive *query = [GTLQueryDrive queryForFilesInsertWithObject:folderObj uploadParameters:nil];
+        GTLServiceTicket *queryTicket =
+        [[DriveHelperClass getSharedInstance].driveService executeQuery:query
+                                                      completionHandler:^(GTLServiceTicket *ticket, id object,
+                                                                          NSError *error) {
+                                                          if (!error) {
+                                                              [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                              [self viewWillAppear:YES];
+                                                              [tbDownload reloadData];                }
+                                                          else
+                                                          {
+                                                              NSLog(@"error %@",error);
+                                                          }
+                                                      }];
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        
+        pdfValue = 0;
+        
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        
+        for (int i =0; i< [arrmetadata count]; i++) {
+            
+            FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+        }
+        
+    }
 }
 
 // Folder is the metadata for the newly created folder
@@ -1955,7 +1940,7 @@ NSString *wastepath = nil;
     if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
     {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
         NSLog(@"response is %@",request.responseString);
         NSMutableArray *arrJson= [[NSMutableArray alloc]initWithObjects:[request.responseString JSONValue],nil];
         NSLog(@"%@",[request.responseString JSONValue] );
@@ -2000,7 +1985,7 @@ NSString *wastepath = nil;
     else if ([[request.userInfo objectForKey:@"id"]isEqualToString:@"drive"])
     {
         NSLog(@"response is %@",request.responseString);
-
+        
     }
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -2113,6 +2098,45 @@ NSString *wastepath = nil;
         editButton.title = @"Edit";
         [boxFilePathsArray removeAllObjects];
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    {
+        
+        NSString *newDirectoryName;
+        
+        NSString*fid = [[driveFilePathsArray objectAtIndex:0] objectForKey:@"folderId"];
+        NSString * oldFileName = [[driveFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
+        
+        if ([[oldFileName pathExtension]isEqualToString:@""])
+        {
+            newDirectoryName =tempString;
+        }
+        else
+        {
+            newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+        }
+        
+        
+        [self renameFileWithService:[DriveHelperClass getSharedInstance].driveService fileId:fid newTitle:newDirectoryName completionBlock:^(GTLDriveFile * file,NSError * error){
+            if (!error) {
+                [arrmetadata removeAllObjects];
+                [self viewWillAppear:YES];
+                [tbDownload reloadData];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+            }
+            else
+            {
+                NSLog(@"error %@",error);
+            }
+        }];
+        
+        
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        [boxFilePathsArray removeAllObjects];
+    }
+    
     pdfValue = 0;
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
@@ -2148,7 +2172,86 @@ NSString *wastepath = nil;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
 }
-
+-(void)renameFileWithService:(GTLServiceDrive *)service
+                      fileId:(NSString *)fileId
+                    newTitle:(NSString *)newTitle
+             completionBlock:(void (^)(GTLDriveFile *, NSError *))completionBlock {
+    GTLDriveFile *file = [GTLDriveFile object];
+    file.title = newTitle;
+    
+    GTLQueryDrive *query = [GTLQueryDrive queryForFilesPatchWithObject:file
+                                                                fileId:fileId];
+    // queryTicket can be used to track the status of the request.
+    GTLServiceTicket *queryTicket =
+    [service executeQuery:query
+        completionHandler:^(GTLServiceTicket *ticket, GTLDriveFile *updatedFile,
+                            NSError *error) {
+            if (error == nil) {
+                completionBlock(updatedFile, nil);
+            } else {
+                NSLog(@"An error occurred: %@", error);
+                completionBlock(nil, error);
+            }
+        }];
+    
+}
+-(void)updateFileWithService:(GTLServiceDrive *)service
+                      fileId:(NSString *)fileId
+                    newTitle:(NSString *)newTitle
+              newDescription:(NSString *)newDescription
+                 newMimeType:(NSString *)newMimeType
+                     newData:(NSData *)newData
+               isNewRevision:(BOOL)isNewRevision
+             completionBlock:(void (^)(GTLDriveFile *, NSError *))completionBlock {
+    // First retrieve the file from the API.
+    GTLQueryDrive *getQuery = [GTLQueryDrive queryForFilesGetWithFileId:fileId];
+    // getQueryTicket can be used to track the status of the request.
+    GTLServiceTicket *getQueryTicket =
+    [service executeQuery:getQuery
+        completionHandler:^(GTLServiceTicket *ticket, GTLDriveFile *file,
+                            NSError *error) {
+            if (error == nil) {
+                // File's new metadata.
+                file.title = newTitle;
+                file.descriptionProperty = newDescription;
+                file.mimeType = newMimeType;
+                
+                // File's new content.
+                GTLUploadParameters *uploadParameters =
+                [GTLUploadParameters uploadParametersWithData:newData
+                                                     MIMEType:newMimeType];
+                
+                // Send the request to the API.
+                GTLQueryDrive *updateQuery =
+                [GTLQueryDrive queryForFilesUpdateWithObject:file
+                                                      fileId:fileId
+                                            uploadParameters:uploadParameters];
+                updateQuery.newRevision = isNewRevision;
+                // updateQueryTicket can be used to track the status of the request.
+                GTLServiceTicket *updateQueryTicket =
+                [service executeQuery:updateQuery
+                    completionHandler:^(GTLServiceTicket *ticket,
+                                        GTLDriveFile *updatedFile,
+                                        NSError *error) {
+                        if (error == nil) {
+                            completionBlock(updatedFile, nil);
+                        } else {
+                            NSLog(@"An error occurred: %@", error);
+                            completionBlock(nil, error);
+                        }
+                    }];
+            } else {
+                NSLog(@"An error occurred: %@", error);
+                completionBlock(nil, error);
+            }
+        }];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self viewWillAppear:YES];
+    [tbDownload reloadData];
+    
+}
 
 #pragma mark - Alert View Delegate
 
@@ -2265,6 +2368,16 @@ NSString *wastepath = nil;
             
         }
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    {
+        for (int k =0; k < [driveFilePathsArray count]; k++)
+        {
+            NSString*fid = [[driveFilePathsArray objectAtIndex:k] objectForKey:@"folderId"];
+            
+            [self deleteFileWithService:[DriveHelperClass getSharedInstance].driveService fileId:fid];
+            
+        }
+    }
     
     [tbDownload setEditing:NO];
     editButton.title = @"Edit";
@@ -2343,7 +2456,26 @@ NSString *wastepath = nil;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
 }
-
+-(void)deleteFileWithService:(GTLServiceDrive *)service
+                      fileId:(NSString *)fileId {
+    GTLQueryDrive *query = [GTLQueryDrive queryForFilesDeleteWithFileId:fileId];
+    // queryTicket can be used to track the status of the request.
+    GTLServiceTicket *queryTicket =
+    [service executeQuery:query
+        completionHandler:^(GTLServiceTicket *ticket, id object,
+                            NSError *error) {
+            if (!error) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+                [self viewWillAppear:YES];
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                [tbDownload reloadData];
+            }
+            else
+            {
+                NSLog(@"error %@",error);
+            }
+        }];
+}
 
 -(IBAction)back:(id)sender;
 {

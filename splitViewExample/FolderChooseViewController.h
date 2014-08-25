@@ -23,11 +23,18 @@
 @property (nonatomic, retain) NSString *boxFolderId;
 @property (nonatomic, retain) NSString *boxFolderName;
 
+// Drive
+
+@property(nonatomic,retain) NSMutableArray * driveFoldersList;
+@property(nonatomic,retain) NSMutableArray * driveFiles;
+@property(nonatomic,retain) NSString * driveFilesId;
 
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;
 -(IBAction)chooseBarButton_click:(id)sender;
 -(IBAction)uploadButton_click:(id)sender;
 -(IBAction)cancelButton_click:(id)sender;
+
+
 
 @end

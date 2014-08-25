@@ -14,8 +14,8 @@
 #import "DocumentsEditViewController.h"
 #import "DocumentManager.h"
 @interface MasterViewController () {
-   
-
+    
+    
 }
 @end
 
@@ -47,15 +47,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-  //  self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-//    self.navigationItem.rightBarButtonItem = addButton;
+    //  self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    //    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
+    //    self.navigationItem.rightBarButtonItem = addButton;
     
     
-
     
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *butImage = [[UIImage imageNamed:@"prefs2.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
     [button setBackgroundImage:butImage forState:UIControlStateNormal];
     [button addTarget:self action:@selector(settingsClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -76,8 +76,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     self.detailViewController = (DetailViewController *)[[self.splitViewController.viewControllers lastObject] topViewController];
     
-  // self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-
+    // self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     [self.tableView reloadData ];
     
 }
@@ -87,7 +87,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     
     int noOfSections;
-
+    
     for (int i = 0; i<[[arrUseraccounts valueForKey:@"AccountType"] count]; i++) {
         
         if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"dropbox"]) {
@@ -108,7 +108,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             {
                 bgoogle = true;
                 noOfSections++;
-
+                
             }
         }
         else if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"ftp"]) {
@@ -119,7 +119,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             {
                 bftp = true;
                 noOfSections++;
-
+                
             }
         }
         else if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"box"]) {
@@ -130,7 +130,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             {
                 bbox = true;
                 noOfSections++;
-
+                
             }
         }
         else if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"sugar"]) {
@@ -141,11 +141,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             {
                 bsugar = true;
                 noOfSections++;
-
+                
             }
         }
     }
-
+    
     return noOfSections;
     
 }
@@ -177,25 +177,25 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             [accountsImagesArray addObject:@"Dropbox-small.png"];
         }
     }
-
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveReloadNotification:)
                                                  name:@"RefreshLefttable"
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveReloadNotification:)
                                                  name:@"BoxRefreshLefttable"
                                                object:nil];
-
-       
+    
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(removeAccount)
                                                  name:@"removeAccount"
                                                object:nil];
-
+    
     
     
     
@@ -208,7 +208,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
                                              selector:@selector(receiveDocumentEdittNotification:)
                                                  name:@"DocumentsEdit"
                                                object:nil];
-
+    
     [self.tableView reloadData];
     
     
@@ -224,7 +224,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"removeAccount" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RefreshLefttable" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BoxRefreshLefttable" object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NetworkController" object:nil];
 }
 
@@ -246,7 +246,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 }
 - (void)receiveReloadNotification:(NSNotification *) notification
 {
-   
+    
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     NSLog(@"check %@",[arrUseraccounts valueForKey:@"AccountType"]);
@@ -274,8 +274,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     
     [self.tableView reloadData];
-
-
+    
+    
 }
 
 -(void)settingsClick:(id)sender
@@ -299,7 +299,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 }
 -(void)insertNewSection:(id)sender
 {
-  
+    
     if (!_objects) {
         _objects = [[NSMutableArray alloc] init];
     }
@@ -307,7 +307,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     [_objects insertObject:accountsArray atIndex:0];
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-
+    
 }
 #pragma mark - Table View
 
@@ -316,7 +316,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     if ([arrUseraccounts count] == 0)
     {
         return 1;
-
+        
     }
     else
     {
@@ -333,7 +333,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     else{
         return [arrUseraccounts count];
     }
-
+    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60;
@@ -345,13 +345,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     if(section == 0)
     {
         return @"";
-
+        
     }
     else
     {
         
         return @"Accounts";
-
+        
     }
 }
 
@@ -375,7 +375,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
         [cell setSelectedBackgroundView:bgColorView];
         return cell;
-
+        
     }
     else
     {
@@ -386,15 +386,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             cell.imageView.image =[UIImage imageNamed:@"Dropbox-small.png"];
             cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"username"];
-
-
+            
+            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"])
         {
             cell.imageView.image =[UIImage imageNamed:@"Google_Drive_Small.png"];
-            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-
-
+            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"email"] capitalizedString];
+            
+            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"])
         {
@@ -403,7 +403,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             
         }
-
+        
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -414,11 +414,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
         [cell setSelectedBackgroundView:bgColorView];
         return cell;
-
+        
     }
     
 }
- 
+
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the specified item to be editable.
@@ -436,20 +436,20 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 //}
 
 /*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
+ // Override to support rearranging the table view.
+ - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+ {
+ }
+ */
 
 /*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
+ // Override to support conditional rearranging of the table view.
+ - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+ {
+ // Return NO if you do not want the item to be re-orderable.
+ return YES;
+ }
+ */
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -459,19 +459,19 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     {
         self.detailViewController.titleTop = [leftArrayTitles objectAtIndex:indexPath.row ];
         self.detailViewController.detailItem = object;
-
+        
     }
     if (indexPath.section == 1)
     {
-    
-        if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
-
         
-        self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-         self.detailViewController.accountInfo =  @"DropBox";
+        if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
+            
+            
+            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            self.detailViewController.accountInfo =  @"DropBox";
             self.detailViewController.indexPathh = indexPath.row;
-        self.detailViewController.detailItem = object;
-
+            self.detailViewController.detailItem = object;
+            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
             
@@ -494,15 +494,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             self.detailViewController.detailItem = object;
         }
         
-//        UIStoryboard * storyboard = self.storyboard;
-//        
-//        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
-//        
-//        [self.navigationController pushViewController: detail animated: YES];
-
+        //        UIStoryboard * storyboard = self.storyboard;
+        //        
+        //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+        //        
+        //        [self.navigationController pushViewController: detail animated: YES];
+        
     }
     
-  
+    
 }
 
 @end
