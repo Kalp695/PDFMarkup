@@ -15,7 +15,8 @@
 #import "JSON.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
-
+#import "DriveConstants.h"
+#import "DriveHelperClass.h"
 
 static FolderChooseViewController *sharedInstance = nil;
 
@@ -41,6 +42,8 @@ static FolderChooseViewController *sharedInstance = nil;
 
 @synthesize loadData,tbDownload,accountName,indexCount,boxFolderName,boxFolderId;
 
+@synthesize driveFoldersList,driveFiles,driveFilesId;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -64,19 +67,19 @@ static FolderChooseViewController *sharedInstance = nil;
     self.navigationItem.rightBarButtonItems =
     [NSArray arrayWithObjects:upload,cancel, nil];
     
-   
-       NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
+    
+    NSLog(@"check account name is %@",[FolderChooseViewController getSharedInstance].accountName);
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-
+    
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         if (!loadData) {
             loadData = @"/";
         }
         self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"username"];
-
+        
         [self fetchAllDropboxData];
-
+        
     }
     else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
@@ -84,23 +87,37 @@ static FolderChooseViewController *sharedInstance = nil;
         
         
         self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
-
+        
         folderItemsArray = [[NSMutableArray alloc]init];
         if (!boxFolderId) {
             boxFolderId = BoxAPIFolderIDRoot;
             boxFolderName =@"All Files";
         }
         [self checkExpiredBoxToken];
-  
+        
     }
-    
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    {
+        NSLog(@"Upload Files to drive");
+        
+        driveFoldersList = [[NSMutableArray alloc]init];
+        driveFiles = [[NSMutableArray alloc]init];
+        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
+        if (!driveFilesId)
+        {
+            driveFilesId = @"root";
+        }
+        [self showDriveFolders:driveFilesId];
+        
+    }
     
     //folderPath = @"/";
     tbDownload.delegate = self;
     tbDownload.dataSource = self;
     
-  //  self.title = @"Folders";
+    //  self.title = @"Folders";
     marrDownloadData = [[NSMutableArray alloc ]init];
+    
     
     
     [super viewDidLoad];
@@ -113,7 +130,7 @@ static FolderChooseViewController *sharedInstance = nil;
     if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         [DetailViewController getSharedInstance].folderPath = loadData;
-
+        
     }
     
     else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
@@ -121,9 +138,13 @@ static FolderChooseViewController *sharedInstance = nil;
         [DetailViewController getSharedInstance].folderPath = @"/";
         
         [DetailViewController getSharedInstance].folderID = boxFolderId;
-
+        
     }
-    
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    {
+        [DetailViewController getSharedInstance].folderID = driveFilesId;
+        
+    }
     
 }
 -(BOOL)checkExpiredBoxToken
@@ -151,7 +172,7 @@ static FolderChooseViewController *sharedInstance = nil;
         [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
         
     }
-
+    
     return secRemaining;
 }
 -(void)createNewAccesToken
@@ -234,15 +255,15 @@ static FolderChooseViewController *sharedInstance = nil;
         }
         
     }
-        [tbDownload reloadData];
-        
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [tbDownload reloadData];
+    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     
 }
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
-
+    
     if ([[request.userInfo objectForKey:@"id"] isEqualToString:@"accessToken"])
     {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -284,6 +305,66 @@ static FolderChooseViewController *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCancel"
                                                         object:self];
 }
+#pragma mark - Google Drive
+-(void)showDriveFolders:(NSString *)folderId
+{
+    if([DriveHelperClass getSharedInstance].driveService.authorizer == nil)
+    {
+        [DriveHelperClass getSharedInstance].driveService = [[GTLServiceDrive alloc] init];
+        [DriveHelperClass getSharedInstance].driveService.authorizer = [GTMOAuth2ViewControllerTouch authForGoogleFromKeychainForName:kKeyChainItemName
+                                                                                                                             clientID:kClientID
+                                                                                                                         clientSecret:kClientSecret];
+    }
+    NSLog(@"Uploading folder id is %@",folderId);
+    NSLog(@"drive service %@",[DriveHelperClass getSharedInstance].driveService.authorizer);
+    GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
+    // or mimeType ='text/directory'
+    query.q = @"mimeType ='text/directory'";
+    query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [[DriveHelperClass getSharedInstance].driveService executeQuery:query
+                                                  completionHandler:^(GTLServiceTicket *ticket,
+                                                                      GTLDriveFileList *files,
+                                                                      NSError *error) {
+                                                      if (!error) {
+                                                          [self.driveFiles addObjectsFromArray:files.items];
+                                                          for (int i =0;i<[driveFiles count]; i++)
+                                                          {
+                                                              GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
+                                                              NSString * str = file.title;
+                                                              if ([[str pathExtension]isEqualToString:@""])
+                                                              {
+                                                                  NSLog(@"file id %@ ",file.identifier);
+                                                                  
+                                                                  NSLog(@"file title %d is %@",i,str);
+                                                                  
+                                                                  NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                                                                  [dic setObject:file.identifier
+                                                                          forKey:@"id"];
+                                                                  [dic setObject:str                                                                        forKey:@"title"];
+                                                                  
+                                                                  [driveFoldersList addObject:dic];
+                                                                  
+                                                              }
+                                                              
+                                                              
+                                                              [tbDownload reloadData];
+                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                              
+                                                          }
+                                                          
+                                                      } else {
+                                                          
+                                                          NSLog(@"An error occurred: %@", error);
+                                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                      }
+                                                  }];
+    
+}
+
+
+
 #pragma mark - Dropbox Methods
 
 -(IBAction)chooseBarButton_click:(id)sender
@@ -335,11 +416,17 @@ static FolderChooseViewController *sharedInstance = nil;
 {
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
-    return [marrDownloadData count];
+        return [marrDownloadData count];
+    }
+    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+        
+        return [folderItemsArray count];
     }
     else
     {
-        return [folderItemsArray count];
+        return [driveFoldersList count];
+        
     }
 }
 
@@ -354,14 +441,13 @@ static FolderChooseViewController *sharedInstance = nil;
     
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
-
-    
-    DBMetadata * metadata = [marrDownloadData objectAtIndex:indexPath.row];
-    cell.textLabel.text=metadata.filename;
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    cell.textLabel.textColor=[UIColor blackColor];
-    cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        DBMetadata * metadata = [marrDownloadData objectAtIndex:indexPath.row];
+        cell.textLabel.text=metadata.filename;
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell.textLabel.textColor=[UIColor blackColor];
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
@@ -373,7 +459,8 @@ static FolderChooseViewController *sharedInstance = nil;
     }
     else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
     {
-        cell.textLabel.text=[[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+        cell.textLabel.text=[[driveFoldersList objectAtIndex:indexPath.row] objectForKey:@"title"];
+        
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         cell.textLabel.textColor=[UIColor blackColor];
         cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
@@ -389,38 +476,48 @@ static FolderChooseViewController *sharedInstance = nil;
     
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
-    
-    DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
-    
-    if (metadata.isDirectory)
-    {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        FolderChooseViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
-        dropboxDownloadFileViewControlller.loadData = metadata.path;
-        [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
         
-    }
-    else{
+        DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
         
+        if (metadata.isDirectory)
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            FolderChooseViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+            dropboxDownloadFileViewControlller.loadData = metadata.path;
+            [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+            
+        }
+        else{
+            
+            
+        }
+        [DetailViewController getSharedInstance].folderPath = metadata.path;
+        NSLog(@"Uploading path is %@",metadata.path);
         
-    }
-    [DetailViewController getSharedInstance].folderPath = metadata.path;
-    NSLog(@"Uploading path is %@",metadata.path);
-    
     }
     else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
-    
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-            FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
-            FolderChooseViewController.boxFolderId = [[folderItemsArray  objectAtIndex:indexPath.row] objectForKey:@"id"];
-            FolderChooseViewController.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
-     [DetailViewController getSharedInstance].folderID=   boxFolderId;
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+        FolderChooseViewController.boxFolderId = [[folderItemsArray  objectAtIndex:indexPath.row] objectForKey:@"id"];
+        FolderChooseViewController.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
+        [DetailViewController getSharedInstance].folderID=   boxFolderId;
         [DetailViewController getSharedInstance].folderPath = [NSString stringWithFormat:@"%@/%@",[DetailViewController getSharedInstance].folderPath,boxFolderName];
-
-            [self.navigationController pushViewController:FolderChooseViewController animated:YES];
-    
-    
+        
+        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+        
+        
+    }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    {
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+        FolderChooseViewController.driveFilesId = [[driveFoldersList objectAtIndex:indexPath.row]objectForKey:@"id"];
+        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+        
+        
     }
     
 }

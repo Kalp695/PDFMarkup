@@ -78,14 +78,14 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
                                              selector:@selector(closeBoxController)
                                                  name:@"googleSucces"
                                                object:nil];
-
+    
     
 }
 -(void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"isDropboxLinked" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"googleSucces" object:nil];
-
+    
 }
 
 -(void)receiveDropboxNotification:(NSNotification *)notification
@@ -167,7 +167,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
         
         [self presentViewController:googleLoginViewController animated:YES completion:nil];
-//     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        //     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
     }
 }
 

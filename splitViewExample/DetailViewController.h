@@ -18,12 +18,12 @@
     IBOutlet UITableView *rightTableView;
     
     IBOutlet UILabel * accountsLabel;
-   // DBRestClient *restClient;
+    // DBRestClient *restClient;
     
     // Code For Documents View
     
     IBOutlet UIView * documentView;
-   // IBOutlet UIScrollView * documentScrollView;
+    // IBOutlet UIScrollView * documentScrollView;
     NSMutableArray * documenmtsArray;
     NSMutableArray * downloadsArray;
     
@@ -31,7 +31,7 @@
     NSMutableArray * sqliteFilesArray;
     
     NSMutableArray * filePathsArray;
-
+    
     IBOutlet UICollectionView *documentsCollectionView;
     
     NSString *hash;
@@ -48,9 +48,9 @@
     NSTimer *timer;
     NSMutableArray *arrtimer;
     NSMutableDictionary *arrLocalFilepaths;
-
     
-
+    
+    
 }
 +(DetailViewController*)getSharedInstance;
 

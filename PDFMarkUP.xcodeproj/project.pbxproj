@@ -30,6 +30,9 @@
 		189F2638197EBAAD00ADDF3F /* normalDisclosure.png in Resources */ = {isa = PBXBuildFile; fileRef = 189F2637197EBAAD00ADDF3F /* normalDisclosure.png */; };
 		189F263A197EBF2900ADDF3F /* upload.png in Resources */ = {isa = PBXBuildFile; fileRef = 189F2639197EBF2900ADDF3F /* upload.png */; };
 		189F263C197EC57A00ADDF3F /* rename.png in Resources */ = {isa = PBXBuildFile; fileRef = 189F263B197EC57A00ADDF3F /* rename.png */; };
+		189F99DF19AB8A4C00C48E6F /* GoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99D919AB8A4C00C48E6F /* GoogleLoginViewController.m */; };
+		189F99E019AB8A4C00C48E6F /* DriveHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DB19AB8A4C00C48E6F /* DriveHelperClass.m */; };
+		189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DE19AB8A4C00C48E6F /* CommonMethods.m */; };
 		18A0C778197D230F00534CF4 /* FileItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C777197D230F00534CF4 /* FileItemCell.xib */; };
 		18A0C77A197D302500534CF4 /* bgCell.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C779197D302500534CF4 /* bgCell.png */; };
 		18A0C77C197D323B00534CF4 /* plusIcon3.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C77B197D323B00534CF4 /* plusIcon3.png */; };
@@ -239,7 +242,6 @@
 		FEF2C9AF1990B87F0044CE0C /* DropboxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF2C9AE1990B87F0044CE0C /* DropboxManager.m */; };
 		FEF2CA451990F7080044CE0C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF2CA441990F7080044CE0C /* SystemConfiguration.framework */; };
 		FEF2CA471990F70E0044CE0C /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF2CA461990F70E0044CE0C /* Security.framework */; };
-		FEF2CA4C199106D50044CE0C /* GoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FEF2CA4B199106D50044CE0C /* GoogleLoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -285,34 +287,6 @@
 			remoteGlobalIDString = E470433A16D41DC500FED29A;
 			remoteInfo = BoxSDK;
 		};
-		18B6A13919A604BD008F99FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18B6A13219A604BD008F99FA /* GTL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F38F6A60B66E91D00B24B81;
-			remoteInfo = GTLFramework;
-		};
-		18B6A13B19A604BD008F99FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18B6A13219A604BD008F99FA /* GTL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F12027C11A4CA2F00BEB470;
-			remoteInfo = GTLTouchStaticLib;
-		};
-		18B6A13D19A604BD008F99FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18B6A13219A604BD008F99FA /* GTL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F12027D11A4CA2F00BEB470;
-			remoteInfo = GTLUnitTests;
-		};
-		18B6A13F19A604BD008F99FA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18B6A13219A604BD008F99FA /* GTL.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4F1AD9020B71603F00DC0485;
-			remoteInfo = DevelopmentTestTool;
-		};
 		658EF44819797D5600E6FA0A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 658EF41719797D5600E6FA0A /* Project object */;
@@ -351,6 +325,13 @@
 		189F2637197EBAAD00ADDF3F /* normalDisclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = normalDisclosure.png; sourceTree = "<group>"; };
 		189F2639197EBF2900ADDF3F /* upload.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = upload.png; sourceTree = "<group>"; };
 		189F263B197EC57A00ADDF3F /* rename.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rename.png; sourceTree = "<group>"; };
+		189F99D819AB8A4C00C48E6F /* GoogleLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleLoginViewController.h; sourceTree = "<group>"; };
+		189F99D919AB8A4C00C48E6F /* GoogleLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleLoginViewController.m; sourceTree = "<group>"; };
+		189F99DA19AB8A4C00C48E6F /* DriveHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveHelperClass.h; sourceTree = "<group>"; };
+		189F99DB19AB8A4C00C48E6F /* DriveHelperClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveHelperClass.m; sourceTree = "<group>"; };
+		189F99DC19AB8A4C00C48E6F /* DriveConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveConstants.h; sourceTree = "<group>"; };
+		189F99DD19AB8A4C00C48E6F /* CommonMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMethods.h; sourceTree = "<group>"; };
+		189F99DE19AB8A4C00C48E6F /* CommonMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMethods.m; sourceTree = "<group>"; };
 		18A0C777197D230F00534CF4 /* FileItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileItemCell.xib; sourceTree = "<group>"; };
 		18A0C779197D302500534CF4 /* bgCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgCell.png; sourceTree = "<group>"; };
 		18A0C77B197D323B00534CF4 /* plusIcon3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plusIcon3.png; sourceTree = "<group>"; };
@@ -395,7 +376,6 @@
 		18ADE2E4198950C400CDE991 /* DocumentsEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentsEditViewController.m; sourceTree = "<group>"; };
 		18AE21EB199BEFC60011D972 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
-		18B6A13219A604BD008F99FA /* GTL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GTL.xcodeproj; path = "../../../../../google-api-objectivec-client-read-only/Source/GTL.xcodeproj"; sourceTree = "<group>"; };
 		18B6A14219A60A34008F99FA /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
 		18B6A14319A60A34008F99FA /* GTLDriveAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDriveAbout.h; sourceTree = "<group>"; };
 		18B6A14419A60A34008F99FA /* GTLDriveAbout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDriveAbout.m; sourceTree = "<group>"; };
@@ -689,8 +669,6 @@
 		FEF2C9AE1990B87F0044CE0C /* DropboxManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxManager.m; sourceTree = "<group>"; };
 		FEF2CA441990F7080044CE0C /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		FEF2CA461990F70E0044CE0C /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		FEF2CA4A199106D50044CE0C /* GoogleLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleLoginViewController.h; sourceTree = "<group>"; };
-		FEF2CA4B199106D50044CE0C /* GoogleLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GoogleLoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -883,17 +861,6 @@
 				FE4DBF85197EA48E00B7A1B2 /* NetworkMenuController.m */,
 			);
 			name = "Downloading Menu Left";
-			sourceTree = "<group>";
-		};
-		18B6A13319A604BD008F99FA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				18B6A13A19A604BD008F99FA /* GTL.framework */,
-				18B6A13C19A604BD008F99FA /* libGTLTouchStaticLib.a */,
-				18B6A13E19A604BD008F99FA /* GTLUnitTests.xctest */,
-				18B6A14019A604BD008F99FA /* DevelopmentTestTool */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		18B6A14119A60A22008F99FA /* Drive Api */ = {
@@ -1514,11 +1481,15 @@
 		FEF2C9B51990F3E60044CE0C /* Google Drive */ = {
 			isa = PBXGroup;
 			children = (
-				FEF2CA4A199106D50044CE0C /* GoogleLoginViewController.h */,
-				FEF2CA4B199106D50044CE0C /* GoogleLoginViewController.m */,
+				189F99D819AB8A4C00C48E6F /* GoogleLoginViewController.h */,
+				189F99D919AB8A4C00C48E6F /* GoogleLoginViewController.m */,
+				189F99DA19AB8A4C00C48E6F /* DriveHelperClass.h */,
+				189F99DB19AB8A4C00C48E6F /* DriveHelperClass.m */,
+				189F99DC19AB8A4C00C48E6F /* DriveConstants.h */,
+				189F99DD19AB8A4C00C48E6F /* CommonMethods.h */,
+				189F99DE19AB8A4C00C48E6F /* CommonMethods.m */,
 				18B6A14119A60A22008F99FA /* Drive Api */,
 				18B6A17919A60A59008F99FA /* Client Library */,
-				18B6A13219A604BD008F99FA /* GTL.xcodeproj */,
 			);
 			name = "Google Drive";
 			sourceTree = "<group>";
@@ -1596,10 +1567,6 @@
 					ProductGroup = 18A2AA901994D465009D7E3A /* Products */;
 					ProjectRef = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
 				},
-				{
-					ProductGroup = 18B6A13319A604BD008F99FA /* Products */;
-					ProjectRef = 18B6A13219A604BD008F99FA /* GTL.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -1643,34 +1610,6 @@
 			fileType = wrapper.cfbundle;
 			path = BoxCocoaSDKTests.octest;
 			remoteRef = 18A2AA9F1994D465009D7E3A /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		18B6A13A19A604BD008F99FA /* GTL.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = GTL.framework;
-			remoteRef = 18B6A13919A604BD008F99FA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		18B6A13C19A604BD008F99FA /* libGTLTouchStaticLib.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGTLTouchStaticLib.a;
-			remoteRef = 18B6A13B19A604BD008F99FA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		18B6A13E19A604BD008F99FA /* GTLUnitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = GTLUnitTests.xctest;
-			remoteRef = 18B6A13D19A604BD008F99FA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		18B6A14019A604BD008F99FA /* DevelopmentTestTool */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = DevelopmentTestTool;
-			remoteRef = 18B6A13F19A604BD008F99FA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1799,6 +1738,7 @@
 				659691651993FFA7002BE628 /* ReaderThumbCache.m in Sources */,
 				65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */,
 				18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */,
+				189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */,
 				18B6A16D19A60A34008F99FA /* GTLDriveChildReference.m in Sources */,
 				659691681993FFA7002BE628 /* ReaderThumbRender.m in Sources */,
 				184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */,
@@ -1825,6 +1765,7 @@
 				18B6A18219A60A74008F99FA /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				FE4DBF86197EA48E00B7A1B2 /* NetworkMenuController.m in Sources */,
 				65C63951199D0A9000833706 /* PDFFileName.m in Sources */,
+				189F99E019AB8A4C00C48E6F /* DriveHelperClass.m in Sources */,
 				18A11DA0197FFF8D0000D80F /* DocumentViewController.m in Sources */,
 				18B6A19E19A60A88008F99FA /* GTMHTTPFetchHistory.m in Sources */,
 				18A2AABB1994E275009D7E3A /* SBJSON.m in Sources */,
@@ -1844,7 +1785,6 @@
 				18B6A17519A60A34008F99FA /* GTLDriveRevision.m in Sources */,
 				18B6A19F19A60A88008F99FA /* GTMHTTPUploadFetcher.m in Sources */,
 				18B84EE8199D33CD00F9E383 /* ASIAuthenticationDialog.m in Sources */,
-				FEF2CA4C199106D50044CE0C /* GoogleLoginViewController.m in Sources */,
 				653E3B98198183D600788965 /* PDFRenderer.m in Sources */,
 				18B6A16E19A60A34008F99FA /* GTLDriveConstants.m in Sources */,
 				184C094B197CF1B100740DD0 /* AddAccountViewController.m in Sources */,
@@ -1904,6 +1844,7 @@
 				18B6A1AB19A60A93008F99FA /* GTLBase64.m in Sources */,
 				659691691993FFA7002BE628 /* ReaderThumbRequest.m in Sources */,
 				653E3BD7198184DF00788965 /* SQLiteResult.m in Sources */,
+				189F99DF19AB8A4C00C48E6F /* GoogleLoginViewController.m in Sources */,
 				18B84EE9199D33CD00F9E383 /* ASIDataCompressor.m in Sources */,
 				18B6A19C19A60A88008F99FA /* GTMHTTPFetcherLogging.m in Sources */,
 				653E3B93198183D600788965 /* ReaderContentTile.m in Sources */,

@@ -67,8 +67,11 @@
 
 
 // GDrive
-@property (nonatomic,retain) NSMutableArray *driveFiles;
-@property (nonatomic, retain) GTLServiceDrive *driveService;
+@property (retain) NSMutableArray *driveFiles;
+@property(nonatomic,retain)NSMutableArray * driveFilesArray;
+@property(nonatomic,retain) NSString * driveFilesId;
+@property(nonatomic,retain)NSMutableArray * driveFilePathsArray;
+
 
 
 @end
