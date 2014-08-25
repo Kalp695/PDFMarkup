@@ -1278,7 +1278,7 @@ NSString *wastepath = nil;
         
         
     }
-    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         if (tableView.editing)

@@ -763,16 +763,6 @@ static DetailViewController *sharedInstance = nil;
         }
         
         
-        
-        
-        
-        
-        //        NSString *filePath = docfilepath;
-        //        NSString *mimeType = @"text/plain";
-        //        NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:filePath];
-        //        GTLUploadParameters *uploadParameters = [GTLUploadParameters uploadParametersWithFileHandle:file
-        //                                                                                          MIMEType:mimeType];
-        
     }
     
     
@@ -786,9 +776,7 @@ static DetailViewController *sharedInstance = nil;
     filecount++;
     
     NSLog(@"sender %d",sender);
-    
-    
-    
+
     NSString * accessToken =  [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"acces_token"];
     
     NSString *str =  [NSString stringWithFormat:@"https://upload.box.com/api/2.0/files/content?access_token=%@&filename=%@&parent_id=%@",accessToken,fileName,parentId];
@@ -797,7 +785,6 @@ static DetailViewController *sharedInstance = nil;
     postParams.delegate = self ;
     postParams.userInfo = [NSDictionary dictionaryWithObject:@"upload" forKey:@"id"];
     [postParams setFile:filePath forKey:@"filename"];
-    
     [postParams startAsynchronous];
     NSLog(@"pdf file");
     
