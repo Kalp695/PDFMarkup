@@ -272,7 +272,26 @@
 /****************************************End*******************************/
 
 
+/****************************************save original page no To Plist file******************************/
 
+-(void)saveOriginalPageNoToDiskWithPath:(NSString*)path withPageCount:(NSNumber*)pageCount{
+    
+    NSDictionary *dict=[[NSDictionary alloc]initWithObjectsAndKeys:pageCount,@"pageCount", nil];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:path])
+    [dict writeToFile: path atomically:YES];
+    
+}
+
+-(NSInteger)getOriginalPageNoFromDiskWithPath:(NSString*)path{
+    
+    NSDictionary *dict=[[NSDictionary alloc]initWithContentsOfFile:path];
+    NSInteger pageCount=[[dict objectForKey:@"pageCount"] integerValue];
+    
+    return pageCount;
+}
+
+
+/****************************************End save original page no To Plist file******************************/
 
 
 - (void)deleteFileWithFilename:(NSString *) filename withrowID:(NSString*)rowID {

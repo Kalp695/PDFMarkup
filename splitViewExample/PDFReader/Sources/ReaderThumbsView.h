@@ -56,6 +56,8 @@
 
 @property (nonatomic, unsafe_unretained, readwrite) id <ReaderThumbsViewDelegate> delegate;
 
+@property(nonatomic,weak) NSString* pdfFilePath;
+
 - (void)setThumbSize:(CGSize)thumbSize;
 
 - (void)reloadThumbsCenterOnIndex:(NSInteger)index;

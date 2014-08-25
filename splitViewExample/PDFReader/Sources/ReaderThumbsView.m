@@ -46,11 +46,13 @@
 	NSUInteger _thumbCount;
 
 	BOOL canUpdate;
+    NSInteger originalPageCount;
 }
 
 #pragma mark Properties
 
 @synthesize delegate;
+@synthesize pdfFilePath=_pdfFilePath;
 
 #pragma mark ReaderThumbsView instance methods
 
@@ -79,6 +81,8 @@
 		[self addGestureRecognizer:pressGesture]; 
 
 		lastContentOffset = CGPointMake(CGFLOAT_MIN, CGFLOAT_MIN);
+        
+        
 	}
 
 	return self;
@@ -138,28 +142,25 @@
 
 -(ReaderThumbView*)addThumbViewCrossButton:(ReaderThumbView*)theCell{
     
-    for(UIView *view in [theCell subviews]){
-        for(UIView *imageView in [view subviews]){
-            NSLog(@"imageView.frame=%@",NSStringFromCGRect(imageView.frame));
-            
-        }
-    }
-    
+
     CommonFunction *commonFunction =[[CommonFunction alloc]init];
-   FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(theCell.frame)+theCell.frame.origin.x-56,theCell.frame.origin.y,26,26)];
+    FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(theCell.frame)+theCell.frame.origin.x-56,theCell.frame.origin.y,26,26)];
     
     [crossButton setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
                                kFRDLivelyButtonHighlightedColor: [commonFunction defaultSystemTintColor],
                                kFRDLivelyButtonColor: [commonFunction defaultSystemTintColor],
                                }];
     [crossButton setStyle:kFRDLivelyButtonStyleCircleClose animated:NO];
-    [crossButton setBackgroundColor:[UIColor whiteColor]];
+    [crossButton setBackgroundColor:    [UIColor whiteColor]];
     crossButton.layer.borderColor = [[commonFunction defaultSystemTintColor] CGColor];
     crossButton.layer.cornerRadius = 10.0f;
     [crossButton addTarget:self action:@selector(thumbViewCloseButton_click:) forControlEvents:UIControlEventTouchUpInside];
     crossButton.tag=theCell.tag;
     crossButton.hidden=YES;
-    [self addSubview:crossButton];
+    
+    if(theCell.tag+1>originalPageCount){
+        [self addSubview:crossButton];
+    }
     
  
     return theCell;
@@ -518,6 +519,12 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    
+    NSString *plistPath=[[_pdfFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist"];
+    CommonFunction *commonFunction=[[CommonFunction alloc]init];
+    originalPageCount=[commonFunction getOriginalPageNoFromDiskWithPath:plistPath];
+
+    
 	if ((canUpdate == YES) && (_thumbCount > 0)) // Check flag and thumb count
 	{
 		if (CGPointEqualToPoint(scrollView.contentOffset, lastContentOffset) == false)

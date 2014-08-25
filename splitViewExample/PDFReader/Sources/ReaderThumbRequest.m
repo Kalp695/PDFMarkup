@@ -47,6 +47,7 @@
 	CGSize _thumbSize;
 
 	CGFloat _scale;
+
 }
 
 #pragma mark Properties

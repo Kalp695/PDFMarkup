@@ -522,6 +522,16 @@ static ReaderViewController *sharedInstance = nil;
    imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
     
     
+    //save original page no To Plist file
+    
+    NSString *plistPath=[[filePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist"];
+    
+    [commonFunction saveOriginalPageNoToDiskWithPath:plistPath withPageCount:document.pageCount];
+    
+    
+    //save original page no To Plist file
+    
+    
 }
 
 
@@ -1163,6 +1173,11 @@ static ReaderViewController *sharedInstance = nil;
 
     NSInteger page = [document.pageNumber integerValue];
     
+    NSString *plistPath=[[_pdfFilePath stringByDeletingPathExtension] stringByAppendingPathExtension:@"plist"];
+    
+    NSInteger originalPageCount=[commonFunction getOriginalPageNoFromDiskWithPath:plistPath];
+    
+    
     NSMutableArray *rightNavItems;
     if([pdfEditDoneBarButton.title isEqualToString:@"Edit"]){
         pdfEditDoneBarButton.title=@"Done";
@@ -1173,22 +1188,21 @@ static ReaderViewController *sharedInstance = nil;
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%d",fileName,page]];
 
         
-        UIBarButtonItem *cameraBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraBarButton_click:)];
+        if([document.pageNumber integerValue]>originalPageCount)
+        {
+            UIBarButtonItem *cameraBarButton = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:@selector(cameraBarButton_click:)];
         
-        // create a spacer
-        UIBarButtonItem *space = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
-        space.width = 30;
+            // create a spacer
+            UIBarButtonItem *space = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:self action:nil];
+            space.width = 30;
+            
+            rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+            [rightNavItems addObject:space];
+            [rightNavItems addObject:cameraBarButton];
         
-        
-        
-        
-        rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
-        [rightNavItems addObject:space];
-        [rightNavItems addObject:cameraBarButton];
-        
-        
-        self.navigationItem.rightBarButtonItems=rightNavItems;
-        
+            self.navigationItem.rightBarButtonItems=rightNavItems;
+            
+        }
         
         
         for(UIView *view in [theScrollView subviews]){
@@ -1232,11 +1246,14 @@ static ReaderViewController *sharedInstance = nil;
     }
     else{
         
-        rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
-        [rightNavItems removeLastObject];
-        [rightNavItems removeLastObject];
+        if([document.pageNumber integerValue]>originalPageCount)
+        {
+           rightNavItems=(NSMutableArray*)[self.navigationItem.rightBarButtonItems mutableCopy];
+           [rightNavItems removeLastObject];
+           [rightNavItems removeLastObject];
         
-        self.navigationItem.rightBarButtonItems=rightNavItems;
+            self.navigationItem.rightBarButtonItems=rightNavItems;
+        }
         
         /*
         leftNavItems=(NSMutableArray*)[self.navigationItem.leftBarButtonItems mutableCopy];
@@ -1845,6 +1862,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView.frame=cornerRect;
                 
                 dotImageView.tag=152;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
             }
             
@@ -1857,6 +1875,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=152;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 
@@ -1865,6 +1884,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=153;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 cornerRect=CGRectMake((rectangle.origin.x+rectangle.size.width)-cornerImageWH/2.0f, rectangle.origin.y-cornerImageWH/2.0f, cornerImageWH, cornerImageWH);
@@ -1872,6 +1892,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=154;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 cornerRect=CGRectMake(rectangle.origin.x-cornerImageWH/2.0f, (rectangle.origin.y+rectangle.size.height/2.0f)-cornerImageWH/2.0f, cornerImageWH, cornerImageWH);
@@ -1879,6 +1900,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=155;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 cornerRect=CGRectMake(rectangle.origin.x-cornerImageWH/2.0f, (rectangle.origin.y+rectangle.size.height)-cornerImageWH/2.0f, cornerImageWH, cornerImageWH);
@@ -1886,6 +1908,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=156;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 
@@ -1894,6 +1917,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=157;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 cornerRect=CGRectMake((rectangle.origin.x+rectangle.size.width)-cornerImageWH/2.0f, (rectangle.origin.y+rectangle.size.height/2.0f)-cornerImageWH/2.0f, cornerImageWH, cornerImageWH);
@@ -1901,6 +1925,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=158;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 cornerRect=CGRectMake((rectangle.origin.x+rectangle.size.width)-cornerImageWH/2.0f, (rectangle.origin.y+rectangle.size.height)-cornerImageWH/2.0f, cornerImageWH, cornerImageWH);
@@ -1908,6 +1933,7 @@ static ReaderViewController *sharedInstance = nil;
                 dotImageView = [[UIImageView alloc] initWithImage:dotImg];
                 dotImageView.frame=cornerRect;
                 dotImageView.tag=159;
+                dotImageView.layer.zPosition=500;
                 [_drawingPad addSubview:dotImageView];
                 
                 
@@ -1922,6 +1948,7 @@ static ReaderViewController *sharedInstance = nil;
                 myLayer.lineJoin = kCALineJoinBevel;
                 myLayer.path = i.pencilBezierPath.CGPath;
                 [_drawingPad.layer setValue:myLayer forKey:@"rectangleSelection"];
+                myLayer.zPosition=100+i.shape_no+1;
                 [_drawingPad.layer addSublayer:myLayer];
                 
                 
@@ -2020,7 +2047,9 @@ static ReaderViewController *sharedInstance = nil;
         myLayer.lineJoin = kCALineJoinBevel;
         myLayer.path = path.CGPath;
         myLayer.name=layerName;
+        
         if(layerName!=nil){
+            myLayer.zPosition=100+shapeToBeDrawn.shape_no+1;
             [_drawingPad.layer setValue:myLayer forKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //CALayer *drawingLayer1 = [self.layer valueForKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //NSLog(@"drawingLayer while adding=%@,shape_=%d",drawingLayer1, shapeToBeDrawn.shape_no);
@@ -2053,7 +2082,9 @@ static ReaderViewController *sharedInstance = nil;
         myLayer.path = path.CGPath;
         myLayer.name=layerName;
         
+        
         if(layerName!=nil){
+            myLayer.zPosition=100+shapeToBeDrawn.shape_no+1;
             [_drawingPad.layer setValue:myLayer forKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //CALayer *drawingLayer1 = [self.layer valueForKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //NSLog(@"drawingLayer while adding=%@,shape_=%d",drawingLayer1, shapeToBeDrawn.shape_no);
@@ -2086,7 +2117,9 @@ static ReaderViewController *sharedInstance = nil;
         myLayer.path = path.CGPath;
         myLayer.name=layerName;
         
+        
         if(layerName!=nil){
+            myLayer.zPosition=100+shapeToBeDrawn.shape_no+1;
             [_drawingPad.layer setValue:myLayer forKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //CALayer *drawingLayer1 = [self.layer valueForKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //NSLog(@"drawingLayer while adding=%@,shape_=%d",drawingLayer1, shapeToBeDrawn.shape_no);
@@ -2110,7 +2143,10 @@ static ReaderViewController *sharedInstance = nil;
         myLayer.path = pencilCurve.CGPath;
         myLayer.name=layerName;
         
+        
         if(layerName!=nil){
+            
+            myLayer.zPosition=100+shapeToBeDrawn.shape_no+1;
             [_drawingPad.layer setValue:myLayer forKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //CALayer *drawingLayer1 = [self.layer valueForKey:[NSString stringWithFormat:(@"shape_%d"), shapeToBeDrawn.shape_no]];
             //NSLog(@"drawingLayer while adding=%@,shape_=%d",drawingLayer1, shapeToBeDrawn.shape_no);

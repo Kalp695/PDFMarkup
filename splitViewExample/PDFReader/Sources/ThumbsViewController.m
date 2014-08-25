@@ -135,6 +135,8 @@
 	theThumbsView.contentInset = insets; theThumbsView.scrollIndicatorInsets = insets;
 
 	theThumbsView.delegate = self;
+    [theThumbsView setPdfFilePath:_filePath];
+    
 
 	[self.view insertSubview:theThumbsView belowSubview:mainToolbar];
 
@@ -278,9 +280,7 @@
 
 
 -(IBAction)addBarButton_click:(id)sender{
- 
-    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
-    NSLog(@"dict=%@",dict);
+    
     
     NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     

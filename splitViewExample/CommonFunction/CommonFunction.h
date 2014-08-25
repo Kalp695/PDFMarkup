@@ -43,7 +43,8 @@ float distanceBetweenTwo_Points(CGPoint a, CGPoint b) ;
 -(NSMutableArray*)getAllFilesWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext;
 -(void)renameFileWithFilePath:(NSString*)dirPath WithFileName:(NSString*)fileName withExtension:(NSString*)ext withCurrentIndex:(NSInteger)currentIndex withCount:(NSInteger)totalCount;
 - (void)deleteFile:(NSString *) filenPath;
-
+-(void)saveOriginalPageNoToDiskWithPath:(NSString*)path withPageCount:(NSNumber*)pageCount;
+-(NSInteger)getOriginalPageNoFromDiskWithPath:(NSString*)path;
 
 @property(nonatomic,retain) NSString *folderPath;
 
