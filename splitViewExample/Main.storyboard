@@ -1035,22 +1035,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="500" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <webView contentMode="scaleToFill" id="rRA-gp-M6s">
-                                <rect key="frame" x="0.0" y="42" width="500" height="558"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <outlet property="delegate" destination="yoD-86-rhh" id="hCZ-C8-GlL"/>
-                                </connections>
-                            </webView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="OKU-2X-dMj">
-                                <rect key="frame" x="451" y="12" width="49" height="30"/>
+                                <rect key="frame" x="451" y="11" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Cancel">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="googleCancelButton_click:" destination="yoD-86-rhh" eventType="touchUpInside" id="CgH-zS-Jbv"/>
+                                    <action selector="cancelClick:" destination="yoD-86-rhh" eventType="touchUpInside" id="W2F-5g-A7k"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1061,9 +1053,6 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="500" height="600"/>
-                    <connections>
-                        <outlet property="webview" destination="rRA-gp-M6s" id="iGa-ww-Lgx"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9f-xE-GEa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
