@@ -33,6 +33,7 @@
 		189F99DF19AB8A4C00C48E6F /* GoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99D919AB8A4C00C48E6F /* GoogleLoginViewController.m */; };
 		189F99E019AB8A4C00C48E6F /* DriveHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DB19AB8A4C00C48E6F /* DriveHelperClass.m */; };
 		189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DE19AB8A4C00C48E6F /* CommonMethods.m */; };
+		189F99E419AB96B300C48E6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 189F99E319AB96B300C48E6F /* Main.storyboard */; };
 		18A0C778197D230F00534CF4 /* FileItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C777197D230F00534CF4 /* FileItemCell.xib */; };
 		18A0C77A197D302500534CF4 /* bgCell.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C779197D302500534CF4 /* bgCell.png */; };
 		18A0C77C197D323B00534CF4 /* plusIcon3.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C77B197D323B00534CF4 /* plusIcon3.png */; };
@@ -201,7 +202,6 @@
 		658EF42D19797D5600E6FA0A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 658EF42B19797D5600E6FA0A /* InfoPlist.strings */; };
 		658EF42F19797D5600E6FA0A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF42E19797D5600E6FA0A /* main.m */; };
 		658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43219797D5600E6FA0A /* AppDelegate.m */; };
-		658EF43619797D5600E6FA0A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 658EF43419797D5600E6FA0A /* Main.storyboard */; };
 		658EF43919797D5600E6FA0A /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43819797D5600E6FA0A /* MasterViewController.m */; };
 		658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43B19797D5600E6FA0A /* DetailViewController.m */; };
 		658EF43E19797D5600E6FA0A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 658EF43D19797D5600E6FA0A /* Images.xcassets */; };
@@ -332,6 +332,7 @@
 		189F99DC19AB8A4C00C48E6F /* DriveConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveConstants.h; sourceTree = "<group>"; };
 		189F99DD19AB8A4C00C48E6F /* CommonMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMethods.h; sourceTree = "<group>"; };
 		189F99DE19AB8A4C00C48E6F /* CommonMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMethods.m; sourceTree = "<group>"; };
+		189F99E319AB96B300C48E6F /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		18A0C777197D230F00534CF4 /* FileItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileItemCell.xib; sourceTree = "<group>"; };
 		18A0C779197D302500534CF4 /* bgCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgCell.png; sourceTree = "<group>"; };
 		18A0C77B197D323B00534CF4 /* plusIcon3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plusIcon3.png; sourceTree = "<group>"; };
@@ -605,7 +606,6 @@
 		658EF43019797D5600E6FA0A /* PDFMarkUP-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PDFMarkUP-Prefix.pch"; sourceTree = "<group>"; };
 		658EF43119797D5600E6FA0A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		658EF43219797D5600E6FA0A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		658EF43519797D5600E6FA0A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		658EF43719797D5600E6FA0A /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		658EF43819797D5600E6FA0A /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
 		658EF43A19797D5600E6FA0A /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
@@ -1364,7 +1364,7 @@
 				653E3B51198183D600788965 /* ToolBarImages */,
 				658EF43119797D5600E6FA0A /* AppDelegate.h */,
 				658EF43219797D5600E6FA0A /* AppDelegate.m */,
-				658EF43419797D5600E6FA0A /* Main.storyboard */,
+				189F99E319AB96B300C48E6F /* Main.storyboard */,
 				658EF43719797D5600E6FA0A /* MasterViewController.h */,
 				658EF43819797D5600E6FA0A /* MasterViewController.m */,
 				184C093B197CDB1C00740DD0 /* LeftTableViewCell.h */,
@@ -1626,6 +1626,7 @@
 				653E3BBB198183D600788965 /* left triangle.png in Resources */,
 				653E3BB2198183D600788965 /* icon_thickness_thin_active@4x.png in Resources */,
 				189F263A197EBF2900ADDF3F /* upload.png in Resources */,
+				189F99E419AB96B300C48E6F /* Main.storyboard in Resources */,
 				653E3BB9198183D600788965 /* circle_blue_2 pt.png in Resources */,
 				653E3BAE198183D600788965 /* icon_redo_gray@4x.png in Resources */,
 				184C0939197CD87000740DD0 /* network.png in Resources */,
@@ -1716,7 +1717,6 @@
 				189F2629197EB5BD00ADDF3F /* download.png in Resources */,
 				189E7841197D12EC00083F61 /* ftp.png in Resources */,
 				653E3BA7198183D600788965 /* icon_drawcircle_active@4x.png in Resources */,
-				658EF43619797D5600E6FA0A /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1898,14 +1898,6 @@
 				658EF42C19797D5600E6FA0A /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		658EF43419797D5600E6FA0A /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				658EF43519797D5600E6FA0A /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		658EF44D19797D5600E6FA0A /* InfoPlist.strings */ = {
