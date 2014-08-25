@@ -34,3 +34,12 @@
 - (id)initWithRequest:(ReaderThumbRequest *)options;
 
 @end
+
+
+
+
+@interface ReaderThumbQueue(Protected)
+    
+
+
+@end
