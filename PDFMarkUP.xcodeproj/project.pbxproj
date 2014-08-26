@@ -36,7 +36,6 @@
 		189F99E419AB96B300C48E6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 189F99E319AB96B300C48E6F /* Main.storyboard */; };
 		18A0C778197D230F00534CF4 /* FileItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C777197D230F00534CF4 /* FileItemCell.xib */; };
 		18A0C77A197D302500534CF4 /* bgCell.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C779197D302500534CF4 /* bgCell.png */; };
-		18A0C77C197D323B00534CF4 /* plusIcon3.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C77B197D323B00534CF4 /* plusIcon3.png */; };
 		18A0C77E197D388D00534CF4 /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C77D197D388D00534CF4 /* blue.png */; };
 		18A0C780197D395E00534CF4 /* circularDisclosure.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C77F197D395E00534CF4 /* circularDisclosure.png */; };
 		18A0C85F197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0C85E197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m */; };
@@ -49,7 +48,6 @@
 		18A11DA0197FFF8D0000D80F /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A11D9F197FFF8D0000D80F /* DocumentViewController.m */; };
 		18A11DA5198016040000D80F /* PdfFilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A11DA4198016040000D80F /* PdfFilesViewController.m */; };
 		18A2AAA41994D51D009D7E3A /* BoxAuthorizationNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */; };
-		18A2AAA71994D60D009D7E3A /* libBoxSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2AA981994D465009D7E3A /* libBoxSDK.a */; };
 		18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAAE1994E275009D7E3A /* NSObject+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18A2AABA1994E275009D7E3A /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAB01994E275009D7E3A /* NSString+SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18A2AABB1994E275009D7E3A /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAB21994E275009D7E3A /* SBJSON.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -224,6 +222,7 @@
 		6596916C1993FFA7002BE628 /* ThumbsMainToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 659691641993FFA7002BE628 /* ThumbsMainToolbar.m */; };
 		6596916F1993FFFA002BE628 /* UIXToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6596916E1993FFFA002BE628 /* UIXToolbarView.m */; };
 		65C63951199D0A9000833706 /* PDFFileName.m in Sources */ = {isa = PBXBuildFile; fileRef = 65C63950199D0A9000833706 /* PDFFileName.m */; };
+		65C7E86519ACDD5400FACCCC /* libBoxSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65C7E85A19ACDCE300FACCCC /* libBoxSDK.a */; };
 		65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF4199BD660008D4E75 /* LoadingView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BF8199BD6B0008D4E75 /* BFCropInterface.m */; };
 		65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 65D59BFA199BD6B0008D4E75 /* BFViewController.m */; };
@@ -245,54 +244,54 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		18A2AA971994D465009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E470433B16D41DC500FED29A;
-			remoteInfo = BoxSDK;
-		};
-		18A2AA991994D465009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E470434C16D41DC500FED29A;
-			remoteInfo = BoxSDKTests;
-		};
-		18A2AA9B1994D465009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = E4081D8D1758728900F6D6AA;
-			remoteInfo = BoxSDKResources;
-		};
-		18A2AA9D1994D465009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F0E5E2E717A78AEF00153646;
-			remoteInfo = BoxCocoaSDK;
-		};
-		18A2AA9F1994D465009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F0E5E2FD17A78AEF00153646;
-			remoteInfo = BoxCocoaSDKTests;
-		};
-		18A2AAA51994D606009D7E3A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = E470433A16D41DC500FED29A;
-			remoteInfo = BoxSDK;
-		};
 		658EF44819797D5600E6FA0A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 658EF41719797D5600E6FA0A /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 658EF41E19797D5600E6FA0A;
 			remoteInfo = splitViewExample;
+		};
+		65C7E85919ACDCE300FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E470433B16D41DC500FED29A;
+			remoteInfo = BoxSDK;
+		};
+		65C7E85B19ACDCE300FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E470434C16D41DC500FED29A;
+			remoteInfo = BoxSDKTests;
+		};
+		65C7E85D19ACDCE300FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E4081D8D1758728900F6D6AA;
+			remoteInfo = BoxSDKResources;
+		};
+		65C7E85F19ACDCE300FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F0E5E2E717A78AEF00153646;
+			remoteInfo = BoxCocoaSDK;
+		};
+		65C7E86119ACDCE300FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F0E5E2FD17A78AEF00153646;
+			remoteInfo = BoxCocoaSDKTests;
+		};
+		65C7E86319ACDD3B00FACCCC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = E470433A16D41DC500FED29A;
+			remoteInfo = BoxSDK;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -335,8 +334,6 @@
 		189F99E319AB96B300C48E6F /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		18A0C777197D230F00534CF4 /* FileItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileItemCell.xib; sourceTree = "<group>"; };
 		18A0C779197D302500534CF4 /* bgCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgCell.png; sourceTree = "<group>"; };
-		18A0C77B197D323B00534CF4 /* plusIcon3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plusIcon3.png; sourceTree = "<group>"; };
-		18A0C77D197D388D00534CF4 /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		18A0C77F197D395E00534CF4 /* circularDisclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circularDisclosure.png; sourceTree = "<group>"; };
 		18A0C85D197D46AC00534CF4 /* DropboxDownloadFileViewControlller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DropboxDownloadFileViewControlller.h; sourceTree = "<group>"; };
 		18A0C85E197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxDownloadFileViewControlller.m; sourceTree = "<group>"; };
@@ -352,7 +349,6 @@
 		18A11D9F197FFF8D0000D80F /* DocumentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentViewController.m; sourceTree = "<group>"; };
 		18A11DA3198016040000D80F /* PdfFilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PdfFilesViewController.h; sourceTree = "<group>"; };
 		18A11DA4198016040000D80F /* PdfFilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PdfFilesViewController.m; sourceTree = "<group>"; };
-		18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoxSDK.xcodeproj; path = "box-ios-sdk-v2-master 2/BoxSDK.xcodeproj"; sourceTree = SOURCE_ROOT; };
 		18A2AAA21994D51D009D7E3A /* BoxAuthorizationNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxAuthorizationNavigationController.h; sourceTree = "<group>"; };
 		18A2AAA31994D51D009D7E3A /* BoxAuthorizationNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoxAuthorizationNavigationController.m; sourceTree = "<group>"; };
 		18A2AAAC1994E275009D7E3A /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
@@ -753,6 +749,7 @@
 		6596916E1993FFFA002BE628 /* UIXToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIXToolbarView.m; sourceTree = "<group>"; };
 		65C6394F199D0A9000833706 /* PDFFileName.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFFileName.h; sourceTree = "<group>"; };
 		65C63950199D0A9000833706 /* PDFFileName.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFFileName.m; sourceTree = "<group>"; };
+		65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BoxSDK.xcodeproj; path = "../../../../../Downloads/box-ios-sdk-v2-master/BoxSDK.xcodeproj"; sourceTree = "<group>"; };
 		65D59BF3199BD660008D4E75 /* LoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoadingView.h; sourceTree = "<group>"; };
 		65D59BF4199BD660008D4E75 /* LoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoadingView.m; sourceTree = "<group>"; };
 		65D59BF7199BD6B0008D4E75 /* BFCropInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BFCropInterface.h; sourceTree = "<group>"; };
@@ -785,10 +782,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65C7E86519ACDD5400FACCCC /* libBoxSDK.a in Frameworks */,
 				18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */,
 				18B84EFB199D345E00F9E383 /* CFNetwork.framework in Frameworks */,
 				18B84EF9199D344F00F9E383 /* libz.dylib in Frameworks */,
-				18A2AAA71994D60D009D7E3A /* libBoxSDK.a in Frameworks */,
 				FEF2CA471990F70E0044CE0C /* Security.framework in Frameworks */,
 				FEF2CA451990F7080044CE0C /* SystemConfiguration.framework in Frameworks */,
 				18A0C870197D4A9D00534CF4 /* libsqlite3.0.dylib in Frameworks */,
@@ -889,18 +886,6 @@
 			name = DB;
 			sourceTree = "<group>";
 		};
-		18A2AA901994D465009D7E3A /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				18A2AA981994D465009D7E3A /* libBoxSDK.a */,
-				18A2AA9A1994D465009D7E3A /* BoxSDKTests.octest */,
-				18A2AA9C1994D465009D7E3A /* BoxSDKResources.bundle */,
-				18A2AA9E1994D465009D7E3A /* BoxCocoaSDK.framework */,
-				18A2AAA01994D465009D7E3A /* BoxCocoaSDKTests.octest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		18A2AAA11994D50B009D7E3A /* Box Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -949,7 +934,6 @@
 				658EF4601979A1C000E6FA0A /* disclButton.m */,
 				184C0937197CD87000740DD0 /* network.png */,
 				184C0938197CD87000740DD0 /* document.png */,
-				18A0C77B197D323B00534CF4 /* plusIcon3.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1654,9 +1638,9 @@
 		658EF42819797D5600E6FA0A /* PDFMarkup */ = {
 			isa = PBXGroup;
 			children = (
+				65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */,
 				65D59BF6199BD6B0008D4E75 /* CropDemo */,
 				65D59BF2199BD660008D4E75 /* ActivityIndicatorView */,
-				18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */,
 				FEA61E9519922D9D00021B15 /* file manager  */,
 				FEF2C9AC1990B8730044CE0C /* Dropbox manager */,
 				653E3B14198183D600788965 /* CommonFunction */,
@@ -1741,6 +1725,18 @@
 			path = PageImage;
 			sourceTree = "<group>";
 		};
+		65C7E85219ACDCE200FACCCC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				65C7E85A19ACDCE300FACCCC /* libBoxSDK.a */,
+				65C7E85C19ACDCE300FACCCC /* BoxSDKTests.octest */,
+				65C7E85E19ACDCE300FACCCC /* BoxSDKResources.bundle */,
+				65C7E86019ACDCE300FACCCC /* BoxCocoaSDK.framework */,
+				65C7E86219ACDCE300FACCCC /* BoxCocoaSDKTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		65D59BF2199BD660008D4E75 /* ActivityIndicatorView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1815,7 +1811,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				18A2AAA61994D606009D7E3A /* PBXTargetDependency */,
+				65C7E86419ACDD3B00FACCCC /* PBXTargetDependency */,
 			);
 			name = PDFMarkUP;
 			productName = splitViewExample;
@@ -1871,8 +1867,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 18A2AA901994D465009D7E3A /* Products */;
-					ProjectRef = 18A2AA8F1994D465009D7E3A /* BoxSDK.xcodeproj */;
+					ProductGroup = 65C7E85219ACDCE200FACCCC /* Products */;
+					ProjectRef = 65C7E85119ACDCE200FACCCC /* BoxSDK.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -1884,39 +1880,39 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		18A2AA981994D465009D7E3A /* libBoxSDK.a */ = {
+		65C7E85A19ACDCE300FACCCC /* libBoxSDK.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libBoxSDK.a;
-			remoteRef = 18A2AA971994D465009D7E3A /* PBXContainerItemProxy */;
+			remoteRef = 65C7E85919ACDCE300FACCCC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		18A2AA9A1994D465009D7E3A /* BoxSDKTests.octest */ = {
+		65C7E85C19ACDCE300FACCCC /* BoxSDKTests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = BoxSDKTests.octest;
-			remoteRef = 18A2AA991994D465009D7E3A /* PBXContainerItemProxy */;
+			remoteRef = 65C7E85B19ACDCE300FACCCC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		18A2AA9C1994D465009D7E3A /* BoxSDKResources.bundle */ = {
+		65C7E85E19ACDCE300FACCCC /* BoxSDKResources.bundle */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = BoxSDKResources.bundle;
-			remoteRef = 18A2AA9B1994D465009D7E3A /* PBXContainerItemProxy */;
+			remoteRef = 65C7E85D19ACDCE300FACCCC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		18A2AA9E1994D465009D7E3A /* BoxCocoaSDK.framework */ = {
+		65C7E86019ACDCE300FACCCC /* BoxCocoaSDK.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = BoxCocoaSDK.framework;
-			remoteRef = 18A2AA9D1994D465009D7E3A /* PBXContainerItemProxy */;
+			remoteRef = 65C7E85F19ACDCE300FACCCC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		18A2AAA01994D465009D7E3A /* BoxCocoaSDKTests.octest */ = {
+		65C7E86219ACDCE300FACCCC /* BoxCocoaSDKTests.octest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = BoxCocoaSDKTests.octest;
-			remoteRef = 18A2AA9F1994D465009D7E3A /* PBXContainerItemProxy */;
+			remoteRef = 65C7E86119ACDCE300FACCCC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1984,7 +1980,6 @@
 				18A0C77E197D388D00534CF4 /* blue.png in Resources */,
 				65D59C05199BD6B0008D4E75 /* Default@2x.png in Resources */,
 				18A0C780197D395E00534CF4 /* circularDisclosure.png in Resources */,
-				18A0C77C197D323B00534CF4 /* plusIcon3.png in Resources */,
 				658EF4671979BF5300E6FA0A /* Selected.png in Resources */,
 				653E3BAF198183D600788965 /* icon_thickness_thick@4x.png in Resources */,
 				653E3BAB198183D600788965 /* icon_drawsquare_active@4x.png in Resources */,
@@ -2177,15 +2172,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		18A2AAA61994D606009D7E3A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BoxSDK;
-			targetProxy = 18A2AAA51994D606009D7E3A /* PBXContainerItemProxy */;
-		};
 		658EF44919797D5600E6FA0A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 658EF41E19797D5600E6FA0A /* PDFMarkUP */;
 			targetProxy = 658EF44819797D5600E6FA0A /* PBXContainerItemProxy */;
+		};
+		65C7E86419ACDD3B00FACCCC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BoxSDK;
+			targetProxy = 65C7E86319ACDD3B00FACCCC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2326,6 +2321,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$SRCROOT/google-api-objectivec-client/Source/**",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
 				OTHER_LDFLAGS = (
@@ -2359,6 +2355,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$SRCROOT/google-api-objectivec-client/Source/**",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
 				OTHER_LDFLAGS = (
