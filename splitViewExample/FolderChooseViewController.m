@@ -319,7 +319,7 @@ static FolderChooseViewController *sharedInstance = nil;
     NSLog(@"drive service %@",[DriveHelperClass getSharedInstance].driveService.authorizer);
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
     // or mimeType ='text/directory'
-    query.q = @"mimeType ='text/directory'";
+    query.q = @"mimeType='application/vnd.google-apps.folder'";
     query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -332,8 +332,8 @@ static FolderChooseViewController *sharedInstance = nil;
                                                           for (int i =0;i<[driveFiles count]; i++)
                                                           {
                                                               GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
-                                                              NSString * str = file.title;
-                                                              if ([[str pathExtension]isEqualToString:@""])
+                                                              NSString * str = file.mimeType;
+                                                              if ([str isEqualToString:@"application/vnd.google-apps.folder"])
                                                               {
                                                                   NSLog(@"file id %@ ",file.identifier);
                                                                   
@@ -342,7 +342,8 @@ static FolderChooseViewController *sharedInstance = nil;
                                                                   NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
                                                                   [dic setObject:file.identifier
                                                                           forKey:@"id"];
-                                                                  [dic setObject:str                                                                        forKey:@"title"];
+                                                                  [dic setObject:str                                                                        forKey:@"mimeType"];
+                                                                  [dic setObject:file.title forKey:@"title"];
                                                                   
                                                                   [driveFoldersList addObject:dic];
                                                                   

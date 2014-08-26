@@ -11,10 +11,10 @@
 #import "DocumentManager.h"
 #import "DriveConstants.h"
 NSString *callbakc =  @"http://localhost";
-NSString *scope = @"https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.google.com/reader/api/0/subscription";
+NSString *scope = @"https://www.googleapis.com/auth/drive";
 NSString *visibleactions = @"http://schemas.google.com/AddActivity";
 
-
+//https://www.googleapis.com/auth/drive
 @interface GoogleLoginViewController ()
 
 @end
