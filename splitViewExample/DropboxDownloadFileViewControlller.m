@@ -305,24 +305,36 @@ NSString *wastepath = nil;
     NSLog(@"drive service %@",[DriveHelperClass getSharedInstance].driveService.authorizer);
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
     // or mimeType ='text/directory'
-    query.q = @"mimeType = 'application/pdf' or mimeType ='text/plain' or mimeType ='text/directory'";
+    query.q = @"mimeType = 'application/pdf' and mimeType='application/vnd.google-apps.folder'";
+ //   query.q = @"mimeType='application/vnd.google-apps.folder'";
+
     query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
+    
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    
+
     [[DriveHelperClass getSharedInstance].driveService executeQuery:query
                                                   completionHandler:^(GTLServiceTicket *ticket,
                                                                       GTLDriveFileList *files,
                                                                       NSError *error) {
+
                                                       if (!error) {
+                                                          self.driveFiles = [[NSMutableArray alloc]init];
                                                           [self.driveFiles addObjectsFromArray:files.items];
+                                                          if ([self.driveFiles count]==0)
+                                                          {
+                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+                                                          }
                                                           for (int i =0;i<[driveFiles count]; i++)
                                                           {
                                                               GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
-                                                              NSString * str = file.title;
-                                                              NSString * strExtension = @"pdf";
-                                                              if ([[str pathExtension]isEqualToString:@""]||[[[str pathExtension] lowercaseString]isEqualToString:strExtension])
+                                                              NSDictionary * dic = file.JSON;
+                                                              NSLog(@"dic is %@",dic);
+                                                              NSString * str = file.mimeType;
+
+                                                            //  NSString * strExtension = @"pdf";
+                                                              if ([str isEqualToString:@"application/pdf"]||[str isEqualToString:@"application/vnd.google-apps.folder"])
                                                               {
                                                                   NSLog(@"file id %@ ",file.identifier);
                                                                   NSLog(@"file title %d is %@",i,str);
@@ -330,8 +342,8 @@ NSString *wastepath = nil;
                                                                   NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
                                                                   [dic setObject:file.identifier
                                                                           forKey:@"id"];
-                                                                  [dic setObject:str                                                                        forKey:@"title"];
-                                                                  [dic setObject:str                                                                        forKey:@"mimetype"];
+                                                                  [dic setObject:file.title                                                                        forKey:@"title"];
+                                                                  [dic setObject:str                                                                        forKey:@"mimeType"];
                                                                   [dic setObject:file.description                                                                        forKey:@"description"];
                                                                   
                                                                   
@@ -354,7 +366,9 @@ NSString *wastepath = nil;
                                                           [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                       }
                                                   }];
-    [MBProgressHUD hideHUDForView:self.view animated:YES];   
+    
+        //[MBProgressHUD hideHUDForView:self.view animated:YES];
+
     
 }
 -(void)addFileMetaDataInfo:(GTLDriveFile*)file numberOfChilderns:(int)totalChildren
@@ -601,7 +615,11 @@ NSString *wastepath = nil;
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
-        
+        [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+       // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+
         NSLog(@"Box");
     }
 }
@@ -1376,8 +1394,8 @@ NSString *wastepath = nil;
         }
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
-        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"];
-        if ([[str pathExtension]isEqualToString:@""]&& !tableView.editing)
+        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"mimeType"];
+        if ([str isEqualToString:@"application/vnd.google-apps.folder"]&& !tableView.editing)
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
@@ -1400,15 +1418,15 @@ NSString *wastepath = nil;
                 {
                     [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"id"] forKey:@"folderId"];
                     [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"folderName"];
-                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"mimetype"] forKey:@"mimetype"];
-                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"description"] forKey:@"description"];
+                    [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"mimeType"] forKey:@"mimetype"];
+                    //[dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"description"] forKey:@"description"];
                     [driveFilePathsArray addObject:dic];
                 }
                 //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
             }
             
             else
-            {
+           {
                 if (item.isChecked == NO)
                 {
                     pdfValue = pdfValue-1;
@@ -2002,6 +2020,7 @@ NSString *wastepath = nil;
 
 -(void)renameFolder
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rename"
                                                     message:@"Enter New name"
                                                    delegate:self
@@ -2020,7 +2039,6 @@ NSString *wastepath = nil;
     
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
-        
         NSString *newDirectoryName;
         if ([[[filePathsArray objectAtIndex:0]pathExtension]isEqualToString:@""])
         {
