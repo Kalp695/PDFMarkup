@@ -596,6 +596,115 @@
 		653E3BD3198184DF00788965 /* SQLiteResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteResult.m; sourceTree = "<group>"; };
 		653E3BD4198184DF00788965 /* SQLiteRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteRow.h; sourceTree = "<group>"; };
 		653E3BD5198184DF00788965 /* SQLiteRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteRow.m; sourceTree = "<group>"; };
+		65745CC619ABD4FA00A94D4F /* BoxLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxLog.h; sourceTree = "<group>"; };
+		65745CC719ABD4FA00A94D4F /* BoxSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BoxSDK-Prefix.pch"; sourceTree = "<group>"; };
+		65745CC819ABD4FA00A94D4F /* BoxSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSDK.h; sourceTree = "<group>"; };
+		65745CC919ABD4FA00A94D4F /* BoxSDK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSDK.m; sourceTree = "<group>"; };
+		65745CCA19ABD4FA00A94D4F /* BoxSDKConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSDKConstants.h; sourceTree = "<group>"; };
+		65745CCB19ABD4FA00A94D4F /* BoxSDKConstants.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSDKConstants.m; sourceTree = "<group>"; };
+		65745CCC19ABD4FA00A94D4F /* BoxSDKErrors.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSDKErrors.h; sourceTree = "<group>"; };
+		65745CCE19ABD4FA00A94D4F /* BoxItem+BoxAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BoxItem+BoxAdditions.h"; sourceTree = "<group>"; };
+		65745CCF19ABD4FA00A94D4F /* BoxItem+BoxAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "BoxItem+BoxAdditions.m"; sourceTree = "<group>"; };
+		65745CD019ABD4FA00A94D4F /* NSJSONSerialization+BoxAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSJSONSerialization+BoxAdditions.h"; sourceTree = "<group>"; };
+		65745CD119ABD4FA00A94D4F /* NSJSONSerialization+BoxAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSJSONSerialization+BoxAdditions.m"; sourceTree = "<group>"; };
+		65745CD219ABD4FA00A94D4F /* NSString+BoxAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+BoxAdditions.h"; sourceTree = "<group>"; };
+		65745CD319ABD4FA00A94D4F /* NSString+BoxAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+BoxAdditions.m"; sourceTree = "<group>"; };
+		65745CD419ABD4FA00A94D4F /* NSString+BoxURLHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+BoxURLHelper.h"; sourceTree = "<group>"; };
+		65745CD519ABD4FA00A94D4F /* NSString+BoxURLHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+BoxURLHelper.m"; sourceTree = "<group>"; };
+		65745CD619ABD4FA00A94D4F /* NSURL+BoxURLHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+BoxURLHelper.h"; sourceTree = "<group>"; };
+		65745CD719ABD4FA00A94D4F /* NSURL+BoxURLHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+BoxURLHelper.m"; sourceTree = "<group>"; };
+		65745CD819ABD4FA00A94D4F /* UIImage+BoxAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+BoxAdditions.h"; sourceTree = "<group>"; };
+		65745CD919ABD4FA00A94D4F /* UIImage+BoxAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIImage+BoxAdditions.m"; sourceTree = "<group>"; };
+		65745CDC19ABD4FA00A94D4F /* BoxISO8601DateFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxISO8601DateFormatter.h; sourceTree = "<group>"; };
+		65745CDD19ABD4FA00A94D4F /* BoxISO8601DateFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxISO8601DateFormatter.m; sourceTree = "<group>"; };
+		65745CDE19ABD4FA00A94D4F /* CHANGES.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = CHANGES.md; sourceTree = "<group>"; };
+		65745CDF19ABD4FA00A94D4F /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		65745CE019ABD4FA00A94D4F /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		65745CE219ABD4FA00A94D4F /* BoxItemPickerHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItemPickerHelper.h; sourceTree = "<group>"; };
+		65745CE319ABD4FA00A94D4F /* BoxItemPickerHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItemPickerHelper.m; sourceTree = "<group>"; };
+		65745CE419ABD4FA00A94D4F /* BoxItemPickerNavigationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItemPickerNavigationController.h; sourceTree = "<group>"; };
+		65745CE519ABD4FA00A94D4F /* BoxItemPickerNavigationController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItemPickerNavigationController.m; sourceTree = "<group>"; };
+		65745CE619ABD4FA00A94D4F /* BOXItemPickerTableViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BOXItemPickerTableViewCell.h; sourceTree = "<group>"; };
+		65745CE719ABD4FA00A94D4F /* BOXItemPickerTableViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BOXItemPickerTableViewCell.m; sourceTree = "<group>"; };
+		65745CE819ABD4FA00A94D4F /* BoxItemPickerTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItemPickerTableViewController.h; sourceTree = "<group>"; };
+		65745CE919ABD4FA00A94D4F /* BoxItemPickerTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItemPickerTableViewController.m; sourceTree = "<group>"; };
+		65745CEA19ABD4FA00A94D4F /* BoxItemPickerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItemPickerViewController.h; sourceTree = "<group>"; };
+		65745CEB19ABD4FA00A94D4F /* BoxItemPickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItemPickerViewController.m; sourceTree = "<group>"; };
+		65745CED19ABD4FA00A94D4F /* BoxCollection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxCollection.h; sourceTree = "<group>"; };
+		65745CEE19ABD4FA00A94D4F /* BoxCollection.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxCollection.m; sourceTree = "<group>"; };
+		65745CEF19ABD4FA00A94D4F /* BoxComment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxComment.h; sourceTree = "<group>"; };
+		65745CF019ABD4FA00A94D4F /* BoxComment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxComment.m; sourceTree = "<group>"; };
+		65745CF119ABD4FA00A94D4F /* BoxCommentableItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxCommentableItem.h; sourceTree = "<group>"; };
+		65745CF219ABD4FA00A94D4F /* BoxFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFile.h; sourceTree = "<group>"; };
+		65745CF319ABD4FA00A94D4F /* BoxFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFile.m; sourceTree = "<group>"; };
+		65745CF419ABD4FA00A94D4F /* BoxFolder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFolder.h; sourceTree = "<group>"; };
+		65745CF519ABD4FA00A94D4F /* BoxFolder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFolder.m; sourceTree = "<group>"; };
+		65745CF619ABD4FA00A94D4F /* BoxItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItem.h; sourceTree = "<group>"; };
+		65745CF719ABD4FA00A94D4F /* BoxItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItem.m; sourceTree = "<group>"; };
+		65745CF819ABD4FA00A94D4F /* BoxModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxModel.h; sourceTree = "<group>"; };
+		65745CF919ABD4FA00A94D4F /* BoxModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxModel.m; sourceTree = "<group>"; };
+		65745CFA19ABD4FA00A94D4F /* BoxModelComparators.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxModelComparators.h; sourceTree = "<group>"; };
+		65745CFB19ABD4FA00A94D4F /* BoxModelComparators.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxModelComparators.m; sourceTree = "<group>"; };
+		65745CFC19ABD4FA00A94D4F /* BoxUser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxUser.h; sourceTree = "<group>"; };
+		65745CFD19ABD4FA00A94D4F /* BoxUser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxUser.m; sourceTree = "<group>"; };
+		65745CFE19ABD4FA00A94D4F /* BoxWebLink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxWebLink.h; sourceTree = "<group>"; };
+		65745CFF19ABD4FA00A94D4F /* BoxWebLink.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxWebLink.m; sourceTree = "<group>"; };
+		65745D0119ABD4FA00A94D4F /* BoxAuthorizationViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAuthorizationViewController.h; sourceTree = "<group>"; };
+		65745D0219ABD4FA00A94D4F /* BoxAuthorizationViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAuthorizationViewController.m; sourceTree = "<group>"; };
+		65745D0319ABD4FA00A94D4F /* BoxOAuth2Session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxOAuth2Session.h; sourceTree = "<group>"; };
+		65745D0419ABD4FA00A94D4F /* BoxOAuth2Session.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxOAuth2Session.m; sourceTree = "<group>"; };
+		65745D0519ABD4FA00A94D4F /* BoxParallelOAuth2Session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxParallelOAuth2Session.h; sourceTree = "<group>"; };
+		65745D0619ABD4FA00A94D4F /* BoxParallelOAuth2Session.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxParallelOAuth2Session.m; sourceTree = "<group>"; };
+		65745D0719ABD4FA00A94D4F /* BoxSerialOAuth2Session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSerialOAuth2Session.h; sourceTree = "<group>"; };
+		65745D0819ABD4FA00A94D4F /* BoxSerialOAuth2Session.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSerialOAuth2Session.m; sourceTree = "<group>"; };
+		65745D0A19ABD4FA00A94D4F /* BoxAPIAuthenticatedOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIAuthenticatedOperation.h; sourceTree = "<group>"; };
+		65745D0B19ABD4FA00A94D4F /* BoxAPIAuthenticatedOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIAuthenticatedOperation.m; sourceTree = "<group>"; };
+		65745D0C19ABD4FA00A94D4F /* BoxAPIDataOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIDataOperation.h; sourceTree = "<group>"; };
+		65745D0D19ABD4FA00A94D4F /* BoxAPIDataOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIDataOperation.m; sourceTree = "<group>"; };
+		65745D0E19ABD4FA00A94D4F /* BoxAPIJSONOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIJSONOperation.h; sourceTree = "<group>"; };
+		65745D0F19ABD4FA00A94D4F /* BoxAPIJSONOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIJSONOperation.m; sourceTree = "<group>"; };
+		65745D1019ABD4FA00A94D4F /* BoxAPIMultipartToJSONOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIMultipartToJSONOperation.h; sourceTree = "<group>"; };
+		65745D1119ABD4FA00A94D4F /* BoxAPIMultipartToJSONOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIMultipartToJSONOperation.m; sourceTree = "<group>"; };
+		65745D1219ABD4FA00A94D4F /* BoxAPIOAuth2ToJSONOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIOAuth2ToJSONOperation.h; sourceTree = "<group>"; };
+		65745D1319ABD4FA00A94D4F /* BoxAPIOAuth2ToJSONOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIOAuth2ToJSONOperation.m; sourceTree = "<group>"; };
+		65745D1419ABD4FA00A94D4F /* BoxAPIOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIOperation.h; sourceTree = "<group>"; };
+		65745D1519ABD4FA00A94D4F /* BoxAPIOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIOperation.m; sourceTree = "<group>"; };
+		65745D1719ABD4FA00A94D4F /* BoxAPIQueueManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIQueueManager.h; sourceTree = "<group>"; };
+		65745D1819ABD4FA00A94D4F /* BoxAPIQueueManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIQueueManager.m; sourceTree = "<group>"; };
+		65745D1919ABD4FA00A94D4F /* BoxParallelAPIQueueManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxParallelAPIQueueManager.h; sourceTree = "<group>"; };
+		65745D1A19ABD4FA00A94D4F /* BoxParallelAPIQueueManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxParallelAPIQueueManager.m; sourceTree = "<group>"; };
+		65745D1B19ABD4FA00A94D4F /* BoxSerialAPIQueueManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSerialAPIQueueManager.h; sourceTree = "<group>"; };
+		65745D1C19ABD4FA00A94D4F /* BoxSerialAPIQueueManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSerialAPIQueueManager.m; sourceTree = "<group>"; };
+		65745D1E19ABD4FA00A94D4F /* BoxAPIRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIRequestBuilder.h; sourceTree = "<group>"; };
+		65745D1F19ABD4FA00A94D4F /* BoxAPIRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2019ABD4FA00A94D4F /* BoxCommentsRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxCommentsRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2119ABD4FA00A94D4F /* BoxCommentsRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxCommentsRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2219ABD4FA00A94D4F /* BoxFilesRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFilesRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2319ABD4FA00A94D4F /* BoxFilesRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFilesRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2419ABD4FA00A94D4F /* BoxFoldersRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFoldersRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2519ABD4FA00A94D4F /* BoxFoldersRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFoldersRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2619ABD4FA00A94D4F /* BoxItemsRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxItemsRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2719ABD4FA00A94D4F /* BoxItemsRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxItemsRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2819ABD4FA00A94D4F /* BoxModelBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxModelBuilder.h; sourceTree = "<group>"; };
+		65745D2919ABD4FA00A94D4F /* BoxModelBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxModelBuilder.m; sourceTree = "<group>"; };
+		65745D2A19ABD4FA00A94D4F /* BoxSearchRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSearchRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2B19ABD4FA00A94D4F /* BoxSearchRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSearchRequestBuilder.m; sourceTree = "<group>"; };
+		65745D2C19ABD4FA00A94D4F /* BoxSharedObjectBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSharedObjectBuilder.h; sourceTree = "<group>"; };
+		65745D2D19ABD4FA00A94D4F /* BoxSharedObjectBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSharedObjectBuilder.m; sourceTree = "<group>"; };
+		65745D2E19ABD4FA00A94D4F /* BoxUsersRequestBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxUsersRequestBuilder.h; sourceTree = "<group>"; };
+		65745D2F19ABD4FA00A94D4F /* BoxUsersRequestBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxUsersRequestBuilder.m; sourceTree = "<group>"; };
+		65745D3119ABD4FA00A94D4F /* BoxAPIResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxAPIResourceManager.h; sourceTree = "<group>"; };
+		65745D3219ABD4FA00A94D4F /* BoxAPIResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxAPIResourceManager.m; sourceTree = "<group>"; };
+		65745D3319ABD4FA00A94D4F /* BoxCommentsResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxCommentsResourceManager.h; sourceTree = "<group>"; };
+		65745D3419ABD4FA00A94D4F /* BoxCommentsResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxCommentsResourceManager.m; sourceTree = "<group>"; };
+		65745D3519ABD4FA00A94D4F /* BoxFilesResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFilesResourceManager.h; sourceTree = "<group>"; };
+		65745D3619ABD4FA00A94D4F /* BoxFilesResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFilesResourceManager.m; sourceTree = "<group>"; };
+		65745D3719ABD4FA00A94D4F /* BoxFoldersResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxFoldersResourceManager.h; sourceTree = "<group>"; };
+		65745D3819ABD4FA00A94D4F /* BoxFoldersResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxFoldersResourceManager.m; sourceTree = "<group>"; };
+		65745D3919ABD4FA00A94D4F /* BoxSearchResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSearchResourceManager.h; sourceTree = "<group>"; };
+		65745D3A19ABD4FA00A94D4F /* BoxSearchResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxSearchResourceManager.m; sourceTree = "<group>"; };
+		65745D3B19ABD4FA00A94D4F /* BoxUsersResourceManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxUsersResourceManager.h; sourceTree = "<group>"; };
+		65745D3C19ABD4FA00A94D4F /* BoxUsersResourceManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BoxUsersResourceManager.m; sourceTree = "<group>"; };
 		658EF41F19797D5600E6FA0A /* PDFMarkUP.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PDFMarkUP.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		658EF42219797D5600E6FA0A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		658EF42419797D5600E6FA0A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1307,6 +1416,203 @@
 			path = toolbar;
 			sourceTree = "<group>";
 		};
+		65745CC519ABD4FA00A94D4F /* BoxSDK */ = {
+			isa = PBXGroup;
+			children = (
+				65745CC619ABD4FA00A94D4F /* BoxLog.h */,
+				65745CC719ABD4FA00A94D4F /* BoxSDK-Prefix.pch */,
+				65745CC819ABD4FA00A94D4F /* BoxSDK.h */,
+				65745CC919ABD4FA00A94D4F /* BoxSDK.m */,
+				65745CCA19ABD4FA00A94D4F /* BoxSDKConstants.h */,
+				65745CCB19ABD4FA00A94D4F /* BoxSDKConstants.m */,
+				65745CCC19ABD4FA00A94D4F /* BoxSDKErrors.h */,
+				65745CCD19ABD4FA00A94D4F /* Categories */,
+				65745CDA19ABD4FA00A94D4F /* External */,
+				65745CE119ABD4FA00A94D4F /* FolderPicker */,
+				65745CEC19ABD4FA00A94D4F /* Models */,
+				65745D0019ABD4FA00A94D4F /* OAuth2 */,
+				65745D0919ABD4FA00A94D4F /* Operations */,
+				65745D1619ABD4FA00A94D4F /* QueueManagers */,
+				65745D1D19ABD4FA00A94D4F /* RequestBuilders */,
+				65745D3019ABD4FA00A94D4F /* ResourceManagers */,
+			);
+			name = BoxSDK;
+			path = "box-ios-sdk-v2-master 2/BoxSDK";
+			sourceTree = "<group>";
+		};
+		65745CCD19ABD4FA00A94D4F /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				65745CCE19ABD4FA00A94D4F /* BoxItem+BoxAdditions.h */,
+				65745CCF19ABD4FA00A94D4F /* BoxItem+BoxAdditions.m */,
+				65745CD019ABD4FA00A94D4F /* NSJSONSerialization+BoxAdditions.h */,
+				65745CD119ABD4FA00A94D4F /* NSJSONSerialization+BoxAdditions.m */,
+				65745CD219ABD4FA00A94D4F /* NSString+BoxAdditions.h */,
+				65745CD319ABD4FA00A94D4F /* NSString+BoxAdditions.m */,
+				65745CD419ABD4FA00A94D4F /* NSString+BoxURLHelper.h */,
+				65745CD519ABD4FA00A94D4F /* NSString+BoxURLHelper.m */,
+				65745CD619ABD4FA00A94D4F /* NSURL+BoxURLHelper.h */,
+				65745CD719ABD4FA00A94D4F /* NSURL+BoxURLHelper.m */,
+				65745CD819ABD4FA00A94D4F /* UIImage+BoxAdditions.h */,
+				65745CD919ABD4FA00A94D4F /* UIImage+BoxAdditions.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		65745CDA19ABD4FA00A94D4F /* External */ = {
+			isa = PBXGroup;
+			children = (
+				65745CDB19ABD4FA00A94D4F /* ISO8601DateFormatter */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
+		65745CDB19ABD4FA00A94D4F /* ISO8601DateFormatter */ = {
+			isa = PBXGroup;
+			children = (
+				65745CDC19ABD4FA00A94D4F /* BoxISO8601DateFormatter.h */,
+				65745CDD19ABD4FA00A94D4F /* BoxISO8601DateFormatter.m */,
+				65745CDE19ABD4FA00A94D4F /* CHANGES.md */,
+				65745CDF19ABD4FA00A94D4F /* LICENSE.txt */,
+				65745CE019ABD4FA00A94D4F /* README.md */,
+			);
+			path = ISO8601DateFormatter;
+			sourceTree = "<group>";
+		};
+		65745CE119ABD4FA00A94D4F /* FolderPicker */ = {
+			isa = PBXGroup;
+			children = (
+				65745CE219ABD4FA00A94D4F /* BoxItemPickerHelper.h */,
+				65745CE319ABD4FA00A94D4F /* BoxItemPickerHelper.m */,
+				65745CE419ABD4FA00A94D4F /* BoxItemPickerNavigationController.h */,
+				65745CE519ABD4FA00A94D4F /* BoxItemPickerNavigationController.m */,
+				65745CE619ABD4FA00A94D4F /* BOXItemPickerTableViewCell.h */,
+				65745CE719ABD4FA00A94D4F /* BOXItemPickerTableViewCell.m */,
+				65745CE819ABD4FA00A94D4F /* BoxItemPickerTableViewController.h */,
+				65745CE919ABD4FA00A94D4F /* BoxItemPickerTableViewController.m */,
+				65745CEA19ABD4FA00A94D4F /* BoxItemPickerViewController.h */,
+				65745CEB19ABD4FA00A94D4F /* BoxItemPickerViewController.m */,
+			);
+			path = FolderPicker;
+			sourceTree = "<group>";
+		};
+		65745CEC19ABD4FA00A94D4F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				65745CED19ABD4FA00A94D4F /* BoxCollection.h */,
+				65745CEE19ABD4FA00A94D4F /* BoxCollection.m */,
+				65745CEF19ABD4FA00A94D4F /* BoxComment.h */,
+				65745CF019ABD4FA00A94D4F /* BoxComment.m */,
+				65745CF119ABD4FA00A94D4F /* BoxCommentableItem.h */,
+				65745CF219ABD4FA00A94D4F /* BoxFile.h */,
+				65745CF319ABD4FA00A94D4F /* BoxFile.m */,
+				65745CF419ABD4FA00A94D4F /* BoxFolder.h */,
+				65745CF519ABD4FA00A94D4F /* BoxFolder.m */,
+				65745CF619ABD4FA00A94D4F /* BoxItem.h */,
+				65745CF719ABD4FA00A94D4F /* BoxItem.m */,
+				65745CF819ABD4FA00A94D4F /* BoxModel.h */,
+				65745CF919ABD4FA00A94D4F /* BoxModel.m */,
+				65745CFA19ABD4FA00A94D4F /* BoxModelComparators.h */,
+				65745CFB19ABD4FA00A94D4F /* BoxModelComparators.m */,
+				65745CFC19ABD4FA00A94D4F /* BoxUser.h */,
+				65745CFD19ABD4FA00A94D4F /* BoxUser.m */,
+				65745CFE19ABD4FA00A94D4F /* BoxWebLink.h */,
+				65745CFF19ABD4FA00A94D4F /* BoxWebLink.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		65745D0019ABD4FA00A94D4F /* OAuth2 */ = {
+			isa = PBXGroup;
+			children = (
+				65745D0119ABD4FA00A94D4F /* BoxAuthorizationViewController.h */,
+				65745D0219ABD4FA00A94D4F /* BoxAuthorizationViewController.m */,
+				65745D0319ABD4FA00A94D4F /* BoxOAuth2Session.h */,
+				65745D0419ABD4FA00A94D4F /* BoxOAuth2Session.m */,
+				65745D0519ABD4FA00A94D4F /* BoxParallelOAuth2Session.h */,
+				65745D0619ABD4FA00A94D4F /* BoxParallelOAuth2Session.m */,
+				65745D0719ABD4FA00A94D4F /* BoxSerialOAuth2Session.h */,
+				65745D0819ABD4FA00A94D4F /* BoxSerialOAuth2Session.m */,
+			);
+			path = OAuth2;
+			sourceTree = "<group>";
+		};
+		65745D0919ABD4FA00A94D4F /* Operations */ = {
+			isa = PBXGroup;
+			children = (
+				65745D0A19ABD4FA00A94D4F /* BoxAPIAuthenticatedOperation.h */,
+				65745D0B19ABD4FA00A94D4F /* BoxAPIAuthenticatedOperation.m */,
+				65745D0C19ABD4FA00A94D4F /* BoxAPIDataOperation.h */,
+				65745D0D19ABD4FA00A94D4F /* BoxAPIDataOperation.m */,
+				65745D0E19ABD4FA00A94D4F /* BoxAPIJSONOperation.h */,
+				65745D0F19ABD4FA00A94D4F /* BoxAPIJSONOperation.m */,
+				65745D1019ABD4FA00A94D4F /* BoxAPIMultipartToJSONOperation.h */,
+				65745D1119ABD4FA00A94D4F /* BoxAPIMultipartToJSONOperation.m */,
+				65745D1219ABD4FA00A94D4F /* BoxAPIOAuth2ToJSONOperation.h */,
+				65745D1319ABD4FA00A94D4F /* BoxAPIOAuth2ToJSONOperation.m */,
+				65745D1419ABD4FA00A94D4F /* BoxAPIOperation.h */,
+				65745D1519ABD4FA00A94D4F /* BoxAPIOperation.m */,
+			);
+			path = Operations;
+			sourceTree = "<group>";
+		};
+		65745D1619ABD4FA00A94D4F /* QueueManagers */ = {
+			isa = PBXGroup;
+			children = (
+				65745D1719ABD4FA00A94D4F /* BoxAPIQueueManager.h */,
+				65745D1819ABD4FA00A94D4F /* BoxAPIQueueManager.m */,
+				65745D1919ABD4FA00A94D4F /* BoxParallelAPIQueueManager.h */,
+				65745D1A19ABD4FA00A94D4F /* BoxParallelAPIQueueManager.m */,
+				65745D1B19ABD4FA00A94D4F /* BoxSerialAPIQueueManager.h */,
+				65745D1C19ABD4FA00A94D4F /* BoxSerialAPIQueueManager.m */,
+			);
+			path = QueueManagers;
+			sourceTree = "<group>";
+		};
+		65745D1D19ABD4FA00A94D4F /* RequestBuilders */ = {
+			isa = PBXGroup;
+			children = (
+				65745D1E19ABD4FA00A94D4F /* BoxAPIRequestBuilder.h */,
+				65745D1F19ABD4FA00A94D4F /* BoxAPIRequestBuilder.m */,
+				65745D2019ABD4FA00A94D4F /* BoxCommentsRequestBuilder.h */,
+				65745D2119ABD4FA00A94D4F /* BoxCommentsRequestBuilder.m */,
+				65745D2219ABD4FA00A94D4F /* BoxFilesRequestBuilder.h */,
+				65745D2319ABD4FA00A94D4F /* BoxFilesRequestBuilder.m */,
+				65745D2419ABD4FA00A94D4F /* BoxFoldersRequestBuilder.h */,
+				65745D2519ABD4FA00A94D4F /* BoxFoldersRequestBuilder.m */,
+				65745D2619ABD4FA00A94D4F /* BoxItemsRequestBuilder.h */,
+				65745D2719ABD4FA00A94D4F /* BoxItemsRequestBuilder.m */,
+				65745D2819ABD4FA00A94D4F /* BoxModelBuilder.h */,
+				65745D2919ABD4FA00A94D4F /* BoxModelBuilder.m */,
+				65745D2A19ABD4FA00A94D4F /* BoxSearchRequestBuilder.h */,
+				65745D2B19ABD4FA00A94D4F /* BoxSearchRequestBuilder.m */,
+				65745D2C19ABD4FA00A94D4F /* BoxSharedObjectBuilder.h */,
+				65745D2D19ABD4FA00A94D4F /* BoxSharedObjectBuilder.m */,
+				65745D2E19ABD4FA00A94D4F /* BoxUsersRequestBuilder.h */,
+				65745D2F19ABD4FA00A94D4F /* BoxUsersRequestBuilder.m */,
+			);
+			path = RequestBuilders;
+			sourceTree = "<group>";
+		};
+		65745D3019ABD4FA00A94D4F /* ResourceManagers */ = {
+			isa = PBXGroup;
+			children = (
+				65745D3119ABD4FA00A94D4F /* BoxAPIResourceManager.h */,
+				65745D3219ABD4FA00A94D4F /* BoxAPIResourceManager.m */,
+				65745D3319ABD4FA00A94D4F /* BoxCommentsResourceManager.h */,
+				65745D3419ABD4FA00A94D4F /* BoxCommentsResourceManager.m */,
+				65745D3519ABD4FA00A94D4F /* BoxFilesResourceManager.h */,
+				65745D3619ABD4FA00A94D4F /* BoxFilesResourceManager.m */,
+				65745D3719ABD4FA00A94D4F /* BoxFoldersResourceManager.h */,
+				65745D3819ABD4FA00A94D4F /* BoxFoldersResourceManager.m */,
+				65745D3919ABD4FA00A94D4F /* BoxSearchResourceManager.h */,
+				65745D3A19ABD4FA00A94D4F /* BoxSearchResourceManager.m */,
+				65745D3B19ABD4FA00A94D4F /* BoxUsersResourceManager.h */,
+				65745D3C19ABD4FA00A94D4F /* BoxUsersResourceManager.m */,
+			);
+			path = ResourceManagers;
+			sourceTree = "<group>";
+		};
 		658EF41619797D5600E6FA0A = {
 			isa = PBXGroup;
 			children = (
@@ -1329,6 +1635,7 @@
 		658EF42119797D5600E6FA0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65745CC519ABD4FA00A94D4F /* BoxSDK */,
 				18B84EFC199D346600F9E383 /* MobileCoreServices.framework */,
 				18B84EFA199D345E00F9E383 /* CFNetwork.framework */,
 				18B84EF8199D344F00F9E383 /* libz.dylib */,
