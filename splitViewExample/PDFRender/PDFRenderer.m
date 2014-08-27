@@ -26,6 +26,13 @@ NSMutableArray *_collection;
 UIView *viewNew;
 UIView *view;
 UIView *imgView;
+NSString *summaryStr;
+NSInteger currentPageNumber;
+NSInteger lineNumber;
+CGPDFPageRef templatePage;
+CGPoint shapePoint;
+NSMutableArray *arrayImage;
+bool thumbNailPreview;
 
 -(void)drawLineFromPoint:(CGPoint)from toPoint:(CGPoint)to inColor:(UIColor *)color inLineWidth:(float)lineWidth
 {
@@ -246,6 +253,9 @@ UIView *imgView;
     CGContextSetStrokeColorWithColor(contextLocal, [shapeToBeDrawn.color CGColor]);
     //NSLog(@"shapeToBeDrawn.color=%ld",(long)shapeToBeDrawn.color);
     // Setting the dashed parameter
+    
+    UIImage *pageImage;
+    shapePoint=shapeToBeDrawn.startPoint;
     if(shapeToBeDrawn.isDashed == true){
         //float num[] = {10.0f, 10.0f};
         //CGContextSetLineDash(context, 0.0, num, 2);
@@ -259,6 +269,10 @@ UIView *imgView;
         //[self drawLineFromPoint:shapeToBeDrawn.startPoint toPoints:shapeToBeDrawn.endPoint inColor:shapeToBeDrawn.color inLineWidth:(float)shapeToBeDrawn.lineWidth];
         [self drawLineFromPoint:shapeToBeDrawn.startPoint toPoint:shapeToBeDrawn.endPoint inColor:shapeToBeDrawn.color inLineWidth:(float)shapeToBeDrawn.lineWidth];
         
+        
+        summaryStr=[NSString stringWithFormat:@"%@ \n a line is drawn on page %d",summaryStr,currentPageNumber];
+        lineNumber+=1;
+        
     }
     else if(shapeToBeDrawn.shape == 1) {    //Rectangle
         
@@ -268,6 +282,9 @@ UIView *imgView;
                                       (shapeToBeDrawn.endPoint.y) - (shapeToBeDrawn.startPoint.y));
         
         [self drawRectangleFromPoint:rectangle inColor:shapeToBeDrawn.color inLineWidth:shapeToBeDrawn.lineWidth];
+        
+        summaryStr=[NSString stringWithFormat:@"%@ \n a rectangle is drawn on page %d",summaryStr,currentPageNumber];
+        lineNumber+=1;
     }
     else if(shapeToBeDrawn.shape == 2) {    //Circle
         if(contextLocal==nil)
@@ -292,6 +309,9 @@ UIView *imgView;
         
         CGContextAddArc(contextLocal, shapeToBeDrawn.startPoint.x, shapeToBeDrawn.startPoint.y, radius, 0, M_PI * 2.0, 1);
         CGContextStrokePath(contextLocal);
+        
+        summaryStr=[NSString stringWithFormat:@"%@ \n a circle is drawn on page %d",summaryStr,currentPageNumber];
+        lineNumber+=1;
     }
     
     else if(shapeToBeDrawn.shape == 3) {    //Circle
@@ -320,10 +340,28 @@ UIView *imgView;
         //[aPath fill];
         [aPath stroke];
         
+        summaryStr=[NSString stringWithFormat:@"%@ \n a pencil is drawn on page %d",summaryStr,currentPageNumber];
+        lineNumber+=1;
+        
+        
         // Restore the graphics state before drawing any other content.
         //CGContextRestoreGState(aRef);    }
     
 
+    }
+    
+    
+    if(thumbNailPreview==NO)
+    {
+        pageImage = [self convertPDFPageToImage:templatePage withResolution:100];
+        CGImageRef bigPageImage=pageImage.CGImage;
+        CGImageRef partOfBigImage = CGImageCreateWithImageInRect(bigPageImage,
+                                                             CGRectMake(shapeToBeDrawn.startPoint.x-50.0f, shapeToBeDrawn.startPoint.y-50.0f, 100, 100));
+    
+        UIImage *partOfImage = [UIImage imageWithCGImage:partOfBigImage];
+    
+        [arrayImage addObject:partOfImage];
+        pageImage=nil;
     }
 }
 
@@ -340,6 +378,7 @@ UIView *imgView;
 
 
 -(void)drawPhotosWithPDFFilePath:(NSString*)pdfFilePath withPage_no:(int)pageNumber withPreview:(BOOL)preview{
+    int i=0;
      CommonFunction *commonFunction=[[CommonFunction alloc]init];
     NSString *folderPath = [commonFunction getFolderPathFromFullPath:pdfFilePath];
     [commonFunction setFolderPath:folderPath];
@@ -353,6 +392,8 @@ UIView *imgView;
     {
         pdfFileNameStr=[[commonFunction getFileNameFromPath:pdfFilePath] stringByAppendingString:[NSString stringWithFormat:@"Big_%d",pageNumber]];
         
+        
+        
     }
     
     NSMutableArray *imageCollection=[commonFunction loadFileDataFromDiskWithFilename:pdfFileNameStr];
@@ -360,6 +401,12 @@ UIView *imgView;
     for(PDFPage *pdfPageObject in imageCollection){
 
          [self drawImage:pdfPageObject.image inRect:pdfPageObject.frame];
+        i++;
+    }
+    if(i!=0)
+    {
+     summaryStr=[NSString stringWithFormat:@"%@ \n %d photo added on page %d",summaryStr,i,currentPageNumber];
+     lineNumber+=1;
     }
     
 }
@@ -371,7 +418,9 @@ UIView *imgView;
     viewNew=[[UIView alloc]initWithFrame:CGRectMake(2.40694e-05, 16.2353, 760, 983.529)];
     view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 612, 792)];
     
-    
+    summaryStr=@"";
+    lineNumber=1;
+    thumbNailPreview=preview;
     // Create the PDF context using the default page size of 612 x 792.
     
     CommonFunction *commonFunction=[[CommonFunction alloc]init];
@@ -391,7 +440,7 @@ UIView *imgView;
     
     
     
-    
+     arrayImage=[[NSMutableArray alloc]init];
     
     //page no to pdf
     
@@ -413,8 +462,10 @@ UIView *imgView;
     
     //for each page in template
     for (size_t pageNumber = 1; pageNumber <= count; pageNumber++) {
+        
+        
         //get bounds of template page
-        CGPDFPageRef templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
+        templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
         CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
         
         //create empty page with corresponding bounds in new document
@@ -436,34 +487,239 @@ UIView *imgView;
         
         [_collection removeAllObjects];
         _collection=nil;
-        
+        currentPageNumber=pageNumber;
         NSString *fileName=[commonFunction getFileNameFromPath:pdfFilePath];
         _collection= [commonFunction loadDataFromDiskWithFilename:[NSString stringWithFormat:@"%@_%zd",fileName, pageNumber]];
         
         [self drawPhotosWithPDFFilePath:pdfFilePath withPage_no:pageNumber withPreview:preview];
         
         [self drawShapes];
-        
-       
+        //UIImage *pageImage = [self convertPDFPageToImage:templatePage withResolution:144];
+        //NSLog(@"pageImage=%@",pageImage);
+        //[arrayImage addObject:pageImage];
     }
     
-    //UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 965), nil);
+    
+    if(thumbNailPreview==NO)
+    {
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
+        int i=40;
+    
+        for(UIImage *image in arrayImage)
+        {
+          CGRect frame=CGRectMake(600, i, 50, 30);
+          [self drawImage:image inRect: frame];
+          i+=100;
+        }
+    
+        UIFont *font=[UIFont systemFontOfSize:25.0f];
+    
+        [self drawText:@"Annotation Summary" inFrame:CGRectMake(100, 40, 768, 600) inFrameRect:font];
+    
+        font=[UIFont systemFontOfSize:18.0f];
+        [self drawText:summaryStr inFrame:CGRectMake(100, 75, 768, 600) inFrameRect:font];
+    }
+    
+    CGPDFDocumentRelease(templateDocument);
+    UIGraphicsEndPDFContext();
+
+    [arrayImage removeAllObjects];
+    arrayImage=nil;
+        
+    //remove
+    
+    
+    /*
+    
+    //Add Summary Page
+    
+     NSString *tempFilePath = [[newFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
+    
+   
+    
+    UIGraphicsBeginPDFContextToFile(tempFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    
+    url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)newFilePath, kCFURLPOSIXPathStyle, 0);
+    
+    //open template file
+    templateDocument = CGPDFDocumentCreateWithURL(url);
+    CFRelease(url);
+    
+    //get amount of pages in template
+    count = CGPDFDocumentGetNumberOfPages(templateDocument);
+    
+    //for each page in template
+    for (size_t pageNumber = 1; pageNumber <= count; pageNumber++) {
+        
+        
+        //get bounds of template page
+        CGPDFPageRef templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
+        CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
+        
+        //create empty page with corresponding bounds in new document
+        UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
+        context = UIGraphicsGetCurrentContext();
+        
+        //flip context due to different origins
+        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        //copy content of template page on the corresponding page in new file
+        CGContextDrawPDFPage(context, templatePage);
+        
+        //flip context back
+        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+
+        
+        
+    }
+    
+    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
+    int i=0;
+    for(UIImage *image in arrayImage)
+    {
+        CGRect frame=CGRectMake(100, i, 50, 50);
+        [self drawImage:image inRect: frame];
+        i+=100;
+    }
     
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
     
     
-    //remove
+    [[NSFileManager defaultManager] removeItemAtPath:newFilePath error:nil];
+    [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:newFilePath error:nil];
 
-    
-    
-    
-    
-    
-    
-    
+    */
     
 }
+
+- (UIImage *) convertPDFPageToImage: (CGPDFPageRef) page withResolution: (float) resolution {
+	
+	CGRect cropBox = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
+    //CGRect cropBox= CGRectMake(shapePoint.x-50.0f, shapePoint.y-50.0f, 100, 100);
+	int pageRotation = CGPDFPageGetRotationAngle(page);
+	
+	if ((pageRotation == 0) || (pageRotation == 180) ||(pageRotation == -180)) {
+		UIGraphicsBeginImageContextWithOptions(cropBox.size, NO, resolution / 72);
+	}
+	else {
+		UIGraphicsBeginImageContextWithOptions(CGSizeMake(cropBox.size.height, cropBox.size.width), NO, resolution / 72);
+	}
+	
+	CGContextRef imageContext = UIGraphicsGetCurrentContext();
+	
+    [self renderPage:page inContext:imageContext];
+	
+    UIImage *pageImage = UIGraphicsGetImageFromCurrentImageContext();
+	
+    UIGraphicsEndImageContext();
+	
+	return pageImage;
+}
+
+
+- (void) renderPage: (CGPDFPageRef) page inContext: (CGContextRef) pageContext{
+	[self renderPage:page inContext:pageContext atPoint:CGPointMake(0, 0)];
+}
+
+- (void) renderPage: (CGPDFPageRef) page inContext: (CGContextRef) pageContext atPoint:(CGPoint) point{
+	[self renderPage:page inContext:pageContext atPoint:point withZoom:100];
+}
+
+- (void) renderPage: (CGPDFPageRef) page inContext: (CGContextRef) pageContext atPoint: (CGPoint) point withZoom: (float) zoom{
+	
+	CGRect cropBox = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
+    //CGRect cropBox= CGRectMake(shapePoint.x-50.0f, shapePoint.y-50.0f, 100, 100);
+	int rotate = CGPDFPageGetRotationAngle(page);
+	
+	CGContextSaveGState(pageContext);
+	
+	// Setup the coordinate system.
+	// Top left corner of the displayed page must be located at the point specified by the 'point' parameter.
+	CGContextTranslateCTM(pageContext, point.x, point.y);
+	
+	// Scale the page to desired zoom level.
+	CGContextScaleCTM(pageContext, zoom / 100, zoom / 100);
+	
+	// The coordinate system must be set to match the PDF coordinate system.
+	switch (rotate) {
+		case 0:
+			CGContextTranslateCTM(pageContext, 0, cropBox.size.height);
+			CGContextScaleCTM(pageContext, 1, -1);
+			break;
+		case 90:
+			CGContextScaleCTM(pageContext, 1, -1);
+			CGContextRotateCTM(pageContext, -M_PI / 2);
+			break;
+		case 180:
+		case -180:
+			CGContextScaleCTM(pageContext, 1, -1);
+			CGContextTranslateCTM(pageContext, cropBox.size.width, 0);
+			CGContextRotateCTM(pageContext, M_PI);
+			break;
+		case 270:
+		case -90:
+			CGContextTranslateCTM(pageContext, cropBox.size.height, cropBox.size.width);
+			CGContextRotateCTM(pageContext, M_PI / 2);
+			CGContextScaleCTM(pageContext, -1, 1);
+			break;
+	}
+	
+	// The CropBox defines the page visible area, clip everything outside it.
+	CGRect clipRect = CGRectMake(0, 0, cropBox.size.width, cropBox.size.height);
+	CGContextAddRect(pageContext, clipRect);
+	CGContextClip(pageContext);
+	
+	CGContextSetRGBFillColor(pageContext, 1.0, 1.0, 1.0, 1.0);
+	CGContextFillRect(pageContext, clipRect);
+	
+	CGContextTranslateCTM(pageContext, -cropBox.origin.x, -cropBox.origin.y);
+	
+	CGContextDrawPDFPage(pageContext, page);
+	
+	CGContextRestoreGState(pageContext);
+}
+
+- (void) renderPage: (CGPDFPageRef) page inContext: (CGContextRef) pageContext inRectangle: (CGRect) displayRectangle {
+    if ((displayRectangle.size.width == 0) || (displayRectangle.size.height == 0)) {
+        return;
+    }
+    
+    CGRect cropBox = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
+	int pageRotation = CGPDFPageGetRotationAngle(page);
+	
+	CGSize pageVisibleSize = CGSizeMake(cropBox.size.width, cropBox.size.height);
+	if ((pageRotation == 90) || (pageRotation == 270) ||(pageRotation == -90)) {
+		pageVisibleSize = CGSizeMake(cropBox.size.height, cropBox.size.width);
+	}
+    
+    float scaleX = displayRectangle.size.width / pageVisibleSize.width;
+    float scaleY = displayRectangle.size.height / pageVisibleSize.height;
+    float scale = scaleX < scaleY ? scaleX : scaleY;
+    
+    // Offset relative to top left corner of rectangle where the page will be displayed
+    float offsetX = 0;
+    float offsetY = 0;
+    
+    float rectangleAspectRatio = displayRectangle.size.width / displayRectangle.size.height;
+    float pageAspectRatio = pageVisibleSize.width / pageVisibleSize.height;
+    
+    if (pageAspectRatio < rectangleAspectRatio) {
+        // The page is narrower than the rectangle, we place it at center on the horizontal
+        offsetX = (displayRectangle.size.width - pageVisibleSize.width * scale) / 2;
+    }
+    else {
+        // The page is wider than the rectangle, we place it at center on the vertical
+        offsetY = (displayRectangle.size.height - pageVisibleSize.height * scale) / 2;
+    }
+    
+    CGPoint topLeftPage = CGPointMake(displayRectangle.origin.x + offsetX, displayRectangle.origin.y + offsetY);
+    
+    [self renderPage:page inContext:pageContext atPoint:topLeftPage withZoom:scale * 100];
+}
+
 
 
 
