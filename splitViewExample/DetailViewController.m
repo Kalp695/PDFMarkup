@@ -216,7 +216,8 @@ static DetailViewController *sharedInstance = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UploadClick) name:@"UploadClick" object:nil];
     // Notifier for Delete Click Event
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DriveDownloadSuccess) name:@"DriveDownloadSuccess" object:nil];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteClick) name:@"DeleteClick" object:nil];
     
@@ -233,8 +234,11 @@ static DetailViewController *sharedInstance = nil;
     
     // Notifier for UploadTo Folder Event
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadToFolder) name:@"UploadToFolder" object:nil];
+
+    });
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadToFolder) name:@"UploadToFolder" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadCancel) name:@"UploadCancel" object:nil];
     
     popOverListArray = [[NSMutableArray alloc]init];
@@ -311,16 +315,8 @@ static DetailViewController *sharedInstance = nil;
     
     [self docDataToDisplay];
     // appDel.documentStatus = @"GridView";
-    
-    
-    
-    
-    
     //  MasterViewController * object = [[MasterViewController alloc ]init];
-    
-    
 }
-
 
 -(void)viewWillDisappear:(BOOL)animated
 {
@@ -330,8 +326,6 @@ static DetailViewController *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolder" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadToFolder" object:nil];
-    
-    
 }
 
 - (void)viewDidLoad
@@ -420,7 +414,10 @@ static DetailViewController *sharedInstance = nil;
     
     
 }
-
+-(void)DriveDownloadSuccess
+{
+    [self docDataToDisplay];
+}
 
 #pragma mark - Documents View
 
@@ -436,11 +433,6 @@ static DetailViewController *sharedInstance = nil;
     documenmtsArray = [[NSMutableArray alloc]init];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    
-    
-    
-    
     
     NSArray *directoryContent = nil;
     if (!loadData) {
@@ -630,13 +622,7 @@ static DetailViewController *sharedInstance = nil;
 {
     
     NSLog(@"uploading files is %@",filePathsArray);
-    
-    
        filecount = 0;
-    
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
    // [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
     
@@ -649,6 +635,8 @@ static DetailViewController *sharedInstance = nil;
     
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
         for (int i = 0; i<[arrtimer count]; i++) {
             
             NSTimer *timerobj  = (NSTimer *)[arrtimer objectAtIndex:i];
@@ -723,6 +711,8 @@ static DetailViewController *sharedInstance = nil;
     {
         // https://developers.box.com/docs/#files-upload-a-file
         
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
         NSString * extension = @"pdf";
         if ([[[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
         {
@@ -769,14 +759,13 @@ static DetailViewController *sharedInstance = nil;
             NSString * docfilepath = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfPath"];
             NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-            NSString * docfileName = [nameArray objectAtIndex:1];
+            NSString * docfileName = [nameArray lastObject];
             NSData *fileData = [NSData dataWithContentsOfFile:docfilepath];
             if (driveParentId == nil)
             {
                 driveParentId =[DetailViewController  getSharedInstance].folderID;
             }
             [self uploadPdfToDrive:fileData :docfileName :driveParentId];
-
             
         }
         else
@@ -784,7 +773,7 @@ static DetailViewController *sharedInstance = nil;
            // NSString * docfilepath = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfPath"];
             NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
-            NSString * docfileName = [nameArray objectAtIndex:1];
+            NSString * docfileName = [nameArray lastObject];
             if (driveParentId == nil)
             {
                 driveParentId =[DetailViewController  getSharedInstance].folderID;
@@ -793,8 +782,18 @@ static DetailViewController *sharedInstance = nil;
             [self uploadFolderToDrive:docfileName :driveParentId];
             
         }
+        editBarButton.title = @"Edit";
+        [documentsTableView setEditing:NO];
+        [documentsCollectionView reloadData];
+        for (int i =0; i< [checkableArray count]; i++) {
+            
+            Item *item = (Item *)[checkableArray objectAtIndex:i];
+            item.isChecked = NO;
+            
+        }
 
-        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
+
     }
     
     
@@ -1252,14 +1251,10 @@ static DetailViewController *sharedInstance = nil;
         [self performSelector:@selector(closeDriveUploadControllerr) withObject:nil afterDelay:0];
         
     }
-    
-
 }
 
 -(void)closeDriveUploadControllerr
 {
-
-
   if ([driveUploadingArray count]>0)
   {
     [filePathsArray removeAllObjects];
@@ -1269,7 +1264,6 @@ static DetailViewController *sharedInstance = nil;
         NSLog(@"%d",[driveUploadingArray count]);
         NSString *   bfolderName =  [[driveUploadingArray objectAtIndex:k]objectForKey:@"PdfName"];
         NSString *    bfolderPath =  [[driveUploadingArray objectAtIndex:k]objectForKey:@"PdfPath"];
-        
         NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
         [dic setObject:bfolderName forKey:@"PdfName"];
         [dic setObject:bfolderPath forKey:@"PdfPath"];

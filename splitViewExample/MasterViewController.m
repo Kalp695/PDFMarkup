@@ -417,6 +417,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
     }
     
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -453,6 +454,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+   // UITableViewCellSelectionStyleGray
+    
+    
+
     NSDate *object = _objects[indexPath.row];
     
     if (indexPath.section == 0)
