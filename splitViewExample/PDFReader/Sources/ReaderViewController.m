@@ -2712,6 +2712,12 @@ static ReaderViewController *sharedInstance = nil;
         SPUserResizableView *noteLabelSPUserResizableView=(SPUserResizableView*)[contentPageView viewWithTag:(i.shape_no+1000)];
         [noteLabelSPUserResizableView removeFromSuperview];
         
+        [NSTimer scheduledTimerWithTimeInterval:0.0
+                                         target:self
+                                       selector:@selector(saveToDisk:)
+                                       userInfo:nil
+                                        repeats:NO];
+
     }
     selectedIndex=-1;
     
@@ -2740,6 +2746,13 @@ static ReaderViewController *sharedInstance = nil;
             [contentPageView addSubview:_lastEditedView];
             
         }
+        
+        [NSTimer scheduledTimerWithTimeInterval:0.0
+                                         target:self
+                                       selector:@selector(saveToDisk:)
+                                       userInfo:nil
+                                        repeats:NO];
+
         
         
     }
@@ -2773,6 +2786,13 @@ static ReaderViewController *sharedInstance = nil;
         selectedIndex=-1;
         
         [self ShapeSelected:YES];
+        
+        [NSTimer scheduledTimerWithTimeInterval:0.0
+                                         target:self
+                                       selector:@selector(saveToDisk:)
+                                       userInfo:nil
+                                        repeats:NO];
+
         
     }
 
@@ -3270,6 +3290,7 @@ static ReaderViewController *sharedInstance = nil;
       dispatch_async(queue,
                      ^{
                          __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
+                         __block NSInteger pageNumber=[document.pageNumber integerValue];
                          
                         dispatch_sync(queue,
                                       ^{
@@ -3282,7 +3303,7 @@ static ReaderViewController *sharedInstance = nil;
                                               }
                                           }
                                           
-                                          NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+                                          NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",pageNumber]];
                                           [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionBig];
 
                                           
@@ -3670,6 +3691,7 @@ static ReaderViewController *sharedInstance = nil;
                    ^{
                        
                        __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
+                       __block NSInteger pageNumber=[document.pageNumber integerValue];
                        
                        dispatch_sync(queue,
                                      ^{
@@ -3683,7 +3705,7 @@ static ReaderViewController *sharedInstance = nil;
                                          }
                                          [imageCollectionBig removeObject:pdfPageObject];
                                          
-                                         NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",[document.pageNumber integerValue]]];
+                                         NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",pageNumber]];
                                          [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionBig];
                                          
                                          

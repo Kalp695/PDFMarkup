@@ -22,7 +22,7 @@
 
 
 CGSize pageSize;
-__weak NSMutableArray *_collection;
+ NSMutableArray *_collection;
 UIView *viewNew;
 UIView *view;
 UIView *imgView;
@@ -353,10 +353,10 @@ bool thumbNailPreview;
     
     if(thumbNailPreview==NO)
     {
-        pageImage = [self convertPDFPageToImage:templatePage withResolution:100];
+        pageImage = [self convertPDFPageToImage:templatePage withCurrentShape:shapeToBeDrawn];
         CGImageRef bigPageImage=pageImage.CGImage;
         CGImageRef partOfBigImage = CGImageCreateWithImageInRect(bigPageImage,
-                                                             CGRectMake(shapeToBeDrawn.startPoint.x-50.0f, shapeToBeDrawn.startPoint.y-50.0f, 100, 100));
+                                                             CGRectMake(shapeToBeDrawn.startPoint.x-100.0f, shapeToBeDrawn.startPoint.y-100.0f, 200, 200));
     
        __weak UIImage *partOfImage = [UIImage imageWithCGImage:partOfBigImage];
     
@@ -407,17 +407,17 @@ bool thumbNailPreview;
          [self drawImage:pdfPageObject.image inRect:pdfPageObject.frame];
         i++;
     }
-    if(i!=0)
+    if(i!=0 && preview==NO)
     {
      summaryStr=[NSString stringWithFormat:@"a new page number %d was added and %d photos were added",currentPageNumber,i];
+        
+    [summaryArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:summaryStr,@"summary",[NSNull null],@"image", nil]];
+    
+
     
     lineNumber+=1;
     }
     
-    if(preview==NO)
-    {
-         [summaryArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:summaryStr,@"summary",[NSNull null],@"image", nil]];
-    }
     
 }
 
@@ -508,26 +508,31 @@ bool thumbNailPreview;
     {
         UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
         
-        UIFont *font=[UIFont systemFontOfSize:25.0f];
-        [self drawText:@"Annotation Summary" inFrame:CGRectMake(100, 40, 768, 600) inFrameRect:font];
-        int i=45;
+        UIFont *font=[UIFont fontWithName:@"HelveticaNeue" size:25.0f];
+        [self drawText:@"Annotation Summary" inFrame:CGRectMake(40, 40, 768, 600) inFrameRect:font];
+        int i=100;
     
         for(NSDictionary *dict in summaryArray)
         {
             summaryStr=[dict objectForKey:@"summary"];
             UIImage *image=[dict objectForKey:@"image"];
             
-          font=[UIFont systemFontOfSize:18.0f];
-          [self drawText:summaryStr inFrame:CGRectMake(100, i, 768, 600) inFrameRect:font];
+            font=[UIFont fontWithName:@"HelveticaNeue" size:15.0f];
+          [self drawText:summaryStr inFrame:CGRectMake(160.0f, i, 500, 600) inFrameRect:font];
             
-            CGSize textSize = [summaryStr sizeWithAttributes:@{NSFontAttributeName:font}];
+            //CGSize textSize = [summaryStr sizeWithAttributes:@{NSFontAttributeName:font}];
             
-            CGFloat textWidth = textSize.width;
             if(![image isEqual:[NSNull null]])
             {
-                [self drawImage:image inRect: CGRectMake(100.0f+textWidth+10.0f, i, 50.0f, 50.0f)];
+                [self drawImage:image inRect: CGRectMake(50.0f, i, 100.0f, 100.0f)];
             }
-          i+=50;
+          i+=110;
+            
+            if(i>900)
+            {
+                UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
+                i=100;
+            }
         }
     
         
@@ -553,7 +558,7 @@ bool thumbNailPreview;
     
 }
 
-- (UIImage *) convertPDFPageToImage: (CGPDFPageRef) page withResolution: (float) resolution {
+- (UIImage *) convertPDFPageToImage: (CGPDFPageRef) page withCurrentShape: (myShape*) currentShape {
 	
 	CGRect cropBox = CGPDFPageGetBoxRect(page, kCGPDFCropBox);
     //CGRect cropBox= CGRectMake(shapePoint.x-50.0f, shapePoint.y-50.0f, 100, 100);
@@ -571,6 +576,63 @@ bool thumbNailPreview;
 	CGContextRef imageContext = UIGraphicsGetCurrentContext();
 	
     [self renderPage:page inContext:imageContext];
+    
+    if(currentShape.shape==0) //line
+    {
+        CGContextMoveToPoint(imageContext, currentShape.startPoint.x, currentShape.startPoint.y);    // This sets up the start point
+        CGContextAddLineToPoint(imageContext, currentShape.endPoint.x, currentShape.endPoint.y);
+        CGContextClosePath(imageContext);
+        CGContextDrawPath(imageContext, kCGPathFillStroke);
+    }
+    
+    else if(currentShape.shape==1)  //rectangle
+    {
+        
+        CGRect rectangle = CGRectMake(currentShape.startPoint.x,
+                                      currentShape.startPoint.y,
+                                      (currentShape.endPoint.x) - (currentShape.startPoint.x),
+                                      (currentShape.endPoint.y) - (currentShape.startPoint.y));
+        
+        CGContextSetLineWidth(imageContext, currentShape.lineWidth);
+    
+        CGContextSetStrokeColorWithColor(imageContext, currentShape.color.CGColor);
+        
+        
+        CGContextStrokeRect(imageContext, rectangle);
+        
+        CGContextDrawPath(imageContext, kCGPathFillStroke);
+
+        
+    }
+    
+    else if(currentShape.shape==2) //circle
+    {
+        
+        CGContextSetStrokeColorWithColor(imageContext, [currentShape.color CGColor]);
+        CGContextSetLineWidth(imageContext, currentShape.lineWidth);
+        
+        float X = currentShape.endPoint.x - currentShape.startPoint.x;
+        float Y = currentShape.endPoint.y - currentShape.startPoint.y;
+        float radius = sqrtf(X*X + Y*Y);
+        
+        CGContextAddArc(imageContext, currentShape.startPoint.x, currentShape.startPoint.y, radius, 0, M_PI * 2.0, 1);
+        CGContextStrokePath(imageContext);
+
+        
+    }
+    
+    else if(currentShape.shape==3) //pencil
+    {
+        UIBezierPath *aPath = currentShape.pencilBezierPath;
+        [currentShape.color setStroke];
+        aPath.lineWidth = currentShape.lineWidth;
+        [aPath stroke];
+
+    }
+    
+    
+    
+
 	
    __weak UIImage *pageImage = UIGraphicsGetImageFromCurrentImageContext();
 	
