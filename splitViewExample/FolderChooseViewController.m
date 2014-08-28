@@ -319,7 +319,7 @@ static FolderChooseViewController *sharedInstance = nil;
     NSLog(@"drive service %@",[DriveHelperClass getSharedInstance].driveService.authorizer);
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
     // or mimeType ='text/directory'
-    query.q = @"mimeType='application/vnd.google-apps.folder'";
+    query.q = @"mimeType='application/vnd.google-apps.folder' and trashed=false";
     query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -329,6 +329,11 @@ static FolderChooseViewController *sharedInstance = nil;
                                                                       NSError *error) {
                                                       if (!error) {
                                                           [self.driveFiles addObjectsFromArray:files.items];
+                                                          if ([self.driveFiles count]==0)
+                                                          {
+                                                              [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                                              
+                                                          }
                                                           for (int i =0;i<[driveFiles count]; i++)
                                                           {
                                                               GTLDriveFile * file =[self.driveFiles objectAtIndex:i];

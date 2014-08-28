@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MESSAGES</key>
+	<array>
+		<string>rodzaj:wiadomość</string>
+		<string>rodzaj:wiadomości</string>
+	</array>
+	<key>APPLICATIONS</key>
+	<array>
+		<string>rodzaj:program</string>
+		<string>rodzaj:programy</string>
+	</array>
+	<key>CONTACT</key>
+	<array>
+		<string>rodzaj:kontakt</string>
+		<string>rodzaj:kontakty</string>
+	</array>
+	<key>DOCUMENTS</key>
+	<array>
+		<string>rodzaj:dokument</string>
+		<string>rodzaj:dokumenty</string>
+	</array>
+	<key>DIRECTORIES</key>
+	<array>
+		<string>rodzaj:katalog</string>
+		<string>rodzaj:katalogi</string>
+	</array>
+	<key>EMAIL</key>
+	<array>
+		<string>rodzaj:email</string>
+		<string>rodzaj:wiadomość email</string>
+		<string>rodzaj:wiadomości email</string>
+		<string>rodzaj:poczta</string>
+		<string>rodzaj:wiadomość pocztowa</string>
+		<string>rodzaj:wiadomości pocztowe</string>
+	</array>
+	<key>EVENT</key>
+	<array>
+		<string>rodzaj:wydarzenie</string>
+		<string>rodzaj:wydarzenia</string>
+	</array>
+	<key>TODO</key>
+	<array>
+		<string>rodzaj:przypomnienie</string>
+		<string>rodzaj:przypomnienia</string>
+	</array>
+	<key>EVENT_TODO</key>
+	<array>
+		<string>rodzaj:wydarzenia &amp; przypomnienia</string>
+		<string>rodzaj:przypomnienia &amp; wydarzenia</string>
+		<string>rodzaj:wydarzenia i przypomnienia</string>
+		<string>rodzaj:przypomnienia i wydarzenia</string>
+		<string>rodzaj:wydarzenie lub przypomnienie</string>
+		<string>rodzaj:przypomnienie lub wydarzenie</string>
+	</array>
+	<key>IMAGES</key>
+	<array>
+		<string>rodzaj:obrazek</string>
+		<string>rodzaj:obrazki</string>
+	</array>
+	<key>MOVIES</key>
+	<array>
+		<string>rodzaj:film</string>
+		<string>rodzaj:filmy</string>
+	</array>
+	<key>MUSIC</key>
+	<array>
+		<string>rodzaj:muzyka</string>
+		<string>utwór</string>
+		<string>utwory</string>
+		<string>rodzaj:audio</string>
+		<string>rodzaj:dźwięk</string>
+	</array>
+	<key>NEXT_MONTH</key>
+	<array>
+		<string>data:następny miesiąc</string>
+	</array>
+	<key>NEXT_WEEK</key>
+	<array>
+		<string>data:następny tydzień</string>
+	</array>
+	<key>NEXT_YEAR</key>
+	<array>
+		<string>data:następny rok</string>
+	</array>
+	<key>PDF</key>
+	<array>
+		<string>rodzaj:pdf</string>
+		<string>rodzaj:plik pdf</string>
+		<string>rodzaj:pliki pdf</string>
+		<string>rodzaj:dokument pdf</string>
+		<string>rodzaj:dokumenty pdf</string>
+	</array>
+	<key>SYSTEM_PREFS</key>
+	<array>
+		<string>rodzaj:preferencje systemowe</string>
+		<string>rodzaj:preferencje</string>
+	</array>
+	<key>THIS_MONTH</key>
+	<array>
+		<string>data:ten miesiąc</string>
+	</array>
+	<key>THIS_WEEK</key>
+	<array>
+		<string>data:ten tydzień</string>
+	</array>
+	<key>THIS_YEAR</key>
+	<array>
+		<string>data:ten rok</string>
+	</array>
+	<key>TODAY</key>
+	<array>
+		<string>data:dzisiaj</string>
+		<string>data:dziś</string>
+	</array>
+	<key>TOMORROW</key>
+	<array>
+		<string>data:jutro</string>
+	</array>
+	<key>YESTERDAY</key>
+	<array>
+		<string>data:wczoraj</string>
+	</array>
+	<key>BOOKMARKS</key>
+	<array>
+		<string>rodzaj:zakładka</string>
+		<string>rodzaj:zakładki</string>
+		<string>rodzaj:url</string>
+		<string>rodzaj:adres url</string>
+		<string>rodzaj:adresy url</string>
+		<string>rodzaj:strona www</string>
+		<string>rodzaj:strony www</string>
+	</array>
+	<key>FONTS</key>
+	<array>
+		<string>rodzaj:czcionka</string>
+		<string>rodzaj:czcionki</string>
+	</array>
+	<key>PRESENTATIONS</key>
+	<array>
+		<string>rodzaj:prezentacja</string>
+		<string>rodzaj:prezentacje</string>
+	</array>
+	<key>SPREADSHEETS</key>
+	<array>
+		<string>rodzaj:arkusz kalkulacyjny</string>
+		<string>rodzaj:arkusze kalkulacyjne</string>
+		<string>rodzaj:arkusz</string>
+		<string>rodzaj:arkusze</string>
+
+	</array>
+	<key>SOURCE</key>
+	<array>
+		<string>rodzaj:programista</string>
+		<string>rodzaj:źródło</string>
+	</array>
+	<key>TEXT</key>
+	<array>
+		<string>rodzaj:tekst</string>
+	</array>
+</dict>
+</plist>

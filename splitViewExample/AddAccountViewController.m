@@ -153,6 +153,15 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         [self presentViewController:loginNavigation animated:YES completion:nil];
         
     }
+    else if ([sender tag]==3)
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"FTPListController"];
+        googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+        
+        [self presentViewController:googleLoginViewController animated:YES completion:nil];
+
+    }
     else if ([sender tag]== 4)
     {
         
