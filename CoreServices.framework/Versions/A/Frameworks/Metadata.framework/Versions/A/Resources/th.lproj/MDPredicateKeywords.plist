@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MESSAGES</key>
+	<array>
+		<string>ประเภท:ข้อความ</string>
+	</array>
+	<key>APPLICATIONS</key>
+	<array>
+		<string>ประเภท:แอปพลิเคชั่น</string>
+		<string>ประเภท:แอพพลิเคชั่น</string>
+		<string>ประเภท:แอปพลิเคชัน</string>
+		<string>ประเภท:แอพพลิเคชัน</string>
+		<string>ประเภท:แอป</string>
+		<string>ประเภท:แอพ</string>
+		<string>ประเภท:แอปฯ</string>
+		<string>ประเภท:แอพฯ</string>
+		<string>ประเภท:แอป ฯ</string>
+		<string>ประเภท:แอพ ฯ</string>
+	</array>
+	<key>CONTACT</key>
+	<array>
+		<string>ประเภท:รายชื่อ</string>
+	</array>
+	<key>DOCUMENTS</key>
+	<array>
+		<string>ประเภท:เอกสาร</string>
+	</array>
+	<key>DIRECTORIES</key>
+	<array>
+		<string>ประเภท:โฟลเดอร์</string>
+	</array>
+	<key>EMAIL</key>
+	<array>
+		<string>ประเภท:อีเมล</string>
+		<string>ประเภท:อีเมล์</string>
+		<string>ประเภท:เมล</string>
+		<string>ประเภท:ข้อความเมล</string>
+	</array>
+	<key>EVENT</key>
+	<array>
+		<string>ประเภท:กิจกรรม</string>
+	</array>
+	<key>TODO</key>
+	<array>
+		<string>ประเภท:เตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำ</string>
+		<string>ประเภท:รายการที่ต้องทำ</string>
+	</array>
+	<key>EVENT_TODO</key>
+	<array>
+		<string>ประเภท:กิจกรรม &amp; เตือนความจำ</string>
+		<string>ประเภท:เตือนความจำ &amp; กิจกรรม</string>
+		<string>ประเภท:กิจกรรม และ เตือนความจำ</string>
+		<string>ประเภท:เตือนความจำ และ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมและเตือนความจำ</string>
+		<string>ประเภท:เตือนความจำและกิจกรรม</string>
+		<string>ประเภท:กิจกรรม หรือ เตือนความจำ</string>
+		<string>ประเภท:เตือนความจำ หรือ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมหรือเตือนความจำ</string>
+		<string>ประเภท:เตือนความจำหรือกิจกรรม</string>
+		<string>ประเภท:กิจกรรม &amp; การเตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำ &amp; กิจกรรม</string>
+		<string>ประเภท:กิจกรรม และ การเตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำ และ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมและการเตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำและกิจกรรม</string>
+		<string>ประเภท:กิจกรรม หรือ การเตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำ หรือ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมหรือการเตือนความจำ</string>
+		<string>ประเภท:การเตือนความจำหรือกิจกรรม</string>
+		<string>ประเภท:กิจกรรม &amp; รายการเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำ &amp; กิจกรรม</string>
+		<string>ประเภท:กิจกรรม และ รายการเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำ และ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมและรายการเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำและกิจกรรม</string>
+		<string>ประเภท:กิจกรรม หรือ รายการเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำ หรือ กิจกรรม</string>
+		<string>ประเภท:กิจกรรมหรือรายการเตือนความจำ</string>
+		<string>ประเภท:รายการเตือนความจำหรือกิจกรรม</string>
+	</array>
+	<key>IMAGES</key>
+	<array>
+		<string>ประเภท:ภาพ</string>
+		<string>ประเภท:รูปภาพ</string>
+		<string>ประเภท:รูป</string>
+		<string>ประเภท:รูปถ่าย</string>
+		<string>ประเภท:ภาพถ่าย</string>
+	</array>
+	<key>MOVIES</key>
+	<array>
+		<string>ประเภท:ภาพยนตร์</string>
+		<string>ประเภท:หนัง</string>
+	</array>
+	<key>MUSIC</key>
+	<array>
+		<string>ประเภท:ดนตรี</string>
+		<string>ประเภท:เพลง</string>
+		<string>ประเภท:เสียง</string>
+		<string>ประเภท:เสียงเพลง</string>
+		<string>ประเภท:เสียงดนตรี</string>
+		<string>ประเภท:เสียงร้อง</string>
+	</array>
+	<key>NEXT_MONTH</key>
+	<array>
+		<string>วันที่:เดือนหน้า</string>
+		<string>วันที่:เดือนถัดไป</string>
+		<string>วันที่:เดือนต่อไป</string>
+	</array>
+	<key>NEXT_WEEK</key>
+	<array>
+		<string>วันที่:สัปดาห์หน้า</string>
+		<string>วันที่:สัปดาห์ถัดไป</string>
+		<string>วันที่:สัปดาห์ต่อไป</string>
+		<string>วันที่:อาทิตย์หน้า</string>
+		<string>วันที่:อาทิตย์ถัดไป</string>
+		<string>วันที่:อาทิตย์ต่อไป</string>
+	</array>
+	<key>NEXT_YEAR</key>
+	<array>
+		<string>วันที่:ปีหน้า</string>
+		<string>วันที่:ปีถัดไป</string>
+		<string>วันที่:ปีต่อไป</string>
+	</array>
+	<key>PDF</key>
+	<array>
+		<string>ประเภท:pdf</string>
+		<string>ประเภท:ไฟล์ pdf</string>
+		<string>ประเภท:PDF</string>
+		<string>ประเภท:ไฟล์ PDF</string>
+		<string>ประเภท:เอกสาร pdf</string>
+		<string>ประเภท:เอกสารไฟล์ pdf</string>
+		<string>ประเภท:เอกสาร PDF</string>
+		<string>ประเภท:เอกสารไฟล์ PDF</string>
+	</array>
+	<key>SYSTEM_PREFS</key>
+	<array>
+		<string>ประเภท:การตั้งค่าระบบ</string>
+		<string>ประเภท:การปรับค่าระบบ</string>
+		<string>ประเภท:การปรับแต่งระบบ</string>
+		<string>ประเภท:การตั้งค่า</string>
+		<string>ประเภท:การปรับค่า</string>
+		<string>ประเภท:การปรับแต่ง</string>
+		<string>ประเภท:ค่าติดตั้ง</string>
+	</array>
+	<key>THIS_MONTH</key>
+	<array>
+		<string>วันที่:เดือนนี้</string>
+	</array>
+	<key>THIS_WEEK</key>
+	<array>
+		<string>วันที่:สัปดาห์นี้</string>
+		<string>วันที่:อาทิตย์นี้</string>
+	</array>
+	<key>THIS_YEAR</key>
+	<array>
+		<string>วันที่:ปีนี้</string>
+	</array>
+	<key>TODAY</key>
+	<array>
+		<string>วันที่:วันนี้</string>
+	</array>
+	<key>TOMORROW</key>
+	<array>
+		<string>วันที่:วันพรุ่งนี้</string>
+		<string>วันที่:พรุ่งนี้</string>
+	</array>
+	<key>YESTERDAY</key>
+	<array>
+		<string>วันที่:เมื่อวาน</string>
+		<string>วันที่:เมื่อวานนี้</string>
+	</array>
+	<key>BOOKMARKS</key>
+	<array>
+		<string>ประเภท:ที่คั่นหน้า</string>
+		<string>ประเภท:ที่คั่นหน้าเว็บ</string>
+		<string>ประเภท:ที่คั่นหน้าหนังสือ</string>
+        <string>ประเภท:url</string>
+		<string>ประเภท:URL</string>
+		<string>ประเภท:หน้าเว็บ</string>
+		<string>ประเภท:เว็บเพจ</string>
+	</array>
+	<key>FONTS</key>
+	<array>
+		<string>ประเภท:แบบอักษร</string>
+		<string>ประเภท:ฟอนต์</string>
+	</array>
+	<key>PRESENTATIONS</key>
+	<array>
+		<string>ประเภท:งานนำเสนอ</string>
+	</array>
+	<key>SPREADSHEETS</key>
+	<array>
+		<string>ประเภท:กระดาษคำนวณ</string>
+		<string>ประเภท:สเปรดชีท</string>
+	</array>
+	<key>SOURCE</key>
+	<array>
+		<string>ประเภท:ผู้พัฒนา</string>
+		<string>ประเภท:นักพัฒนา</string>
+		<string>ประเภท:ผู้เขียนโปรแกรม</string>
+		<string>ประเภท:นักเขียนโปรแกรม</string>
+		<string>ประเภท:ต้นฉบับ</string>
+		<string>ประเภท:รหัสต้นฉบับ</string>
+		<string>ประเภท:ตัวโปรแกรมต้นฉบับ</string>
+		<string>ประเภท:ซอร์ส</string>
+		<string>ประเภท:ซอร์สโค้ต</string>
+	</array>
+	<key>TEXT</key>
+	<array>
+		<string>ประเภท:ข้อความ</string>
+		<string>ประเภท:ตัวหนังสือ</string>
+	</array>
+</dict>
+</plist>

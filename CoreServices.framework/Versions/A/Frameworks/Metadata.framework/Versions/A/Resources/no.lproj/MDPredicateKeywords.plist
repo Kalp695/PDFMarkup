@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>MESSAGES</key>
+	<array>
+		<string>type:melding</string>
+		<string>type:meldinger</string>
+	</array>
+	<key>APPLICATIONS</key>
+	<array>
+		<string>type:program</string>
+		<string>type:programmer</string>
+		<string>type:program</string>
+		<string>type:programmer</string>
+	</array>
+	<key>CONTACT</key>
+	<array>
+		<string>type:kontakt</string>
+		<string>type:kontakter</string>
+	</array>
+	<key>DOCUMENTS</key>
+	<array>
+		<string>type:dokument</string>
+		<string>type:dokumenter</string>
+	</array>
+	<key>DIRECTORIES</key>
+	<array>
+		<string>type:mappe</string>
+		<string>type:mapper</string>
+	</array>
+	<key>EMAIL</key>
+	<array>
+		<string>type:e-post</string>
+		<string>type:e-poster</string>
+		<string>type:mail</string>
+		<string>type:e-postmelding</string>
+		<string>type:e-postmeldinger</string>
+	</array>
+	<key>EVENT</key>
+	<array>
+		<string>type:hendelse</string>
+		<string>type:hendelser</string>
+	</array>
+	<key>TODO</key>
+	<array>
+		<string>type:påminnelse</string>
+		<string>type:påminnelser</string>
+	</array>
+	<key>EVENT_TODO</key>
+	<array>
+		<string>type:hendelser og påminnelser</string>
+		<string>type:påminnelser og hendelser</string>
+		<string>type:hendelser og påminnelser</string>
+		<string>type:påminnelser og arrangementer</string>
+		<string>type:hendelse eller påminnelse</string>
+		<string>type:påminnelse eller hendelse</string>
+	</array>
+	<key>IMAGES</key>
+	<array>
+		<string>type:bilde</string>
+		<string>type:bilder</string>
+	</array>
+	<key>MOVIES</key>
+	<array>
+		<string>type:film</string>
+		<string>type:filmer</string>
+	</array>
+	<key>MUSIC</key>
+	<array>
+		<string>type:musikk</string>
+		<string>type:sang</string>
+		<string>type:sanger</string>
+		<string>type:lyd</string>
+	</array>
+	<key>NEXT_MONTH</key>
+	<array>
+		<string>dato:neste måned</string>
+	</array>
+	<key>NEXT_WEEK</key>
+	<array>
+		<string>dato:neste uke</string>
+	</array>
+	<key>NEXT_YEAR</key>
+	<array>
+		<string>dato:neste år</string>
+	</array>
+	<key>PDF</key>
+	<array>
+		<string>type:pdf</string>
+		<string>type:pdf-er</string>
+		<string>type:pdf-dokument</string>
+		<string>type:pdf-dokumenter</string>
+	</array>
+	<key>SYSTEM_PREFS</key>
+	<array>
+		<string>type:systemvalg</string>
+		<string>type:systeminnstillinger</string>
+		<string>type:systemvalg</string>
+		<string>type:valg</string>
+		<string>type:innstillinger</string>
+		<string>type:valg</string>
+	</array>
+	<key>THIS_MONTH</key>
+	<array>
+		<string>dato:denne måneden</string>
+	</array>
+	<key>THIS_WEEK</key>
+	<array>
+		<string>dato:denne uken</string>
+	</array>
+	<key>THIS_YEAR</key>
+	<array>
+		<string>dato:dette året</string>
+	</array>
+	<key>TODAY</key>
+	<array>
+		<string>dato:i dag</string>
+	</array>
+	<key>TOMORROW</key>
+	<array>
+		<string>dato:i morgen</string>
+	</array>
+	<key>YESTERDAY</key>
+	<array>
+		<string>dato:i går</string>
+	</array>
+	<key>BOOKMARKS</key>
+	<array>
+		<string>type:bokmerke</string>
+		<string>type:bokmerker</string>
+        <string>type:url</string>
+		<string>type:nettadresser</string>
+		<string>type:nettside</string>
+		<string>type:nettsider</string>
+	</array>
+	<key>FONTS</key>
+	<array>
+		<string>type:font</string>
+		<string>type:fonter</string>
+	</array>
+	<key>PRESENTATIONS</key>
+	<array>
+		<string>type:presentasjoner</string>
+		<string>type:presentasjon</string>
+	</array>
+	<key>SPREADSHEETS</key>
+	<array>
+		<string>type:regneark</string>
+		<string>type:regneark</string>
+	</array>
+	<key>SOURCE</key>
+	<array>
+		<string>type:utvikler</string>
+		<string>type:kilde</string>
+	</array>
+	<key>TEXT</key>
+	<array>
+		<string>type:tekst</string>
+	</array>
+</dict>
+</plist>

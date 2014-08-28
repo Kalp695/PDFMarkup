@@ -1,0 +1,1124 @@
+<?xml version='1.0'?>
+<!DOCTYPE signatures SYSTEM "file://localhost/System/Library/DTDs/BridgeSupport.dtd">
+<signatures version='1.0'>
+<depends_on path='/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework'/>
+<depends_on path='/System/Library/Frameworks/CFNetwork.framework'/>
+<depends_on path='/System/Library/Frameworks/OpenDirectory.framework/Versions/A/Frameworks/CFOpenDirectory.framework'/>
+<depends_on path='/System/Library/Frameworks/CoreFoundation.framework'/>
+<depends_on path='/System/Library/Frameworks/IOKit.framework'/>
+<depends_on path='/System/Library/Frameworks/Security.framework'/>
+<depends_on path='/System/Library/Frameworks/SystemConfiguration.framework'/>
+<struct name='CSIdentityClientContext' type='{CSIdentityClientContext=&quot;version&quot;i&quot;info&quot;^v&quot;retain&quot;^?&quot;release&quot;^?&quot;copyDescription&quot;^?&quot;statusUpdated&quot;^?}' type64='{CSIdentityClientContext=&quot;version&quot;q&quot;info&quot;^v&quot;retain&quot;^?&quot;release&quot;^?&quot;copyDescription&quot;^?&quot;statusUpdated&quot;^?}'/>
+<struct name='CSIdentityQueryClientContext' type='{CSIdentityQueryClientContext=&quot;version&quot;i&quot;info&quot;^v&quot;retainInfo&quot;^?&quot;releaseInfo&quot;^?&quot;copyInfoDescription&quot;^?&quot;receiveEvent&quot;^?}' type64='{CSIdentityQueryClientContext=&quot;version&quot;q&quot;info&quot;^v&quot;retainInfo&quot;^?&quot;releaseInfo&quot;^?&quot;copyInfoDescription&quot;^?&quot;receiveEvent&quot;^?}'/>
+<struct name='IconFamilyElement' type='{IconFamilyElement=&quot;elementType&quot;I&quot;elementSize&quot;i&quot;elementData&quot;[1C]}'/>
+<struct name='IconFamilyResource' type='{IconFamilyResource=&quot;resourceType&quot;I&quot;resourceSize&quot;i&quot;elements&quot;[1{IconFamilyElement=&quot;elementType&quot;I&quot;elementSize&quot;i&quot;elementData&quot;[1C]}]}'/>
+<struct name='KCAttribute' type='{SecKeychainAttribute=&quot;tag&quot;I&quot;length&quot;I&quot;data&quot;^v}'/>
+<struct name='KCAttributeList' type='{SecKeychainAttributeList=&quot;count&quot;I&quot;attr&quot;^{SecKeychainAttribute}}'/>
+<struct name='KCCallbackInfo' type='{KCCallbackInfo=&quot;version&quot;I&quot;item&quot;^{OpaqueSecKeychainItemRef}&quot;processID&quot;[2l]&quot;event&quot;[4l]&quot;keychain&quot;^{OpaqueSecKeychainRef}}' type64='{KCCallbackInfo=&quot;version&quot;I&quot;item&quot;^{OpaqueSecKeychainItemRef}&quot;processID&quot;[2i]&quot;event&quot;[4i]&quot;keychain&quot;^{OpaqueSecKeychainRef}}'/>
+<struct name='SleepQRec' type='{SleepQRec=&quot;sleepQLink&quot;^{SleepQRec}&quot;sleepQType&quot;s&quot;sleepQProc&quot;^?&quot;sleepQFlags&quot;s}'/>
+<struct name='WSClientContext' type='{WSClientContext=&quot;version&quot;i&quot;info&quot;^v&quot;retain&quot;^?&quot;release&quot;^?&quot;copyDescription&quot;^?}' type64='{WSClientContext=&quot;version&quot;q&quot;info&quot;^v&quot;retain&quot;^?&quot;release&quot;^?&quot;copyDescription&quot;^?}'/>
+<cftype gettypeid_func='CSIdentityAuthorityGetTypeID' name='CSIdentityAuthorityRef' tollfree='__NSCFType' type='^{__CSIdentityAuthority=}'/>
+<cftype gettypeid_func='CSIdentityQueryGetTypeID' name='CSIdentityQueryRef' tollfree='__NSCFType' type='^{__CSIdentityQuery=}'/>
+<cftype gettypeid_func='CSIdentityGetTypeID' name='CSIdentityRef' tollfree='__NSCFType' type='^{__CSIdentity=}'/>
+<cftype gettypeid_func='WSMethodInvocationGetTypeID' name='WSMethodInvocationRef' tollfree='__NSCFType' type='^{OpaqueWSMethodInvocationRef=}'/>
+<cftype gettypeid_func='WSProtocolHandlerGetTypeID' name='WSProtocolHandlerRef' tollfree='__NSCFType' type='^{OpaqueWSProtocolHandlerRef=}'/>
+<constant name='kCSIdentityErrorDomain' type='^{__CFString=}'/>
+<constant name='kCSIdentityGeneratePosixName' type='^{__CFString=}'/>
+<constant name='kWSDebugIncomingBody' type='^{__CFString=}'/>
+<constant name='kWSDebugIncomingHeaders' type='^{__CFString=}'/>
+<constant name='kWSDebugOutgoingBody' type='^{__CFString=}'/>
+<constant name='kWSDebugOutgoingHeaders' type='^{__CFString=}'/>
+<constant name='kWSFaultCode' type='^{__CFString=}'/>
+<constant name='kWSFaultExtra' type='^{__CFString=}'/>
+<constant name='kWSFaultString' type='^{__CFString=}'/>
+<constant name='kWSHTTPExtraHeaders' type='^{__CFString=}'/>
+<constant name='kWSHTTPFollowsRedirects' type='^{__CFString=}'/>
+<constant name='kWSHTTPMessage' type='^{__CFString=}'/>
+<constant name='kWSHTTPProxy' type='^{__CFString=}'/>
+<constant name='kWSHTTPResponseMessage' type='^{__CFString=}'/>
+<constant name='kWSHTTPVersion' type='^{__CFString=}'/>
+<constant name='kWSMethodInvocationResult' type='^{__CFString=}'/>
+<constant name='kWSMethodInvocationResultParameterName' type='^{__CFString=}'/>
+<constant name='kWSMethodInvocationTimeoutValue' type='^{__CFString=}'/>
+<constant name='kWSNetworkStreamFaultString' type='^{__CFString=}'/>
+<constant name='kWSRecordNamespaceURI' type='^{__CFString=}'/>
+<constant name='kWSRecordParameterOrder' type='^{__CFString=}'/>
+<constant name='kWSRecordType' type='^{__CFString=}'/>
+<constant name='kWSSOAP1999Protocol' type='^{__CFString=}'/>
+<constant name='kWSSOAP2001Protocol' type='^{__CFString=}'/>
+<constant name='kWSSOAPBodyEncodingStyle' type='^{__CFString=}'/>
+<constant name='kWSSOAPMessageHeaders' type='^{__CFString=}'/>
+<constant name='kWSSOAPMethodNamespaceURI' type='^{__CFString=}'/>
+<constant name='kWSSOAPStyleDoc' type='^{__CFString=}'/>
+<constant name='kWSSOAPStyleRPC' type='^{__CFString=}'/>
+<constant name='kWSStreamErrorDomain' type='^{__CFString=}'/>
+<constant name='kWSStreamErrorError' type='^{__CFString=}'/>
+<constant name='kWSStreamErrorMessage' type='^{__CFString=}'/>
+<constant name='kWSXMLRPCProtocol' type='^{__CFString=}'/>
+<string_constant name='kWSMethodName' nsstring='true' value='/WSMethodName'/>
+<string_constant name='kWSMethodParameterOrder' nsstring='true' value='/WSMethodParameterOrder'/>
+<string_constant name='kWSMethodParameters' nsstring='true' value='/WSMethodParameters'/>
+<enum name='HDActivity' value='3'/>
+<enum name='IdleActivity' value='4'/>
+<enum name='NetActivity' value='2'/>
+<enum name='OverallAct' value='0'/>
+<enum name='UsrActivity' value='1'/>
+<enum name='eWSArrayType' value='8'/>
+<enum name='eWSBooleanType' value='2'/>
+<enum name='eWSDataType' value='7'/>
+<enum name='eWSDateType' value='6'/>
+<enum name='eWSDictionaryType' value='9'/>
+<enum name='eWSDoubleType' value='4'/>
+<enum name='eWSIntegerType' value='3'/>
+<enum name='eWSNullType' value='1'/>
+<enum name='eWSStringType' value='5'/>
+<enum name='eWSUnknownType' value='0'/>
+<enum name='errWSInternalError' value='-65793'/>
+<enum name='errWSParseError' value='-65795'/>
+<enum name='errWSTimeoutError' value='-65796'/>
+<enum name='errWSTransportError' value='-65794'/>
+<enum name='kAccountKCItemAttr' value='1633903476'/>
+<enum name='kAddKCEvent' value='3'/>
+<enum name='kAddKCEventMask' value='8'/>
+<enum name='kAddressKCItemAttr' value='1633969266'/>
+<enum name='kAnyAuthType' value='0'/>
+<enum name='kAnyPort' value='0'/>
+<enum name='kAnyProtocol' value='0'/>
+<enum name='kAppleSharePasswordKCItemClass' value='1634953328'/>
+<enum name='kAuthTypeKCItemAttr' value='1635023216'/>
+<enum name='kCSIdentityAuthorityNotAccessibleErr' value='-2'/>
+<enum name='kCSIdentityClassGroup' value='2'/>
+<enum name='kCSIdentityClassUser' value='1'/>
+<enum name='kCSIdentityCommitCompleted' value='1'/>
+<enum name='kCSIdentityDeletedErr' value='-4'/>
+<enum name='kCSIdentityDuplicateFullNameErr' value='-6'/>
+<enum name='kCSIdentityDuplicatePosixNameErr' value='-8'/>
+<enum name='kCSIdentityFlagHidden' value='1'/>
+<enum name='kCSIdentityFlagNone' value='0'/>
+<enum name='kCSIdentityInvalidFullNameErr' value='-5'/>
+<enum name='kCSIdentityInvalidPosixNameErr' value='-7'/>
+<enum name='kCSIdentityPermissionErr' value='-3'/>
+<enum name='kCSIdentityQueryEventErrorOccurred' value='5'/>
+<enum name='kCSIdentityQueryEventResultsAdded' value='2'/>
+<enum name='kCSIdentityQueryEventResultsChanged' value='3'/>
+<enum name='kCSIdentityQueryEventResultsRemoved' value='4'/>
+<enum name='kCSIdentityQueryEventSearchPhaseFinished' value='1'/>
+<enum name='kCSIdentityQueryGenerateUpdateEvents' value='1'/>
+<enum name='kCSIdentityQueryIncludeHiddenIdentities' value='2'/>
+<enum name='kCSIdentityQueryStringBeginsWith' value='2'/>
+<enum name='kCSIdentityQueryStringEquals' value='1'/>
+<enum name='kCSIdentityUnknownAuthorityErr' value='-1'/>
+<enum name='kCertSearchAny' value='0'/>
+<enum name='kCertSearchDecryptAllowed' value='64'/>
+<enum name='kCertSearchDecryptDisallowed' value='128'/>
+<enum name='kCertSearchDecryptIgnored' value='0'/>
+<enum name='kCertSearchDecryptMask' value='192'/>
+<enum name='kCertSearchEncryptAllowed' value='16'/>
+<enum name='kCertSearchEncryptDisallowed' value='32'/>
+<enum name='kCertSearchEncryptIgnored' value='0'/>
+<enum name='kCertSearchEncryptMask' value='48'/>
+<enum name='kCertSearchPrivKeyRequired' value='4096'/>
+<enum name='kCertSearchShift' value='0'/>
+<enum name='kCertSearchSigningAllowed' value='1'/>
+<enum name='kCertSearchSigningDisallowed' value='2'/>
+<enum name='kCertSearchSigningIgnored' value='0'/>
+<enum name='kCertSearchSigningMask' value='3'/>
+<enum name='kCertSearchUnwrapAllowed' value='1024'/>
+<enum name='kCertSearchUnwrapDisallowed' value='2048'/>
+<enum name='kCertSearchUnwrapIgnored' value='0'/>
+<enum name='kCertSearchUnwrapMask' value='3072'/>
+<enum name='kCertSearchVerifyAllowed' value='4'/>
+<enum name='kCertSearchVerifyDisallowed' value='8'/>
+<enum name='kCertSearchVerifyIgnored' value='0'/>
+<enum name='kCertSearchVerifyMask' value='12'/>
+<enum name='kCertSearchWrapAllowed' value='256'/>
+<enum name='kCertSearchWrapDisallowed' value='512'/>
+<enum name='kCertSearchWrapIgnored' value='0'/>
+<enum name='kCertSearchWrapMask' value='768'/>
+<enum name='kCertUsageAllAdd' value='2147483392'/>
+<enum name='kCertUsageDecryptAdd' value='16384'/>
+<enum name='kCertUsageDecryptAskAndAdd' value='32768'/>
+<enum name='kCertUsageEncryptAdd' value='4096'/>
+<enum name='kCertUsageEncryptAskAndAdd' value='8192'/>
+<enum name='kCertUsageKeyExchAdd' value='65536'/>
+<enum name='kCertUsageKeyExchAskAndAdd' value='131072'/>
+<enum name='kCertUsageRootAdd' value='262144'/>
+<enum name='kCertUsageRootAskAndAdd' value='524288'/>
+<enum name='kCertUsageSSLAdd' value='1048576'/>
+<enum name='kCertUsageSSLAskAndAdd' value='2097152'/>
+<enum name='kCertUsageShift' value='8'/>
+<enum name='kCertUsageSigningAdd' value='256'/>
+<enum name='kCertUsageSigningAskAndAdd' value='512'/>
+<enum name='kCertUsageVerifyAdd' value='1024'/>
+<enum name='kCertUsageVerifyAskAndAdd' value='2048'/>
+<enum name='kCertificateKCItemClass' value='1667592820'/>
+<enum name='kClassKCItemAttr' value='1668047219'/>
+<enum name='kCommentKCItemAttr' value='1768123764'/>
+<enum name='kCommonNameKCItemAttr' value='1668161568'/>
+<enum name='kCreationDateKCItemAttr' value='1667522932'/>
+<enum name='kCreatorKCItemAttr' value='1668445298'/>
+<enum name='kCustomIconKCItemAttr' value='1668641641'/>
+<enum name='kDataAccessKCEvent' value='10'/>
+<enum name='kDataAccessKCEventMask' value='1024'/>
+<enum name='kDecryptKCItemAttr' value='1684366194'/>
+<enum name='kDefaultChangedKCEvent' value='9'/>
+<enum name='kDefaultChangedKCEventMask' value='512'/>
+<enum name='kDeleteKCEvent' value='4'/>
+<enum name='kDeleteKCEventMask' value='16'/>
+<enum name='kDescriptionKCItemAttr' value='1684370275'/>
+<enum name='kDeviceInitiatedWake' value='18'/>
+<enum name='kDozeDemand' value='7'/>
+<enum name='kDozeRequest' value='9'/>
+<enum name='kDozeToFullWakeUp' value='20'/>
+<enum name='kDozeWakeUp' value='8'/>
+<enum name='kDropIconVariant' value='1685221232'/>
+<enum name='kEMailKCItemAttr' value='1835100524'/>
+<enum name='kEncryptKCItemAttr' value='1701733234'/>
+<enum name='kEndDateKCItemAttr' value='1701077364'/>
+<enum name='kEnterIdle' value='24'/>
+<enum name='kEnterRun' value='11'/>
+<enum name='kEnterStandby' value='10'/>
+<enum name='kEveryKCEventMask' value='65535'/>
+<enum name='kExitIdle' value='26'/>
+<enum name='kFirstFailKCStopOn' value='3'/>
+<enum name='kFirstPassKCStopOn' value='2'/>
+<enum name='kGenericKCItemAttr' value='1734700641'/>
+<enum name='kGenericPasswordKCItemClass' value='1734700656'/>
+<enum name='kGetPowerInfo' value='21'/>
+<enum name='kGetPowerLevel' value='16'/>
+<enum name='kGetWakeOnNetInfo' value='22'/>
+<enum name='kHuge1BitMask' value='1768122403'/>
+<enum name='kHuge32BitData' value='1768436530'/>
+<enum name='kHuge4BitData' value='1768122420'/>
+<enum name='kHuge8BitData' value='1768122424'/>
+<enum name='kHuge8BitMask' value='1748528491'/>
+<enum name='kIconFamilyType' value='1768124019'/>
+<enum name='kIconServices1024PixelDataARGB' value='1768108336'/>
+<enum name='kIconServices128PixelDataARGB' value='1768108087'/>
+<enum name='kIconServices16PixelDataARGB' value='1768108084'/>
+<enum name='kIconServices256PixelDataARGB' value='1768108088'/>
+<enum name='kIconServices32PixelDataARGB' value='1768108085'/>
+<enum name='kIconServices48PixelDataARGB' value='1768108086'/>
+<enum name='kIconServices512PixelDataARGB' value='1768108089'/>
+<enum name='kIdleKCEvent' value='0'/>
+<enum name='kIdleKCEventMask' value='1'/>
+<enum name='kInternetPasswordKCItemClass' value='1768842612'/>
+<enum name='kInvisibleKCItemAttr' value='1768846953'/>
+<enum name='kIssuerKCItemAttr' value='1769173877'/>
+<enum name='kIssuerURLKCItemAttr' value='1769304684'/>
+<enum name='kKCAuthTypeDPA' value='1685086561'/>
+<enum name='kKCAuthTypeDefault' value='1684434036'/>
+<enum name='kKCAuthTypeHTTPDigest' value='1752462436'/>
+<enum name='kKCAuthTypeMSN' value='1836281441'/>
+<enum name='kKCAuthTypeNTLM' value='1853123693'/>
+<enum name='kKCAuthTypeRPA' value='1919967585'/>
+<enum name='kKCProtocolTypeAFP' value='1634103328'/>
+<enum name='kKCProtocolTypeAppleTalk' value='1635019883'/>
+<enum name='kKCProtocolTypeFTP' value='1718906912'/>
+<enum name='kKCProtocolTypeFTPAccount' value='1718906977'/>
+<enum name='kKCProtocolTypeHTTP' value='1752462448'/>
+<enum name='kKCProtocolTypeIMAP' value='1768776048'/>
+<enum name='kKCProtocolTypeIRC' value='1769104160'/>
+<enum name='kKCProtocolTypeLDAP' value='1818517872'/>
+<enum name='kKCProtocolTypeNNTP' value='1852732528'/>
+<enum name='kKCProtocolTypePOP3' value='1886351411'/>
+<enum name='kKCProtocolTypeSMTP' value='1936553072'/>
+<enum name='kKCProtocolTypeSOCKS' value='1936685088'/>
+<enum name='kKCProtocolTypeTelnet' value='1952803950'/>
+<enum name='kKeychainListChangedKCEvent' value='11'/>
+<enum name='kLabelKCItemAttr' value='1818321516'/>
+<enum name='kLarge1BitMask' value='1229147683'/>
+<enum name='kLarge32BitData' value='1768698674'/>
+<enum name='kLarge4BitData' value='1768123444'/>
+<enum name='kLarge8BitData' value='1768123448'/>
+<enum name='kLarge8BitMask' value='1815637355'/>
+<enum name='kLockKCEvent' value='1'/>
+<enum name='kLockKCEventMask' value='2'/>
+<enum name='kMini1BitMask' value='1768123683'/>
+<enum name='kMini4BitData' value='1768123700'/>
+<enum name='kMini8BitData' value='1768123704'/>
+<enum name='kModDateKCItemAttr' value='1835295092'/>
+<enum name='kNegativeKCItemAttr' value='1852139361'/>
+<enum name='kNoneKCStopOn' value='1'/>
+<enum name='kOpenDropIconVariant' value='1868853872'/>
+<enum name='kOpenIconVariant' value='1869636974'/>
+<enum name='kPasswordChangedKCEvent' value='6'/>
+<enum name='kPasswordChangedKCEventMask' value='64'/>
+<enum name='kPathKCItemAttr' value='1885434984'/>
+<enum name='kPolicyKCStopOn' value='0'/>
+<enum name='kPortKCItemAttr' value='1886351988'/>
+<enum name='kProtocolKCItemAttr' value='1886675820'/>
+<enum name='kPublicKeyHashKCItemAttr' value='1752198009'/>
+<enum name='kRdPermKCStatus' value='2'/>
+<enum name='kRolloverIconVariant' value='1870030194'/>
+<enum name='kScriptCodeKCItemAttr' value='1935897200'/>
+<enum name='kSecOptionReserved' value='255'/>
+<enum name='kSecurityDomainKCItemAttr' value='1935961454'/>
+<enum name='kSerialNumberKCItemAttr' value='1936614002'/>
+<enum name='kServerKCItemAttr' value='1936881266'/>
+<enum name='kServiceKCItemAttr' value='1937138533'/>
+<enum name='kSetPowerLevel' value='17'/>
+<enum name='kSignKCItemAttr' value='1936287598'/>
+<enum name='kSignatureKCItemAttr' value='1936943463'/>
+<enum name='kSleepDemand' value='2'/>
+<enum name='kSleepDeny' value='5'/>
+<enum name='kSleepNow' value='6'/>
+<enum name='kSleepRequest' value='1'/>
+<enum name='kSleepRevoke' value='4'/>
+<enum name='kSleepUnlock' value='4'/>
+<enum name='kSleepWakeUp' value='3'/>
+<enum name='kSmall1BitMask' value='1768125219'/>
+<enum name='kSmall32BitData' value='1769157426'/>
+<enum name='kSmall4BitData' value='1768125236'/>
+<enum name='kSmall8BitData' value='1768125240'/>
+<enum name='kSmall8BitMask' value='1933077867'/>
+<enum name='kStartDateKCItemAttr' value='1935958388'/>
+<enum name='kStillIdle' value='25'/>
+<enum name='kSubjectKCItemAttr' value='1937072746'/>
+<enum name='kSuspendDemand' value='13'/>
+<enum name='kSuspendRequest' value='12'/>
+<enum name='kSuspendRevoke' value='14'/>
+<enum name='kSuspendWakeToDoze' value='23'/>
+<enum name='kSuspendWakeUp' value='15'/>
+<enum name='kSystemEventKCEventMask' value='256'/>
+<enum name='kSystemKCEvent' value='8'/>
+<enum name='kSystemSoundClientTimedOutError' value='-1501'/>
+<enum name='kSystemSoundNoError' value='0'/>
+<enum name='kSystemSoundUnspecifiedError' value='-1500'/>
+<enum name='kThumbnail32BitData' value='1769222962'/>
+<enum name='kThumbnail8BitMask' value='1949855083'/>
+<enum name='kTileIconVariant' value='1953066085'/>
+<enum name='kTypeKCItemAttr' value='1954115685'/>
+<enum name='kUnlockKCEvent' value='2'/>
+<enum name='kUnlockKCEventMask' value='4'/>
+<enum name='kUnlockStateKCStatus' value='1'/>
+<enum name='kUnwrapKCItemAttr' value='1970173810'/>
+<enum name='kUpdateKCEvent' value='5'/>
+<enum name='kUpdateKCEventMask' value='32'/>
+<enum name='kVerifyKCItemAttr' value='1986359913'/>
+<enum name='kVolumeKCItemAttr' value='1986817381'/>
+<enum name='kWakeToDoze' value='19'/>
+<enum name='kWrPermKCStatus' value='4'/>
+<enum name='kWrapKCItemAttr' value='2003984752'/>
+<enum name='large1BitMask' value='1229147683'/>
+<enum name='large4BitData' value='1768123444'/>
+<enum name='large8BitData' value='1768123448'/>
+<enum name='mini1BitMask' value='1768123683'/>
+<enum name='mini4BitData' value='1768123700'/>
+<enum name='mini8BitData' value='1768123704'/>
+<enum name='noCalls' value='1'/>
+<enum name='noRequest' value='2'/>
+<enum name='sleepQType' value='16'/>
+<enum name='slpQType' value='16'/>
+<enum name='small1BitMask' value='1768125219'/>
+<enum name='small4BitData' value='1768125236'/>
+<enum name='small8BitData' value='1768125240'/>
+<function name='AlertSoundPlay'/>
+<function name='AlertSoundPlayCustomSound'>
+<arg type='L' type64='I'/>
+</function>
+<function name='BatteryCount'>
+<retval type='s'/>
+</function>
+<function name='CSGetDefaultIdentityAuthority'>
+<retval type='^{__CSIdentityAuthority=}'/>
+</function>
+<function name='CSGetLocalIdentityAuthority'>
+<retval type='^{__CSIdentityAuthority=}'/>
+</function>
+<function name='CSGetManagedIdentityAuthority'>
+<retval type='^{__CSIdentityAuthority=}'/>
+</function>
+<function name='CSIdentityAddAlias'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityAddMember'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentityAuthenticateUsingPassword'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityAuthorityCopyLocalizedName'>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityAuthorityGetTypeID'>
+<retval type='L' type64='Q'/>
+</function>
+<function name='CSIdentityCommit'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{AuthorizationOpaqueRef=}'/>
+<arg type='^^{__CFError}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityCommitAsynchronously'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{CSIdentityClientContext=i^v^?^?^?^?}' type64='^{CSIdentityClientContext=q^v^?^?^?^?}'/>
+<arg type='^{__CFRunLoop=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{AuthorizationOpaqueRef=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityCreate'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='l' type64='q'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='L' type64='Q'/>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentityCreateCopy'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CSIdentity=}'/>
+<retval already_retained='true' type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentityCreateGroupMembershipQuery'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CSIdentity=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityCreatePersistentReference'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CSIdentity=}'/>
+<retval already_retained='true' type='^{__CFData=}'/>
+</function>
+<function name='CSIdentityDelete'>
+<arg type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentityGetAliases'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFArray=}'/>
+</function>
+<function name='CSIdentityGetAuthority'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CSIdentityAuthority=}'/>
+</function>
+<function name='CSIdentityGetCertificate'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{OpaqueSecCertificateRef=}'/>
+</function>
+<function name='CSIdentityGetClass'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='l' type64='q'/>
+</function>
+<function name='CSIdentityGetEmailAddress'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityGetFullName'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityGetImageData'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFData=}'/>
+</function>
+<function name='CSIdentityGetImageDataType'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityGetImageURL'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFURL=}'/>
+</function>
+<function name='CSIdentityGetPosixID'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='I'/>
+</function>
+<function name='CSIdentityGetPosixName'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityGetTypeID'>
+<retval type='L' type64='Q'/>
+</function>
+<function name='CSIdentityGetUUID'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='^{__CFUUID=}'/>
+</function>
+<function name='CSIdentityIsCommitting'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityIsEnabled'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityIsHidden'>
+<arg type='^{__CSIdentity=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityIsMemberOfGroup'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CSIdentity=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityQueryCopyResults'>
+<arg type='^{__CSIdentityQuery=}'/>
+<retval already_retained='true' type='^{__CFArray=}'/>
+</function>
+<function name='CSIdentityQueryCreate'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='l' type64='q'/>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryCreateForCurrentUser'>
+<arg type='^{__CFAllocator=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryCreateForName'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='l' type64='q'/>
+<arg type='l' type64='q'/>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryCreateForPersistentReference'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CFData=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryCreateForPosixID'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='I'/>
+<arg type='l' type64='q'/>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryCreateForUUID'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CFUUID=}'/>
+<arg type='^{__CSIdentityAuthority=}'/>
+<retval already_retained='true' type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityQueryExecute'>
+<arg type='^{__CSIdentityQuery=}'/>
+<arg type='L' type64='Q'/>
+<arg type='^^{__CFError}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityQueryExecuteAsynchronously'>
+<arg type='^{__CSIdentityQuery=}'/>
+<arg type='L' type64='Q'/>
+<arg type='^{CSIdentityQueryClientContext=i^v^?^?^?^?}' type64='^{CSIdentityQueryClientContext=q^v^?^?^?^?}'/>
+<arg type='^{__CFRunLoop=}'/>
+<arg type='^{__CFString=}'/>
+<retval type='B'/>
+</function>
+<function name='CSIdentityQueryGetTypeID'>
+<retval type='L' type64='Q'/>
+</function>
+<function name='CSIdentityQueryStop'>
+<arg type='^{__CSIdentityQuery=}'/>
+</function>
+<function name='CSIdentityRemoveAlias'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CSIdentityRemoveClient'>
+<arg type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentityRemoveMember'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CSIdentity=}'/>
+</function>
+<function name='CSIdentitySetCertificate'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{OpaqueSecCertificateRef=}'/>
+</function>
+<function name='CSIdentitySetEmailAddress'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CSIdentitySetFullName'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CSIdentitySetImageData'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFData=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CSIdentitySetImageURL'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFURL=}'/>
+</function>
+<function name='CSIdentitySetIsEnabled'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='B'/>
+</function>
+<function name='CSIdentitySetPassword'>
+<arg type='^{__CSIdentity=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='CurrentProcessorSpeed'>
+<retval type='s'/>
+</function>
+<function name='DisposeKCCallbackUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+</function>
+<function name='DisposeSleepQUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='l' type64='q'/>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+<retval type='l' type64='q'/>
+</arg>
+</function>
+<function name='DisposeSystemSoundCompletionUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+</function>
+<function name='GetCPUSpeed'>
+<retval type='l' type64='q'/>
+</function>
+<function name='InvokeKCCallbackUPP'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<arg function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<retval type='l' type64='i'/>
+</function>
+<function name='InvokeSleepQUPP'>
+<arg type='l' type64='q'/>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+<arg function_pointer='true' type='^?'>
+<arg type='l' type64='q'/>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+<retval type='l' type64='q'/>
+</arg>
+<retval type='l' type64='q'/>
+</function>
+<function name='InvokeSystemSoundCompletionUPP'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg function_pointer='true' type='^?'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCAddCallback'>
+<arg function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<arg type='S'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCCopyItem'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCCountKeychains'>
+<retval type='S'/>
+</function>
+<function name='KCDeleteItem'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindAppleSharePassword'>
+<arg type='^[16C]'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindFirstItem'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='^{SecKeychainAttributeList=I^{SecKeychainAttribute}}'/>
+<arg type='^^{OpaqueSecKeychainSearchRef}'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindGenericPassword'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindInternetPassword'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='S'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindInternetPasswordWithPath'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='S'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCFindNextItem'>
+<arg type='^{OpaqueSecKeychainSearchRef=}'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetAttribute'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='^{SecKeychainAttribute=II^v}'/>
+<arg type='^I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetData'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetDefaultKeychain'>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetIndKeychain'>
+<arg type='S'/>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetKeychain'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetKeychainManagerVersion'>
+<arg type='^I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetKeychainName'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='*'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCGetStatus'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='^I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCIsInteractionAllowed'>
+<retval type='B'/>
+</function>
+<function name='KCLock'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCMakeAliasFromKCRef'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='^^^{AliasRecord}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCMakeKCRefFromAlias'>
+<arg type='^^{AliasRecord}'/>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCMakeKCRefFromFSRef'>
+<arg type='^{FSRef=[80C]}'/>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCNewItem'>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCReleaseItem'>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCReleaseKeychain'>
+<arg type='^^{OpaqueSecKeychainRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCReleaseSearch'>
+<arg type='^^{OpaqueSecKeychainSearchRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCRemoveCallback'>
+<arg function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCSetAttribute'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='^{SecKeychainAttribute=II^v}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCSetData'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCSetDefaultKeychain'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCSetInteractionAllowed'>
+<arg type='B'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='KCUpdateItem'>
+<arg type='^{OpaqueSecKeychainItemRef=}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='MaximumProcessorSpeed'>
+<retval type='s'/>
+</function>
+<function name='MinimumProcessorSpeed'>
+<retval type='s'/>
+</function>
+<function name='NewKCCallbackUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<retval function_pointer='true' type='^?'>
+<arg type='S'/>
+<arg type='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2l][4l]^{OpaqueSecKeychainRef}}' type64='^{KCCallbackInfo=I^{OpaqueSecKeychainItemRef}[2i][4i]^{OpaqueSecKeychainRef}}'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</retval>
+</function>
+<function name='NewSleepQUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='l' type64='q'/>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+<retval type='l' type64='q'/>
+</arg>
+<retval function_pointer='true' type='^?'>
+<arg type='l' type64='q'/>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+<retval type='l' type64='q'/>
+</retval>
+</function>
+<function name='NewSystemSoundCompletionUPP'>
+<arg function_pointer='true' type='^?'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<retval function_pointer='true' type='^?'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</retval>
+</function>
+<function name='SleepQInstall'>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+</function>
+<function name='SleepQRemove'>
+<arg type='^{SleepQRec=^{SleepQRec}s^?s}'/>
+</function>
+<function name='SystemSoundGetActionID'>
+<arg type='^{FSRef=[80C]}'/>
+<arg type='^I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='SystemSoundPlay'>
+<arg type='L' type64='I'/>
+</function>
+<function name='SystemSoundRemoveActionID'>
+<arg type='L' type64='I'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='SystemSoundRemoveCompletionRoutine'>
+<arg type='L' type64='I'/>
+</function>
+<function name='SystemSoundSetCompletionRoutine'>
+<arg type='L' type64='I'/>
+<arg type='^{__CFRunLoop=}'/>
+<arg type='^{__CFString=}'/>
+<arg function_pointer='true' type='^?'>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</arg>
+<arg type='^v'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='UpdateSystemActivity'>
+<arg type='C'/>
+<retval type='s'/>
+</function>
+<function name='WSGetCFTypeIDFromWSTypeID'>
+<arg type='i'/>
+<retval type='L' type64='Q'/>
+</function>
+<function name='WSGetWSTypeIDFromCFType'>
+<arg type='@'/>
+<retval type='i'/>
+</function>
+<function name='WSMethodInvocationAddDeserializationOverride'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFString=}'/>
+<arg function_pointer='true' type='^?'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFTree=}'/>
+<arg type='^{__CFTree=}'/>
+<arg type='^v'/>
+<retval type='@'/>
+</arg>
+<arg type='^{WSClientContext=i^v^?^?^?}' type64='^{WSClientContext=q^v^?^?^?}'/>
+</function>
+<function name='WSMethodInvocationAddSerializationOverride'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='L' type64='Q'/>
+<arg function_pointer='true' type='^?'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='@'/>
+<arg type='^v'/>
+<retval type='^{__CFString=}'/>
+</arg>
+<arg type='^{WSClientContext=i^v^?^?^?}' type64='^{WSClientContext=q^v^?^?^?}'/>
+</function>
+<function name='WSMethodInvocationCopyParameters'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^^{__CFArray}'/>
+<retval already_retained='true' type='^{__CFDictionary=}'/>
+</function>
+<function name='WSMethodInvocationCopyProperty'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFString=}'/>
+<retval already_retained='true' type='@'/>
+</function>
+<function name='WSMethodInvocationCopySerialization'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<retval already_retained='true' type='^{__CFData=}'/>
+</function>
+<function name='WSMethodInvocationCreate'>
+<arg type='^{__CFURL=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFString=}'/>
+<retval already_retained='true' type='^{OpaqueWSMethodInvocationRef=}'/>
+</function>
+<function name='WSMethodInvocationCreateFromSerialization'>
+<arg type='^{__CFData=}'/>
+<retval already_retained='true' type='^{OpaqueWSMethodInvocationRef=}'/>
+</function>
+<function name='WSMethodInvocationGetTypeID'>
+<retval type='L' type64='Q'/>
+</function>
+<function name='WSMethodInvocationInvoke'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<retval type='^{__CFDictionary=}'/>
+</function>
+<function name='WSMethodInvocationScheduleWithRunLoop'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFRunLoop=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='WSMethodInvocationSetCallBack'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg function_pointer='true' type='^?'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^v'/>
+<arg type='^{__CFDictionary=}'/>
+<retval type='v'/>
+</arg>
+<arg type='^{WSClientContext=i^v^?^?^?}' type64='^{WSClientContext=q^v^?^?^?}'/>
+</function>
+<function name='WSMethodInvocationSetParameters'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFDictionary=}'/>
+<arg type='^{__CFArray=}'/>
+</function>
+<function name='WSMethodInvocationSetProperty'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='@'/>
+</function>
+<function name='WSMethodInvocationUnscheduleFromRunLoop'>
+<arg type='^{OpaqueWSMethodInvocationRef=}'/>
+<arg type='^{__CFRunLoop=}'/>
+<arg type='^{__CFString=}'/>
+</function>
+<function name='WSMethodResultIsFault'>
+<arg type='^{__CFDictionary=}'/>
+<retval type='B'/>
+</function>
+<function name='WSProtocolHandlerCopyFaultDocument'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFDictionary=}'/>
+<arg type='^{__CFDictionary=}'/>
+<retval already_retained='true' type='^{__CFData=}'/>
+</function>
+<function name='WSProtocolHandlerCopyProperty'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFString=}'/>
+<retval already_retained='true' type='@'/>
+</function>
+<function name='WSProtocolHandlerCopyReplyDictionary'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFData=}'/>
+<retval already_retained='true' type='^{__CFDictionary=}'/>
+</function>
+<function name='WSProtocolHandlerCopyReplyDocument'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFDictionary=}'/>
+<arg type='@'/>
+<retval already_retained='true' type='^{__CFData=}'/>
+</function>
+<function name='WSProtocolHandlerCopyRequestDictionary'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFData=}'/>
+<retval already_retained='true' type='^{__CFDictionary=}'/>
+</function>
+<function name='WSProtocolHandlerCopyRequestDocument'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFDictionary=}'/>
+<arg type='^{__CFArray=}'/>
+<arg type='^{__CFDictionary=}'/>
+<retval already_retained='true' type='^{__CFData=}'/>
+</function>
+<function name='WSProtocolHandlerCreate'>
+<arg type='^{__CFAllocator=}'/>
+<arg type='^{__CFString=}'/>
+<retval already_retained='true' type='^{OpaqueWSProtocolHandlerRef=}'/>
+</function>
+<function name='WSProtocolHandlerGetTypeID'>
+<retval type='L' type64='Q'/>
+</function>
+<function name='WSProtocolHandlerSetDeserializationOverride'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='^{__CFString=}'/>
+<arg function_pointer='true' type='^?'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFTree=}'/>
+<arg type='^{__CFTree=}'/>
+<arg type='^v'/>
+<retval type='@'/>
+</arg>
+<arg type='^{WSClientContext=i^v^?^?^?}' type64='^{WSClientContext=q^v^?^?^?}'/>
+</function>
+<function name='WSProtocolHandlerSetProperty'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='^{__CFString=}'/>
+<arg type='@'/>
+</function>
+<function name='WSProtocolHandlerSetSerializationOverride'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='L' type64='Q'/>
+<arg function_pointer='true' type='^?'>
+<arg type='^{OpaqueWSProtocolHandlerRef=}'/>
+<arg type='@'/>
+<arg type='^v'/>
+<retval type='^{__CFString=}'/>
+</arg>
+<arg type='^{WSClientContext=i^v^?^?^?}' type64='^{WSClientContext=q^v^?^?^?}'/>
+</function>
+<function name='kcfindapplesharepassword'>
+<arg type='^[16C]'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='kcfindgenericpassword'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='kcfindinternetpassword'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='S'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='kcfindinternetpasswordwithpath'>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='*'/>
+<arg type='S'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='L' type64='I'/>
+<arg type='^v'/>
+<arg type='^I'/>
+<arg type='^^{OpaqueSecKeychainItemRef}'/>
+<retval type='l' type64='i'/>
+</function>
+<function name='kcgetkeychainname'>
+<arg type='^{OpaqueSecKeychainRef=}'/>
+<arg type='*'/>
+<retval type='l' type64='i'/>
+</function>
+</signatures>

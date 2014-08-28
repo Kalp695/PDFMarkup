@@ -61,6 +61,37 @@
 		18ADE2E219892B8900CDE991 /* FolderChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ADE2E119892B8900CDE991 /* FolderChooseViewController.m */; };
 		18ADE2E5198950C400CDE991 /* DocumentsEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ADE2E4198950C400CDE991 /* DocumentsEditViewController.m */; };
 		18AE21ED199BEFC60011D972 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E4C19AF2BDC00E26E42 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF4E4B19AF2BDC00E26E42 /* libxml2.dylib */; };
+		18AF4E4E19AF2BF000E26E42 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18AF4E4D19AF2BF000E26E42 /* libxml2.dylib */; };
+		18AF4E8319AF2CB100E26E42 /* SugarSyncAlbum.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5119AF2CB100E26E42 /* SugarSyncAlbum.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8419AF2CB100E26E42 /* SugarSyncClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5219AF2CB100E26E42 /* SugarSyncClient.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8519AF2CB100E26E42 /* SugarSyncCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5319AF2CB100E26E42 /* SugarSyncCollection.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8619AF2CB100E26E42 /* SugarSyncContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5419AF2CB100E26E42 /* SugarSyncContact.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8719AF2CB100E26E42 /* SugarSyncFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5519AF2CB100E26E42 /* SugarSyncFile.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8819AF2CB100E26E42 /* SugarSyncFileVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5619AF2CB100E26E42 /* SugarSyncFileVersion.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8919AF2CB100E26E42 /* SugarSyncFolder.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5719AF2CB100E26E42 /* SugarSyncFolder.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8A19AF2CB100E26E42 /* SugarSyncLoginView_ipad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E5819AF2CB100E26E42 /* SugarSyncLoginView_ipad.xib */; };
+		18AF4E8B19AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E5919AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib */; };
+		18AF4E8C19AF2CB100E26E42 /* SugarSyncLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5B19AF2CB100E26E42 /* SugarSyncLoginViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8D19AF2CB100E26E42 /* SugarSyncReceivedShare.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5C19AF2CB100E26E42 /* SugarSyncReceivedShare.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8E19AF2CB100E26E42 /* SugarSyncUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5D19AF2CB100E26E42 /* SugarSyncUser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E8F19AF2CB100E26E42 /* SugarSyncWorkspace.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E5E19AF2CB100E26E42 /* SugarSyncWorkspace.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9019AF2CB100E26E42 /* SugarSyncXMLTemplate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E6019AF2CB100E26E42 /* SugarSyncXMLTemplate.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9119AF2CB100E26E42 /* accessToken.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E6D19AF2CB100E26E42 /* accessToken.xml */; };
+		18AF4E9219AF2CB100E26E42 /* copyFile.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E6E19AF2CB100E26E42 /* copyFile.xml */; };
+		18AF4E9319AF2CB100E26E42 /* createFile.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E6F19AF2CB100E26E42 /* createFile.xml */; };
+		18AF4E9419AF2CB100E26E42 /* createFolder.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7019AF2CB100E26E42 /* createFolder.xml */; };
+		18AF4E9519AF2CB100E26E42 /* login.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7119AF2CB100E26E42 /* login.xml */; };
+		18AF4E9619AF2CB100E26E42 /* updateFile.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7219AF2CB100E26E42 /* updateFile.xml */; };
+		18AF4E9719AF2CB100E26E42 /* updateFileImage.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7319AF2CB100E26E42 /* updateFileImage.xml */; };
+		18AF4E9819AF2CB100E26E42 /* updateFolder.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7419AF2CB100E26E42 /* updateFolder.xml */; };
+		18AF4E9919AF2CB100E26E42 /* updateWorkspace.xml in Resources */ = {isa = PBXBuildFile; fileRef = 18AF4E7519AF2CB100E26E42 /* updateWorkspace.xml */; };
+		18AF4E9B19AF2CB100E26E42 /* SSC9Log.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E7A19AF2CB100E26E42 /* SSC9Log.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9C19AF2CB100E26E42 /* SSErrorUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E7C19AF2CB100E26E42 /* SSErrorUtil.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9D19AF2CB100E26E42 /* SSHttpFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E7E19AF2CB100E26E42 /* SSHttpFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9E19AF2CB100E26E42 /* SSXMLLibUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E8019AF2CB100E26E42 /* SSXMLLibUtil.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		18AF4E9F19AF2CB100E26E42 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E8219AF2CB100E26E42 /* XPathQuery.m */; };
+		18AF4EAE19AF71C000E26E42 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4EAD19AF71C000E26E42 /* NetworkManager.m */; };
 		18B6A16719A60A34008F99FA /* GTLDriveAbout.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14419A60A34008F99FA /* GTLDriveAbout.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A16819A60A34008F99FA /* GTLDriveApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14619A60A34008F99FA /* GTLDriveApp.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A16919A60A34008F99FA /* GTLDriveAppList.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14819A60A34008F99FA /* GTLDriveAppList.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -120,6 +151,7 @@
 		18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFC199D346600F9E383 /* MobileCoreServices.framework */; };
 		18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CD36E919ADB3EE006EB8CE /* blue.png */; };
 		18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */; };
+		18EC9AF919AF86060097BE95 /* FTPListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC9AF819AF86060097BE95 /* FTPListController.m */; };
 		653E3B87198183D600788965 /* CommonFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B16198183D600788965 /* CommonFunction.m */; };
 		653E3B88198183D600788965 /* DatabaseCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B18198183D600788965 /* DatabaseCommon.m */; };
 		653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B1D198183D600788965 /* FRDLivelyButton.m */; };
@@ -375,6 +407,55 @@
 		18ADE2E4198950C400CDE991 /* DocumentsEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentsEditViewController.m; sourceTree = "<group>"; };
 		18AE21EB199BEFC60011D972 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		18AE21EC199BEFC60011D972 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
+		18AF4E4B19AF2BDC00E26E42 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libxml2.dylib; sourceTree = "<group>"; };
+		18AF4E4D19AF2BF000E26E42 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		18AF4E5119AF2CB100E26E42 /* SugarSyncAlbum.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncAlbum.m; sourceTree = "<group>"; };
+		18AF4E5219AF2CB100E26E42 /* SugarSyncClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncClient.m; sourceTree = "<group>"; };
+		18AF4E5319AF2CB100E26E42 /* SugarSyncCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncCollection.m; sourceTree = "<group>"; };
+		18AF4E5419AF2CB100E26E42 /* SugarSyncContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncContact.m; sourceTree = "<group>"; };
+		18AF4E5519AF2CB100E26E42 /* SugarSyncFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncFile.m; sourceTree = "<group>"; };
+		18AF4E5619AF2CB100E26E42 /* SugarSyncFileVersion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncFileVersion.m; sourceTree = "<group>"; };
+		18AF4E5719AF2CB100E26E42 /* SugarSyncFolder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncFolder.m; sourceTree = "<group>"; };
+		18AF4E5819AF2CB100E26E42 /* SugarSyncLoginView_ipad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SugarSyncLoginView_ipad.xib; sourceTree = "<group>"; };
+		18AF4E5919AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SugarSyncLoginView_iphone.xib; sourceTree = "<group>"; };
+		18AF4E5A19AF2CB100E26E42 /* SugarSyncLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncLoginViewController.h; sourceTree = "<group>"; };
+		18AF4E5B19AF2CB100E26E42 /* SugarSyncLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncLoginViewController.m; sourceTree = "<group>"; };
+		18AF4E5C19AF2CB100E26E42 /* SugarSyncReceivedShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncReceivedShare.m; sourceTree = "<group>"; };
+		18AF4E5D19AF2CB100E26E42 /* SugarSyncUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncUser.m; sourceTree = "<group>"; };
+		18AF4E5E19AF2CB100E26E42 /* SugarSyncWorkspace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncWorkspace.m; sourceTree = "<group>"; };
+		18AF4E5F19AF2CB100E26E42 /* SugarSyncXMLTemplate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncXMLTemplate.h; sourceTree = "<group>"; };
+		18AF4E6019AF2CB100E26E42 /* SugarSyncXMLTemplate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SugarSyncXMLTemplate.m; sourceTree = "<group>"; };
+		18AF4E6219AF2CB100E26E42 /* SugarSyncAlbum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncAlbum.h; sourceTree = "<group>"; };
+		18AF4E6319AF2CB100E26E42 /* SugarSyncClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncClient.h; sourceTree = "<group>"; };
+		18AF4E6419AF2CB100E26E42 /* SugarSyncCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncCollection.h; sourceTree = "<group>"; };
+		18AF4E6519AF2CB100E26E42 /* SugarSyncContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncContact.h; sourceTree = "<group>"; };
+		18AF4E6619AF2CB100E26E42 /* SugarSyncFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncFile.h; sourceTree = "<group>"; };
+		18AF4E6719AF2CB100E26E42 /* SugarSyncFileVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncFileVersion.h; sourceTree = "<group>"; };
+		18AF4E6819AF2CB100E26E42 /* SugarSyncFolder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncFolder.h; sourceTree = "<group>"; };
+		18AF4E6919AF2CB100E26E42 /* SugarSyncReceivedShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncReceivedShare.h; sourceTree = "<group>"; };
+		18AF4E6A19AF2CB100E26E42 /* SugarSyncUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncUser.h; sourceTree = "<group>"; };
+		18AF4E6B19AF2CB100E26E42 /* SugarSyncWorkspace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SugarSyncWorkspace.h; sourceTree = "<group>"; };
+		18AF4E6D19AF2CB100E26E42 /* accessToken.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = accessToken.xml; sourceTree = "<group>"; };
+		18AF4E6E19AF2CB100E26E42 /* copyFile.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = copyFile.xml; sourceTree = "<group>"; };
+		18AF4E6F19AF2CB100E26E42 /* createFile.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = createFile.xml; sourceTree = "<group>"; };
+		18AF4E7019AF2CB100E26E42 /* createFolder.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = createFolder.xml; sourceTree = "<group>"; };
+		18AF4E7119AF2CB100E26E42 /* login.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = login.xml; sourceTree = "<group>"; };
+		18AF4E7219AF2CB100E26E42 /* updateFile.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = updateFile.xml; sourceTree = "<group>"; };
+		18AF4E7319AF2CB100E26E42 /* updateFileImage.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = updateFileImage.xml; sourceTree = "<group>"; };
+		18AF4E7419AF2CB100E26E42 /* updateFolder.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = updateFolder.xml; sourceTree = "<group>"; };
+		18AF4E7519AF2CB100E26E42 /* updateWorkspace.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = updateWorkspace.xml; sourceTree = "<group>"; };
+		18AF4E7919AF2CB100E26E42 /* SSC9Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSC9Log.h; sourceTree = "<group>"; };
+		18AF4E7A19AF2CB100E26E42 /* SSC9Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSC9Log.m; sourceTree = "<group>"; };
+		18AF4E7B19AF2CB100E26E42 /* SSErrorUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSErrorUtil.h; sourceTree = "<group>"; };
+		18AF4E7C19AF2CB100E26E42 /* SSErrorUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSErrorUtil.m; sourceTree = "<group>"; };
+		18AF4E7D19AF2CB100E26E42 /* SSHttpFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSHttpFetcher.h; sourceTree = "<group>"; };
+		18AF4E7E19AF2CB100E26E42 /* SSHttpFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSHttpFetcher.m; sourceTree = "<group>"; };
+		18AF4E7F19AF2CB100E26E42 /* SSXMLLibUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSXMLLibUtil.h; sourceTree = "<group>"; };
+		18AF4E8019AF2CB100E26E42 /* SSXMLLibUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSXMLLibUtil.m; sourceTree = "<group>"; };
+		18AF4E8119AF2CB100E26E42 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		18AF4E8219AF2CB100E26E42 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
+		18AF4EAC19AF71C000E26E42 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
+		18AF4EAD19AF71C000E26E42 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		18B6A14219A60A34008F99FA /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
 		18B6A14319A60A34008F99FA /* GTLDriveAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDriveAbout.h; sourceTree = "<group>"; };
 		18B6A14419A60A34008F99FA /* GTLDriveAbout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDriveAbout.m; sourceTree = "<group>"; };
@@ -494,6 +575,8 @@
 		18CD36E919ADB3EE006EB8CE /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		18CFBD57198CBB370062DA5B /* DocumentChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentChooseViewController.h; sourceTree = "<group>"; };
 		18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentChooseViewController.m; sourceTree = "<group>"; };
+		18EC9AF719AF86060097BE95 /* FTPListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPListController.h; sourceTree = "<group>"; };
+		18EC9AF819AF86060097BE95 /* FTPListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPListController.m; sourceTree = "<group>"; };
 		653E3B15198183D600788965 /* CommonFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonFunction.h; sourceTree = "<group>"; };
 		653E3B16198183D600788965 /* CommonFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonFunction.m; sourceTree = "<group>"; };
 		653E3B17198183D600788965 /* DatabaseCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseCommon.h; sourceTree = "<group>"; };
@@ -784,8 +867,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				184AC04F19ACFD0000F9C9F1 /* libBoxSDK.a in Frameworks */,
 				18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */,
+				18AF4E4E19AF2BF000E26E42 /* libxml2.dylib in Frameworks */,
+				184AC04F19ACFD0000F9C9F1 /* libBoxSDK.a in Frameworks */,
 				18B84EFB199D345E00F9E383 /* CFNetwork.framework in Frameworks */,
 				18B84EF9199D344F00F9E383 /* libz.dylib in Frameworks */,
 				FEF2CA471990F70E0044CE0C /* Security.framework in Frameworks */,
@@ -795,6 +879,7 @@
 				658EF42719797D5600E6FA0A /* UIKit.framework in Frameworks */,
 				FE1866561989391E001D6A83 /* DropboxSDK.framework in Frameworks */,
 				658EF42319797D5600E6FA0A /* Foundation.framework in Frameworks */,
+				18AF4E4C19AF2BDC00E26E42 /* libxml2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,6 +1035,102 @@
 				184C0938197CD87000740DD0 /* document.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		18AF4E4F19AF2C8C00E26E42 /* Sugar Sync */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4E4B19AF2BDC00E26E42 /* libxml2.dylib */,
+				18AF4E5019AF2CB100E26E42 /* Private */,
+				18AF4E6119AF2CB100E26E42 /* Public Headers */,
+				18AF4E6C19AF2CB100E26E42 /* Templates */,
+				18AF4E7619AF2CB100E26E42 /* Utilities */,
+			);
+			name = "Sugar Sync";
+			sourceTree = "<group>";
+		};
+		18AF4E5019AF2CB100E26E42 /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4E5119AF2CB100E26E42 /* SugarSyncAlbum.m */,
+				18AF4E5219AF2CB100E26E42 /* SugarSyncClient.m */,
+				18AF4E5319AF2CB100E26E42 /* SugarSyncCollection.m */,
+				18AF4E5419AF2CB100E26E42 /* SugarSyncContact.m */,
+				18AF4E5519AF2CB100E26E42 /* SugarSyncFile.m */,
+				18AF4E5619AF2CB100E26E42 /* SugarSyncFileVersion.m */,
+				18AF4E5719AF2CB100E26E42 /* SugarSyncFolder.m */,
+				18AF4E5819AF2CB100E26E42 /* SugarSyncLoginView_ipad.xib */,
+				18AF4E5919AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib */,
+				18AF4E5A19AF2CB100E26E42 /* SugarSyncLoginViewController.h */,
+				18AF4E5B19AF2CB100E26E42 /* SugarSyncLoginViewController.m */,
+				18AF4E5C19AF2CB100E26E42 /* SugarSyncReceivedShare.m */,
+				18AF4E5D19AF2CB100E26E42 /* SugarSyncUser.m */,
+				18AF4E5E19AF2CB100E26E42 /* SugarSyncWorkspace.m */,
+				18AF4E5F19AF2CB100E26E42 /* SugarSyncXMLTemplate.h */,
+				18AF4E6019AF2CB100E26E42 /* SugarSyncXMLTemplate.m */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		18AF4E6119AF2CB100E26E42 /* Public Headers */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4E6219AF2CB100E26E42 /* SugarSyncAlbum.h */,
+				18AF4E6319AF2CB100E26E42 /* SugarSyncClient.h */,
+				18AF4E6419AF2CB100E26E42 /* SugarSyncCollection.h */,
+				18AF4E6519AF2CB100E26E42 /* SugarSyncContact.h */,
+				18AF4E6619AF2CB100E26E42 /* SugarSyncFile.h */,
+				18AF4E6719AF2CB100E26E42 /* SugarSyncFileVersion.h */,
+				18AF4E6819AF2CB100E26E42 /* SugarSyncFolder.h */,
+				18AF4E6919AF2CB100E26E42 /* SugarSyncReceivedShare.h */,
+				18AF4E6A19AF2CB100E26E42 /* SugarSyncUser.h */,
+				18AF4E6B19AF2CB100E26E42 /* SugarSyncWorkspace.h */,
+			);
+			path = "Public Headers";
+			sourceTree = "<group>";
+		};
+		18AF4E6C19AF2CB100E26E42 /* Templates */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4E6D19AF2CB100E26E42 /* accessToken.xml */,
+				18AF4E6E19AF2CB100E26E42 /* copyFile.xml */,
+				18AF4E6F19AF2CB100E26E42 /* createFile.xml */,
+				18AF4E7019AF2CB100E26E42 /* createFolder.xml */,
+				18AF4E7119AF2CB100E26E42 /* login.xml */,
+				18AF4E7219AF2CB100E26E42 /* updateFile.xml */,
+				18AF4E7319AF2CB100E26E42 /* updateFileImage.xml */,
+				18AF4E7419AF2CB100E26E42 /* updateFolder.xml */,
+				18AF4E7519AF2CB100E26E42 /* updateWorkspace.xml */,
+			);
+			path = Templates;
+			sourceTree = "<group>";
+		};
+		18AF4E7619AF2CB100E26E42 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4E7919AF2CB100E26E42 /* SSC9Log.h */,
+				18AF4E7A19AF2CB100E26E42 /* SSC9Log.m */,
+				18AF4E7B19AF2CB100E26E42 /* SSErrorUtil.h */,
+				18AF4E7C19AF2CB100E26E42 /* SSErrorUtil.m */,
+				18AF4E7D19AF2CB100E26E42 /* SSHttpFetcher.h */,
+				18AF4E7E19AF2CB100E26E42 /* SSHttpFetcher.m */,
+				18AF4E7F19AF2CB100E26E42 /* SSXMLLibUtil.h */,
+				18AF4E8019AF2CB100E26E42 /* SSXMLLibUtil.m */,
+				18AF4E8119AF2CB100E26E42 /* XPathQuery.h */,
+				18AF4E8219AF2CB100E26E42 /* XPathQuery.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		18AF4EAB19AF716100E26E42 /* FTP */ = {
+			isa = PBXGroup;
+			children = (
+				18AF4EAC19AF71C000E26E42 /* NetworkManager.h */,
+				18AF4EAD19AF71C000E26E42 /* NetworkManager.m */,
+				18EC9AF719AF86060097BE95 /* FTPListController.h */,
+				18EC9AF819AF86060097BE95 /* FTPListController.m */,
+			);
+			name = FTP;
 			sourceTree = "<group>";
 		};
 		18AF56191986481200CAA234 /* Uploading Menu Left */ = {
@@ -1633,6 +1814,7 @@
 		658EF42119797D5600E6FA0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18AF4E4D19AF2BF000E26E42 /* libxml2.dylib */,
 				65745CC519ABD4FA00A94D4F /* BoxSDK */,
 				18B84EFC199D346600F9E383 /* MobileCoreServices.framework */,
 				18B84EFA199D345E00F9E383 /* CFNetwork.framework */,
@@ -1682,6 +1864,8 @@
 				18B84F00199D358D00F9E383 /* Add Account */,
 				18A2AAA11994D50B009D7E3A /* Box Classes */,
 				FEF2C9B51990F3E60044CE0C /* Google Drive */,
+				18AF4E4F19AF2C8C00E26E42 /* Sugar Sync */,
+				18AF4EAB19AF716100E26E42 /* FTP */,
 				18AF561A1986482900CAA234 /* Downloading Menu Left */,
 				18AF56191986481200CAA234 /* Uploading Menu Left */,
 				18B84F02199D35C800F9E383 /* Table view classes */,
@@ -1927,6 +2111,7 @@
 				18A0C778197D230F00534CF4 /* FileItemCell.xib in Resources */,
 				189E7840197D12EC00083F61 /* Dropbox.png in Resources */,
 				653E3BC9198183D600788965 /* thin.png in Resources */,
+				18AF4E9119AF2CB100E26E42 /* accessToken.xml in Resources */,
 				653E3BA9198183D600788965 /* icon_drawline_active@4x.png in Resources */,
 				653E3BBB198183D600788965 /* left triangle.png in Resources */,
 				18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */,
@@ -1935,6 +2120,7 @@
 				189F99E419AB96B300C48E6F /* Main.storyboard in Resources */,
 				653E3BB9198183D600788965 /* circle_blue_2 pt.png in Resources */,
 				653E3BAE198183D600788965 /* icon_redo_gray@4x.png in Resources */,
+				18AF4E8B19AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib in Resources */,
 				184C0939197CD87000740DD0 /* network.png in Resources */,
 				653E3BA2198183D600788965 /* icon_angle_home@4x.png in Resources */,
 				653E3BC5198183D600788965 /* square.png in Resources */,
@@ -1942,6 +2128,7 @@
 				658EF43E19797D5600E6FA0A /* Images.xcassets in Resources */,
 				18A0C872197D657400534CF4 /* Dropbox-small.png in Resources */,
 				653E3BB0198183D600788965 /* icon_thickness_thick_active@4x.png in Resources */,
+				18AF4E8A19AF2CB100E26E42 /* SugarSyncLoginView_ipad.xib in Resources */,
 				189F2638197EBAAD00ADDF3F /* normalDisclosure.png in Resources */,
 				189F2625197EB1D200ADDF3F /* pdf.png in Resources */,
 				653E3BA4198183D600788965 /* icon_angle_right@4x.png in Resources */,
@@ -1949,11 +2136,15 @@
 				653E3BCF198183D600788965 /* yellow_blue.png in Resources */,
 				18A11D9D197FF6C80000D80F /* folder_large.png in Resources */,
 				189E783E197D12EC00083F61 /* SugarSync.png in Resources */,
+				18AF4E9719AF2CB100E26E42 /* updateFileImage.xml in Resources */,
 				653E3BC0198183D600788965 /* pencil_blue.png in Resources */,
+				18AF4E9819AF2CB100E26E42 /* updateFolder.xml in Resources */,
 				653E3BCB198183D600788965 /* tool.png in Resources */,
 				653E3BAC198183D600788965 /* icon_logout@4x.png in Resources */,
 				18A0C77A197D302500534CF4 /* bgCell.png in Resources */,
+				18AF4E9219AF2CB100E26E42 /* copyFile.xml in Resources */,
 				653E3BB7198183D600788965 /* checkbox.png in Resources */,
+				18AF4E9319AF2CB100E26E42 /* createFile.xml in Resources */,
 				653E3BAA198183D600788965 /* icon_drawsquare@4x.png in Resources */,
 				18A8F0BD197F83B0008967E8 /* topNavigation.png in Resources */,
 				189E7842197D12EC00083F61 /* box.png in Resources */,
@@ -1977,11 +2168,13 @@
 				65D59C06199BD6B0008D4E75 /* dumbo.jpg in Resources */,
 				653E3B8E198183D600788965 /* Localizable.strings in Resources */,
 				189E783F197D12EC00083F61 /* Google-Drive.png in Resources */,
+				18AF4E9919AF2CB100E26E42 /* updateWorkspace.xml in Resources */,
 				653E3BC6198183D600788965 /* square_blue_2 pt.png in Resources */,
 				FEA61E9A19923D0F00021B15 /* Google_Drive_Small.png in Resources */,
 				658EF4681979BF5300E6FA0A /* Unselected.png in Resources */,
 				18A0C77E197D388D00534CF4 /* (null) in Resources */,
 				65D59C05199BD6B0008D4E75 /* Default@2x.png in Resources */,
+				18AF4E9419AF2CB100E26E42 /* createFolder.xml in Resources */,
 				18A0C780197D395E00534CF4 /* circularDisclosure.png in Resources */,
 				658EF4671979BF5300E6FA0A /* Selected.png in Resources */,
 				653E3BAF198183D600788965 /* icon_thickness_thick@4x.png in Resources */,
@@ -1996,6 +2189,7 @@
 				189F262E197EB68E00ADDF3F /* folder.png in Resources */,
 				18A11D9B197FEA530000D80F /* documentsCell.xib in Resources */,
 				18B6A18319A60A74008F99FA /* GTMOAuth2ViewTouch.xib in Resources */,
+				18AF4E9619AF2CB100E26E42 /* updateFile.xml in Resources */,
 				653E3BCA198183D600788965 /* thin_blue_2 pt.png in Resources */,
 				65D59C07199BD6B0008D4E75 /* MainStoryboard_iPhone.storyboard in Resources */,
 				653E3BC7198183D600788965 /* thick.png in Resources */,
@@ -2009,6 +2203,7 @@
 				653E3BB4198183D600788965 /* icon_undo_gray@4x.png in Resources */,
 				653E3B9D198183D600788965 /* sectionbkg.jpg in Resources */,
 				653E3BB6198183D600788965 /* black_blue.png in Resources */,
+				18AF4E9519AF2CB100E26E42 /* login.xml in Resources */,
 				653E3BA1198183D600788965 /* icon_angle_front@4x.png in Resources */,
 				653E3BCC198183D600788965 /* white1.png in Resources */,
 				65D59C08199BD6B0008D4E75 /* MainStoryboardCrop_iPad.storyboard in Resources */,
@@ -2045,13 +2240,20 @@
 				18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */,
 				189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */,
 				18B6A16D19A60A34008F99FA /* GTLDriveChildReference.m in Sources */,
+				18AF4E9E19AF2CB100E26E42 /* SSXMLLibUtil.m in Sources */,
 				659691681993FFA7002BE628 /* ReaderThumbRender.m in Sources */,
+				18EC9AF919AF86060097BE95 /* FTPListController.m in Sources */,
+				18AF4E9B19AF2CB100E26E42 /* SSC9Log.m in Sources */,
 				184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */,
 				653E3B92198183D600788965 /* ReaderContentPage.m in Sources */,
 				18B6A1C419A60A9D008F99FA /* GTLErrorObject.m in Sources */,
+				18AF4E8319AF2CB100E26E42 /* SugarSyncAlbum.m in Sources */,
 				658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */,
+				18AF4E8519AF2CB100E26E42 /* SugarSyncCollection.m in Sources */,
+				18AF4E8D19AF2CB100E26E42 /* SugarSyncReceivedShare.m in Sources */,
 				65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */,
 				18B6A1C119A60A9D008F99FA /* GTLBatchQuery.m in Sources */,
+				18AF4E9D19AF2CB100E26E42 /* SSHttpFetcher.m in Sources */,
 				18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */,
 				189A604019A4C42100408AEF /* CheckInternet.m in Sources */,
 				18B6A16919A60A34008F99FA /* GTLDriveAppList.m in Sources */,
@@ -2064,8 +2266,10 @@
 				18B6A19B19A60A88008F99FA /* GTMHTTPFetcher.m in Sources */,
 				653E3B91198183D600788965 /* ReaderConstants.m in Sources */,
 				659691661993FFA7002BE628 /* ReaderThumbFetch.m in Sources */,
+				18AF4EAE19AF71C000E26E42 /* NetworkManager.m in Sources */,
 				18B6A17619A60A34008F99FA /* GTLDriveRevisionList.m in Sources */,
 				653E3BD6198184DF00788965 /* SQLiteDatabase.m in Sources */,
+				18AF4E8F19AF2CB100E26E42 /* SugarSyncWorkspace.m in Sources */,
 				18B6A16719A60A34008F99FA /* GTLDriveAbout.m in Sources */,
 				18B6A18219A60A74008F99FA /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				FE4DBF86197EA48E00B7A1B2 /* NetworkMenuController.m in Sources */,
@@ -2077,10 +2281,13 @@
 				6596916B1993FFA7002BE628 /* ReaderThumbView.m in Sources */,
 				653E3B94198183D600788965 /* ReaderContentView.m in Sources */,
 				6596916F1993FFFA002BE628 /* UIXToolbarView.m in Sources */,
+				18AF4E8919AF2CB100E26E42 /* SugarSyncFolder.m in Sources */,
 				653E3B8A198183D600788965 /* ShapeButton.m in Sources */,
 				18B6A19A19A60A88008F99FA /* GTMGatherInputStream.m in Sources */,
 				18B6A17419A60A34008F99FA /* GTLDrivePermissionList.m in Sources */,
+				18AF4E9F19AF2CB100E26E42 /* XPathQuery.m in Sources */,
 				18ADE2E5198950C400CDE991 /* DocumentsEditViewController.m in Sources */,
+				18AF4E8419AF2CB100E26E42 /* SugarSyncClient.m in Sources */,
 				18A2AABC1994E275009D7E3A /* SBJsonBase.m in Sources */,
 				18A0C86C197D476700534CF4 /* DropboxCell.m in Sources */,
 				653E3B90198183D600788965 /* CGPDFDocument.m in Sources */,
@@ -2108,10 +2315,13 @@
 				18B6A1C819A60A9D008F99FA /* GTLService.m in Sources */,
 				653E3B97198183D600788965 /* ReaderViewController.m in Sources */,
 				18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */,
+				18AF4E8819AF2CB100E26E42 /* SugarSyncFileVersion.m in Sources */,
 				18A2AAA41994D51D009D7E3A /* BoxAuthorizationNavigationController.m in Sources */,
+				18AF4E9C19AF2CB100E26E42 /* SSErrorUtil.m in Sources */,
 				18B6A16C19A60A34008F99FA /* GTLDriveChildList.m in Sources */,
 				653E3BD8198184DF00788965 /* SQLiteRow.m in Sources */,
 				18A2AABD1994E275009D7E3A /* SBJsonParser.m in Sources */,
+				18AF4E8E19AF2CB100E26E42 /* SugarSyncUser.m in Sources */,
 				18B6A1C519A60A9D008F99FA /* GTLObject.m in Sources */,
 				18B6A1C919A60A9D008F99FA /* GTLUploadParameters.m in Sources */,
 				18B6A17719A60A34008F99FA /* GTLQueryDrive.m in Sources */,
@@ -2127,12 +2337,15 @@
 				18B6A18819A60A7D008F99FA /* GTMOAuth2Authentication.m in Sources */,
 				653E3B88198183D600788965 /* DatabaseCommon.m in Sources */,
 				18B6A1A019A60A88008F99FA /* GTMMIMEDocument.m in Sources */,
+				18AF4E9019AF2CB100E26E42 /* SugarSyncXMLTemplate.m in Sources */,
 				653E3B99198183D600788965 /* PreviewViewController.m in Sources */,
 				1836507A19862C3F00D2D157 /* CollectionViewCell.m in Sources */,
 				18B6A17319A60A34008F99FA /* GTLDrivePermission.m in Sources */,
 				659691671993FFA7002BE628 /* ReaderThumbQueue.m in Sources */,
 				18B6A18919A60A7D008F99FA /* GTMOAuth2SignIn.m in Sources */,
 				653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */,
+				18AF4E8C19AF2CB100E26E42 /* SugarSyncLoginViewController.m in Sources */,
+				18AF4E8619AF2CB100E26E42 /* SugarSyncContact.m in Sources */,
 				18A0C85F197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m in Sources */,
 				18B6A16819A60A34008F99FA /* GTLDriveApp.m in Sources */,
 				65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */,
@@ -2143,6 +2356,7 @@
 				658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */,
 				18ADE2E219892B8900CDE991 /* FolderChooseViewController.m in Sources */,
 				658EF4641979BA4500E6FA0A /* FileItemTableCell.m in Sources */,
+				18AF4E8719AF2CB100E26E42 /* SugarSyncFile.m in Sources */,
 				18B6A19D19A60A88008F99FA /* GTMHTTPFetcherService.m in Sources */,
 				18B6A17819A60A34008F99FA /* GTLServiceDrive.m in Sources */,
 				18B6A17219A60A34008F99FA /* GTLDriveParentReference.m in Sources */,
@@ -2317,6 +2531,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)/splitViewExample",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "splitViewExample/PDFMarkUP-Prefix.pch";
@@ -2325,8 +2540,15 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$SRCROOT/google-api-objectivec-client/Source/**",
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/splitViewExample",
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2351,6 +2573,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)/splitViewExample",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "splitViewExample/PDFMarkUP-Prefix.pch";
@@ -2359,8 +2582,15 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$SRCROOT/google-api-objectivec-client/Source/**",
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/splitViewExample",
+				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",

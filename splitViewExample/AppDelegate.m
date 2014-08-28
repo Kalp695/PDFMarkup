@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <GLKit/GLKit.h>
 #import "KeychainItemWrapper.h"
+#import "NetworkManager.h"
 
 #define REFRESH_TOKEN_KEY   (@"T4BAPIHmmyJ4J5fXzAfwJFxe7RXeHJhe")
 @interface AppDelegate ()
@@ -19,6 +20,9 @@
 @end
 
 @implementation AppDelegate
+{
+    char                _networkOperationCountDummy;
+}
 @synthesize arrDropboxUserids;
 @synthesize dicUserdetails;
 @synthesize documentStatus;
@@ -91,6 +95,9 @@
         [BoxSDK sharedSDK].OAuth2Session.refreshToken = storedRefreshToken;
     }
     
+    // FTP
+    
+//     [[NetworkManager sharedInstance] addObserver:self forKeyPath:@"networkOperationCount" options:NSKeyValueObservingOptionInitial context:&self->_networkOperationCountDummy];
     
     return YES;
 }
