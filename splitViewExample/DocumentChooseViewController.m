@@ -128,9 +128,11 @@
     renameText = @"";
     if (alertView.tag == 1)
     {
-        NSLog(@"alert text is %@", [alertView textFieldAtIndex:0].text);
-        exportText  =[alertView textFieldAtIndex:0].text;
-        [self savePdf];
+        if(buttonIndex==1){
+            //NSLog(@"alert text is %@", [alertView textFieldAtIndex:0].text);
+            exportText  =[alertView textFieldAtIndex:0].text;
+            [self savePdf];
+        }
     }
     
     if (alertView.tag == 2)
@@ -215,12 +217,12 @@
 }
 -(IBAction)documentCacel:(id)sender
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 -(void)savePdf
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
     [ReaderViewController getSharedInstance].savedFolderPath = loadData;
     [ReaderViewController getSharedInstance].pdfName = exportText;

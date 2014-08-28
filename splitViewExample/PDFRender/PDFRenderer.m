@@ -22,7 +22,7 @@
 
 
 CGSize pageSize;
-NSMutableArray *_collection;
+__weak NSMutableArray *_collection;
 UIView *viewNew;
 UIView *view;
 UIView *imgView;
@@ -31,7 +31,7 @@ NSInteger currentPageNumber;
 NSInteger lineNumber;
 CGPDFPageRef templatePage;
 CGPoint shapePoint;
-NSMutableArray *arrayImage;
+NSMutableArray *summaryArray;
 bool thumbNailPreview;
 
 -(void)drawLineFromPoint:(CGPoint)from toPoint:(CGPoint)to inColor:(UIColor *)color inLineWidth:(float)lineWidth
@@ -254,7 +254,7 @@ bool thumbNailPreview;
     //NSLog(@"shapeToBeDrawn.color=%ld",(long)shapeToBeDrawn.color);
     // Setting the dashed parameter
     
-    UIImage *pageImage;
+  __weak  UIImage *pageImage;
     shapePoint=shapeToBeDrawn.startPoint;
     if(shapeToBeDrawn.isDashed == true){
         //float num[] = {10.0f, 10.0f};
@@ -269,8 +269,8 @@ bool thumbNailPreview;
         //[self drawLineFromPoint:shapeToBeDrawn.startPoint toPoints:shapeToBeDrawn.endPoint inColor:shapeToBeDrawn.color inLineWidth:(float)shapeToBeDrawn.lineWidth];
         [self drawLineFromPoint:shapeToBeDrawn.startPoint toPoint:shapeToBeDrawn.endPoint inColor:shapeToBeDrawn.color inLineWidth:(float)shapeToBeDrawn.lineWidth];
         
-        
-        summaryStr=[NSString stringWithFormat:@"%@ \n a line is drawn on page %d",summaryStr,currentPageNumber];
+        UILabel *labelText=[self getSPUerResizableText: shapeToBeDrawn.noteSPUserResizableView];
+        summaryStr=[NSString stringWithFormat:@"a line was drawn on page %d and %@ was added",currentPageNumber,labelText.text];
         lineNumber+=1;
         
     }
@@ -283,7 +283,7 @@ bool thumbNailPreview;
         
         [self drawRectangleFromPoint:rectangle inColor:shapeToBeDrawn.color inLineWidth:shapeToBeDrawn.lineWidth];
         
-        summaryStr=[NSString stringWithFormat:@"%@ \n a rectangle is drawn on page %d",summaryStr,currentPageNumber];
+        summaryStr=[NSString stringWithFormat:@"a rectangle was drawn on page %d",currentPageNumber];
         lineNumber+=1;
     }
     else if(shapeToBeDrawn.shape == 2) {    //Circle
@@ -310,11 +310,11 @@ bool thumbNailPreview;
         CGContextAddArc(contextLocal, shapeToBeDrawn.startPoint.x, shapeToBeDrawn.startPoint.y, radius, 0, M_PI * 2.0, 1);
         CGContextStrokePath(contextLocal);
         
-        summaryStr=[NSString stringWithFormat:@"%@ \n a circle is drawn on page %d",summaryStr,currentPageNumber];
+        summaryStr=[NSString stringWithFormat:@"a cricle was drawn on page %d",currentPageNumber];
         lineNumber+=1;
     }
     
-    else if(shapeToBeDrawn.shape == 3) {    //Circle
+    else if(shapeToBeDrawn.shape == 3) {    //Pencil
             if(contextLocal==nil)
                 contextLocal=UIGraphicsGetCurrentContext();
         //CommonFunction *commonFunction=[[CommonFunction alloc]init];
@@ -340,7 +340,7 @@ bool thumbNailPreview;
         //[aPath fill];
         [aPath stroke];
         
-        summaryStr=[NSString stringWithFormat:@"%@ \n a pencil is drawn on page %d",summaryStr,currentPageNumber];
+        summaryStr=[NSString stringWithFormat:@"a pencile was drawn on page %d",currentPageNumber];
         lineNumber+=1;
         
         
@@ -358,9 +358,13 @@ bool thumbNailPreview;
         CGImageRef partOfBigImage = CGImageCreateWithImageInRect(bigPageImage,
                                                              CGRectMake(shapeToBeDrawn.startPoint.x-50.0f, shapeToBeDrawn.startPoint.y-50.0f, 100, 100));
     
-        UIImage *partOfImage = [UIImage imageWithCGImage:partOfBigImage];
+       __weak UIImage *partOfImage = [UIImage imageWithCGImage:partOfBigImage];
     
-        [arrayImage addObject:partOfImage];
+        [summaryArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:summaryStr,@"summary",partOfImage,@"image", nil]];
+        //CGImageRelease(bigPageImage);
+        //bigPageImage=nil;
+       // CGImageRelease(partOfBigImage);
+        //partOfBigImage=nil;
         pageImage=nil;
     }
 }
@@ -405,8 +409,14 @@ bool thumbNailPreview;
     }
     if(i!=0)
     {
-     summaryStr=[NSString stringWithFormat:@"%@ \n %d photo added on page %d",summaryStr,i,currentPageNumber];
-     lineNumber+=1;
+     summaryStr=[NSString stringWithFormat:@"a new page number %d was added and %d photos were added",currentPageNumber,i];
+    
+    lineNumber+=1;
+    }
+    
+    if(preview==NO)
+    {
+         [summaryArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:summaryStr,@"summary",[NSNull null],@"image", nil]];
     }
     
 }
@@ -432,15 +442,9 @@ bool thumbNailPreview;
     //NSString *pdfPathTemp = [pdfs lastObject]; assert(pdfPathTemp != nil); // Path t
     NSString * pdfPathTemp=pdfFilePath;
     
-    if(_collection == nil) {
-        _collection = [[NSMutableArray alloc] init];
-    }
     
     
-    
-    
-    
-     arrayImage=[[NSMutableArray alloc]init];
+     summaryArray=[[NSMutableArray alloc]init];
     
     //page no to pdf
     
@@ -503,95 +507,49 @@ bool thumbNailPreview;
     if(thumbNailPreview==NO)
     {
         UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
-        int i=40;
+        
+        UIFont *font=[UIFont systemFontOfSize:25.0f];
+        [self drawText:@"Annotation Summary" inFrame:CGRectMake(100, 40, 768, 600) inFrameRect:font];
+        int i=45;
     
-        for(UIImage *image in arrayImage)
+        for(NSDictionary *dict in summaryArray)
         {
-          CGRect frame=CGRectMake(600, i, 50, 30);
-          [self drawImage:image inRect: frame];
-          i+=100;
+            summaryStr=[dict objectForKey:@"summary"];
+            UIImage *image=[dict objectForKey:@"image"];
+            
+          font=[UIFont systemFontOfSize:18.0f];
+          [self drawText:summaryStr inFrame:CGRectMake(100, i, 768, 600) inFrameRect:font];
+            
+            CGSize textSize = [summaryStr sizeWithAttributes:@{NSFontAttributeName:font}];
+            
+            CGFloat textWidth = textSize.width;
+            if(![image isEqual:[NSNull null]])
+            {
+                [self drawImage:image inRect: CGRectMake(100.0f+textWidth+10.0f, i, 50.0f, 50.0f)];
+            }
+          i+=50;
         }
     
-        UIFont *font=[UIFont systemFontOfSize:25.0f];
+        
     
-        [self drawText:@"Annotation Summary" inFrame:CGRectMake(100, 40, 768, 600) inFrameRect:font];
+        
     
-        font=[UIFont systemFontOfSize:18.0f];
-        [self drawText:summaryStr inFrame:CGRectMake(100, 75, 768, 600) inFrameRect:font];
+        
     }
     
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
 
-    [arrayImage removeAllObjects];
-    arrayImage=nil;
+    [summaryArray removeAllObjects];
+    summaryArray=nil;
+    [_collection removeAllObjects];
+    _collection=nil;
+    context=nil;
+    templatePage=nil;
         
     //remove
     
-    
-    /*
-    
-    //Add Summary Page
-    
-     NSString *tempFilePath = [[newFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
-    
    
-    
-    UIGraphicsBeginPDFContextToFile(tempFilePath, CGRectMake(0, 0, 768, 1024), nil);
-    
-    url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)newFilePath, kCFURLPOSIXPathStyle, 0);
-    
-    //open template file
-    templateDocument = CGPDFDocumentCreateWithURL(url);
-    CFRelease(url);
-    
-    //get amount of pages in template
-    count = CGPDFDocumentGetNumberOfPages(templateDocument);
-    
-    //for each page in template
-    for (size_t pageNumber = 1; pageNumber <= count; pageNumber++) {
-        
-        
-        //get bounds of template page
-        CGPDFPageRef templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
-        CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
-        
-        //create empty page with corresponding bounds in new document
-        UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
-        context = UIGraphicsGetCurrentContext();
-        
-        //flip context due to different origins
-        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
-        CGContextScaleCTM(context, 1.0, -1.0);
-        
-        //copy content of template page on the corresponding page in new file
-        CGContextDrawPDFPage(context, templatePage);
-        
-        //flip context back
-        CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
-        CGContextScaleCTM(context, 1.0, -1.0);
-
-        
-        
-    }
-    
-    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
-    int i=0;
-    for(UIImage *image in arrayImage)
-    {
-        CGRect frame=CGRectMake(100, i, 50, 50);
-        [self drawImage:image inRect: frame];
-        i+=100;
-    }
-    
-    CGPDFDocumentRelease(templateDocument);
-    UIGraphicsEndPDFContext();
-    
-    
-    [[NSFileManager defaultManager] removeItemAtPath:newFilePath error:nil];
-    [[NSFileManager defaultManager] moveItemAtPath:tempFilePath toPath:newFilePath error:nil];
-
-    */
     
 }
 
@@ -602,17 +560,19 @@ bool thumbNailPreview;
 	int pageRotation = CGPDFPageGetRotationAngle(page);
 	
 	if ((pageRotation == 0) || (pageRotation == 180) ||(pageRotation == -180)) {
-		UIGraphicsBeginImageContextWithOptions(cropBox.size, NO, resolution / 72);
+		//UIGraphicsBeginImageContextWithOptions(cropBox.size, NO, resolution / 72);
+        UIGraphicsBeginImageContext(cropBox.size);
 	}
 	else {
-		UIGraphicsBeginImageContextWithOptions(CGSizeMake(cropBox.size.height, cropBox.size.width), NO, resolution / 72);
+		//UIGraphicsBeginImageContextWithOptions(CGSizeMake(cropBox.size.height, cropBox.size.width), NO, resolution / 72);
+        UIGraphicsBeginImageContext(cropBox.size);
 	}
 	
 	CGContextRef imageContext = UIGraphicsGetCurrentContext();
 	
     [self renderPage:page inContext:imageContext];
 	
-    UIImage *pageImage = UIGraphicsGetImageFromCurrentImageContext();
+   __weak UIImage *pageImage = UIGraphicsGetImageFromCurrentImageContext();
 	
     UIGraphicsEndImageContext();
 	
