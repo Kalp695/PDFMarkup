@@ -216,6 +216,7 @@ NSString *wastepath = nil;
     {
         ftpListArray = [[NSMutableArray alloc]init];
         ftpFilePathsArray = [[NSMutableArray alloc]init];
+        boxFilesItemsArray = [[NSMutableArray alloc]init];
     }
     
     pdfValue = 0;
@@ -503,14 +504,14 @@ NSString *wastepath = nil;
                 }
             }
             
-            if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
+            if ([ftpFilePathsArray count]>0) {
                 
-                [[AppDelegate sharedInstance].boxSelectedFiles removeObjectAtIndex:0];
+                [ftpFilePathsArray removeObjectAtIndex:0];
                 root = @"";
                 
             }
-            if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
-                [self downloadfrombox];
+            if ([ftpFilePathsArray count]>0) {
+                [self downloadFromFTPServer];
                 
             }
             else
@@ -562,7 +563,8 @@ NSString *wastepath = nil;
             filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,downloadingName]];
             [downloadData writeToFile:filePath atomically:YES];
             
-
+            downloadData = nil;
+            downloadFile = nil;
             
             if ([ftpFilePathsArray count]>0) {
                 
@@ -584,8 +586,7 @@ NSString *wastepath = nil;
         {
             
         }
-        downloadData = nil;
-        downloadFile = nil;
+
     }
     
     
@@ -639,14 +640,16 @@ NSString *wastepath = nil;
     {
         
         NSLog(@"%@", request.error.message);
-        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
         listDir = nil;
     }
     
     if (request == downloadFile)
     {
         NSLog(@"%@", request.error.message);
-        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
         downloadFile = nil;
     }
     
@@ -2104,7 +2107,7 @@ NSString *wastepath = nil;
         ftpStatus = @"Downloading";
         [self downloadFromFTPServer];
 
-      //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+       // [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
        // [self.navigationController popToRootViewControllerAnimated:YES];
 
   
@@ -2767,7 +2770,6 @@ NSString *wastepath = nil;
 
 -(void)downloadFromFTPServer
 {
-    
     NSString *filename = nil;
     
     NSLog(@"%@",ftpFilePathsArray);
@@ -2901,8 +2903,8 @@ NSString *wastepath = nil;
     listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
     listDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
     listDir.path = [NSString stringWithFormat:@"%@/%@",root,name];
-    listDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-    listDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+    listDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+    listDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
     [listDir start];
     }
     
@@ -2924,7 +2926,7 @@ NSString *wastepath = nil;
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         
-        for (int i =0; i< [driveFilesArray count]; i++) {
+        for (int i =0; i< [ftpListArray count]; i++) {
             
             NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
             FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
@@ -2951,9 +2953,8 @@ NSString *wastepath = nil;
         
             downloadData = [NSMutableData dataWithCapacity: 1];
         
-            for (int k =0; k < [ftpFilePathsArray count]; k++)
-            {
-                NSString*fname = [[ftpFilePathsArray objectAtIndex:k] objectForKey:@"folderName"];
+        
+                NSString*fname = [[ftpFilePathsArray objectAtIndex:0] objectForKey:@"folderName"];
         
                 if ([[fname pathExtension]isEqualToString:@""])
                 {
@@ -2973,7 +2974,8 @@ NSString *wastepath = nil;
                        fname = [NSString stringWithFormat:@"/%@",fname];
         
                     }
-                    downloadFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+                   downloadFile.path =  [NSString stringWithFormat:@"%@%@",root,fname];
+                 //   downloadFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
                     downloadingName = fname;
                     downloadFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
                     downloadFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
@@ -2981,9 +2983,6 @@ NSString *wastepath = nil;
                     [downloadFile start];
                     
                 }
-                
-            }
-        
         
     }
     
@@ -3001,12 +3000,10 @@ NSString *wastepath = nil;
         for (int k = 0; k<[boxFilesItemsArray count]; k++)
         {
             // NSLog(@"files inside folder is %@",boxFilesItemsArray);
-            NSString * folderId =  [[boxFilesItemsArray objectAtIndex:k] objectForKey:@"folderId"];
             NSString *   folderName =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"folderName"];
             NSString *    type =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"type"];
             
             NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
-            [dic setObject:folderId forKey:@"folderId"];
             [dic setObject:folderName forKey:@"folderName"];
             [dic setObject:type forKey:@"type"];
             [dic setObject:[[boxFilesItemsArray objectAtIndex:k]objectForKey:@"path"] forKey:@"path"];
@@ -3023,6 +3020,8 @@ NSString *wastepath = nil;
         ftpStatus = @"Downloaded";
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [ftpFilePathsArray removeAllObjects];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
