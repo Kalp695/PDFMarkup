@@ -10,7 +10,15 @@
 #import <DropboxSDK/DropboxSDK.h>
 #import "GTLDrive.h"
 #import "ASIHTTPRequest.h"
-@interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate,ASIHTTPRequestDelegate>
+
+#import "BRRequestListDirectory.h"
+#import "BRRequestCreateDirectory.h"
+#import "BRRequestUpload.h"
+#import "BRRequestDownload.h"
+#import "BRRequestDelete.h"
+#import "BRRequest+_UserData.h"
+
+@interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate,ASIHTTPRequestDelegate,BRRequestDelegate>
 {
     NSMutableArray *marrDownloadData;
     NSMutableArray *arrmetadata;
@@ -35,6 +43,18 @@
     NSString *strrootpath;
     NSMutableDictionary *arrLocalFilepaths;
     NSString * refreshToken ;
+    
+    //FTP
+    
+    BRRequestCreateDirectory *createDir;
+    BRRequestDelete * deleteDir;
+    BRRequestListDirectory *listDir;
+    BRRequestDownload * downloadFile;
+    BRRequestDelete *deleteFile;
+    
+    NSMutableData *downloadData;
+    NSData *uploadData;
+    NSMutableArray * ftpListArray;
     
 }
 - (BOOL)connected;
@@ -71,6 +91,14 @@
 @property(nonatomic,retain)NSMutableArray * driveFilesArray;
 @property(nonatomic,retain) NSString * driveFilesId;
 @property(nonatomic,retain)NSMutableArray * driveFilePathsArray;
+
+//FTP
+@property(nonatomic,retain) NSString * ftpFolderName;
+@property(nonatomic,retain) NSString * ftpFolderPath;
+
+@property(nonatomic,retain)NSMutableArray * ftpFilePathsArray;
+@property(nonatomic,retain)NSString * ftpStatus;
+@property(nonatomic,retain)NSString * downloadingName;
 
 
 

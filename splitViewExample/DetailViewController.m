@@ -280,6 +280,22 @@ static DetailViewController *sharedInstance = nil;
             
             
         }
+        else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"ftp"]) {
+            
+            item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"host"];
+            item.image = [UIImage imageNamed:@"ftp.png" ];
+            item.accounttype = @"ftp";
+            
+            
+        }
+        else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"]) {
+            
+            item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"name"];
+            item.image = [UIImage imageNamed:@"SugarSync.png" ];
+            item.accounttype = @"sugarsync";
+            
+            
+        }
         item.isChecked = NO;
         
         [items addObject:item];

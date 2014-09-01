@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1552" identifier="iOS"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
@@ -1056,18 +1056,23 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="X9f-xE-GEa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="143" y="-1404"/>
+            <point key="canvasLocation" x="-537" y="-1436"/>
         </scene>
-        <!--List Controller-->
+        <!--Login View Controller-->
         <scene sceneID="2oZ-jK-Lcs">
             <objects>
-                <viewController storyboardIdentifier="FTPListController" id="eve-pn-xKi" customClass="FTPListController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FTPLoginViewController" id="eve-pn-xKi" customClass="FTPLoginViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Dda-wr-OJb">
                         <rect key="frame" x="0.0" y="0.0" width="500" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="nKO-PT-gpN">
+                                <rect key="frame" x="0.0" y="66" width="540" height="600"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="KoH-8Q-KTP">
-                                <rect key="frame" x="451" y="11" width="49" height="30"/>
+                                <rect key="frame" x="480" y="11" width="49" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Cancel">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1076,15 +1081,47 @@
                                     <action selector="cancelClick:" destination="eve-pn-xKi" eventType="touchUpInside" id="5Bs-Vx-6vy"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Wss-ke-1Zb">
-                                <rect key="frame" x="63" y="179" width="250" height="300"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Host Name (or) IP" minimumFontSize="17" id="RNK-h4-16K">
+                                <rect key="frame" x="129" y="209" width="242" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="UserName" minimumFontSize="17" id="fJM-QM-YCY">
+                                <rect key="frame" x="129" y="294" width="242" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" minimumFontSize="17" id="znu-cR-p1n">
+                                <rect key="frame" x="129" y="372" width="242" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
+                            </textField>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login To Grant Accees To Server" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Ly7-AU-iDK">
+                                <rect key="frame" x="175" y="112" width="264" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="iIS-i1-xFs">
+                                <rect key="frame" x="201" y="448" width="99" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="18"/>
+                                <state key="normal" title="Connect">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <outlet property="dataSource" destination="eve-pn-xKi" id="SKx-yF-xWt"/>
-                                    <outlet property="delegate" destination="eve-pn-xKi" id="Xxg-x5-bfl"/>
+                                    <action selector="connect:" destination="eve-pn-xKi" eventType="touchUpInside" id="Ykg-sl-ZV6"/>
                                 </connections>
-                            </tableView>
+                            </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ftp.png" id="amO-eK-P2O">
+                                <rect key="frame" x="104" y="95" width="71" height="55"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -1094,12 +1131,14 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="500" height="600"/>
                     <connections>
-                        <outlet property="tableView" destination="Wss-ke-1Zb" id="ZWo-EE-4EB"/>
+                        <outlet property="hostTextField" destination="RNK-h4-16K" id="2ef-x7-LI4"/>
+                        <outlet property="password" destination="znu-cR-p1n" id="kgA-8u-9lZ"/>
+                        <outlet property="username" destination="fJM-QM-YCY" id="5NO-j3-OqJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOY-uZ-4kw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="701" y="-1394"/>
+            <point key="canvasLocation" x="317" y="-1406"/>
         </scene>
     </scenes>
     <resources>

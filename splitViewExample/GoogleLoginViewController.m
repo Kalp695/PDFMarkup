@@ -93,6 +93,8 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
     {
         NSLog(@"auth result is %@",authResult);
         [DriveHelperClass getSharedInstance].driveService.authorizer = authResult;
+        
+        
 //        NSString * accessToken = authResult.accessToken;
 //        NSString * refreshT = authResult.refreshToken;
 //        NSString * expire = [NSString stringWithFormat:@"%@",authResult.expirationDate];

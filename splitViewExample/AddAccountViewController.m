@@ -16,7 +16,7 @@
 #import "BoxAuthorizationNavigationController.h"
 #import "JSON.h"
 #import "DropboxDownloadFileViewControlller.h"
-
+#import "FTPLoginViewController.h"
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
 static NSString *const kClientID = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";
 static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
@@ -155,17 +155,18 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     }
     else if ([sender tag]==3)
     {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"FTPListController"];
-        googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
         
-        [self presentViewController:googleLoginViewController animated:YES completion:nil];
-
-    }
+   }
     else if ([sender tag]== 4)
     {
         
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FTPLoginViewController * ftpLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"FTPLoginViewController"];
+        ftpLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
         
+        [self presentViewController:ftpLoginViewController animated:YES completion:nil];
+        
+
     }
     else if ([sender tag] == 5)
     {

@@ -403,7 +403,21 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             
         }
-        
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"])
+        {
+            cell.imageView.image =[UIImage imageNamed:@"ftp.png"];
+            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            
+            
+        }
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"])
+        {
+            cell.imageView.image =[UIImage imageNamed:@"box_small.png"];
+            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            
+            
+        }
+
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -498,7 +512,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             self.detailViewController.indexPathh = indexPath.row;
             self.detailViewController.detailItem = object;
         }
-        
+        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"]) {
+            
+            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            self.detailViewController.accountInfo =  @"ftp";
+            self.detailViewController.indexPathh = indexPath.row;
+            self.detailViewController.detailItem = object;
+        }
         //        UIStoryboard * storyboard = self.storyboard;
         //        
         //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];

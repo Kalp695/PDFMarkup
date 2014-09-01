@@ -25,6 +25,7 @@ NSString * folderDocpath;
 #import "KeychainItemWrapper.h"
 #import "DriveHelperClass.h"
 #import "DriveConstants.h"
+#import "FTPMainViewController.h"
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -103,12 +104,18 @@ NSString *wastepath = nil;
 @synthesize boxRefreshToken;
 @synthesize filePathsArray;
 @synthesize boxFilePathsArray;
+@synthesize boxFolderId,boxFolderName,index;
 
 // Drive
 @synthesize driveFiles;
 @synthesize driveFilesArray,driveFilesId,driveFilePathsArray;
 
-@synthesize boxFolderId,boxFolderName,index;
+// FTP
+@synthesize ftpFolderName;
+@synthesize ftpFolderPath,ftpFilePathsArray;
+@synthesize ftpStatus;
+@synthesize downloadingName;
+
 -(void)viewWillAppear:(BOOL)animated
 {
     
@@ -149,7 +156,7 @@ NSString *wastepath = nil;
         fetching = YES;
         [self checkExpiredBoxToken];
     }
-    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
         self.driveFiles = [[NSMutableArray alloc]init];
         driveFilesArray = [[NSMutableArray alloc]init];
@@ -161,6 +168,17 @@ NSString *wastepath = nil;
         }
         [self loadDriveFiles:driveFilesId];
         // [[self class ]retrieveAllFilesWithService:[DropboxDownloadFileViewControlller getSharedInstance].driveService completionBlock:nil];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        if (!ftpFolderName)
+        {
+            ftpFolderName = @"";
+        }
+        ftpListArray = [[NSMutableArray alloc]init];
+
+        [self listDirectory:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
+        
     }
 }
 #pragma mark - View lifecycle
@@ -177,9 +195,8 @@ NSString *wastepath = nil;
         
         [self performSelector:@selector(fetchAllDropboxData) withObject:nil afterDelay:.1];
         self.title = [[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"];
-        
-        
     }
+    
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         
@@ -189,11 +206,16 @@ NSString *wastepath = nil;
         root = @"";
         boxFilePath =@"";
     }
+    
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
         boxFilesItemsArray = [[NSMutableArray alloc]init];
-
-        
+    }
+    
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        ftpListArray = [[NSMutableArray alloc]init];
+        ftpFilePathsArray = [[NSMutableArray alloc]init];
     }
     
     pdfValue = 0;
@@ -294,6 +316,352 @@ NSString *wastepath = nil;
     
     
 }
+#pragma mark FTP Methods
+
+-(void)listDirectory:(id)sender
+{
+    NSLog(@"sender is %@",sender);
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
+    listDir.hostname = [sender objectForKey:@"host"];
+    listDir.path = ftpFolderName;
+    listDir.username = [sender objectForKey:@"name"];
+    listDir.password = [sender objectForKey:@"password"];
+    [listDir start];
+    
+}
+
+- (void) requestDataAvailable: (BRRequestDownload *) request;
+{
+    [downloadData appendData: request.receivedData];
+}
+
+
+
+
+
+//-----
+//
+//				percentCompleted
+//
+// synopsis:	[self percentCompleted:request];
+//					BRRequest *request	-
+//
+// description:	percentCompleted is designed to
+//
+// errors:		none
+//
+// returns:		none
+//
+
+- (void) percentCompleted: (BRRequest *) request
+{
+    NSLog(@"%f completed...", request.percentCompleted);
+    NSLog(@"%ld bytes this iteration", request.bytesSent);
+    NSLog(@"%ld total bytes", request.totalBytesSent);
+}
+
+
+
+//-----
+//
+//				requestDataSendSize
+//
+// synopsis:	retval = [self requestDataSendSize:request];
+//					long retval             	-
+//					BRRequestUpload *request	-
+//
+// description:	requestDataSendSize is designed to
+//
+// important:   This is an optional method when uploading. It is purely used
+//              to help calculate the percent completed.
+//
+//              If this method is missing, then the send size defaults to LONG_MAX
+//              or about 2 gig.
+//
+// errors:		none
+//
+// returns:		Variable of type long
+//
+
+- (long) requestDataSendSize: (BRRequestUpload *) request
+{
+    //----- user returns the total size of data to send. Used ONLY for percentComplete
+    return [uploadData length];
+}
+
+
+
+//-----
+//
+//				requestDataToSend
+//
+// synopsis:	retval = [self requestDataToSend:request];
+//					NSData *retval          	-
+//					BRRequestUpload *request	-
+//
+// description:	requestDataToSend is designed to hand off the BR the next block
+//              of data to upload to the FTP server. It continues to call this
+//              method for more data until nil is returned.
+//
+// important:   This is a required method for uploading data to an FTP server.
+//              If this method is missing, it you will get a runtime error indicating
+//              this method is missing.
+//
+// errors:		none
+//
+// returns:		Variable of type NSData *
+//
+
+- (NSData *) requestDataToSend: (BRRequestUpload *) request
+{
+    //----- returns data object or nil when complete
+    //----- basically, first time we return the pointer to the NSData.
+    //----- and BR will upload the data.
+    //----- Second time we return nil which means no more data to send
+    NSData *temp = uploadData;                                                  // this is a shallow copy of the pointer, not a deep copy
+    
+    uploadData = nil;                                                           // next time around, return nil...
+    
+    return temp;
+}
+
+
+
+//-----
+//
+//				requestCompleted
+//
+// synopsis:	[self requestCompleted:request];
+//					BRRequest *request	-
+//
+// description:	requestCompleted is designed to
+//
+// errors:		none
+//
+// returns:		none
+//
+
+-(void) requestCompleted: (BRRequest *) request
+{
+  
+    
+    if (request == createDir)
+    {
+        NSLog(@"%@ completed!", request);
+        
+        createDir = nil;
+        [tbDownload reloadData];
+        [self viewWillAppear:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+        
+    }
+    
+    if (request == deleteDir)
+    {
+        NSLog(@"%@ completed!", request);
+        
+        deleteDir = nil;
+        [tbDownload reloadData];
+        [self viewWillAppear:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    }
+    
+    if (request == listDir)
+    {
+        //called after 'request' is completed successfully
+        NSLog(@"%@ completed!", request);
+        if ([ftpStatus isEqualToString:@"Downloading"])
+        {
+            for (NSDictionary *file in listDir.filesInfo)
+            {
+                NSString * name = [file objectForKey:(id)kCFFTPResourceName];
+                
+                if ([[name pathExtension] isEqualToString:@""])
+                {
+                    
+                    NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                    [dic setObject:name forKey:@"folderName"];
+                    [dic setObject:@"folder" forKey:@"type"];
+                    [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
+                    [boxFilesItemsArray addObject: dic];
+                    
+                }
+                else
+                {
+                    NSString * ext = @"pdf";
+                    if ([[[file objectForKey:(id)kCFFTPResourceName] pathExtension ]isEqualToString:@""]||[[[[file objectForKey:(id)kCFFTPResourceName]lowercaseString]pathExtension]isEqualToString:ext])
+                    {
+                        NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                        [dic setObject:name forKey:@"folderName"];
+                        [dic setObject:@"file" forKey:@"type"];
+                        [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
+                        [boxFilesItemsArray addObject: dic];
+                    }
+                }
+            }
+            
+            if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
+                
+                [[AppDelegate sharedInstance].boxSelectedFiles removeObjectAtIndex:0];
+                root = @"";
+                
+            }
+            if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
+                [self downloadfrombox];
+                
+            }
+            else
+            {
+                [self performSelector:@selector(closeFtpControllerr) withObject:nil afterDelay:0];
+                
+            }
+
+            
+        }
+        else
+        {
+            //we print each of the files name
+            for (NSDictionary *file in listDir.filesInfo)
+            {
+                NSLog(@"%@", [file objectForKey:(id)kCFFTPResourceName]);
+                NSString * ext = @"pdf";
+                if ([[[file objectForKey:(id)kCFFTPResourceName] pathExtension ]isEqualToString:@""]||[[[[file objectForKey:(id)kCFFTPResourceName]lowercaseString]pathExtension]isEqualToString:ext])
+                {
+                    [ftpListArray addObject:[file objectForKey:(id)kCFFTPResourceName]];
+                    
+                }
+                FolderItem *item = [[FolderItem alloc] init];
+                item.isChecked = NO;
+                [arrmetadata addObject:item];
+            }
+            [tbDownload reloadData];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            listDir = nil;
+ 
+        }
+        
+       
+        
+    }
+    if (request == downloadFile)
+    {
+        //called after 'request' is completed successfully
+        NSLog(@"%@ completed!", request);
+        
+        NSError *error;
+        
+        
+        if ([ftpStatus isEqualToString:@"Downloading"])
+        {
+            
+            NSString *filePath;
+
+            filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,downloadingName]];
+            [downloadData writeToFile:filePath atomically:YES];
+            
+
+            
+            if ([ftpFilePathsArray count]>0) {
+                
+                [ftpFilePathsArray removeObjectAtIndex:0];
+                root = @"";
+                
+            }
+            if ([ftpFilePathsArray count]>0) {
+                [self downloadFromFTPServer];
+                
+            }
+            else
+            {
+                [self performSelector:@selector(closeFtpControllerr) withObject:nil afterDelay:0];
+                
+            }
+        }
+        else
+        {
+            
+        }
+        downloadData = nil;
+        downloadFile = nil;
+    }
+    
+    
+    if (request == deleteFile)
+    {
+        NSLog(@"%@ completed!", request);
+        deleteFile = nil;
+        //[tbDownload reloadData];
+        [self viewWillAppear:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    }
+    
+}
+
+
+
+//-----
+//
+//				requestFailed
+//
+// synopsis:	[self requestFailed:request];
+//					BRRequest *request	-
+//
+// description:	requestFailed is designed to
+//
+// errors:		none
+//
+// returns:		none
+//
+
+-(void) requestFailed:(BRRequest *) request
+{
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    if (request == createDir)
+    {
+        NSLog(@"%@", request.error.message);
+        
+        createDir = nil;
+    }
+    
+    if (request == deleteDir)
+    {
+        NSLog(@"%@", request.error.message);
+        
+        deleteDir = nil;
+    }
+    
+    if (request == listDir)
+    {
+        
+        NSLog(@"%@", request.error.message);
+        
+        listDir = nil;
+    }
+    
+    if (request == downloadFile)
+    {
+        NSLog(@"%@", request.error.message);
+        
+        downloadFile = nil;
+    }
+    
+    
+    if (request == deleteFile)
+    {
+        NSLog(@"%@", request.error.message);
+        deleteFile = nil;
+    }
+}
+
+
+
+
+
 #pragma mark Drive Methods
 
 - (void)loadDriveFiles:(NSString *)folderId {
@@ -543,8 +911,27 @@ NSString *wastepath = nil;
          [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         
-        NSLog(@"Box");
+        NSLog(@"google");
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        //[[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+        
+        NSLog(@"ftp");
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
+    {
+        //[[NSNotificationCenter defaultCenter] removeObserver:self];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+        
+        NSLog(@"sugarsync");
+    }
+
 }
 
 
@@ -615,7 +1002,8 @@ NSString *wastepath = nil;
                                                                 object:self];
             
         }
-        else
+        if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+            
         {
             for (int i =0; i< [driveFilesArray count]; i++) {
                 
@@ -636,6 +1024,34 @@ NSString *wastepath = nil;
             [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
             
             [driveFilePathsArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
+                                                                object:self];
+            
+        
+        
+        }
+        else 
+        {
+            for (int i =0; i< [ftpListArray count]; i++) {
+                
+                // DBMetadata *data = [marrDownloadData objectAtIndex:i];
+                //NSLog(@"selected %@",data.path);
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                
+                [tbDownload reloadData];
+                
+            }
+            [tbDownload setEditing:YES animated:YES];
+            [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
+            
+            [ftpFilePathsArray removeAllObjects];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
                                                                 object:self];
@@ -824,6 +1240,8 @@ NSString *wastepath = nil;
     
     return documentsDirectory;
 }
+
+
 
 #pragma mark - DBRestClientDelegate Methods for Load Data
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata *)metadata
@@ -1048,7 +1466,11 @@ NSString *wastepath = nil;
         return [driveFilesArray count];
         
     }
-    
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        return [ftpListArray count];
+        
+    }
     else
     {
         return 0;
@@ -1124,6 +1546,74 @@ NSString *wastepath = nil;
         return cell;
         
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+
+    {
+        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
+        
+        [cell.btnIcon setTitle:[[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"] forState:UIControlStateDisabled];
+        
+        FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        
+        if (tableView.editing)
+        {
+            [cell setChecked:item.isChecked];
+        }
+        cell.lblTitle.text = [[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"];
+        
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.btnIcon.hidden = NO;
+        
+        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"];
+        if ([[str pathExtension]isEqualToString:@"pdf"])
+        {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.btnIcon.hidden = NO;
+            cell.imageView.image = [UIImage imageNamed:@"pdf.png"];
+        }
+        else
+        {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
+            
+        }
+        
+        return cell;
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
+        
+        [cell.btnIcon setTitle:[ftpListArray objectAtIndex:indexPath.row] forState:UIControlStateDisabled];
+        
+        FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        
+        if (tableView.editing)
+        {
+            [cell setChecked:item.isChecked];
+        }
+        cell.lblTitle.text = [ftpListArray objectAtIndex:indexPath.row];
+        
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.btnIcon.hidden = NO;
+        
+        NSString * str = [ftpListArray objectAtIndex:indexPath.row];
+        if ([[str pathExtension]isEqualToString:@"pdf"])
+        {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.btnIcon.hidden = NO;
+            cell.imageView.image = [UIImage imageNamed:@"pdf.png"];
+        }
+        else
+        {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
+            
+        }
+        
+        return cell;
+
+    }
     else
     {
         FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
@@ -1156,6 +1646,7 @@ NSString *wastepath = nil;
         }
         
         return cell;
+
     }
     
 }
@@ -1330,7 +1821,7 @@ NSString *wastepath = nil;
         }
         
     }
-    else
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
         
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
@@ -1412,7 +1903,96 @@ NSString *wastepath = nil;
         
         
     }
-    
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        if (tableView.editing)
+        {
+            FileItemTableCell *cell = (FileItemTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+            item.isChecked = !item.isChecked;
+            
+            folder_file=[ftpListArray objectAtIndex:indexPath.row];
+            [cell setChecked:item.isChecked];
+        }
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        NSString * str = [ftpListArray objectAtIndex:indexPath.row];
+        if ([[str pathExtension] isEqualToString:@""]&& !tableView.editing)
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
+            dropboxDownloadFileViewControlller.ftpFolderName = [ftpListArray objectAtIndex:indexPath.row];
+            ftpFolderPath = [ftpFolderPath stringByAppendingString:[NSString stringWithFormat:@"/%@",ftpFolderName]];
+            [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        }
+        else
+        {
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            
+            if (item.isChecked == YES)
+            {
+                //selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [downloadingButton setTitle:[ftpListArray objectAtIndex:indexPath.row] forState:UIControlStateDisabled];
+                
+                pdfValue = pdfValue+1;
+                
+                if (![ftpFilePathsArray containsObject:[ftpListArray objectAtIndex:indexPath.row]])
+                {
+                    
+                    [dic setObject:[ftpListArray objectAtIndex:indexPath.row] forKey:@"folderName"];
+                    if ([[[ftpListArray objectAtIndex:indexPath.row]pathExtension]isEqualToString:@""]) {
+                        [dic setObject:@"folder" forKey:@"type"];
+ 
+                    }
+                    else
+                    {
+                        [dic setObject:@"file" forKey:@"type"];
+
+                    }
+
+                    [dic setObject:@"/" forKey:@"path"];
+                    
+                    [ftpFilePathsArray addObject:dic];
+                }
+                //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
+            }
+            
+            else
+            {
+                if (item.isChecked == NO)
+                {
+                    pdfValue = pdfValue-1;
+                    
+                    
+                    for (int i =0; i<[self.ftpFilePathsArray count]; i++)
+                    {
+                        
+                        if ([[ftpListArray objectAtIndex:indexPath.row] isEqualToString:[[ftpFilePathsArray objectAtIndex:i]objectForKey:@"folderName"]]) {
+                            [self.ftpFilePathsArray removeObjectAtIndex:i];
+                        }
+                    }
+                    //[AppDelegate sharedInstance].boxSelectedFiles = boxFilePathsArray;
+                }
+            }
+        }
+        
+        NSLog(@"ftpFilePathsArray array is %@",ftpFilePathsArray);
+        
+        if ([ftpFilePathsArray count]==1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SingleFile" object:self];
+        }
+        else if([ftpFilePathsArray count]>1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MultipleFiles" object:self];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+        }
+        
+    }
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1517,6 +2097,20 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        NSLog(@"box files array %@",ftpFilePathsArray);
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        ftpStatus = @"Downloading";
+        [self downloadFromFTPServer];
+
+      //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+       // [self.navigationController popToRootViewControllerAnimated:YES];
+
+  
+        
+    }
+
     
 }
 
@@ -1838,7 +2432,6 @@ NSString *wastepath = nil;
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             
             for (int i =0; i< [marrDownloadData count]; i++) {
-                
                 
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
@@ -2169,6 +2762,273 @@ NSString *wastepath = nil;
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
+
+#pragma mark - Ftp Download
+
+-(void)downloadFromFTPServer
+{
+    
+    NSString *filename = nil;
+    
+    NSLog(@"%@",ftpFilePathsArray);
+    if ([ftpFilePathsArray count]>0)
+    {
+        filename = [[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
+        
+        NSLog(@"%@",[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"path"]);
+        
+        NSString * str = [NSString stringWithFormat:@"%@%@",[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"path"],filename];
+        if ([sqliteRowsArray containsObject:str])
+        {
+            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show ];
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
+            for (int i =0; i< [marrDownloadData count]; i++) {
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                
+                [tbDownload reloadData];
+                
+            }
+            
+            [ftpFilePathsArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+            
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+        }
+        else
+        {
+            
+            pdfCount = pdfCount + 1;
+            filesCount = filesCount + 1;
+            NSLog(@"files is %@",[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderName"]);
+           // NSString * folderId =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderId"];
+            NSString * folderName =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
+            NSString * type =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"type"];
+            
+            if ([[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"path"] length]>0)
+            {
+                root = [[ftpFilePathsArray objectAtIndex:0]objectForKey:@"path"];
+            }
+            if ([type isEqualToString:@"folder"])
+            {
+                boxDownloadingType = @"folder";
+                [self ftpFolderDownload:folderName];
+                boxFolderPath =[NSString stringWithFormat:@"%@",folderName];
+                root = [root stringByAppendingString:boxFolderPath];
+                //[self getFileMetadataWithService:folderName];
+                
+            }
+            
+            else
+            {
+                boxDownloadingType = @"file";
+                boxFolderPath = @"";
+                itemCount = 0;
+                [self downloadFileContentFtp:folderName];
+                
+            }
+        }
+        
+    }
+    else
+    {
+        [self performSelector:@selector(closeFtpControllerr) withObject:nil afterDelay:0];
+        
+    }
+    
+}
+-(void)ftpFolderDownload:(NSString *)name
+{
+    arrdownlaodfiels = [[NSMutableArray alloc] init];
+    
+    
+    NSLog(@"check %@",sqliteRowsArray);
+    if ([sqliteRowsArray containsObject:name])
+    {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",name ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show ];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        for (int i =0; i< [folderItemsArray count]; i++) {
+            
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+            
+            FolderItem* item = [arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+            
+            
+            [cell setChecked:item.isChecked];
+            
+            [tbDownload reloadData];
+            
+            
+            break;
+            
+        }
+        
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        fetching = YES;
+        
+    }
+    else
+    {
+        NSError * error;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+        if (boxFolderPath == nil) {
+            boxFolderPath = @"";
+        }
+        
+        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
+            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
+    
+    
+    listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
+    listDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+    listDir.path = [NSString stringWithFormat:@"%@/%@",root,name];
+    listDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+    listDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+    [listDir start];
+    }
+    
+}
+
+
+-(void)downloadFileContentFtp:(NSString *)file
+
+{
+    
+    // NSLog(@"download file");
+    NSLog(@"downloading file is %@",file);
+    arrdownlaodfiels = [[NSMutableArray alloc] init];
+    
+    if ([sqliteRowsArray containsObject:file])
+    {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",file ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show ];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        for (int i =0; i< [driveFilesArray count]; i++) {
+            
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+            
+            FolderItem* item = [arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+            [cell setChecked:item.isChecked];
+            
+            [tbDownload reloadData];
+            
+            
+            break;
+            
+        }
+        
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        fetching = YES;
+        
+    }
+    else
+    {
+        
+            downloadData = [NSMutableData dataWithCapacity: 1];
+        
+            for (int k =0; k < [ftpFilePathsArray count]; k++)
+            {
+                NSString*fname = [[ftpFilePathsArray objectAtIndex:k] objectForKey:@"folderName"];
+        
+                if ([[fname pathExtension]isEqualToString:@""])
+                {
+        
+                }
+                else
+                {
+                    downloadFile = [[BRRequestDownload alloc] initWithDelegate:self];
+        
+                    downloadFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+        
+                    if (!ftpFolderPath) {
+                        ftpFolderPath = @"";
+                    }
+                    else
+                    {
+                       fname = [NSString stringWithFormat:@"/%@",fname];
+        
+                    }
+                    downloadFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+                    downloadingName = fname;
+                    downloadFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+                    downloadFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+                    
+                    [downloadFile start];
+                    
+                }
+                
+            }
+        
+        
+    }
+    
+}
+-(void)closeFtpControllerr
+{
+  
+    
+    if ([boxFilesItemsArray count]>0)
+    {
+        [[AppDelegate sharedInstance].boxSelectedFiles removeAllObjects];
+        
+        NSLog(@"%@",root);
+        //  boxFilePath = root;
+        for (int k = 0; k<[boxFilesItemsArray count]; k++)
+        {
+            // NSLog(@"files inside folder is %@",boxFilesItemsArray);
+            NSString * folderId =  [[boxFilesItemsArray objectAtIndex:k] objectForKey:@"folderId"];
+            NSString *   folderName =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"folderName"];
+            NSString *    type =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"type"];
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            [dic setObject:folderId forKey:@"folderId"];
+            [dic setObject:folderName forKey:@"folderName"];
+            [dic setObject:type forKey:@"type"];
+            [dic setObject:[[boxFilesItemsArray objectAtIndex:k]objectForKey:@"path"] forKey:@"path"];
+            [ftpFilePathsArray addObject:dic];
+            
+        }
+        [boxFilesItemsArray removeAllObjects];
+        [self multipleFileDownload:nil];
+        
+    }
+    
+    if ([ftpFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
+    {
+        ftpStatus = @"Downloaded";
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [ftpFilePathsArray removeAllObjects];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+}
+
+
 #pragma mark - Create Folder
 
 -(void)createFolder
@@ -2311,6 +3171,37 @@ NSString *wastepath = nil;
         }
         
     }
+    
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        createDir = [[BRRequestCreateDirectory alloc] initWithDelegate:self];
+        
+        createDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+        if (!ftpFolderPath) {
+            ftpFolderPath = @"";
+        }
+        
+        createDir.path = [NSString stringWithFormat:@"%@/%@",ftpFolderPath,tempString];
+        createDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+        createDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+        
+        [createDir start];
+
+        
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        pdfValue = 0;
+        
+        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        
+        for (int i =0; i< [arrmetadata count]; i++)
+        {
+            FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+        }
+    }
 }
 
 // Folder is the metadata for the newly created folder
@@ -2418,11 +3309,7 @@ NSString *wastepath = nil;
 }
 
 
--(void)requestFailed:(id)sender;
-{
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-    
-}
+
 #pragma mark - Rename Folder
 
 -(void)renameFolder
@@ -2463,6 +3350,7 @@ NSString *wastepath = nil;
                 newDirectoryName = tempString;
             }
         }
+        
         NSString *oldPath = [filePathsArray objectAtIndex:0];
         NSString *newPath = [[oldPath stringByDeletingLastPathComponent] stringByAppendingPathComponent:newDirectoryName];
         DropboxManager *dbManager = [DropboxManager dbManager];
@@ -2803,6 +3691,55 @@ NSString *wastepath = nil;
             
         }
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        for (int k =0; k < [ftpFilePathsArray count]; k++)
+        {
+            NSString*fname = [[ftpFilePathsArray objectAtIndex:k] objectForKey:@"folderName"];
+            
+            if ([[fname pathExtension]isEqualToString:@""])
+            {
+                deleteDir = [[BRRequestDelete alloc] initWithDelegate:self];
+                
+                deleteDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+                if (!ftpFolderPath) {
+                    ftpFolderPath = @"";
+                }
+                else
+                {
+                    fname = [NSString stringWithFormat:@"/%@",fname];
+
+                }
+                deleteDir.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+                deleteDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+                deleteDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+                
+                [deleteDir start];
+
+            }
+            else
+            {
+                deleteFile = [[BRRequestDelete alloc] initWithDelegate:self];
+                deleteFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+                if (!ftpFolderPath) {
+                    ftpFolderPath = @"";
+                }
+                else
+                {
+                    fname = [NSString stringWithFormat:@"/%@",fname];
+                    
+                }
+                deleteFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+                deleteFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+                deleteFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+                
+                [deleteFile start];
+
+            }
+            
+        }
+    }
+
     
     [tbDownload setEditing:NO];
     editButton.title = @"Edit";

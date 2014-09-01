@@ -14,6 +14,9 @@
 		184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 184C093C197CDB1C00740DD0 /* LeftTableViewCell.m */; };
 		184C094B197CF1B100740DD0 /* AddAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 184C094A197CF1B100740DD0 /* AddAccountViewController.m */; };
 		186D58DF1982ADB0007D0C48 /* email.png in Resources */ = {isa = PBXBuildFile; fileRef = 186D58DE1982ADB0007D0C48 /* email.png */; };
+		1888F6F919B2E8D100DBC547 /* FTPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */; };
+		1888F70019B2F8C600DBC547 /* BRRequestLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6FF19B2F8C600DBC547 /* BRRequestLogin.m */; };
+		1888F70319B301D700DBC547 /* FTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F70219B301D700DBC547 /* FTP.m */; };
 		189A604019A4C42100408AEF /* CheckInternet.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A603F19A4C42100408AEF /* CheckInternet.m */; };
 		189A604519A4DEA800408AEF /* BoxHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189A604419A4DEA800408AEF /* BoxHelperClass.m */; };
 		189E783E197D12EC00083F61 /* SugarSync.png in Resources */ = {isa = PBXBuildFile; fileRef = 189E7839197D12EC00083F61 /* SugarSync.png */; };
@@ -91,7 +94,6 @@
 		18AF4E9D19AF2CB100E26E42 /* SSHttpFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E7E19AF2CB100E26E42 /* SSHttpFetcher.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18AF4E9E19AF2CB100E26E42 /* SSXMLLibUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E8019AF2CB100E26E42 /* SSXMLLibUtil.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18AF4E9F19AF2CB100E26E42 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4E8219AF2CB100E26E42 /* XPathQuery.m */; };
-		18AF4EAE19AF71C000E26E42 /* NetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18AF4EAD19AF71C000E26E42 /* NetworkManager.m */; };
 		18B6A16719A60A34008F99FA /* GTLDriveAbout.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14419A60A34008F99FA /* GTLDriveAbout.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A16819A60A34008F99FA /* GTLDriveApp.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14619A60A34008F99FA /* GTLDriveApp.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A16919A60A34008F99FA /* GTLDriveAppList.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A14819A60A34008F99FA /* GTLDriveAppList.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -151,7 +153,17 @@
 		18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFC199D346600F9E383 /* MobileCoreServices.framework */; };
 		18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CD36E919ADB3EE006EB8CE /* blue.png */; };
 		18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */; };
-		18EC9AF919AF86060097BE95 /* FTPListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18EC9AF819AF86060097BE95 /* FTPListController.m */; };
+		18FE906C19B1F9B60042CB15 /* BRRequest+_UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE905919B1F9B60042CB15 /* BRRequest+_UserData.m */; };
+		18FE906D19B1F9B60042CB15 /* BRRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE905B19B1F9B60042CB15 /* BRRequest.m */; };
+		18FE906E19B1F9B60042CB15 /* BRRequestCreateDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE905D19B1F9B60042CB15 /* BRRequestCreateDirectory.m */; };
+		18FE906F19B1F9B60042CB15 /* BRRequestDelete.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE905F19B1F9B60042CB15 /* BRRequestDelete.m */; };
+		18FE907019B1F9B60042CB15 /* BRRequestDownload.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906119B1F9B60042CB15 /* BRRequestDownload.m */; };
+		18FE907119B1F9B60042CB15 /* BRRequestError.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906319B1F9B60042CB15 /* BRRequestError.m */; };
+		18FE907219B1F9B60042CB15 /* BRRequestListDirectory.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906519B1F9B60042CB15 /* BRRequestListDirectory.m */; };
+		18FE907319B1F9B60042CB15 /* BRRequestQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906719B1F9B60042CB15 /* BRRequestQueue.m */; };
+		18FE907419B1F9B60042CB15 /* BRRequestUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906919B1F9B60042CB15 /* BRRequestUpload.m */; };
+		18FE907519B1F9B60042CB15 /* BRStreamInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE906B19B1F9B60042CB15 /* BRStreamInfo.m */; };
+		18FE907819B201DE0042CB15 /* FTPMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE907719B201DE0042CB15 /* FTPMainViewController.m */; };
 		653E3B87198183D600788965 /* CommonFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B16198183D600788965 /* CommonFunction.m */; };
 		653E3B88198183D600788965 /* DatabaseCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B18198183D600788965 /* DatabaseCommon.m */; };
 		653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3B1D198183D600788965 /* FRDLivelyButton.m */; };
@@ -339,6 +351,12 @@
 		184C0949197CF1B100740DD0 /* AddAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAccountViewController.h; sourceTree = "<group>"; };
 		184C094A197CF1B100740DD0 /* AddAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAccountViewController.m; sourceTree = "<group>"; };
 		186D58DE1982ADB0007D0C48 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
+		1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPLoginViewController.h; sourceTree = "<group>"; };
+		1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPLoginViewController.m; sourceTree = "<group>"; };
+		1888F6FE19B2F8C600DBC547 /* BRRequestLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestLogin.h; sourceTree = "<group>"; };
+		1888F6FF19B2F8C600DBC547 /* BRRequestLogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestLogin.m; sourceTree = "<group>"; };
+		1888F70119B301D700DBC547 /* FTP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTP.h; sourceTree = "<group>"; };
+		1888F70219B301D700DBC547 /* FTP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTP.m; sourceTree = "<group>"; };
 		189A603E19A4C42100408AEF /* CheckInternet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckInternet.h; sourceTree = "<group>"; };
 		189A603F19A4C42100408AEF /* CheckInternet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckInternet.m; sourceTree = "<group>"; };
 		189A604319A4DEA800408AEF /* BoxHelperClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoxHelperClass.h; sourceTree = "<group>"; };
@@ -454,8 +472,6 @@
 		18AF4E8019AF2CB100E26E42 /* SSXMLLibUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSXMLLibUtil.m; sourceTree = "<group>"; };
 		18AF4E8119AF2CB100E26E42 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
 		18AF4E8219AF2CB100E26E42 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
-		18AF4EAC19AF71C000E26E42 /* NetworkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkManager.h; sourceTree = "<group>"; };
-		18AF4EAD19AF71C000E26E42 /* NetworkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkManager.m; sourceTree = "<group>"; };
 		18B6A14219A60A34008F99FA /* GTLDrive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDrive.h; sourceTree = "<group>"; };
 		18B6A14319A60A34008F99FA /* GTLDriveAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDriveAbout.h; sourceTree = "<group>"; };
 		18B6A14419A60A34008F99FA /* GTLDriveAbout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLDriveAbout.m; sourceTree = "<group>"; };
@@ -575,8 +591,29 @@
 		18CD36E919ADB3EE006EB8CE /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		18CFBD57198CBB370062DA5B /* DocumentChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentChooseViewController.h; sourceTree = "<group>"; };
 		18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentChooseViewController.m; sourceTree = "<group>"; };
-		18EC9AF719AF86060097BE95 /* FTPListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPListController.h; sourceTree = "<group>"; };
-		18EC9AF819AF86060097BE95 /* FTPListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPListController.m; sourceTree = "<group>"; };
+		18FE905719B1F9B60042CB15 /* BRGlobal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRGlobal.h; sourceTree = "<group>"; };
+		18FE905819B1F9B60042CB15 /* BRRequest+_UserData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRRequest+_UserData.h"; sourceTree = "<group>"; };
+		18FE905919B1F9B60042CB15 /* BRRequest+_UserData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "BRRequest+_UserData.m"; sourceTree = "<group>"; };
+		18FE905A19B1F9B60042CB15 /* BRRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequest.h; sourceTree = "<group>"; };
+		18FE905B19B1F9B60042CB15 /* BRRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequest.m; sourceTree = "<group>"; };
+		18FE905C19B1F9B60042CB15 /* BRRequestCreateDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestCreateDirectory.h; sourceTree = "<group>"; };
+		18FE905D19B1F9B60042CB15 /* BRRequestCreateDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestCreateDirectory.m; sourceTree = "<group>"; };
+		18FE905E19B1F9B60042CB15 /* BRRequestDelete.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestDelete.h; sourceTree = "<group>"; };
+		18FE905F19B1F9B60042CB15 /* BRRequestDelete.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestDelete.m; sourceTree = "<group>"; };
+		18FE906019B1F9B60042CB15 /* BRRequestDownload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestDownload.h; sourceTree = "<group>"; };
+		18FE906119B1F9B60042CB15 /* BRRequestDownload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestDownload.m; sourceTree = "<group>"; };
+		18FE906219B1F9B60042CB15 /* BRRequestError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestError.h; sourceTree = "<group>"; };
+		18FE906319B1F9B60042CB15 /* BRRequestError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestError.m; sourceTree = "<group>"; };
+		18FE906419B1F9B60042CB15 /* BRRequestListDirectory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestListDirectory.h; sourceTree = "<group>"; };
+		18FE906519B1F9B60042CB15 /* BRRequestListDirectory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestListDirectory.m; sourceTree = "<group>"; };
+		18FE906619B1F9B60042CB15 /* BRRequestQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestQueue.h; sourceTree = "<group>"; };
+		18FE906719B1F9B60042CB15 /* BRRequestQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestQueue.m; sourceTree = "<group>"; };
+		18FE906819B1F9B60042CB15 /* BRRequestUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestUpload.h; sourceTree = "<group>"; };
+		18FE906919B1F9B60042CB15 /* BRRequestUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRRequestUpload.m; sourceTree = "<group>"; };
+		18FE906A19B1F9B60042CB15 /* BRStreamInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRStreamInfo.h; sourceTree = "<group>"; };
+		18FE906B19B1F9B60042CB15 /* BRStreamInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BRStreamInfo.m; sourceTree = "<group>"; };
+		18FE907619B201DE0042CB15 /* FTPMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPMainViewController.h; sourceTree = "<group>"; };
+		18FE907719B201DE0042CB15 /* FTPMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPMainViewController.m; sourceTree = "<group>"; };
 		653E3B15198183D600788965 /* CommonFunction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonFunction.h; sourceTree = "<group>"; };
 		653E3B16198183D600788965 /* CommonFunction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonFunction.m; sourceTree = "<group>"; };
 		653E3B17198183D600788965 /* DatabaseCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabaseCommon.h; sourceTree = "<group>"; };
@@ -1125,10 +1162,13 @@
 		18AF4EAB19AF716100E26E42 /* FTP */ = {
 			isa = PBXGroup;
 			children = (
-				18AF4EAC19AF71C000E26E42 /* NetworkManager.h */,
-				18AF4EAD19AF71C000E26E42 /* NetworkManager.m */,
-				18EC9AF719AF86060097BE95 /* FTPListController.h */,
-				18EC9AF819AF86060097BE95 /* FTPListController.m */,
+				1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */,
+				1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */,
+				1888F70119B301D700DBC547 /* FTP.h */,
+				1888F70219B301D700DBC547 /* FTP.m */,
+				18FE907619B201DE0042CB15 /* FTPMainViewController.h */,
+				18FE907719B201DE0042CB15 /* FTPMainViewController.m */,
+				18FE905619B1F9B60042CB15 /* BlackRaccoon */,
 			);
 			name = FTP;
 			sourceTree = "<group>";
@@ -1334,6 +1374,36 @@
 				1836507919862C3F00D2D157 /* CollectionViewCell.m */,
 			);
 			name = "Table view classes";
+			sourceTree = "<group>";
+		};
+		18FE905619B1F9B60042CB15 /* BlackRaccoon */ = {
+			isa = PBXGroup;
+			children = (
+				18FE905719B1F9B60042CB15 /* BRGlobal.h */,
+				18FE905819B1F9B60042CB15 /* BRRequest+_UserData.h */,
+				18FE905919B1F9B60042CB15 /* BRRequest+_UserData.m */,
+				18FE905A19B1F9B60042CB15 /* BRRequest.h */,
+				18FE905B19B1F9B60042CB15 /* BRRequest.m */,
+				1888F6FE19B2F8C600DBC547 /* BRRequestLogin.h */,
+				1888F6FF19B2F8C600DBC547 /* BRRequestLogin.m */,
+				18FE905C19B1F9B60042CB15 /* BRRequestCreateDirectory.h */,
+				18FE905D19B1F9B60042CB15 /* BRRequestCreateDirectory.m */,
+				18FE905E19B1F9B60042CB15 /* BRRequestDelete.h */,
+				18FE905F19B1F9B60042CB15 /* BRRequestDelete.m */,
+				18FE906019B1F9B60042CB15 /* BRRequestDownload.h */,
+				18FE906119B1F9B60042CB15 /* BRRequestDownload.m */,
+				18FE906219B1F9B60042CB15 /* BRRequestError.h */,
+				18FE906319B1F9B60042CB15 /* BRRequestError.m */,
+				18FE906419B1F9B60042CB15 /* BRRequestListDirectory.h */,
+				18FE906519B1F9B60042CB15 /* BRRequestListDirectory.m */,
+				18FE906619B1F9B60042CB15 /* BRRequestQueue.h */,
+				18FE906719B1F9B60042CB15 /* BRRequestQueue.m */,
+				18FE906819B1F9B60042CB15 /* BRRequestUpload.h */,
+				18FE906919B1F9B60042CB15 /* BRRequestUpload.m */,
+				18FE906A19B1F9B60042CB15 /* BRStreamInfo.h */,
+				18FE906B19B1F9B60042CB15 /* BRStreamInfo.m */,
+			);
+			path = BlackRaccoon;
 			sourceTree = "<group>";
 		};
 		653E3B14198183D600788965 /* CommonFunction */ = {
@@ -2239,10 +2309,10 @@
 				65D59BF5199BD660008D4E75 /* LoadingView.m in Sources */,
 				18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */,
 				189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */,
+				18FE906C19B1F9B60042CB15 /* BRRequest+_UserData.m in Sources */,
 				18B6A16D19A60A34008F99FA /* GTLDriveChildReference.m in Sources */,
 				18AF4E9E19AF2CB100E26E42 /* SSXMLLibUtil.m in Sources */,
 				659691681993FFA7002BE628 /* ReaderThumbRender.m in Sources */,
-				18EC9AF919AF86060097BE95 /* FTPListController.m in Sources */,
 				18AF4E9B19AF2CB100E26E42 /* SSC9Log.m in Sources */,
 				184C093D197CDB1C00740DD0 /* LeftTableViewCell.m in Sources */,
 				653E3B92198183D600788965 /* ReaderContentPage.m in Sources */,
@@ -2254,6 +2324,7 @@
 				65D59C03199BD6B0008D4E75 /* BFCropInterface.m in Sources */,
 				18B6A1C119A60A9D008F99FA /* GTLBatchQuery.m in Sources */,
 				18AF4E9D19AF2CB100E26E42 /* SSHttpFetcher.m in Sources */,
+				1888F70019B2F8C600DBC547 /* BRRequestLogin.m in Sources */,
 				18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */,
 				189A604019A4C42100408AEF /* CheckInternet.m in Sources */,
 				18B6A16919A60A34008F99FA /* GTLDriveAppList.m in Sources */,
@@ -2265,8 +2336,8 @@
 				6596916A1993FFA7002BE628 /* ReaderThumbsView.m in Sources */,
 				18B6A19B19A60A88008F99FA /* GTMHTTPFetcher.m in Sources */,
 				653E3B91198183D600788965 /* ReaderConstants.m in Sources */,
+				18FE906E19B1F9B60042CB15 /* BRRequestCreateDirectory.m in Sources */,
 				659691661993FFA7002BE628 /* ReaderThumbFetch.m in Sources */,
-				18AF4EAE19AF71C000E26E42 /* NetworkManager.m in Sources */,
 				18B6A17619A60A34008F99FA /* GTLDriveRevisionList.m in Sources */,
 				653E3BD6198184DF00788965 /* SQLiteDatabase.m in Sources */,
 				18AF4E8F19AF2CB100E26E42 /* SugarSyncWorkspace.m in Sources */,
@@ -2276,24 +2347,30 @@
 				65C63951199D0A9000833706 /* PDFFileName.m in Sources */,
 				189F99E019AB8A4C00C48E6F /* DriveHelperClass.m in Sources */,
 				18A11DA0197FFF8D0000D80F /* DocumentViewController.m in Sources */,
+				1888F70319B301D700DBC547 /* FTP.m in Sources */,
 				18B6A19E19A60A88008F99FA /* GTMHTTPFetchHistory.m in Sources */,
 				18A2AABB1994E275009D7E3A /* SBJSON.m in Sources */,
 				6596916B1993FFA7002BE628 /* ReaderThumbView.m in Sources */,
 				653E3B94198183D600788965 /* ReaderContentView.m in Sources */,
 				6596916F1993FFFA002BE628 /* UIXToolbarView.m in Sources */,
+				18FE907519B1F9B60042CB15 /* BRStreamInfo.m in Sources */,
 				18AF4E8919AF2CB100E26E42 /* SugarSyncFolder.m in Sources */,
 				653E3B8A198183D600788965 /* ShapeButton.m in Sources */,
 				18B6A19A19A60A88008F99FA /* GTMGatherInputStream.m in Sources */,
 				18B6A17419A60A34008F99FA /* GTLDrivePermissionList.m in Sources */,
 				18AF4E9F19AF2CB100E26E42 /* XPathQuery.m in Sources */,
 				18ADE2E5198950C400CDE991 /* DocumentsEditViewController.m in Sources */,
+				18FE906F19B1F9B60042CB15 /* BRRequestDelete.m in Sources */,
 				18AF4E8419AF2CB100E26E42 /* SugarSyncClient.m in Sources */,
 				18A2AABC1994E275009D7E3A /* SBJsonBase.m in Sources */,
 				18A0C86C197D476700534CF4 /* DropboxCell.m in Sources */,
 				653E3B90198183D600788965 /* CGPDFDocument.m in Sources */,
 				18B6A1C619A60A9D008F99FA /* GTLQuery.m in Sources */,
 				18B84EEE199D33CD00F9E383 /* ASIInputStream.m in Sources */,
+				18FE907319B1F9B60042CB15 /* BRRequestQueue.m in Sources */,
+				1888F6F919B2E8D100DBC547 /* FTPLoginViewController.m in Sources */,
 				653E3B95198183D600788965 /* ReaderDocument.m in Sources */,
+				18FE907419B1F9B60042CB15 /* BRRequestUpload.m in Sources */,
 				18B6A17519A60A34008F99FA /* GTLDriveRevision.m in Sources */,
 				18B6A19F19A60A88008F99FA /* GTMHTTPUploadFetcher.m in Sources */,
 				18B84EE8199D33CD00F9E383 /* ASIAuthenticationDialog.m in Sources */,
@@ -2315,6 +2392,7 @@
 				18B6A1C819A60A9D008F99FA /* GTLService.m in Sources */,
 				653E3B97198183D600788965 /* ReaderViewController.m in Sources */,
 				18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */,
+				18FE907819B201DE0042CB15 /* FTPMainViewController.m in Sources */,
 				18AF4E8819AF2CB100E26E42 /* SugarSyncFileVersion.m in Sources */,
 				18A2AAA41994D51D009D7E3A /* BoxAuthorizationNavigationController.m in Sources */,
 				18AF4E9C19AF2CB100E26E42 /* SSErrorUtil.m in Sources */,
@@ -2327,10 +2405,13 @@
 				18B6A17719A60A34008F99FA /* GTLQueryDrive.m in Sources */,
 				18B84EED199D33CD00F9E383 /* ASIHTTPRequest.m in Sources */,
 				658EF42F19797D5600E6FA0A /* main.m in Sources */,
+				18FE906D19B1F9B60042CB15 /* BRRequest.m in Sources */,
+				18FE907219B1F9B60042CB15 /* BRRequestListDirectory.m in Sources */,
 				653E3B9C198183D600788965 /* disclButton.m in Sources */,
 				18B6A16F19A60A34008F99FA /* GTLDriveFile.m in Sources */,
 				18B6A1AC19A60A93008F99FA /* GTLFramework.m in Sources */,
 				18B6A1A119A60A88008F99FA /* GTMReadMonitorInputStream.m in Sources */,
+				18FE907019B1F9B60042CB15 /* BRRequestDownload.m in Sources */,
 				18B6A1AE19A60A93008F99FA /* GTLUtilities.m in Sources */,
 				653E3B8D198183D600788965 /* SPUserResizableView.m in Sources */,
 				18B6A16B19A60A34008F99FA /* GTLDriveChangeList.m in Sources */,
@@ -2371,6 +2452,7 @@
 				653E3B87198183D600788965 /* CommonFunction.m in Sources */,
 				18A2AABA1994E275009D7E3A /* NSString+SBJSON.m in Sources */,
 				18B6A1AD19A60A93008F99FA /* GTLJSONParser.m in Sources */,
+				18FE907119B1F9B60042CB15 /* BRRequestError.m in Sources */,
 				18B84EE7199D33CD00F9E383 /* Reachability.m in Sources */,
 				18B6A16A19A60A34008F99FA /* GTLDriveChange.m in Sources */,
 				18B6A17119A60A34008F99FA /* GTLDriveParentList.m in Sources */,

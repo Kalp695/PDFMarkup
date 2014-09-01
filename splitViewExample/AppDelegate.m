@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import <GLKit/GLKit.h>
 #import "KeychainItemWrapper.h"
-#import "NetworkManager.h"
 
 #define REFRESH_TOKEN_KEY   (@"T4BAPIHmmyJ4J5fXzAfwJFxe7RXeHJhe")
 @interface AppDelegate ()
@@ -64,7 +63,7 @@
         [[DBSession sharedSession] unlinkAll];
 
     }
-    
+
     
     //setting up app name
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"appStartProperty" ofType:@"plist"];
