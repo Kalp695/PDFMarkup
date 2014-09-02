@@ -450,7 +450,7 @@ static ReaderViewController *sharedInstance = nil;
     [commonFunction setFolderPath:folderPath];
     document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
     
-        
+    
     if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
     {
         
