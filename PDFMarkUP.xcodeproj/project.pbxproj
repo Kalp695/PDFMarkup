@@ -240,6 +240,7 @@
 		653E3BD6198184DF00788965 /* SQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3BD1198184DF00788965 /* SQLiteDatabase.m */; };
 		653E3BD7198184DF00788965 /* SQLiteResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3BD3198184DF00788965 /* SQLiteResult.m */; };
 		653E3BD8198184DF00788965 /* SQLiteRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 653E3BD5198184DF00788965 /* SQLiteRow.m */; };
+		65482DE619B642B2005DF89E /* PDFThumbnail.m in Sources */ = {isa = PBXBuildFile; fileRef = 65482DE519B642B2005DF89E /* PDFThumbnail.m */; };
 		658EF42319797D5600E6FA0A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658EF42219797D5600E6FA0A /* Foundation.framework */; };
 		658EF42519797D5600E6FA0A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658EF42419797D5600E6FA0A /* CoreGraphics.framework */; };
 		658EF42719797D5600E6FA0A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658EF42619797D5600E6FA0A /* UIKit.framework */; };
@@ -715,6 +716,8 @@
 		653E3BD3198184DF00788965 /* SQLiteResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteResult.m; sourceTree = "<group>"; };
 		653E3BD4198184DF00788965 /* SQLiteRow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SQLiteRow.h; sourceTree = "<group>"; };
 		653E3BD5198184DF00788965 /* SQLiteRow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SQLiteRow.m; sourceTree = "<group>"; };
+		65482DE419B642B2005DF89E /* PDFThumbnail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFThumbnail.h; sourceTree = "<group>"; };
+		65482DE519B642B2005DF89E /* PDFThumbnail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFThumbnail.m; sourceTree = "<group>"; };
 		65745CC619ABD4FA00A94D4F /* BoxLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxLog.h; sourceTree = "<group>"; };
 		65745CC719ABD4FA00A94D4F /* BoxSDK-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BoxSDK-Prefix.pch"; sourceTree = "<group>"; };
 		65745CC819ABD4FA00A94D4F /* BoxSDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxSDK.h; sourceTree = "<group>"; };
@@ -1665,6 +1668,15 @@
 			path = toolbar;
 			sourceTree = "<group>";
 		};
+		65482DE319B6418A005DF89E /* PDFThumbnail */ = {
+			isa = PBXGroup;
+			children = (
+				65482DE419B642B2005DF89E /* PDFThumbnail.h */,
+				65482DE519B642B2005DF89E /* PDFThumbnail.m */,
+			);
+			path = PDFThumbnail;
+			sourceTree = "<group>";
+		};
 		65745CC519ABD4FA00A94D4F /* BoxSDK */ = {
 			isa = PBXGroup;
 			children = (
@@ -1904,6 +1916,7 @@
 		658EF42819797D5600E6FA0A /* PDFMarkup */ = {
 			isa = PBXGroup;
 			children = (
+				65482DE319B6418A005DF89E /* PDFThumbnail */,
 				184AC03B19ACFC6500F9C9F1 /* BoxSDK.xcodeproj */,
 				65D59BF6199BD6B0008D4E75 /* CropDemo */,
 				65D59BF2199BD660008D4E75 /* ActivityIndicatorView */,
@@ -2406,6 +2419,7 @@
 				18B84EED199D33CD00F9E383 /* ASIHTTPRequest.m in Sources */,
 				658EF42F19797D5600E6FA0A /* main.m in Sources */,
 				18FE906D19B1F9B60042CB15 /* BRRequest.m in Sources */,
+				65482DE619B642B2005DF89E /* PDFThumbnail.m in Sources */,
 				18FE907219B1F9B60042CB15 /* BRRequestListDirectory.m in Sources */,
 				653E3B9C198183D600788965 /* disclButton.m in Sources */,
 				18B6A16F19A60A34008F99FA /* GTLDriveFile.m in Sources */,

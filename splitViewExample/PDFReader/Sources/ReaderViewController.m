@@ -33,6 +33,7 @@
 #import "DetailViewController.h"
 #import "DropboxManager.h"
 #import "PDFRenderer.h"
+#import "PDFThumbnail.h"
 
 
 static ReaderViewController *sharedInstance = nil;
@@ -449,6 +450,7 @@ static ReaderViewController *sharedInstance = nil;
     [commonFunction setFolderPath:folderPath];
     document = [ReaderDocument withDocumentFilePath:filePath password:phrase];
     
+        
     if (document != nil) // Must have a valid ReaderDocument object in order to proceed with things
     {
         
