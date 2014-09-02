@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <DropboxSDK/DropboxSDK.h>
+#import "BRRequestListDirectory.h"
 
-@interface FolderChooseViewController : UIViewController<DBRestClientDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface FolderChooseViewController : UIViewController<DBRestClientDelegate,UITableViewDelegate,UITableViewDataSource,BRRequestDelegate>
 {
     NSMutableArray *marrDownloadData;
     //  DBRestClient *restClient;
     NSMutableArray *arrUseraccounts;
+    BRRequestListDirectory *listDir;
+    NSMutableArray * ftpFoldersArray;
     
 }
 +(FolderChooseViewController*)getSharedInstance;
@@ -28,6 +31,11 @@
 @property(nonatomic,retain) NSMutableArray * driveFoldersList;
 @property(nonatomic,retain) NSMutableArray * driveFiles;
 @property(nonatomic,retain) NSString * driveFilesId;
+
+// FTP
+
+@property(nonatomic,retain) NSString * ftpFolderName;
+//@property(nonatomic,retain) NSString * ftpFolderPath;
 
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;

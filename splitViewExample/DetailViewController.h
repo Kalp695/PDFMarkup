@@ -10,7 +10,10 @@
 #import "FileItemTableCell.h"
 #import <DropboxSDK/DropboxSDK.h>
 #import "CollectionViewCell.h"
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,UITableViewDelegate,UITableViewDataSource,DBRestClientDelegate,UICollectionViewDataSource,UICollectionViewDelegate>{
+#import "BRRequestUpload.h"
+#import "BRRequestCreateDirectory.h"
+
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,UITableViewDelegate,UITableViewDataSource,DBRestClientDelegate,UICollectionViewDataSource,UICollectionViewDelegate,BRRequestDelegate>{
     IBOutlet UIBarButtonItem *editBarButton;
     IBOutlet FileItemTableCell *fileItemTableCell;
     NSMutableArray *items;
@@ -49,6 +52,9 @@
     NSMutableArray *arrtimer;
     NSMutableDictionary *arrLocalFilepaths;
     
+    NSData *uploadData;
+    BRRequestUpload *uploadFile;
+    BRRequestCreateDirectory *createDir;
     
     
 }
@@ -85,7 +91,9 @@
 // Drive
 @property (nonatomic, strong)  NSMutableArray * driveUploadingArray;
 @property (nonatomic, retain)  NSMutableArray * driveFiles;
-
+@property (nonatomic, retain)  NSString * createdFolderName;
+@property(nonatomic,retain) NSString * folderNameNospace;
+@property(nonatomic,retain)  NSString * ftpFolderPath;
 
 
 @end

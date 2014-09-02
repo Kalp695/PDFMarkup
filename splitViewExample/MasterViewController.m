@@ -417,7 +417,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             
         }
-
+        
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -468,10 +468,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-   // UITableViewCellSelectionStyleGray
+    // UITableViewCellSelectionStyleGray
     
     
-
+    
     NSDate *object = _objects[indexPath.row];
     
     if (indexPath.section == 0)
@@ -520,9 +520,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             self.detailViewController.detailItem = object;
         }
         //        UIStoryboard * storyboard = self.storyboard;
-        //        
+        //
         //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
-        //        
+        //
         //        [self.navigationController pushViewController: detail animated: YES];
         
     }
