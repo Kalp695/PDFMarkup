@@ -42,7 +42,7 @@ static FolderChooseViewController *sharedInstance = nil;
 
 @synthesize loadData,tbDownload,accountName,indexCount,boxFolderName,boxFolderId;
 
-@synthesize driveFoldersList,driveFiles,driveFilesId;
+@synthesize driveFoldersList,driveFiles,driveFilesId,ftpFolderName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -108,6 +108,29 @@ static FolderChooseViewController *sharedInstance = nil;
             driveFilesId = @"root";
         }
         [self showDriveFolders:driveFilesId];
+        
+    }
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    {
+        NSLog(@"Upload Files to ftp");
+        
+        ftpFoldersArray = [[NSMutableArray alloc]init];
+        self.title = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
+        if (!ftpFolderName)
+        {
+            ftpFolderName = @"";
+            
+        }
+        if (![DetailViewController getSharedInstance].folderPath) {
+            [DetailViewController getSharedInstance].folderPath = @"";
+        }
+        [self listDirectory:ftpFolderName];
+        
+    }
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
+    {
+        NSLog(@"Upload Files to sugar");
+        
         
     }
     
@@ -396,6 +419,45 @@ static FolderChooseViewController *sharedInstance = nil;
 {
     NSLog(@"Upload Click");
 }
+#pragma mark FTP Methods
+
+-(void)listDirectory:(id)sender
+{
+    
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
+    listDir.hostname = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"];
+    listDir.path = ftpFolderName;
+    listDir.username = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
+    listDir.password = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"password"];
+    [listDir start];
+    
+}
+
+-(void) requestCompleted: (BRRequest *) request
+{
+    
+    if (request == listDir)
+    {
+        //called after 'request' is completed successfully
+        NSLog(@"%@ completed!", request);
+        
+        //we print each of the files name
+        for (NSDictionary *file in listDir.filesInfo)
+        {
+            NSLog(@"%@", [file objectForKey:(id)kCFFTPResourceName]);
+            if ([[[file objectForKey:(id)kCFFTPResourceName] pathExtension ]isEqualToString:@""])
+            {
+                [ftpFoldersArray addObject:[file objectForKey:(id)kCFFTPResourceName]];
+                
+            }
+            
+        }
+        [tbDownload reloadData];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        listDir = nil;
+    }
+}
 
 #pragma mark - DBRestClientDelegate Methods for Load Data
 - (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata *)metadata
@@ -420,6 +482,9 @@ static FolderChooseViewController *sharedInstance = nil;
 #pragma mark - UITableView Delegate Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    
+    
+    
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         return [marrDownloadData count];
@@ -428,6 +493,18 @@ static FolderChooseViewController *sharedInstance = nil;
     {
         
         return [folderItemsArray count];
+    }
+    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+        
+    {
+        return [driveFoldersList count];
+        
+    }
+    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    {
+        return [ftpFoldersArray count];
+        
+        
     }
     else
     {
@@ -472,6 +549,25 @@ static FolderChooseViewController *sharedInstance = nil;
         cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    {
+        cell.textLabel.text=[ftpFoldersArray objectAtIndex:indexPath.row];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell.textLabel.textColor=[UIColor blackColor];
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
+    {
+        cell.textLabel.text=[[driveFoldersList objectAtIndex:indexPath.row] objectForKey:@"title"];
+        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        cell.textLabel.textColor=[UIColor blackColor];
+        cell.textLabel.font=[UIFont fontWithName:@"Helvetica" size:18];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
     return cell;
 }
 
@@ -525,7 +621,31 @@ static FolderChooseViewController *sharedInstance = nil;
         
         
     }
-    
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    {
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+        FolderChooseViewController.ftpFolderName = [ftpFoldersArray  objectAtIndex:indexPath.row];
+        if (![DetailViewController getSharedInstance].folderPath)
+        {
+            [DetailViewController getSharedInstance].folderPath  = @"";
+        }
+        [DetailViewController getSharedInstance].folderPath = [NSString stringWithFormat:@"%@/%@",[DetailViewController getSharedInstance].folderPath,FolderChooseViewController.ftpFolderName];
+        NSLog(@"ftp folder Name is %@ , folder path is %@",FolderChooseViewController.ftpFolderName,[DetailViewController getSharedInstance].folderPath);
+        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+        
+    }
+    else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
+    {
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
+        FolderChooseViewController.driveFilesId = [[driveFoldersList objectAtIndex:indexPath.row]objectForKey:@"id"];
+        [self.navigationController pushViewController:FolderChooseViewController animated:YES];
+        
+        
+    }
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {

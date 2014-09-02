@@ -27,10 +27,11 @@
 @synthesize documentStatus;
 @synthesize boxSelectedFiles;
 @synthesize accountIndex;
+@synthesize ftpDownloadpath;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
-
+    
     // Override point for customization after application launch.
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
@@ -40,9 +41,9 @@
     
     NSString *dropBoxAppKey = @"axtmpnh9jmisgme";
 	NSString *dropBoxAppSecret = @"wap0sdsxnldywwn";
-
-  //  NSString *dropBoxAppKey = @"uw5h7hzofid6igu";
-//	NSString *dropBoxAppSecret = @"u4x5e08gi7yqz2z";
+    
+    //  NSString *dropBoxAppKey = @"uw5h7hzofid6igu";
+    //	NSString *dropBoxAppSecret = @"u4x5e08gi7yqz2z";
     NSString *root = kDBRootDropbox;
 	boxSelectedFiles = [[NSMutableArray alloc]init];
     DBSession* session =
@@ -61,9 +62,9 @@
     else
     {
         [[DBSession sharedSession] unlinkAll];
-
+        
     }
-
+    
     
     //setting up app name
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"appStartProperty" ofType:@"plist"];
@@ -73,7 +74,7 @@
     //dictionary = [[NSDictionary alloc]initWithObjectsAndKeys:appName,@"startApp", nil];
     [dictionary writeToFile:savedplistPath atomically:YES];
     //end setting up app name
-
+    
     
     
     // Box
@@ -95,8 +96,8 @@
     }
     
     // FTP
-    
-//     [[NetworkManager sharedInstance] addObserver:self forKeyPath:@"networkOperationCount" options:NSKeyValueObservingOptionInitial context:&self->_networkOperationCountDummy];
+    ftpDownloadpath = [[NSString alloc]init];
+    //     [[NetworkManager sharedInstance] addObserver:self forKeyPath:@"networkOperationCount" options:NSKeyValueObservingOptionInitial context:&self->_networkOperationCountDummy];
     
     return YES;
 }
@@ -115,36 +116,36 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     
-   /* NSString *query = url.query;
-    if ([[url absoluteString] rangeOfString:@"cancel"].location == NSNotFound) {
-        NSDictionary *urlData = [DBSession parseURLParams:query];
-        NSString *uid = [urlData objectForKey:@"uid"];
-        NSLog(@"uid is %@",uid);
-        if (![arrDropboxUserids containsObject:uid]) {
-            [arrDropboxUserids addObject:uid];
-        }
-
-        
-        if ([[[DBSession sharedSession] userIds] containsObject:uid]) {
-            // At this point we know the login succeeded and we have the newly linked userid
-            // make a call to process the uid
-            
-           
-            
-
-
-        }
-    } else {
-        // user cancelled the login
-        
-
-    }*/
+    /* NSString *query = url.query;
+     if ([[url absoluteString] rangeOfString:@"cancel"].location == NSNotFound) {
+     NSDictionary *urlData = [DBSession parseURLParams:query];
+     NSString *uid = [urlData objectForKey:@"uid"];
+     NSLog(@"uid is %@",uid);
+     if (![arrDropboxUserids containsObject:uid]) {
+     [arrDropboxUserids addObject:uid];
+     }
+     
+     
+     if ([[[DBSession sharedSession] userIds] containsObject:uid]) {
+     // At this point we know the login succeeded and we have the newly linked userid
+     // make a call to process the uid
+     
+     
+     
+     
+     
+     }
+     } else {
+     // user cancelled the login
+     
+     
+     }*/
     
     if ([[DBSession sharedSession] handleOpenURL:url]) {
         if ([[DBSession sharedSession] isLinked]) {
             
             [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"isDropboxLinked" object:nil]];
-           
+            
         }
         return YES;
     }
@@ -191,7 +192,7 @@ static int outstandingRequests;
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 

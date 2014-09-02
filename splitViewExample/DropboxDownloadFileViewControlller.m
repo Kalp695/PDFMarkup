@@ -122,7 +122,7 @@ NSString *wastepath = nil;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
-
+        
     });
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -171,12 +171,19 @@ NSString *wastepath = nil;
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
     {
+        NSLog(@"folder path is %@",ftpFolderPath);
+        
         if (!ftpFolderName)
         {
             ftpFolderName = @"";
         }
+        if (!ftpFolderPath) {
+            ftpFolderPath = @"";
+            
+        }
+        
         ftpListArray = [[NSMutableArray alloc]init];
-
+        
         [self listDirectory:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
         
     }
@@ -445,17 +452,18 @@ NSString *wastepath = nil;
 
 -(void) requestCompleted: (BRRequest *) request
 {
-  
+    
     
     if (request == createDir)
     {
         NSLog(@"%@ completed!", request);
         
         createDir = nil;
-        [tbDownload reloadData];
         [self viewWillAppear:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+        
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
         
     }
     
@@ -464,10 +472,10 @@ NSString *wastepath = nil;
         NSLog(@"%@ completed!", request);
         
         deleteDir = nil;
-        [tbDownload reloadData];
+        // [tbDownload reloadData];
         [self viewWillAppear:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
     }
     
     if (request == listDir)
@@ -519,7 +527,7 @@ NSString *wastepath = nil;
                 [self performSelector:@selector(closeFtpControllerr) withObject:nil afterDelay:0];
                 
             }
-
+            
             
         }
         else
@@ -541,10 +549,10 @@ NSString *wastepath = nil;
             [tbDownload reloadData];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             listDir = nil;
- 
+            
         }
         
-       
+        
         
     }
     if (request == downloadFile)
@@ -559,7 +567,7 @@ NSString *wastepath = nil;
         {
             
             NSString *filePath;
-
+            
             filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,downloadingName]];
             [downloadData writeToFile:filePath atomically:YES];
             
@@ -586,7 +594,7 @@ NSString *wastepath = nil;
         {
             
         }
-
+        
     }
     
     
@@ -597,7 +605,7 @@ NSString *wastepath = nil;
         //[tbDownload reloadData];
         [self viewWillAppear:YES];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
     }
     
 }
@@ -621,7 +629,8 @@ NSString *wastepath = nil;
 -(void) requestFailed:(BRRequest *) request
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+    
     if (request == createDir)
     {
         NSLog(@"%@", request.error.message);
@@ -641,7 +650,7 @@ NSString *wastepath = nil;
         
         NSLog(@"%@", request.error.message);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
         listDir = nil;
     }
     
@@ -649,7 +658,7 @@ NSString *wastepath = nil;
     {
         NSLog(@"%@", request.error.message);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+        
         downloadFile = nil;
     }
     
@@ -681,24 +690,24 @@ NSString *wastepath = nil;
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesList];
     // or mimeType ='text/directory'
     query.q = @"mimeType = 'application/pdf' and mimeType='application/vnd.google-apps.folder'";
-
+    
     query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+    
     [[DriveHelperClass getSharedInstance].driveService executeQuery:query
                                                   completionHandler:^(GTLServiceTicket *ticket,
                                                                       GTLDriveFileList *files,
                                                                       NSError *error) {
-
+                                                      
                                                       if (!error) {
                                                           self.driveFiles = [[NSMutableArray alloc]init];
                                                           [self.driveFiles addObjectsFromArray:files.items];
                                                           if ([self.driveFiles count]==0)
                                                           {
                                                               [MBProgressHUD hideHUDForView:self.view animated:YES];
-
+                                                              
                                                           }
                                                           for (int i =0;i<[driveFiles count]; i++)
                                                           {
@@ -706,8 +715,8 @@ NSString *wastepath = nil;
                                                               NSDictionary * dic = file.JSON;
                                                               NSLog(@"dic is %@",dic);
                                                               NSString * str = file.mimeType;
-
-                                                            //  NSString * strExtension = @"pdf";
+                                                              
+                                                              //  NSString * strExtension = @"pdf";
                                                               if ([str isEqualToString:@"application/pdf"]||[str isEqualToString:@"application/vnd.google-apps.folder"])
                                                               {
                                                                   NSLog(@"file id %@ ",file.identifier);
@@ -720,7 +729,7 @@ NSString *wastepath = nil;
                                                                   [dic setObject:str                                                                        forKey:@"mimeType"];
                                                                   [dic setObject:file.description                                                                        forKey:@"description"];
                                                                   
-                                                                 // [dic setObject:file.downloadUrl forKey:@"url"];
+                                                                  // [dic setObject:file.downloadUrl forKey:@"url"];
                                                                   [driveFilesArray addObject:dic];
                                                                   
                                                               }
@@ -741,8 +750,8 @@ NSString *wastepath = nil;
                                                       }
                                                   }];
     
-        //[MBProgressHUD hideHUDForView:self.view animated:YES];
-
+    //[MBProgressHUD hideHUDForView:self.view animated:YES];
+    
     
 }
 -(void)addFileMetaDataInfo:(GTLDriveFile*)file numberOfChilderns:(int)totalChildren
@@ -892,8 +901,8 @@ NSString *wastepath = nil;
                                                                 object:self];
             
         }
-         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
-          [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         
         //[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -901,17 +910,17 @@ NSString *wastepath = nil;
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         //[[NSNotificationCenter defaultCenter] removeObserver:self];
-         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
-
+        
         NSLog(@"Box");
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
         //[[NSNotificationCenter defaultCenter] removeObserver:self];
-         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
-         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         
         NSLog(@"google");
@@ -934,7 +943,7 @@ NSString *wastepath = nil;
         
         NSLog(@"sugarsync");
     }
-
+    
 }
 
 
@@ -978,7 +987,7 @@ NSString *wastepath = nil;
             
         }
         if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
-        
+            
         {
             
             for (int i =0; i< [folderItemsArray count]; i++) {
@@ -1031,10 +1040,10 @@ NSString *wastepath = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
                                                                 object:self];
             
-        
-        
+            
+            
         }
-        else 
+        else
         {
             for (int i =0; i< [ftpListArray count]; i++) {
                 
@@ -1058,7 +1067,7 @@ NSString *wastepath = nil;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
                                                                 object:self];
-
+            
         }
     }
     
@@ -1550,7 +1559,7 @@ NSString *wastepath = nil;
         
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
-
+        
     {
         FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
         
@@ -1615,7 +1624,7 @@ NSString *wastepath = nil;
         }
         
         return cell;
-
+        
     }
     else
     {
@@ -1649,13 +1658,14 @@ NSString *wastepath = nil;
         }
         
         return cell;
-
+        
     }
     
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         
@@ -1689,7 +1699,7 @@ NSString *wastepath = nil;
         }
         else {
             
-          //  UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
+            //  UITableViewCell *selectedCell = [tableView cellForRowAtIndexPath:indexPath];
             
             if (item.isChecked == YES)
             {
@@ -1698,7 +1708,7 @@ NSString *wastepath = nil;
                 
                 pdfValue = pdfValue+1;
                 
-               // NSString * str = [NSString stringWithFormat:@"Pdf%d",pdfValue] ;
+                // NSString * str = [NSString stringWithFormat:@"Pdf%d",pdfValue] ;
                 if (![filePathsArray containsObject:metadata.path])
                 {
                     [filePathsArray addObject:metadata.path];
@@ -1864,14 +1874,14 @@ NSString *wastepath = nil;
                     [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"folderName"];
                     [dic setObject:[[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"mimeType"] forKey:@"type"];
                     [dic setObject:@"/" forKey:@"path"];
-
+                    
                     [driveFilePathsArray addObject:dic];
                 }
                 //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
             }
             
             else
-           {
+            {
                 if (item.isChecked == NO)
                 {
                     pdfValue = pdfValue-1;
@@ -1917,6 +1927,7 @@ NSString *wastepath = nil;
             folder_file=[ftpListArray objectAtIndex:indexPath.row];
             [cell setChecked:item.isChecked];
         }
+        
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         NSString * str = [ftpListArray objectAtIndex:indexPath.row];
@@ -1925,12 +1936,15 @@ NSString *wastepath = nil;
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
             dropboxDownloadFileViewControlller.ftpFolderName = [ftpListArray objectAtIndex:indexPath.row];
-            ftpFolderPath = [ftpFolderPath stringByAppendingString:[NSString stringWithFormat:@"/%@",ftpFolderName]];
+            
+            ftpFolderPath = [ftpFolderPath stringByAppendingString:[NSString stringWithFormat:@"/%@",dropboxDownloadFileViewControlller.ftpFolderName]];
+            
+            [AppDelegate sharedInstance].ftpDownloadpath =[ [AppDelegate sharedInstance].ftpDownloadpath stringByAppendingString:[NSString stringWithFormat:@"%@/",dropboxDownloadFileViewControlller.ftpFolderName]];
+            NSLog(@"folder path is %@ and appdel is %@",ftpFolderPath,[AppDelegate sharedInstance].ftpDownloadpath);
             [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
         }
         else
         {
-            
             NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
             
             if (item.isChecked == YES)
@@ -1946,14 +1960,14 @@ NSString *wastepath = nil;
                     [dic setObject:[ftpListArray objectAtIndex:indexPath.row] forKey:@"folderName"];
                     if ([[[ftpListArray objectAtIndex:indexPath.row]pathExtension]isEqualToString:@""]) {
                         [dic setObject:@"folder" forKey:@"type"];
- 
+                        
                     }
                     else
                     {
                         [dic setObject:@"file" forKey:@"type"];
-
+                        
                     }
-
+                    
                     [dic setObject:@"/" forKey:@"path"];
                     
                     [ftpFilePathsArray addObject:dic];
@@ -2023,7 +2037,7 @@ NSString *wastepath = nil;
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         [self performSelector:@selector(spinner) withObject:nil];
-
+        
         for (int indexx = 0; indexx<[filePathsArray count]; indexx++)
         {
             NSLog(@"mnmnmnmnmn %@",[filePathsArray objectAtIndex:indexx]);
@@ -2085,7 +2099,7 @@ NSString *wastepath = nil;
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
         [self performSelector:@selector(spinner) withObject:nil];
-
+        
         NSLog(@"box files array %@",boxFilePathsArray);
         NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
         
@@ -2106,14 +2120,14 @@ NSString *wastepath = nil;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         ftpStatus = @"Downloading";
         [self downloadFromFTPServer];
-
-       // [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-       // [self.navigationController popToRootViewControllerAnimated:YES];
-
-  
+        
+        // [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        // [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        
         
     }
-
+    
     
 }
 
@@ -2284,7 +2298,7 @@ NSString *wastepath = nil;
 
 - (void)downloadFilesWithFolderID:(NSString *)folderID name:(NSString *)name
 {
-
+    
     arrdownlaodfiels = [[NSMutableArray alloc] init];
     
     
@@ -2418,7 +2432,7 @@ NSString *wastepath = nil;
 -(void)downloadFromDrive
 {
     NSString *filename = nil;
-
+    
     NSLog(@"%@",driveFilePathsArray);
     if ([driveFilePathsArray count]>0)
     {
@@ -2472,12 +2486,12 @@ NSString *wastepath = nil;
             {
                 boxDownloadingType = @"folder";
                 [self driveFolderDownload:folderName];
-
+                
                 boxFolderPath =[NSString stringWithFormat:@"%@",folderName];
                 root = [root stringByAppendingString:boxFolderPath];
                 [self getFileMetadataWithService:folderId];
-
-               // [self downloadableFolderFiles:folderId name:folderName];
+                
+                // [self downloadableFolderFiles:folderId name:folderName];
                 
             }
             
@@ -2499,7 +2513,7 @@ NSString *wastepath = nil;
         [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
         
     }
-
+    
 }
 -(void)driveFolderDownload:(NSString *)name
 {
@@ -2540,16 +2554,16 @@ NSString *wastepath = nil;
     }
     else
     {
-    NSError * error;
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
-    if (boxFolderPath == nil) {
-        boxFolderPath = @"";
-    }
-    
-    NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
-        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
+        NSError * error;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+        if (boxFolderPath == nil) {
+            boxFolderPath = @"";
+        }
+        
+        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
+            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
     }
 }
 
@@ -2561,55 +2575,55 @@ NSString *wastepath = nil;
     query.q = [NSString stringWithFormat:@"'%@' IN parents", folderId];
     
     [[DriveHelperClass getSharedInstance].driveService executeQuery:query completionHandler:^(GTLServiceTicket *ticket,
-                                                              GTLDriveFileList *files,
-                                                              NSError *error)
-    {
-
-        self.driveFiles = [[NSMutableArray alloc]init];
-        [self.driveFiles addObjectsFromArray:files.items];
-        if ([self.driveFiles count]==0)
-        {
-            
-        }
-        for (int i =0;i<[driveFiles count]; i++)
-        {
-            GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
-            NSString * str = file.mimeType;
-            if ([str isEqualToString:@"application/pdf"]||[str isEqualToString:@"application/vnd.google-apps.folder"])
-            {
-                NSLog(@"file id %@ ",file.identifier);
-                NSLog(@"file %d Type is %@",i,str);
-                
-                NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
-                
-                [dic setObject:file.identifier forKey:@"folderId"];
-                [dic setObject:file.title forKey:@"folderName"];
-                [dic setObject:str forKey:@"type"];
-                [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
-                [boxFilesItemsArray addObject: dic];
-                
-            }
-        }
-        
-        if ([driveFilePathsArray count]>0) {
-            
-            [driveFilePathsArray removeObjectAtIndex:0];
-            root = @"";
-            
-        }
-        if ([driveFilePathsArray count]>0) {
-            [self downloadFromDrive];
-            
-        }
-        else
-        {
-            [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
-            
-        }
-
-    }];
+                                                                                              GTLDriveFileList *files,
+                                                                                              NSError *error)
+     {
+         
+         self.driveFiles = [[NSMutableArray alloc]init];
+         [self.driveFiles addObjectsFromArray:files.items];
+         if ([self.driveFiles count]==0)
+         {
+             
+         }
+         for (int i =0;i<[driveFiles count]; i++)
+         {
+             GTLDriveFile * file =[self.driveFiles objectAtIndex:i];
+             NSString * str = file.mimeType;
+             if ([str isEqualToString:@"application/pdf"]||[str isEqualToString:@"application/vnd.google-apps.folder"])
+             {
+                 NSLog(@"file id %@ ",file.identifier);
+                 NSLog(@"file %d Type is %@",i,str);
+                 
+                 NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                 
+                 [dic setObject:file.identifier forKey:@"folderId"];
+                 [dic setObject:file.title forKey:@"folderName"];
+                 [dic setObject:str forKey:@"type"];
+                 [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
+                 [boxFilesItemsArray addObject: dic];
+                 
+             }
+         }
+         
+         if ([driveFilePathsArray count]>0) {
+             
+             [driveFilePathsArray removeObjectAtIndex:0];
+             root = @"";
+             
+         }
+         if ([driveFilePathsArray count]>0) {
+             [self downloadFromDrive];
+             
+         }
+         else
+         {
+             [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
+             
+         }
+         
+     }];
     
-   
+    
     
     
 }
@@ -2617,28 +2631,28 @@ NSString *wastepath = nil;
 {
     GTLQuery *query = [GTLQueryDrive queryForFilesGetWithFileId:fileId];
     [[DriveHelperClass getSharedInstance].driveService executeQuery:query
-        completionHandler:^(GTLServiceTicket *ticket, GTLDriveFile *file,
-                            NSError *error) {
-            if (error == nil) {
-                NSLog(@"Title: %@", file.title);
-                NSLog(@"Description: %@", file.descriptionProperty);
-                NSLog(@"MIME type: %@", file.mimeType);
-                NSLog(@"download url:%@",file.downloadUrl);
-                NSLog(@"export link:%@",file.exportLinks);
-                if ([file.mimeType isEqualToString:@"application/vnd.google-apps.folder"])
-                {
-                    [self driveChildFiles:fileId];
-                }
-                else
-                {
-                    [self downloadFileContentWithService:@"example"
-                                                    file:file];
-                }
-                
-            } else {
-                NSLog(@"An error occurred: %@", error);
-            }
-        }];
+                                                  completionHandler:^(GTLServiceTicket *ticket, GTLDriveFile *file,
+                                                                      NSError *error) {
+                                                      if (error == nil) {
+                                                          NSLog(@"Title: %@", file.title);
+                                                          NSLog(@"Description: %@", file.descriptionProperty);
+                                                          NSLog(@"MIME type: %@", file.mimeType);
+                                                          NSLog(@"download url:%@",file.downloadUrl);
+                                                          NSLog(@"export link:%@",file.exportLinks);
+                                                          if ([file.mimeType isEqualToString:@"application/vnd.google-apps.folder"])
+                                                          {
+                                                              [self driveChildFiles:fileId];
+                                                          }
+                                                          else
+                                                          {
+                                                              [self downloadFileContentWithService:@"example"
+                                                                                              file:file];
+                                                          }
+                                                          
+                                                      } else {
+                                                          NSLog(@"An error occurred: %@", error);
+                                                      }
+                                                  }];
     
     
 }
@@ -2648,12 +2662,12 @@ NSString *wastepath = nil;
                                  file:(GTLDriveFile *)file
 {
     
-   // NSLog(@"download file");
+    // NSLog(@"download file");
     NSLog(@"downloading file is %@",file.title);
     arrdownlaodfiels = [[NSMutableArray alloc] init];
     
-   if ([sqliteRowsArray containsObject:file.title])
-   {
+    if ([sqliteRowsArray containsObject:file.title])
+    {
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",file.title ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show ];
         
@@ -2680,35 +2694,35 @@ NSString *wastepath = nil;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         fetching = YES;
         
-  }
-  else
-  {
-    if (file.downloadUrl != nil)
-    {
-        NSLog(@"begin download");
-        GTMHTTPFetcher *fetcher =[[DriveHelperClass getSharedInstance].driveService.fetcherService fetcherWithURLString:file.downloadUrl];
-        
-
-      NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,file.title]];
-        
-        //fetcher.downloadPath =filePath;
-        [fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
-            if (error == nil) {
-                NSLog(@"download ok");
-                [data writeToFile:filePath atomically:YES];
-                if ([driveFilePathsArray count]==0) {
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
-                }
-            } else {
-                NSLog(@"An error occurred: %@", error);
-            }
-        }];
     }
     else
     {
-        NSLog(@"folder ");
+        if (file.downloadUrl != nil)
+        {
+            NSLog(@"begin download");
+            GTMHTTPFetcher *fetcher =[[DriveHelperClass getSharedInstance].driveService.fetcherService fetcherWithURLString:file.downloadUrl];
+            
+            
+            NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,file.title]];
+            
+            //fetcher.downloadPath =filePath;
+            [fetcher beginFetchWithCompletionHandler:^(NSData *data, NSError *error) {
+                if (error == nil) {
+                    NSLog(@"download ok");
+                    [data writeToFile:filePath atomically:YES];
+                    if ([driveFilePathsArray count]==0) {
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
+                    }
+                } else {
+                    NSLog(@"An error occurred: %@", error);
+                }
+            }];
+        }
+        else
+        {
+            NSLog(@"folder ");
+        }
     }
-  }
     
     if ([driveFilePathsArray count]>0) {
         
@@ -2725,7 +2739,7 @@ NSString *wastepath = nil;
         [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
         
     }
-
+    
     
 }
 -(void)closeDriveControllerr
@@ -2738,7 +2752,7 @@ NSString *wastepath = nil;
         //  boxFilePath = root;
         for (int k = 0; k<[boxFilesItemsArray count]; k++)
         {
-           // NSLog(@"files inside folder is %@",boxFilesItemsArray);
+            // NSLog(@"files inside folder is %@",boxFilesItemsArray);
             NSString * folderId =  [[boxFilesItemsArray objectAtIndex:k] objectForKey:@"folderId"];
             NSString *   folderName =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"folderName"];
             NSString *    type =  [[boxFilesItemsArray objectAtIndex:k]objectForKey:@"type"];
@@ -2749,7 +2763,7 @@ NSString *wastepath = nil;
             [dic setObject:type forKey:@"type"];
             [dic setObject:[[boxFilesItemsArray objectAtIndex:k]objectForKey:@"path"] forKey:@"path"];
             [driveFilePathsArray addObject:dic];
-    
+            
         }
         [boxFilesItemsArray removeAllObjects];
         [self multipleFileDownload:nil];
@@ -2813,7 +2827,7 @@ NSString *wastepath = nil;
             pdfCount = pdfCount + 1;
             filesCount = filesCount + 1;
             NSLog(@"files is %@",[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderName"]);
-           // NSString * folderId =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderId"];
+            // NSString * folderId =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderId"];
             NSString * folderName =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
             NSString * type =[[ftpFilePathsArray objectAtIndex:0]objectForKey:@"type"];
             
@@ -2898,14 +2912,14 @@ NSString *wastepath = nil;
         NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
             [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
-    
-    
-    listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
-    listDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-    listDir.path = [NSString stringWithFormat:@"%@/%@",root,name];
-    listDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-    listDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-    [listDir start];
+        
+        
+        listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
+        listDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+        listDir.path = [NSString stringWithFormat:@"%@/%@",root,name];
+        listDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+        listDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+        [listDir start];
     }
     
 }
@@ -2951,45 +2965,45 @@ NSString *wastepath = nil;
     else
     {
         
-            downloadData = [NSMutableData dataWithCapacity: 1];
+        downloadData = [NSMutableData dataWithCapacity: 1];
         
         
-                NSString*fname = [[ftpFilePathsArray objectAtIndex:0] objectForKey:@"folderName"];
+        NSString*fname = [[ftpFilePathsArray objectAtIndex:0] objectForKey:@"folderName"];
         
-                if ([[fname pathExtension]isEqualToString:@""])
-                {
-        
-                }
-                else
-                {
-                    downloadFile = [[BRRequestDownload alloc] initWithDelegate:self];
-        
-                    downloadFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-        
-                    if (!ftpFolderPath) {
-                        ftpFolderPath = @"";
-                    }
-                    else
-                    {
-                       fname = [NSString stringWithFormat:@"/%@",fname];
-        
-                    }
-                   downloadFile.path =  [NSString stringWithFormat:@"%@%@",root,fname];
-                 //   downloadFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
-                    downloadingName = fname;
-                    downloadFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-                    downloadFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-                    
-                    [downloadFile start];
-                    
-                }
+        if ([[fname pathExtension]isEqualToString:@""])
+        {
+            
+        }
+        else
+        {
+            downloadFile = [[BRRequestDownload alloc] initWithDelegate:self];
+            
+            downloadFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+            
+            if (!ftpFolderPath) {
+                ftpFolderPath = @"";
+            }
+            else
+            {
+                fname = [NSString stringWithFormat:@"/%@",fname];
+                
+            }
+            downloadFile.path =  [NSString stringWithFormat:@"%@%@",root,fname];
+            //   downloadFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+            downloadingName = fname;
+            downloadFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+            downloadFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+            
+            [downloadFile start];
+            
+        }
         
     }
     
 }
 -(void)closeFtpControllerr
 {
-  
+    
     
     if ([boxFilesItemsArray count]>0)
     {
@@ -3021,7 +3035,7 @@ NSString *wastepath = nil;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [ftpFilePathsArray removeAllObjects];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
-
+        
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -3032,7 +3046,7 @@ NSString *wastepath = nil;
 
 -(void)createFolder
 {
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
+    // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Folder"
                                                     message:@"Enter folder name"
@@ -3178,16 +3192,16 @@ NSString *wastepath = nil;
         createDir = [[BRRequestCreateDirectory alloc] initWithDelegate:self];
         
         createDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-        if (!ftpFolderPath) {
-            ftpFolderPath = @"";
+        if (! [AppDelegate sharedInstance].ftpDownloadpath) {
+            [AppDelegate sharedInstance].ftpDownloadpath = @"";
         }
         
-        createDir.path = [NSString stringWithFormat:@"%@/%@",ftpFolderPath,tempString];
+        createDir.path = [NSString stringWithFormat:@"%@%@", [AppDelegate sharedInstance].ftpDownloadpath,tempString];
         createDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
         createDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
         
         [createDir start];
-
+        
         
         [tbDownload setEditing:NO];
         editButton.title = @"Edit";
@@ -3696,6 +3710,9 @@ NSString *wastepath = nil;
         {
             NSString*fname = [[ftpFilePathsArray objectAtIndex:k] objectForKey:@"folderName"];
             
+            NSArray *nameArray = [fname componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+            NSString * docfileName = [nameArray lastObject];
+            
             if ([[fname pathExtension]isEqualToString:@""])
             {
                 deleteDir = [[BRRequestDelete alloc] initWithDelegate:self];
@@ -3706,15 +3723,15 @@ NSString *wastepath = nil;
                 }
                 else
                 {
-                    fname = [NSString stringWithFormat:@"/%@",fname];
-
+                    fname = [NSString stringWithFormat:@"%@",fname];
+                    
                 }
-                deleteDir.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+                deleteDir.path = [NSString stringWithFormat:@"%@%@/",[AppDelegate sharedInstance].ftpDownloadpath,docfileName];
                 deleteDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
                 deleteDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
                 
                 [deleteDir start];
-
+                
             }
             else
             {
@@ -3733,12 +3750,12 @@ NSString *wastepath = nil;
                 deleteFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
                 
                 [deleteFile start];
-
+                
             }
             
         }
     }
-
+    
     
     [tbDownload setEditing:NO];
     editButton.title = @"Edit";

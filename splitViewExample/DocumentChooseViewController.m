@@ -43,12 +43,12 @@
     self.navigationItem.rightBarButtonItems =
     [NSArray arrayWithObjects:save, createFolder, nil];
     
-    UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
-                                                               style:UIBarButtonItemStylePlain
-                                                              target:self
-                                                              action:@selector(documentCacel:)];
-    self.navigationItem.leftBarButtonItems =
-    [NSArray arrayWithObjects:cancel, nil];
+    //  UIBarButtonItem *cancel = [[UIBarButtonItem alloc] initWithTitle:@"Cancel"
+    //                                                             style:UIBarButtonItemStylePlain
+    //  //                                                         target:self
+    //                                                          action:@selector(documentCacel:)];
+    ///   self.navigationItem.leftBarButtonItems =
+    // [NSArray arrayWithObjects:cancel, nil];
     
     
     
@@ -107,8 +107,6 @@
         NSLog(@"file already exists");
     }
     
-    
-    //  [documentsCollectionView reloadData];
     
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];

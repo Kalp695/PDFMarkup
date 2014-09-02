@@ -13,7 +13,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate,DBSessionDelegate,DBNetworkRequestDelegate>
 {
     NSString *relinkUserId;
-
+    
 }
 @property (strong,nonatomic)  NSString *documentStatus;
 @property (strong,nonatomic)  NSString *appdelRefreshToken;
@@ -25,6 +25,7 @@
 
 @property (strong,nonatomic)  NSMutableArray *boxSelectedFiles;
 @property (assign, nonatomic)  int accountIndex;
+@property (strong,nonatomic)  NSString *ftpDownloadpath;
 
 
 - (void)setRefreshTokenInKeychain:(NSString *)refreshToken;

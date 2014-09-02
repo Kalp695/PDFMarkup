@@ -37,7 +37,6 @@
 		189F99DF19AB8A4C00C48E6F /* GoogleLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99D919AB8A4C00C48E6F /* GoogleLoginViewController.m */; };
 		189F99E019AB8A4C00C48E6F /* DriveHelperClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DB19AB8A4C00C48E6F /* DriveHelperClass.m */; };
 		189F99E119AB8A4C00C48E6F /* CommonMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 189F99DE19AB8A4C00C48E6F /* CommonMethods.m */; };
-		189F99E419AB96B300C48E6F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 189F99E319AB96B300C48E6F /* Main.storyboard */; };
 		18A0C778197D230F00534CF4 /* FileItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C777197D230F00534CF4 /* FileItemCell.xib */; };
 		18A0C77A197D302500534CF4 /* bgCell.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C779197D302500534CF4 /* bgCell.png */; };
 		18A0C77E197D388D00534CF4 /* (null) in Resources */ = {isa = PBXBuildFile; };
@@ -151,6 +150,7 @@
 		18B84EF9199D344F00F9E383 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EF8199D344F00F9E383 /* libz.dylib */; };
 		18B84EFB199D345E00F9E383 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFA199D345E00F9E383 /* CFNetwork.framework */; };
 		18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFC199D346600F9E383 /* MobileCoreServices.framework */; };
+		18BEF3EC19B60F5E00EFF819 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18BEF3EB19B60F5E00EFF819 /* Main.storyboard */; };
 		18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CD36E919ADB3EE006EB8CE /* blue.png */; };
 		18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */; };
 		18FE906C19B1F9B60042CB15 /* BRRequest+_UserData.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FE905919B1F9B60042CB15 /* BRRequest+_UserData.m */; };
@@ -383,7 +383,6 @@
 		189F99DC19AB8A4C00C48E6F /* DriveConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveConstants.h; sourceTree = "<group>"; };
 		189F99DD19AB8A4C00C48E6F /* CommonMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonMethods.h; sourceTree = "<group>"; };
 		189F99DE19AB8A4C00C48E6F /* CommonMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonMethods.m; sourceTree = "<group>"; };
-		189F99E319AB96B300C48E6F /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		18A0C777197D230F00534CF4 /* FileItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileItemCell.xib; sourceTree = "<group>"; };
 		18A0C779197D302500534CF4 /* bgCell.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bgCell.png; sourceTree = "<group>"; };
 		18A0C77F197D395E00534CF4 /* circularDisclosure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = circularDisclosure.png; sourceTree = "<group>"; };
@@ -588,6 +587,7 @@
 		18B84EF8199D344F00F9E383 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		18B84EFA199D345E00F9E383 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		18B84EFC199D346600F9E383 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		18BEF3EB19B60F5E00EFF819 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		18CD36E919ADB3EE006EB8CE /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		18CFBD57198CBB370062DA5B /* DocumentChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentChooseViewController.h; sourceTree = "<group>"; };
 		18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentChooseViewController.m; sourceTree = "<group>"; };
@@ -1921,7 +1921,7 @@
 				653E3B51198183D600788965 /* ToolBarImages */,
 				658EF43119797D5600E6FA0A /* AppDelegate.h */,
 				658EF43219797D5600E6FA0A /* AppDelegate.m */,
-				189F99E319AB96B300C48E6F /* Main.storyboard */,
+				18BEF3EB19B60F5E00EFF819 /* Main.storyboard */,
 				658EF43719797D5600E6FA0A /* MasterViewController.h */,
 				658EF43819797D5600E6FA0A /* MasterViewController.m */,
 				184C093B197CDB1C00740DD0 /* LeftTableViewCell.h */,
@@ -2187,7 +2187,6 @@
 				18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */,
 				653E3BB2198183D600788965 /* icon_thickness_thin_active@4x.png in Resources */,
 				189F263A197EBF2900ADDF3F /* upload.png in Resources */,
-				189F99E419AB96B300C48E6F /* Main.storyboard in Resources */,
 				653E3BB9198183D600788965 /* circle_blue_2 pt.png in Resources */,
 				653E3BAE198183D600788965 /* icon_redo_gray@4x.png in Resources */,
 				18AF4E8B19AF2CB100E26E42 /* SugarSyncLoginView_iphone.xib in Resources */,
@@ -2251,6 +2250,7 @@
 				653E3BAB198183D600788965 /* icon_drawsquare_active@4x.png in Resources */,
 				18ABDF1F198022B2000C002B /* pdf_Large.png in Resources */,
 				18A2AAC11994F918009D7E3A /* box_small.png in Resources */,
+				18BEF3EC19B60F5E00EFF819 /* Main.storyboard in Resources */,
 				653E3B9E198183D600788965 /* terms.plist in Resources */,
 				653E3BC2198183D600788965 /* red_blue.png in Resources */,
 				189F263C197EC57A00ADDF3F /* rename.png in Resources */,
