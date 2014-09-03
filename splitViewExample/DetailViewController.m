@@ -129,8 +129,9 @@ static DetailViewController *sharedInstance = nil;
         [self docDataToDisplay];
         
         self.navigationController.view.backgroundColor=[UIColor whiteColor];
-        [self.navigationController popToRootViewControllerAnimated:YES];
         
+            [self.navigationController popToRootViewControllerAnimated:YES];
+
     }
     else if ([self.title isEqualToString:@"Network" ])
     {
@@ -138,7 +139,8 @@ static DetailViewController *sharedInstance = nil;
         documentView.hidden = YES;
         rightTableView.hidden = NO;
         [rightTableView reloadData];
-        [self.navigationController popToRootViewControllerAnimated:YES];
+            [self.navigationController popToRootViewControllerAnimated:YES];
+        
         
     }
     
@@ -161,6 +163,7 @@ static DetailViewController *sharedInstance = nil;
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
         [FolderChooseViewController getSharedInstance].accountName = @"box";
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [self.navigationController pushViewController: detail animated: YES];
         
     }
@@ -228,6 +231,7 @@ static DetailViewController *sharedInstance = nil;
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UploadClick) name:@"UploadClick" object:nil];
     // Notifier for Delete Click Event
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DriveDownloadSuccess) name:@"BGDownloadSuccess" object:nil];
@@ -351,6 +355,7 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadClick" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCancel" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
@@ -3038,6 +3043,8 @@ static DetailViewController *sharedInstance = nil;
             }
             else
             {
+                
+                [MasterViewController sharedInstance].popStatus = NO;
                 if ([item.accounttype isEqualToString:@"dropbox"]) {
                     
                     UIStoryboard * storyboard = self.storyboard;

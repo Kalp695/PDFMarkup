@@ -61,6 +61,8 @@
     
     NSOperationQueue * boxOperationQueue;
     NSOperationQueue * driveOperationQueue;
+    
+    
 
 }
 - (BOOL)connected;

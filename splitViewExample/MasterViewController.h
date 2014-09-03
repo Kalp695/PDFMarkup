@@ -11,9 +11,11 @@
 @class DetailViewController;
 
 @interface MasterViewController : UITableViewController
+{
 
+}
 @property (strong, nonatomic) DetailViewController *detailViewController;
-
+@property(nonatomic,assign) BOOL popStatus;
 @property (strong, nonatomic)  NSMutableArray *_objects;
 @property (strong, nonatomic) NSMutableArray * leftArrayTitles;
 @property (strong, nonatomic) NSMutableArray * leftImagesArray;

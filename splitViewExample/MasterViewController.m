@@ -22,7 +22,7 @@
 @implementation MasterViewController
 @synthesize _objects,leftArrayTitles,leftImagesArray,accountsArray,accountsImagesArray;
 @synthesize arrUseraccounts;
-
+@synthesize popStatus;
 
 bool bdropbox,bgoogle,bbox,bftp,bsugar;
 - (void)awakeFromNib
@@ -52,7 +52,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     //    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     //    self.navigationItem.rightBarButtonItem = addButton;
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popStatusChange) name:@"popStatusNotification" object:nil];
+
     
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -79,6 +80,16 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     // self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.tableView reloadData ];
+    [MasterViewController sharedInstance].popStatus = YES;
+}
+-(void)popStatusChange
+{
+    [MasterViewController sharedInstance].popStatus = YES;
+    
+        if ([MasterViewController sharedInstance].popStatus == YES)
+        {
+            self.tableView.userInteractionEnabled = YES;
+        }
     
 }
 
@@ -470,61 +481,64 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     // UITableViewCellSelectionStyleGray
     
-    
-    
+        
     NSDate *object = _objects[indexPath.row];
-    
-    if (indexPath.section == 0)
+    if ([MasterViewController sharedInstance].popStatus == YES)
     {
-        self.detailViewController.titleTop = [leftArrayTitles objectAtIndex:indexPath.row ];
-        self.detailViewController.detailItem = object;
-        
-    }
-    if (indexPath.section == 1)
-    {
-        
-        if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
-            
-            
-            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"DropBox";
-            self.detailViewController.indexPathh = indexPath.row;
+        if (indexPath.section == 0)
+        {
+            self.detailViewController.titleTop = [leftArrayTitles objectAtIndex:indexPath.row ];
             self.detailViewController.detailItem = object;
             
         }
-        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
+        if (indexPath.section == 1)
+        {
+            [MasterViewController sharedInstance].popStatus = NO;
+            self.tableView.userInteractionEnabled = NO;
+            if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
+                
+                
+                self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                self.detailViewController.accountInfo =  @"DropBox";
+                self.detailViewController.indexPathh = indexPath.row;
+                self.detailViewController.detailItem = object;
+                
+            }
+            else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
+                
+                self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                self.detailViewController.accountInfo =  @"google";
+                self.detailViewController.detailItem = object;
+            }
+            else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
+                
+                self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                self.detailViewController.accountInfo =  @"box";
+                self.detailViewController.indexPathh = indexPath.row;
+                self.detailViewController.detailItem = object;
+            }
+            else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"]) {
+                
+                self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                self.detailViewController.accountInfo =  @"sugarsync";
+                self.detailViewController.indexPathh = indexPath.row;
+                self.detailViewController.detailItem = object;
+            }
+            else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"]) {
+                
+                self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                self.detailViewController.accountInfo =  @"ftp";
+                self.detailViewController.indexPathh = indexPath.row;
+                self.detailViewController.detailItem = object;
+            }
+            //        UIStoryboard * storyboard = self.storyboard;
+            //
+            //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
+            //
+            //        [self.navigationController pushViewController: detail animated: YES];
             
-            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"google";
-            self.detailViewController.detailItem = object;
         }
-        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
-            
-            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"box";
-            self.detailViewController.indexPathh = indexPath.row;
-            self.detailViewController.detailItem = object;
-        }
-        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"]) {
-            
-            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"sugarsync";
-            self.detailViewController.indexPathh = indexPath.row;
-            self.detailViewController.detailItem = object;
-        }
-        else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"]) {
-            
-            self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            self.detailViewController.accountInfo =  @"ftp";
-            self.detailViewController.indexPathh = indexPath.row;
-            self.detailViewController.detailItem = object;
-        }
-        //        UIStoryboard * storyboard = self.storyboard;
-        //
-        //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
-        //
-        //        [self.navigationController pushViewController: detail animated: YES];
-        
+
     }
     
     

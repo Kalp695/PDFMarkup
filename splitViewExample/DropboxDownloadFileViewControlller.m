@@ -467,7 +467,7 @@ NSString *wastepath = nil;
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         
-        
+    
     }
     
     if (request == deleteDir)
@@ -881,9 +881,15 @@ NSString *wastepath = nil;
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
-    
-}
+    [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
 
+
+}
+-(void)postNoftifier
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"popStatusNotification" object:self];
+
+}
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     
@@ -1335,7 +1341,7 @@ NSString *wastepath = nil;
                 
                 
                 //    strDirPath= [dataPath stringByAppendingPathComponent:[self getDropBoxDirectoryPath:path withfilename:metadata.filename]];
-                NSLog(@"check this fucking path for childs %@",strDirPath);
+                NSLog(@"check this  path for childs %@",strDirPath);
                 
                 
                 NSDictionary *dic = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:path,strDirPath, nil] forKeys:[NSArray arrayWithObjects:@"dropboxpath",@"documentspath", nil]];
@@ -2195,9 +2201,9 @@ NSString *wastepath = nil;
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
 
             [boxOperationQueue cancelAllOperations];
-            UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-            [alert show ];
             
+            
+            [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:NO];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             
             for (int i =0; i< [marrDownloadData count]; i++) {
@@ -2323,6 +2329,12 @@ NSString *wastepath = nil;
         [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
         
     }
+}
+-(void)boxShowAlert:(id)sender
+{
+    NSLog(@"sender is %@",sender);
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",sender ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show ];
 }
 
 -(void)downloadableFolderFiles:(NSString *)folderID name:(NSString *)name

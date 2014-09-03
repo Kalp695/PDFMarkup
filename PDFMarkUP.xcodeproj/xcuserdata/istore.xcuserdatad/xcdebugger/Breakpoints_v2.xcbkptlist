@@ -614,11 +614,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2182"
-            endingLineNumber = "2182"
+            startingLineNumber = "2190"
+            endingLineNumber = "2190"
             landmarkName = "-downloadfrombox"
             landmarkType = "5">
          </BreakpointContent>
@@ -630,11 +630,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2496"
-            endingLineNumber = "2496"
+            startingLineNumber = "2510"
+            endingLineNumber = "2510"
             landmarkName = "-closeBoxControllerr"
             landmarkType = "5">
          </BreakpointContent>
@@ -646,11 +646,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2408"
-            endingLineNumber = "2408"
+            startingLineNumber = "2422"
+            endingLineNumber = "2422"
             landmarkName = "-downloadFilesWithFolderID:name:"
             landmarkType = "5">
          </BreakpointContent>
@@ -662,11 +662,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2106"
-            endingLineNumber = "2106"
+            startingLineNumber = "2114"
+            endingLineNumber = "2114"
             landmarkName = "-multipleFileDownload:"
             landmarkType = "5">
          </BreakpointContent>
@@ -678,11 +678,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2328"
-            endingLineNumber = "2328"
+            startingLineNumber = "2342"
+            endingLineNumber = "2342"
             landmarkName = "-downloadableFolderFiles:name:"
             landmarkType = "5">
          </BreakpointContent>
@@ -694,11 +694,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1081"
-            endingLineNumber = "1081"
+            startingLineNumber = "1089"
+            endingLineNumber = "1089"
             landmarkName = "-editBarButton_clickk:"
             landmarkType = "5">
          </BreakpointContent>
@@ -726,11 +726,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2841"
-            endingLineNumber = "2841"
+            startingLineNumber = "2855"
+            endingLineNumber = "2855"
             landmarkName = "-downloadFileContentWithService:file:"
             landmarkType = "5">
          </BreakpointContent>
@@ -742,11 +742,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2772"
-            endingLineNumber = "2772"
+            startingLineNumber = "2786"
+            endingLineNumber = "2786"
             landmarkName = "-downloadFileContentWithService:file:"
             landmarkType = "5">
          </BreakpointContent>
@@ -758,11 +758,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2862"
-            endingLineNumber = "2862"
+            startingLineNumber = "2876"
+            endingLineNumber = "2876"
             landmarkName = "-pdfThumbnail"
             landmarkType = "5">
          </BreakpointContent>
@@ -790,12 +790,90 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "431445403.756377"
+            timestampString = "431453870.878499"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2187"
-            endingLineNumber = "2187"
+            startingLineNumber = "2195"
+            endingLineNumber = "2195"
             landmarkName = "-downloadfrombox"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/main.m"
+            timestampString = "431448830.391563"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "5"
+            endingLineNumber = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
+            timestampString = "431453870.878499"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2335"
+            endingLineNumber = "2335"
+            landmarkName = "-boxShowAlert:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/MasterViewController.m"
+            timestampString = "431453167.572463"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "260"
+            endingLineNumber = "260"
+            landmarkName = "-receiveReloadNotification:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/MasterViewController.m"
+            timestampString = "431453271.212946"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "166"
+            endingLineNumber = "166"
+            landmarkName = "-viewWillAppear:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/MasterViewController.m"
+            timestampString = "431453585.792698"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "483"
+            endingLineNumber = "483"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
