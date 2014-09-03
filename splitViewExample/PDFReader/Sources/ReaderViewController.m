@@ -602,7 +602,7 @@ static ReaderViewController *sharedInstance = nil;
 
 #pragma mark ThumbsViewControllerDelegate methods
 
-- (void)dismissThumbsViewController:(ThumbsViewController *)viewController withDocument:(ReaderDocument *)readerDocument
+- (void)dismissThumbsViewControllerWithDocument:(ReaderDocument *)readerDocument
 {
 	[self updateToolbarBookmarkIcon]; // Update bookmark icon
     [self deleteTempPDFFile];
@@ -638,7 +638,7 @@ static ReaderViewController *sharedInstance = nil;
     [[NSFileManager defaultManager] removeItemAtPath:tempFilePath error:nil];
 }
 
-- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument
+- (void)thumbsViewControllerGotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument
 {
     [self deleteTempPDFFile];
 	document = [ReaderDocument withDocumentFilePath:_pdfFilePath password:nil];
@@ -651,7 +651,7 @@ static ReaderViewController *sharedInstance = nil;
 
     
     [self showDocumentPageNew:page]; // Show the page
-    
+    //[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
     //[viewController dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
 
@@ -1128,11 +1128,17 @@ static ReaderViewController *sharedInstance = nil;
                                              
                                              NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
                                              NSString *documentsPath = [paths objectAtIndex:0];
-                                             NSString *filePathh = [documentsPath stringByAppendingPathComponent:[ReaderViewController getSharedInstance].savedFolderPath];
-                                             NSString *appFile = [filePathh stringByAppendingPathComponent:theFileName];
+                                             NSString *filePath = [documentsPath stringByAppendingPathComponent:[ReaderViewController getSharedInstance].savedFolderPath];
+                                             NSString *appFile = [filePath stringByAppendingPathComponent:theFileName];
                                              
                                              PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
                                              [pdfRenderer drawPDFWithReportID:reportID withPDFFilePath:_pdfFilePath withSavePDFFilePath:appFile withPreview:NO];
+                                             
+                                             PDFThumbnail *pdfThumbnail=[[PDFThumbnail alloc]init];
+                                             
+                                             [pdfThumbnail createThumbnailFromPDFFilePath:appFile];
+                                             
+
                                              
                                          }
                                          

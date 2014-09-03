@@ -214,8 +214,8 @@ bool thumbNailPreview;
             
             UILabel *labelText=[self getSPUerResizableText: i.noteSPUserResizableView];
             CGRect frame=i.noteSPUserResizableView.frame;
-            frame= [viewNew convertRect:frame toView:view];
-            frame=CGRectMake(frame.origin.x+15.0f, frame.origin.y-33.0f,frame.size.width, frame.size.height);
+            //frame= [viewNew convertRect:frame toView:view];
+            frame=CGRectMake(frame.origin.x+15.0f, frame.origin.y+15.0f,frame.size.width, frame.size.height);
             [self drawText:labelText.text inFrame: frame inFrameRect:labelText.font];
         }
         
@@ -426,7 +426,7 @@ bool thumbNailPreview;
     
     
     viewNew=[[UIView alloc]initWithFrame:CGRectMake(2.40694e-05, 16.2353, 760, 983.529)];
-    view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 612, 792)];
+    view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 768, 1024)];
     
     summaryStr=@"";
     lineNumber=1;

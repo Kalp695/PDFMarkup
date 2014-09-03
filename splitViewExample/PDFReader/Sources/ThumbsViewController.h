@@ -36,9 +36,9 @@
 
 @required // Delegate protocols
 
-- (void)thumbsViewController:(ThumbsViewController *)viewController gotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument;
+- (void)thumbsViewControllerGotoPage:(NSInteger)page withDocument:(ReaderDocument *)readerDocument;
 
-- (void)dismissThumbsViewController:(ThumbsViewController *)viewController withDocument:(ReaderDocument*)readerDocument;
+- (void)dismissThumbsViewControllerWithDocument:(ReaderDocument*)readerDocument;
 
 @end
 
@@ -46,8 +46,8 @@
     UIBarButtonItem *editDoneItemBar;
 }
 
-@property (nonatomic, unsafe_unretained, readwrite) id <ThumbsViewControllerDelegate> delegate;
-@property (nonatomic, retain) NSString *filePath;
+@property (nonatomic, weak) id <ThumbsViewControllerDelegate> delegate;
+@property (nonatomic, weak) NSString *filePath;
 
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;

@@ -269,7 +269,8 @@
 
 -(IBAction)closeBarButton_click:(id)sender{
     
-    [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
+    [delegate dismissThumbsViewControllerWithDocument:document]; // Dismiss thumbs display
+    //[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -387,8 +388,10 @@
     if(![editDoneItemBar .title isEqualToString:@"Done"]){
         
         NSInteger page = (showBookmarked ? [[bookmarked objectAtIndex:index] integerValue] : (index + 1));
-        [delegate dismissThumbsViewController:self withDocument:document]; // Dismiss thumbs display
-        [delegate thumbsViewController:self gotoPage:page withDocument:document]; // Show the selected page
+        //[delegate dismissThumbsViewControllerWithDocument:document]; // Dismiss thumbs display
+        [delegate thumbsViewControllerGotoPage:page withDocument:document]; // Show the selected page
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
         
     }
 
