@@ -214,8 +214,8 @@ bool thumbNailPreview;
             
             UILabel *labelText=[self getSPUerResizableText: i.noteSPUserResizableView];
             CGRect frame=i.noteSPUserResizableView.frame;
-            //frame= [viewNew convertRect:frame toView:view];
-            frame=CGRectMake(frame.origin.x+15.0f, frame.origin.y+15.0f,frame.size.width, frame.size.height);
+            //frame= [view convertRect:frame fromView:viewNew];
+            //frame=CGRectMake(frame.origin.x+15.0f, frame.origin.y+15.0f,frame.size.width, frame.size.height);
             [self drawText:labelText.text inFrame: frame inFrameRect:labelText.font];
         }
         
@@ -472,9 +472,12 @@ bool thumbNailPreview;
         templatePage = CGPDFDocumentGetPage(templateDocument, pageNumber);
         CGRect templatePageBounds = CGPDFPageGetBoxRect(templatePage, kCGPDFCropBox);
         
+        
         //create empty page with corresponding bounds in new document
         UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
         context = UIGraphicsGetCurrentContext();
+        
+        viewNew.frame=templatePageBounds;
         
         //flip context due to different origins
         CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);

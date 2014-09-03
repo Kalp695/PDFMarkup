@@ -1706,7 +1706,17 @@ static ReaderViewController *sharedInstance = nil;
 -(void)addAllLabelsWithBoundingBox :(myShape*)shapeToBeDrawn withDrawingPadView:(ReaderContentView*)padView{
     
     
-    _lastEditedView=shapeToBeDrawn.noteSPUserResizableView;
+    
+    
+   
+    
+    //copy SPUserResizable object
+    NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: shapeToBeDrawn.noteSPUserResizableView];
+    SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
+    noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:padView];
+    _lastEditedView=noteSPUserResizableViewCopy;
+    //end copy SPUserResizable object
+    
     _lastEditedView.delegate=self;
     UITapGestureRecognizer *doubleTap =
     [[UITapGestureRecognizer alloc]
@@ -1719,27 +1729,6 @@ static ReaderViewController *sharedInstance = nil;
     [_lastEditedView hideEditingHandles];
     [self hideEditingHandles:nil];
     _lastEditedView.userInteractionEnabled=NO;
-    
-    //UILabel *noteLabel=[self getSPUerResizableText:shapeToBeDrawn.noteSPUserResizableView];
-    //noteLabel.frame=[contentPageView convertRect:noteLabel.frame toView:padView];
-    //noteLabel.font=markupLabelFont;
-    
-    if(shapeToBeDrawn.shape==-2){
-        
-        
-        //[noteLabel setNuiClass:@"Label:SmallLabel"];
-        
-        
-        
-        
-        
-        
-    }
-    
-    else if(shapeToBeDrawn.shape!=-2){
-        
-    }
-    
     
     [padView addSubview:_lastEditedView];
     
@@ -3133,7 +3122,7 @@ static ReaderViewController *sharedInstance = nil;
     noteLabel.frame = newFrame;
     [noteLabel setFont:font];
     
-      noteLabel.frame=[_drawingPad convertRect:noteLabel.frame toView:contentPageView];
+    
     
     
     SPUserResizableView *noteSPUserResizableView=[self getResizableLabel:noteLabel withFrame:noteLabel.frame];
@@ -3146,10 +3135,16 @@ static ReaderViewController *sharedInstance = nil;
     }
     
     
-    noteLabel.text = [noteLabel.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: noteSPUserResizableView];
+    SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
+    noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:contentPageView];
+    
+    
+    
     
     if(noteLabel!=nil && noteLabel.text!=nil && ![noteLabel.text isEqualToString:@""]){
-        [contentPageView addSubview:noteSPUserResizableView];
+        [contentPageView addSubview:noteSPUserResizableViewCopy];
         
       
         
