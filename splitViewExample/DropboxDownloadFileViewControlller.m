@@ -26,6 +26,9 @@ NSString * folderDocpath;
 #import "DriveHelperClass.h"
 #import "DriveConstants.h"
 #import "FTPMainViewController.h"
+#import "PDFThumbnail.h"
+#import "DetailViewController.h"
+
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -119,11 +122,11 @@ NSString *wastepath = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+   // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
         
-    });
+   // });
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createFolder)
@@ -887,11 +890,13 @@ NSString *wastepath = nil;
     
 }
 
+#pragma mark - View Disappear
 
 
 
 -(void)viewDidDisappear:(BOOL)animated
 {
+    
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         if (tbDownload.isEditing) {
@@ -946,13 +951,15 @@ NSString *wastepath = nil;
     
 }
 
+#pragma mark - Edit Click
 
 -(void)editBarButton_clickk:(id)sender
 {
     UIBarButtonItem *btn = (UIBarButtonItem *)sender;
     NSLog(@"%@",btn.title);
     
-    if([btn.title isEqualToString:@"Edit"]){
+    if([btn.title isEqualToString:@"Edit"])
+    {
         btn.title=@"Cancel";
         
         if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
@@ -1074,11 +1081,10 @@ NSString *wastepath = nil;
     else{
         btn.title=@"Edit";
         [tbDownload setEditing:NO animated:YES];
-        [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
-        
-        
+       // [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkControllerCancel"
                                                             object:self];
+        
         
     }
     
@@ -2098,13 +2104,53 @@ NSString *wastepath = nil;
     
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
-        [self performSelector:@selector(spinner) withObject:nil];
+        //[self performSelector:@selector(spinner) withObject:nil];
         
         NSLog(@"box files array %@",boxFilePathsArray);
         NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
         
-        [self downloadfrombox];
         
+       /*
+        NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+            
+            NSError *error = nil;
+            
+            [self downloadfrombox];
+          
+            // Return to the main queue once the request has been processed.
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                
+                if ( error )
+                    NSLog(@"error");
+                else
+                    NSLog(@"completed");
+                
+            }];
+            
+            
+        }];
+        */
+        // Optionally, set the operation priority. This is useful when flooding
+        // the operation queue with different requests.
+        
+        
+        boxOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                        selector:@selector(downloadfrombox)
+                                                                                          object:nil];
+    
+        // Add the operation to the queue and let it to be executed.
+
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [boxOperationQueue addOperation:operation];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+       //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
     {
@@ -2112,6 +2158,8 @@ NSString *wastepath = nil;
         
         [self downloadFromDrive];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
@@ -2119,24 +2167,21 @@ NSString *wastepath = nil;
         NSLog(@"box files array %@",ftpFilePathsArray);
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         ftpStatus = @"Downloading";
+        
         [self downloadFromFTPServer];
         
         // [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         // [self.navigationController popToRootViewControllerAnimated:YES];
         
-        
-        
     }
-    
-    
 }
 
+#pragma mark Box Download Methods
 
 -(void)downloadfrombox
 {
     NSString *filename = nil;
-    
-    
+
     NSLog(@"%@",[AppDelegate sharedInstance].boxSelectedFiles);
     if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0)
     {
@@ -2147,6 +2192,9 @@ NSString *wastepath = nil;
         NSString * str = [NSString stringWithFormat:@"%@%@",[[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"path"],filename];
         if ([sqliteRowsArray containsObject:str])
         {
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+
+            [boxOperationQueue cancelAllOperations];
             UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",filename ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show ];
             
@@ -2170,7 +2218,6 @@ NSString *wastepath = nil;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
             
-            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             
         }
         else
@@ -2207,17 +2254,62 @@ NSString *wastepath = nil;
                 
                 if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
                     
+                    NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,[[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"folderName"]]];
+                    NSLog(@"thumbnail file path is %@",filePath);
+                    
+                    NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+                        
+                        NSError *error = nil;
+                        
+                        PDFThumbnail *pdfThumbnail=[[PDFThumbnail alloc]init];
+                        [pdfThumbnail createThumbnailFromPDFFilePath:filePath];
+                        
+                        // Return to the main queue once the request has been processed.
+                        
+                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                            
+                            if ( error )
+                                NSLog(@"error");
+                            else
+                                NSLog(@"completed");
+                            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+
+                            
+                        }];
+                        
+                        
+                    }];
+                    
+                    // Optionally, set the operation priority. This is useful when flooding
+                    // the operation queue with different requests.
+                    
+                    [operation setQueuePriority:NSOperationQueuePriorityNormal];
+                    [boxOperationQueue addOperation:operation];
+                    
+                    
+                    
                     [[AppDelegate sharedInstance].boxSelectedFiles removeObjectAtIndex:0];
                     root = @"";
                     
                 }
                 if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
+                    
+                    
                     [self downloadfrombox];
                     
                 }
                 else
                 {
-                    [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
+                    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                            selector:@selector(closeBoxControllerr)
+                                                                                              object:nil];
+                    
+                    // Add the operation to the queue and let it to be executed.
+                    
+                    [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+                    [boxOperationQueue addOperation:operation];
+
+                  //  [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
                     
                 }
                 
@@ -2227,6 +2319,7 @@ NSString *wastepath = nil;
     }
     else
     {
+       
         [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
         
     }
@@ -2283,12 +2376,27 @@ NSString *wastepath = nil;
             
         }
         if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
+
+
             [self downloadfrombox];
             
         }
         else
         {
-            [self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
+            
+            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                    selector:@selector(closeBoxControllerr)
+                                                                                      object:nil];
+            
+            // Add the operation to the queue and let it to be executed.
+            
+            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+            [boxOperationQueue addOperation:operation];
+
+            
+            //[self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
+            
+            
             
         }
         
@@ -2374,10 +2482,10 @@ NSString *wastepath = nil;
             NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
             if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
                 [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
-            
-            
-            
             [data writeToFile:dataPath atomically:YES];
+            
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+
             
         }
         
@@ -2423,7 +2531,8 @@ NSString *wastepath = nil;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [driveFilePathsArray removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        [boxOperationQueue cancelAllOperations];
+       // [self.navigationController popToRootViewControllerAnimated:YES];
     }
     
 }
@@ -2710,8 +2819,14 @@ NSString *wastepath = nil;
                 if (error == nil) {
                     NSLog(@"download ok");
                     [data writeToFile:filePath atomically:YES];
+                    
+                    PDFThumbnail *pdfThumbnail=[[PDFThumbnail alloc]init];
+                    [pdfThumbnail createThumbnailFromPDFFilePath:filePath];
+                    
+                    [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
                     if ([driveFilePathsArray count]==0) {
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
+                        
+                        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
                     }
                 } else {
                     NSLog(@"An error occurred: %@", error);
@@ -2726,6 +2841,7 @@ NSString *wastepath = nil;
     
     if ([driveFilePathsArray count]>0) {
         
+       
         [driveFilePathsArray removeObjectAtIndex:0];
         root = @"";
         
@@ -2739,6 +2855,16 @@ NSString *wastepath = nil;
         [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
         
     }
+    
+}
+
+-(void)pdfThumbnail
+{
+    
+    NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,[[driveFilePathsArray objectAtIndex:0]objectForKey:@"folderName"]]];
+    NSLog(@"thumbnail file path is %@",filePath);
+
+    
     
     
 }
@@ -3034,7 +3160,7 @@ NSString *wastepath = nil;
         ftpStatus = @"Downloaded";
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [ftpFilePathsArray removeAllObjects];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"DriveDownloadSuccess" object:nil];
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [self.navigationController popToRootViewControllerAnimated:YES];

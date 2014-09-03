@@ -197,6 +197,14 @@ static DetailViewController *sharedInstance = nil;
         [self.navigationController pushViewController: detail animated: YES];
         
     }
+    else
+    {
+        accountsLabel.hidden = NO;
+        documentView.hidden = YES;
+        rightTableView.hidden = NO;
+        [rightTableView reloadData];
+
+    }
     
     [self gridViewButton_click:nil];
     
@@ -222,9 +230,10 @@ static DetailViewController *sharedInstance = nil;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UploadClick) name:@"UploadClick" object:nil];
     // Notifier for Delete Click Event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DriveDownloadSuccess) name:@"DriveDownloadSuccess" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DriveDownloadSuccess) name:@"BGDownloadSuccess" object:nil];
     
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(DriveDownloadSuccess) name:@"DocumentViewNotification" object:nil];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deleteClick) name:@"DeleteClick" object:nil];
     
     // Notifier for Rename Click Event
@@ -348,6 +357,9 @@ static DetailViewController *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolder" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadToFolder" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BGDownloadSuccess" object:nil];
+   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DocumentViewNotification" object:nil];
+
 }
 
 - (void)viewDidLoad
@@ -439,6 +451,9 @@ static DetailViewController *sharedInstance = nil;
 }
 -(void)DriveDownloadSuccess
 {
+    rightTableView.hidden = YES;
+    accountsLabel.hidden = YES;
+    documentView.hidden  = NO;
     [self docDataToDisplay];
 }
 
@@ -565,16 +580,13 @@ static DetailViewController *sharedInstance = nil;
                                                             object:self];
     }
     else{
-        
-        
-        
+
         btn.title=@"Edit";
         [documentsTableView setEditing:NO animated:YES];
         [documentsTableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentsEditCancel"
                                                             object:self];
-        
-    }
+        }
     
     [documentsCollectionView reloadData];
     
@@ -2329,7 +2341,25 @@ static DetailViewController *sharedInstance = nil;
     }
     else
     {
-        cell.collectionViewImageView.image = [UIImage imageNamed:@"pdf_Large.png"];
+        NSString * name = [documenmtsArray objectAtIndex:indexPath.row];
+        NSString* theFileName = [[name lastPathComponent] stringByDeletingPathExtension];
+
+       NSString * image = [NSString stringWithFormat:@"%@.png",theFileName];
+       
+        NSString *pdfFilePath;
+        CommonFunction *commonFunction=[[CommonFunction alloc]init];
+        if (loadData) {
+            
+            pdfFilePath=[[commonFunction getDoumentPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",loadData,image]];
+            
+        }
+        else
+        {
+            pdfFilePath=[[commonFunction getDoumentPath] stringByAppendingPathComponent:[documenmtsArray objectAtIndex:indexPath.row]];
+        }
+        UIImage *thumbnailImage = [UIImage imageWithContentsOfFile:pdfFilePath];
+        
+        cell.collectionViewImageView.image = thumbnailImage;
         
     }
     
@@ -2671,7 +2701,27 @@ static DetailViewController *sharedInstance = nil;
         }
         else
         {
-            cell.folderImage.image = [UIImage imageNamed:@"pdf.png"];
+            
+            NSString * name = [documenmtsArray objectAtIndex:indexPath.row];
+            NSString* theFileName = [[name lastPathComponent] stringByDeletingPathExtension];
+            
+            NSString * image = [NSString stringWithFormat:@"%@.png",theFileName];
+            
+            NSString *pdfFilePath;
+            CommonFunction *commonFunction=[[CommonFunction alloc]init];
+            if (loadData) {
+                
+                pdfFilePath=[[commonFunction getDoumentPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",loadData,image]];
+                
+            }
+            else
+            {
+                pdfFilePath=[[commonFunction getDoumentPath] stringByAppendingPathComponent:[documenmtsArray objectAtIndex:indexPath.row]];
+            }
+            UIImage *thumbnailImage = [UIImage imageWithContentsOfFile:pdfFilePath];
+            
+             cell.folderImage.image = thumbnailImage;
+
             
             
         }

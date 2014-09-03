@@ -56,6 +56,12 @@
     NSData *uploadData;
     NSMutableArray * ftpListArray;
     
+    
+    // NSOperation Queue
+    
+    NSOperationQueue * boxOperationQueue;
+    NSOperationQueue * driveOperationQueue;
+
 }
 - (BOOL)connected;
 

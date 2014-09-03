@@ -129,6 +129,7 @@
     [super viewWillDisappear:animated];
     [self.navigationController setNavigationBarHidden:NO];    // it shows
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NetworkControllerCancel" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NetworkController" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"MultipleFiles" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"SingleFile" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NoFiles" object:nil];
