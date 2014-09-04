@@ -28,7 +28,7 @@ NSString * folderDocpath;
 #import "FTPMainViewController.h"
 #import "PDFThumbnail.h"
 #import "DetailViewController.h"
-
+#import "DownloadingSingletonClass.h"
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -1128,7 +1128,8 @@ NSString *wastepath = nil;
         if ([sqliteRowsArray containsObject:filename])
         {
             [dropBoxOperationQueue cancelAllOperations];
-            dropBoxDownload = YES;
+            [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
+ 
             [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:NO];
             
             [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1167,7 +1168,7 @@ NSString *wastepath = nil;
             }
         }
     }
-    while (dropBoxDownload==NO)
+    while ([DownloadingSingletonClass getSharedInstance].dropBoxDownload == NO)
     {
         NSLog(@"thread is running .....");
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
@@ -1189,7 +1190,7 @@ NSString *wastepath = nil;
     {
         
         [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:YES];
-        dropBoxDownload = YES;
+        [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
         [dropBoxOperationQueue cancelAllOperations];
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1387,7 +1388,13 @@ NSString *wastepath = nil;
             bisprocessing = false;
             // [[self restClient] loadFile:metadata.path intoPath:strDirPath];
             NSDictionary *dic = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:metadata.path,strDirPath, nil] forKeys:[NSArray arrayWithObjects:@"dropboxpath",@"documentspath", nil]];
+            
+            NSLog(@"dropbox downloading path ectension is %@",metadata.path);
+            NSString * downloadingFileExt = [metadata.path lastPathComponent];
+            
+            if ([downloadingFileExt isEqualToString:@"PDF"]) {
             [arrdownlaodfiels addObject:dic];
+            }
         }
         
         for (DBMetadata* child in [metadata.contents reverseObjectEnumerator]) {
@@ -1410,8 +1417,14 @@ NSString *wastepath = nil;
                 
                 NSDictionary *dic = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:path,strDirPath, nil] forKeys:[NSArray arrayWithObjects:@"dropboxpath",@"documentspath", nil]];
                 
-                [arrdownlaodfiels addObject:dic];
-                bisprocessing = false;
+                NSLog(@"dropbox downloading path ectension is %@",path);
+                NSString * downloadingFileExt = [path lastPathComponent];
+                if ([[downloadingFileExt pathExtension] isEqualToString:@"PDF"]) {
+                    [arrdownlaodfiels addObject:dic];
+                    bisprocessing = false;
+                }
+                
+              
                 
             } else {
                 
@@ -1465,7 +1478,7 @@ NSString *wastepath = nil;
 
 - (void)restClient:(DBRestClient *)client loadMetadataFailedWithError:(NSError *)error
 {
-    dropBoxDownload=YES;
+    [DownloadingSingletonClass getSharedInstance].dropBoxDownload =YES;
     [tbDownload reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
@@ -1474,10 +1487,15 @@ NSString *wastepath = nil;
 - (void)restClient:(DBRestClient*)client loadedFile:(NSString*)destPath
 {
     
-    NSLog(@"file path is %@",destPath);
-    
+    NSLog(@"file path is %@",[destPath lastPathComponent]);
+
+  
     NSLog(@"%@",filePathsArray);
     if ([arrdownlaodfiels count] != 0) {
+        
+        NSLog(@"path extension is  %@",[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"dropboxpath"]);
+        
+        
         [self pdfThumbnail:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"documentspath"]];
         [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
         [arrdownlaodfiels removeObjectAtIndex:0];
@@ -1488,9 +1506,10 @@ NSString *wastepath = nil;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         DropboxManager *dbManager = [DropboxManager dbManager];
         [dbManager restClient].delegate = self;
-        // dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void){
-        [[dbManager restClient] loadFile:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"dropboxpath"] intoPath:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"documentspath"]];
         
+        [[dbManager restClient] loadFile:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"dropboxpath"] intoPath:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"documentspath"]];
+
+      
     }
     filesCount = filesCount + 1;
     
@@ -1498,8 +1517,9 @@ NSString *wastepath = nil;
     {
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        dropBoxDownload = YES;
+        [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
         NSLog(@"Thread is stopped.....");
+        
         [arrLocalFilepaths removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:destPath];
         [self.navigationController popViewControllerAnimated:YES];
@@ -1512,7 +1532,7 @@ NSString *wastepath = nil;
 
 -(void)restClient:(DBRestClient *)client loadFileFailedWithError:(NSError *)error
 {
-    dropBoxDownload = YES;
+    [DownloadingSingletonClass getSharedInstance].dropBoxDownload  = YES;
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Download"
@@ -2124,17 +2144,12 @@ NSString *wastepath = nil;
         
         [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
         [dropBoxOperationQueue addOperation:operation];
-        dropBoxDownload = NO;
-        
+        [DownloadingSingletonClass getSharedInstance].dropBoxDownload = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
         
         [self.navigationController popToRootViewControllerAnimated:YES];
-        //        if (dropBoxDownload == NO)
-        //        {
-        //            [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
-        //
-        //        }
+        
     }
     
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
@@ -2232,7 +2247,6 @@ NSString *wastepath = nil;
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             
             for (int i =0; i< [marrDownloadData count]; i++) {
-                
                 
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];

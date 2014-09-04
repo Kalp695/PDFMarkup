@@ -15,7 +15,6 @@
 #import "DocumentManager.h"
 @interface MasterViewController () {
     
-    
 }
 @end
 

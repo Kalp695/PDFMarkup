@@ -66,7 +66,7 @@
 
     // Asynch
 
-    BOOL dropBoxDownload;
+   // BOOL dropBoxDownload;
     BOOL dbEditing;
     BOOL ftpDownload;
     

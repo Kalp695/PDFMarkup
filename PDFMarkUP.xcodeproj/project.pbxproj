@@ -46,6 +46,7 @@
 		18A0C86C197D476700534CF4 /* DropboxCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0C86B197D476700534CF4 /* DropboxCell.m */; };
 		18A0C870197D4A9D00534CF4 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A0C86F197D4A9D00534CF4 /* libsqlite3.0.dylib */; };
 		18A0C872197D657400534CF4 /* Dropbox-small.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A0C871197D657400534CF4 /* Dropbox-small.png */; };
+		18A0CE1119B8D65400E4155F /* DownloadingSingletonClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A0CE1019B8D65400E4155F /* DownloadingSingletonClass.m */; };
 		18A11D9B197FEA530000D80F /* documentsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18A11D9A197FEA530000D80F /* documentsCell.xib */; };
 		18A11D9D197FF6C80000D80F /* folder_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A11D9C197FF6C80000D80F /* folder_large.png */; };
 		18A11DA0197FFF8D0000D80F /* DocumentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A11D9F197FFF8D0000D80F /* DocumentViewController.m */; };
@@ -395,6 +396,8 @@
 		18A0C86B197D476700534CF4 /* DropboxCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DropboxCell.m; sourceTree = "<group>"; };
 		18A0C86F197D4A9D00534CF4 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		18A0C871197D657400534CF4 /* Dropbox-small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dropbox-small.png"; sourceTree = "<group>"; };
+		18A0CE0F19B8D65400E4155F /* DownloadingSingletonClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DownloadingSingletonClass.h; sourceTree = "<group>"; };
+		18A0CE1019B8D65400E4155F /* DownloadingSingletonClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DownloadingSingletonClass.m; sourceTree = "<group>"; };
 		18A11D9A197FEA530000D80F /* documentsCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = documentsCell.xib; sourceTree = "<group>"; };
 		18A11D9C197FF6C80000D80F /* folder_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = folder_large.png; sourceTree = "<group>"; };
 		18A11D9E197FFF8D0000D80F /* DocumentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentViewController.h; sourceTree = "<group>"; };
@@ -1000,6 +1003,8 @@
 			children = (
 				18A0C85D197D46AC00534CF4 /* DropboxDownloadFileViewControlller.h */,
 				18A0C85E197D46AC00534CF4 /* DropboxDownloadFileViewControlller.m */,
+				18A0CE0F19B8D65400E4155F /* DownloadingSingletonClass.h */,
+				18A0CE1019B8D65400E4155F /* DownloadingSingletonClass.m */,
 			);
 			name = "DropBox Download Controller";
 			sourceTree = "<group>";
@@ -2427,6 +2432,7 @@
 				18B6A1A119A60A88008F99FA /* GTMReadMonitorInputStream.m in Sources */,
 				18FE907019B1F9B60042CB15 /* BRRequestDownload.m in Sources */,
 				18B6A1AE19A60A93008F99FA /* GTLUtilities.m in Sources */,
+				18A0CE1119B8D65400E4155F /* DownloadingSingletonClass.m in Sources */,
 				653E3B8D198183D600788965 /* SPUserResizableView.m in Sources */,
 				18B6A16B19A60A34008F99FA /* GTLDriveChangeList.m in Sources */,
 				18B6A18819A60A7D008F99FA /* GTMOAuth2Authentication.m in Sources */,
