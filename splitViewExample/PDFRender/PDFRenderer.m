@@ -213,10 +213,11 @@ bool thumbNailPreview;
         else if(i.noteSPUserResizableView!=nil){
             
             UILabel *labelText=[self getSPUerResizableText: i.noteSPUserResizableView];
+            UIFont *font=markupLabelFont;
             CGRect frame=i.noteSPUserResizableView.frame;
             //frame= [view convertRect:frame fromView:viewNew];
-            //frame=CGRectMake(frame.origin.x+15.0f, frame.origin.y+15.0f,frame.size.width, frame.size.height);
-            [self drawText:labelText.text inFrame: frame inFrameRect:labelText.font];
+            frame=CGRectMake(frame.origin.x-10.0f, frame.origin.y+5.0f,frame.size.width, frame.size.height);
+            [self drawText:labelText.text inFrame: frame inFrameRect:font];
         }
         
     }

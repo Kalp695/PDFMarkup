@@ -1714,7 +1714,9 @@ static ReaderViewController *sharedInstance = nil;
     NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: shapeToBeDrawn.noteSPUserResizableView];
     SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
     noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:padView];
+    noteSPUserResizableViewCopy.fixBorder=YES;
     _lastEditedView=noteSPUserResizableViewCopy;
+    
     //end copy SPUserResizable object
     
     _lastEditedView.delegate=self;
@@ -3135,10 +3137,33 @@ static ReaderViewController *sharedInstance = nil;
     }
     
     
-    
+    //copy SPUserResizable
     NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: noteSPUserResizableView];
     SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
+    noteSPUserResizableViewCopy.fixBorder=YES;
     noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:contentPageView];
+    
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideEditingHandles:)];
+    [gestureRecognizer setDelegate:self];
+    
+    //[photoView addGestureRecognizer:gestureRecognizer];
+    
+    
+    UITapGestureRecognizer *doubleTap =
+    [[UITapGestureRecognizer alloc]
+     initWithTarget:self
+     action:@selector(tapDetected:)];
+    doubleTap.numberOfTapsRequired = 2;
+    [noteSPUserResizableViewCopy addGestureRecognizer:doubleTap];
+    
+    [noteSPUserResizableViewCopy hideEditingHandles];
+    
+    // Notify the delegate we've ended our editing session.
+    [self respondsToSelector:@selector(userResizableViewDidEndEditing:)];
+    [self userResizableViewDidEndEditing:noteSPUserResizableViewCopy];
+    //end copy SPUserResizable
+
     
     
     
