@@ -61,9 +61,11 @@
     
     NSOperationQueue * boxOperationQueue;
     NSOperationQueue * driveOperationQueue;
+    NSOperationQueue * dropBoxOperationQueue;
     
+    BOOL dropBoxDownload;
+    BOOL dbEditing;
     
-
 }
 - (BOOL)connected;
 
