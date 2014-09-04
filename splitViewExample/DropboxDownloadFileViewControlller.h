@@ -62,9 +62,16 @@
     NSOperationQueue * boxOperationQueue;
     NSOperationQueue * driveOperationQueue;
     NSOperationQueue * dropBoxOperationQueue;
-    
+    NSOperationQueue * ftpOperationQueue;
+
+    // Asynch
+
     BOOL dropBoxDownload;
     BOOL dbEditing;
+    BOOL ftpDownload;
+    
+    //
+    BOOL boxDownloadProcess;
     
 }
 - (BOOL)connected;
