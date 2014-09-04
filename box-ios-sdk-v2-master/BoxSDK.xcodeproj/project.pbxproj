@@ -2388,7 +2388,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = "arm8 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -2417,7 +2417,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = "arm8 armv7 armv7s";
 			};
 			name = Release;
 		};
@@ -2433,7 +2433,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include/BoxSDK;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv64 armv7 armv7s";
+				VALID_ARCHS = "arm8 armv7 armv7s";
 			};
 			name = Debug;
 		};
@@ -2449,7 +2449,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PUBLIC_HEADERS_FOLDER_PATH = include/BoxSDK;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = "armv64 armv7 armv7s";
+				VALID_ARCHS = "arm8 armv7 armv7s";
 			};
 			name = Release;
 		};
