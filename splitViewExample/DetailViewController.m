@@ -459,6 +459,8 @@ static DetailViewController *sharedInstance = nil;
     rightTableView.hidden = YES;
     accountsLabel.hidden = YES;
     documentView.hidden  = NO;
+    self.title = @"Documents";
+
     [self docDataToDisplay];
 }
 
