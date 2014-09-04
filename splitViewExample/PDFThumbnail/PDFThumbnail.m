@@ -198,6 +198,7 @@
 	UIGraphicsBeginImageContext(rect.size);
 	[[UIImage imageWithCGImage:imageRef] drawInRect:rect];
 	UIImage *thumbnail = UIGraphicsGetImageFromCurrentImageContext();
+    CGImageRelease(imageRef);
 	UIGraphicsEndImageContext();
 	// Done Resizing
 	

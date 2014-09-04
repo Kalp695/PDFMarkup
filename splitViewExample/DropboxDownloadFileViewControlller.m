@@ -1391,7 +1391,7 @@ NSString *wastepath = nil;
             
             NSLog(@"dropbox downloading path ectension is %@",metadata.path);
             NSString * downloadingFileExt = [metadata.path lastPathComponent];
-            
+            downloadingFileExt=[downloadingFileExt uppercaseString];
             if ([downloadingFileExt isEqualToString:@"PDF"]) {
             [arrdownlaodfiels addObject:dic];
             }
@@ -1419,7 +1419,7 @@ NSString *wastepath = nil;
                 
                 NSLog(@"dropbox downloading path ectension is %@",path);
                 NSString * downloadingFileExt = [path lastPathComponent];
-                if ([[downloadingFileExt pathExtension] isEqualToString:@"PDF"]) {
+                if ([[[downloadingFileExt pathExtension] uppercaseString] isEqualToString:@"PDF"]) {
                     [arrdownlaodfiels addObject:dic];
                     bisprocessing = false;
                 }

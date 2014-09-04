@@ -89,7 +89,7 @@
 -(IBAction)back:(id)sender;
 
 
-@property (nonatomic, strong) IBOutlet UITableView *tbDownload;
+@property (nonatomic, weak) IBOutlet UITableView *tbDownload;
 //@property (nonatomic, readonly) DBRestClient *restClient;
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong)     NSMutableArray * folderPath;
