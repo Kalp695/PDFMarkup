@@ -289,7 +289,8 @@
     
     CGContextRef context;
     //create empty pdf file;
-    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    CGSize PDFSize = CGSizeFromString([[NSUserDefaults standardUserDefaults] stringForKey:@"PDFSize"]);
+    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, PDFSize.width, PDFSize.height), nil);
     
     CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
     
@@ -325,7 +326,7 @@
         
     }
     
-    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
+    UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDFSize.width, PDFSize.height), nil);
     
     CGPDFDocumentRelease(templateDocument);
     UIGraphicsEndPDFContext();
@@ -401,10 +402,7 @@
 
 -(void)thumbsView:(FRDLivelyButton *)thumbsViewCross crossButtonThumbWithIndex:(NSInteger)index{
     
-    
-    
-    NSMutableDictionary *dict=[NSMutableDictionary dictionary];
-    NSLog(@"dict=%@",dict);
+    CGSize PDFSize = CGSizeFromString([[NSUserDefaults standardUserDefaults] stringForKey:@"PDFSize"]);
     
     NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     
@@ -412,7 +410,8 @@
     
     CGContextRef context;
     //create empty pdf file;
-    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    
+    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, PDFSize.width, PDFSize.height), nil);
     
     CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
     

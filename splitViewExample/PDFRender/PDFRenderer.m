@@ -34,6 +34,7 @@ CGPoint shapePoint;
 NSMutableArray *summaryArray;
 bool thumbNailPreview;
 
+
 -(void)drawLineFromPoint:(CGPoint)from toPoint:(CGPoint)to inColor:(UIColor *)color inLineWidth:(float)lineWidth
 {
     if(context==nil)
@@ -215,8 +216,9 @@ bool thumbNailPreview;
             UILabel *labelText=[self getSPUerResizableText: i.noteSPUserResizableView];
             UIFont *font=markupLabelFont;
             CGRect frame=i.noteSPUserResizableView.frame;
-            //frame= [view convertRect:frame fromView:viewNew];
-            frame=CGRectMake(frame.origin.x-10.0f, frame.origin.y+5.0f,frame.size.width, frame.size.height);
+            //frame= [labelText convertRect:i.noteSPUserResizableView.frame toView:i.noteSPUserResizableView];
+            frame=CGRectMake(frame.origin.x, frame.origin.y,frame.size.width, frame.size.height);
+            //frame=CGRectMake(469.248f+5.0f, 390.081+5.0f,frame.size.width, frame.size.height);
             [self drawText:labelText.text inFrame: frame inFrameRect:font];
         }
         
@@ -427,8 +429,8 @@ bool thumbNailPreview;
     
     
     viewNew=[[UIView alloc]initWithFrame:CGRectMake(2.40694e-05, 16.2353, 760, 983.529)];
-    view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 768, 1024)];
-    
+    view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 1000, 1024)];
+    [view addSubview:viewNew];
     summaryStr=@"";
     lineNumber=1;
     thumbNailPreview=preview;
@@ -453,8 +455,9 @@ bool thumbNailPreview;
     
     NSString *templatePath =pdfPathTemp;
     
+    CGSize PDFSize = CGSizeFromString([[NSUserDefaults standardUserDefaults] stringForKey:@"PDFSize"]);
     //create empty pdf file;
-    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, 768, 1024), nil);
+    UIGraphicsBeginPDFContextToFile(newFilePath, CGRectMake(0, 0, PDFSize.width, PDFSize.height), nil);
     
     CFURLRef url = CFURLCreateWithFileSystemPath (NULL, (CFStringRef)templatePath, kCFURLPOSIXPathStyle, 0);
     
@@ -510,7 +513,7 @@ bool thumbNailPreview;
     
     if(thumbNailPreview==NO)
     {
-        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, 768, 1024), nil);
+        UIGraphicsBeginPDFPageWithInfo(CGRectMake(0, 0, PDFSize.width, PDFSize.height), nil);
         
         UIFont *font=[UIFont fontWithName:@"HelveticaNeue" size:25.0f];
         [self drawText:@"Annotation Summary" inFrame:CGRectMake(40, 40, 768, 600) inFrameRect:font];

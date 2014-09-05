@@ -487,6 +487,8 @@
 				if (page_w % 2) page_w--; if (page_h % 2) page_h--; // Even
 
 				viewRect.size = CGSizeMake(page_w, page_h); // View size
+                
+                [[NSUserDefaults standardUserDefaults] setValue:NSStringFromCGSize(viewRect.size) forKey:@"PDFSize"];
 			}
 			else // Error out with a diagnostic
 			{

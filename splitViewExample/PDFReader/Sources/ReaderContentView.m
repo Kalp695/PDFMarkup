@@ -143,6 +143,7 @@ static inline CGFloat ZoomScaleThatFits(CGSize target, CGSize source)
 		[self addObserver:self forKeyPath:@"frame" options:0 context:ReaderContentViewContext];
 
 		self.tag = page; // Tag the view with the page number
+        
 	}
 
 	return self;

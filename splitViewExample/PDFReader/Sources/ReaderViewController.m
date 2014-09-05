@@ -211,7 +211,6 @@ static ReaderViewController *sharedInstance = nil;
                 contentView = [[ReaderContentView alloc] initWithFrame:viewRect fileURL:fileURL page:number password:phrase];
                 contentView.tag=number;
                 
-                
                 [theScrollView addSubview:contentView]; [contentViews setObject:contentView forKey:key];
                 
                 contentView.message = (id)self; [newPageSet addIndex:number];
@@ -226,7 +225,10 @@ static ReaderViewController *sharedInstance = nil;
                     imgView.image=pdfPageObject.image;
                     for(UIView *view in [[contentViews objectForKey:key] subviews]){
                         if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-                            _drawingPad=view;
+                            for(UIView *view1 in [view subviews])
+                            {
+                            _drawingPad=view1;
+                            }
                         }
                     }
                     
@@ -243,8 +245,13 @@ static ReaderViewController *sharedInstance = nil;
                 //Loading shapes
                 
                 for(UIView *view in [contentView subviews]){
+                   
                     if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-                        _drawingPad=view;
+                        for(UIView *view1 in [view subviews])
+                        {
+                            _drawingPad=view1;
+                        }
+
                     }
                     
                 }
@@ -351,7 +358,11 @@ static ReaderViewController *sharedInstance = nil;
     
     for(UIView *view in [contentPageView subviews]){
         if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-            _drawingPad=view;
+            for(UIView *view1 in [view subviews])
+            {
+                _drawingPad=view1;
+            }
+
         }
     }
 
@@ -1224,7 +1235,11 @@ static ReaderViewController *sharedInstance = nil;
         
         for(UIView *view in [contentPageView subviews]){
             if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-            _drawingPad=view;
+                for(UIView *view1 in [view subviews])
+                {
+                    _drawingPad=view1;
+                }
+
             }
             
            
@@ -1307,7 +1322,11 @@ static ReaderViewController *sharedInstance = nil;
     
     for(UIView *view in [contentPageView subviews]){
         if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-            _drawingPad=view;
+            for(UIView *view1 in [view subviews])
+            {
+                _drawingPad=view1;
+            }
+
         }
     }
     
@@ -1705,15 +1724,24 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)addAllLabelsWithBoundingBox :(myShape*)shapeToBeDrawn withDrawingPadView:(ReaderContentView*)padView{
     
-    
-    
-    
    
     
     //copy SPUserResizable object
     NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: shapeToBeDrawn.noteSPUserResizableView];
     SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
-    noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:padView];
+    UIView *middleView=nil;
+        for(UIView *view in [padView subviews])
+        {
+            if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]])
+            {
+                middleView=view;
+            }
+        }
+    
+    //noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:middleView];
+    
+    //noteSPUserResizableViewCopy.frame=[middleView convertRect:noteSPUserResizableViewCopy.frame toView:padView];
+    
     noteSPUserResizableViewCopy.fixBorder=YES;
     _lastEditedView=noteSPUserResizableViewCopy;
     
@@ -3141,7 +3169,7 @@ static ReaderViewController *sharedInstance = nil;
     NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: noteSPUserResizableView];
     SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
     noteSPUserResizableViewCopy.fixBorder=YES;
-    noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:contentPageView];
+    //noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:contentPageView];
     
     
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideEditingHandles:)];
@@ -3169,7 +3197,7 @@ static ReaderViewController *sharedInstance = nil;
     
     
     if(noteLabel!=nil && noteLabel.text!=nil && ![noteLabel.text isEqualToString:@""]){
-        [contentPageView addSubview:noteSPUserResizableViewCopy];
+        [_drawingPad addSubview:noteSPUserResizableViewCopy];
         
       
         
@@ -3247,7 +3275,7 @@ static ReaderViewController *sharedInstance = nil;
 -(SPUserResizableView *)getResizableLabel:(UILabel*)label withFrame:(CGRect)labelFrame{
     
     
-    SPUserResizableView *imgResizableView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(labelFrame.origin.x-18.00, labelFrame.origin.y-18.00, labelFrame.size.width+25, labelFrame.size.height+25)];
+    SPUserResizableView *imgResizableView = [[SPUserResizableView alloc] initWithFrame:CGRectMake(labelFrame.origin.x-20.00, labelFrame.origin.y-20.00, labelFrame.size.width+20, labelFrame.size.height+20)];
     [imgResizableView setFixBorder:YES];
     UIImageView *imageView = [[UIImageView alloc] init];
     label.frame=CGRectMake(5, 5, labelFrame.size.width, labelFrame.size.height);
