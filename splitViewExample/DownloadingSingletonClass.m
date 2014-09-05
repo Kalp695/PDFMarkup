@@ -14,6 +14,7 @@ static DownloadingSingletonClass *sharedInstance = nil;
     
 }
 @synthesize dropBoxDownload;
+@synthesize activityView;
 
 +(DownloadingSingletonClass*)getSharedInstance{
     if (!sharedInstance) {

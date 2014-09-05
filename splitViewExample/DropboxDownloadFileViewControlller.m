@@ -122,11 +122,9 @@ NSString *wastepath = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    // dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
     
-    // });
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createFolder)
@@ -1125,47 +1123,11 @@ NSString *wastepath = nil;
             filename = [filePathsArray objectAtIndex:indexx];
         }
         
-        if ([sqliteRowsArray containsObject:filename])
+        if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
         {
-            [dropBoxOperationQueue cancelAllOperations];
-            [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
- 
-            [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:NO];
-            
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
-            
-            for (int i =0; i< [marrDownloadData count]; i++) {
-                
-                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
-                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
-                
-                FolderItem* item = [arrmetadata objectAtIndex:i];
-                item.isChecked = NO;
-                [cell setChecked:item.isChecked];
-                
-                [tbDownload reloadData];
-                
-            }
-            
-            [filePathsArray removeAllObjects];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
-            
-            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-            
-            break;
-            
-            
-            
-        }
-        else
-        {
-            if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
-            {
                 
                 [self downloadFileFromDropBox:[filePathsArray objectAtIndex:indexx]];
                 
-            }
         }
     }
     while ([DownloadingSingletonClass getSharedInstance].dropBoxDownload == NO)
@@ -1182,7 +1144,7 @@ NSString *wastepath = nil;
     
     arrdownlaodfiels = [[NSMutableArray alloc] init];
     NSArray *array = [filePath componentsSeparatedByString:@"/"];
-    NSString *filename = [array lastObject];
+    NSString *filename = [NSString stringWithFormat:@"/%@",[array lastObject]];
     
     NSLog(@"check %@",sqliteRowsArray);
     NSLog(@"sdsd %@",filename);
@@ -1194,7 +1156,7 @@ NSString *wastepath = nil;
         [dropBoxOperationQueue cancelAllOperations];
         
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
+
         
         for (int i =0; i< [marrDownloadData count]; i++) {
             
@@ -1391,7 +1353,7 @@ NSString *wastepath = nil;
             
             NSLog(@"dropbox downloading path ectension is %@",metadata.path);
             NSString * downloadingFileExt = [metadata.path lastPathComponent];
-            downloadingFileExt=[downloadingFileExt uppercaseString];
+            downloadingFileExt=[[downloadingFileExt pathExtension] uppercaseString];
             if ([downloadingFileExt isEqualToString:@"PDF"]) {
             [arrdownlaodfiels addObject:dic];
             }
@@ -1419,7 +1381,7 @@ NSString *wastepath = nil;
                 
                 NSLog(@"dropbox downloading path ectension is %@",path);
                 NSString * downloadingFileExt = [path lastPathComponent];
-                if ([[[downloadingFileExt pathExtension] uppercaseString] isEqualToString:@"PDF"]) {
+                if ([[[downloadingFileExt pathExtension] lowercaseString] isEqualToString:@"pdf"]) {
                     [arrdownlaodfiels addObject:dic];
                     bisprocessing = false;
                 }
@@ -1453,7 +1415,7 @@ NSString *wastepath = nil;
             }
         }
     }
-    NSLog(@"check the rocking  %@",arrdownlaodfiels);
+    NSLog(@"check the rocking output %@",arrdownlaodfiels);
     [tbDownload reloadData];
     if ([filePathsArray count]==0)
     {
@@ -1541,7 +1503,8 @@ NSString *wastepath = nil;
                                          cancelButtonTitle:@"Ok"
                                          otherButtonTitles:nil];
     [alert show];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
 }
@@ -2372,8 +2335,12 @@ NSString *wastepath = nil;
 -(void)boxShowAlert:(id)sender
 {
     NSLog(@"sender is %@",sender);
+    [sender stringByReplacingOccurrencesOfString:@"/" withString:@""];
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",sender ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show ];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+
 }
 
 -(void)downloadableFolderFiles:(NSString *)folderID name:(NSString *)name

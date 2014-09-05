@@ -15,4 +15,6 @@
 +(DownloadingSingletonClass*)getSharedInstance;
 
 @property(atomic,assign,readwrite) BOOL dropBoxDownload;
+@property(atomic,assign,readwrite) BOOL activityView;
+
 @end
