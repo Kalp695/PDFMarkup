@@ -13,12 +13,17 @@
 #import "NetworkMenuController.h"
 #import "DocumentsEditViewController.h"
 #import "DocumentManager.h"
+#import "DownloadingSingletonClass.h"
+
 @interface MasterViewController () {
     
 }
 @end
 
 @implementation MasterViewController
+{
+    UIActivityIndicatorView *ac;
+}
 @synthesize _objects,leftArrayTitles,leftImagesArray,accountsArray,accountsImagesArray;
 @synthesize arrUseraccounts;
 @synthesize popStatus;
@@ -41,7 +46,70 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     return sharedObj;
     
 }
-
+-(void)viewWillAppear:(BOOL)animated
+{
+    
+    arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+    
+    NSLog(@"check %@",[arrUseraccounts valueForKey:@"AccountType"]);
+    accountsArray = [[NSMutableArray alloc ]init];
+    accountsImagesArray = [[NSMutableArray alloc ]init];
+    
+    
+    [[DBSession sharedSession] userIds];
+    if ([[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] isKindOfClass:[NSArray class]]) {
+        for (int i = 0; i<[[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] count]; i++) {
+            
+            if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
+                [accountsArray addObject:[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"]];
+                [accountsImagesArray addObject:@"Dropbox-small.png"];
+            }
+        }
+    }
+    else
+    {
+        if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
+            [accountsArray addObject:[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"]];
+            [accountsImagesArray addObject:@"Dropbox-small.png"];
+        }
+    }
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveReloadNotification:)
+                                                 name:@"RefreshLefttable"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveReloadNotification:)
+                                                 name:@"BoxRefreshLefttable"
+                                               object:nil];
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(removeAccount)
+                                                 name:@"removeAccount"
+                                               object:nil];
+    
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveNetworkEdittNotification:)
+                                                 name:@"NetworkController"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveDocumentEdittNotification:)
+                                                 name:@"DocumentsEdit"
+                                               object:nil];
+    
+    activityIndicatorframe.origin.y = 0;
+    [self.tableView reloadData];
+    
+    
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -53,7 +121,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popStatusChange) name:@"popStatusNotification" object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart) name:@"DownloadStart" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee) name:@"Download Success" object:nil];
+
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *butImage = [[UIImage imageNamed:@"prefs2.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
@@ -78,7 +149,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     // self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
+   
     [self.tableView reloadData ];
+    
     [MasterViewController sharedInstance].popStatus = YES;
 }
 -(void)popStatusChange
@@ -90,8 +163,32 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             self.tableView.userInteractionEnabled = YES;
         }
     
+    
+}
+-(void)downloadStart
+{
+ 
+    [DownloadingSingletonClass getSharedInstance].activityView = YES;
+    [self.tableView reloadData];
+//    ac = [[UIActivityIndicatorView alloc]
+//                                   initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//    [ac startAnimating];
+//    
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(90, 450, 320, 50)];
+//    NSLog(@"view frame is %f",view.frame.origin.y);
+//    [view addSubview:ac];
+//    [self.tableView addSubview:view];
+
 }
 
+-(void)downloadCompletee
+{
+    [DownloadingSingletonClass getSharedInstance].activityView = NO;
+    [self.tableView reloadData];
+
+    [ac removeFromSuperview];
+    ac = nil;
+}
 
 -(int)getNumberOfSections
 {
@@ -159,70 +256,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     return noOfSections;
     
 }
--(void)viewWillAppear:(BOOL)animated
-{
-    
-    
-    arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-    
-    NSLog(@"check %@",[arrUseraccounts valueForKey:@"AccountType"]);
-    accountsArray = [[NSMutableArray alloc ]init];
-    accountsImagesArray = [[NSMutableArray alloc ]init];
-    
-    
-    [[DBSession sharedSession] userIds];
-    if ([[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] isKindOfClass:[NSArray class]]) {
-        for (int i = 0; i<[[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"] count]; i++) {
-            
-            if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
-                [accountsArray addObject:[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"]];
-                [accountsImagesArray addObject:@"Dropbox-small.png"];
-            }
-        }
-    }
-    else
-    {
-        if([[AppDelegate sharedInstance] dicUserdetails]!=nil){
-            [accountsArray addObject:[[[AppDelegate sharedInstance] dicUserdetails] objectForKey:@"username"]];
-            [accountsImagesArray addObject:@"Dropbox-small.png"];
-        }
-    }
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveReloadNotification:)
-                                                 name:@"RefreshLefttable"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveReloadNotification:)
-                                                 name:@"BoxRefreshLefttable"
-                                               object:nil];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(removeAccount)
-                                                 name:@"removeAccount"
-                                               object:nil];
-    
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveNetworkEdittNotification:)
-                                                 name:@"NetworkController"
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(receiveDocumentEdittNotification:)
-                                                 name:@"DocumentsEdit"
-                                               object:nil];
-    
-    [self.tableView reloadData];
-    
-    
-}
+
 -(void)removeAccount
 {
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
@@ -330,7 +364,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     }
     else
     {
-        return 2;
+        if ([DownloadingSingletonClass getSharedInstance].activityView == YES)
+        {
+            return 3;
+ 
+        }
+        else
+        {
+            return 2;
+        }
     }
 }
 
@@ -340,8 +382,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     {
         return [leftArrayTitles count];
     }
-    else{
+    else if(section == 1)
+    {
         return [arrUseraccounts count];
+    }
+    else
+    {
+        return 1;
     }
     
 }
@@ -357,11 +404,15 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         return @"";
         
     }
-    else
+    else if(section == 1)
     {
         
         return @"Accounts";
         
+    }
+    else
+    {
+        return @"Downloading in progress";
     }
 }
 
@@ -377,7 +428,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         cell.label.text = [leftArrayTitles objectAtIndex:indexPath.row ];
         
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-        
+        activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
+        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
+
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         UIView *bgColorView = [[UIView alloc] init];
         bgColorView.layer.cornerRadius = 0;
@@ -387,7 +440,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         return cell;
         
     }
-    else
+    else if (indexPath.section ==1)
     {
         static NSString *CellIdentifier = @"Cell";
         LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -427,7 +480,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             
             
         }
+        //activityIndicatorframe = cell.label.frame;
         
+      // activityIndicatorframe = cell.label.frame;
+        activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
+        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -441,7 +498,38 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
     }
     
+    else
+    {
+        static NSString *CellIdentifier = @"Cell";
+        LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
+        cell.imageView.hidden = YES;
+        cell.label.hidden = YES;
+        
+        ac = [[UIActivityIndicatorView alloc]
+              initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        [ac startAnimating];
+        
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(90, 10, 320, 50)];
+        NSLog(@"view frame is %f",view.frame.origin.y);
+        [view addSubview:ac];
+        [cell addSubview:view];
+        
+        tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+        activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
+        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
+        
+        
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        UIView *bgColorView = [[UIView alloc] init];
+        bgColorView.layer.cornerRadius = 0;
+        bgColorView.layer.masksToBounds = YES;
+        [bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
+        [cell setSelectedBackgroundView:bgColorView];
+        
+        return cell;
+
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
