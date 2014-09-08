@@ -24,6 +24,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SPUserResizableView.h"
 
 
 @class ReaderContentView;
@@ -38,11 +39,19 @@
 - (void)contentView:(ReaderContentView *)contentView touchesMoved:(NSSet *)touches;
 - (void)contentView:(ReaderContentView *)contentView touchesEnded:(NSSet *)touches;
 
+- (void)tapDetected:(SPUserResizableView *)spView;
+
+
 @end
 
-@interface ReaderContentView : UIScrollView
+@interface ReaderContentView : UIScrollView{
+    BOOL spSelected;
+    __weak SPUserResizableView *spUserView;
+    CGPoint lastTouch;
+}
 
 @property (nonatomic, weak, readwrite) id <ReaderContentViewDelegate> message;
+@property (nonatomic,assign) BOOL edit;
 
 - (id)initWithFrame:(CGRect)frame fileURL:(NSURL *)fileURL page:(NSUInteger)page password:(NSString *)phrase;
 

@@ -23,8 +23,6 @@
 
 CGSize pageSize;
  NSMutableArray *_collection;
-UIView *viewNew;
-UIView *view;
 UIView *imgView;
 NSString *summaryStr;
 NSInteger currentPageNumber;
@@ -207,7 +205,6 @@ bool thumbNailPreview;
         
         if(![i.noteLabel.text isEqualToString:@""] && i.noteLabel.text!=nil){
             [imgView addSubview:i.noteLabel];
-            i.noteLabel.frame= [view convertRect:i.noteLabel.frame toView:viewNew];
             if(![i.noteLabel.text isEqualToString:@"doubletap"])
                 [self drawText:i.noteLabel.text inFrame: i.noteLabel.frame inFrameRect:i.noteLabel.font];
         }
@@ -216,9 +213,7 @@ bool thumbNailPreview;
             UILabel *labelText=[self getSPUerResizableText: i.noteSPUserResizableView];
             UIFont *font=markupLabelFont;
             CGRect frame=i.noteSPUserResizableView.frame;
-            //frame= [labelText convertRect:i.noteSPUserResizableView.frame toView:i.noteSPUserResizableView];
-            frame=CGRectMake(frame.origin.x, frame.origin.y,frame.size.width, frame.size.height);
-            //frame=CGRectMake(469.248f+5.0f, 390.081+5.0f,frame.size.width, frame.size.height);
+            frame= [labelText convertRect:i.noteSPUserResizableView.frame toView:i.noteSPUserResizableView];
             [self drawText:labelText.text inFrame: frame inFrameRect:font];
         }
         
@@ -228,26 +223,6 @@ bool thumbNailPreview;
     
     
     
-}
-
-+(UILabel*)getSPUerResizableText:(SPUserResizableView*)spUserResizableView{
-    
-    for(UIView *spView in [spUserResizableView subviews]){
-        if([spView isMemberOfClass:[UIImageView class]]){
-            
-            for(UIView *spLabelView in [spView subviews]){
-                if([spLabelView isMemberOfClass:[UILabel class]]){
-                    UILabel *label=(UILabel*)spLabelView;
-                    return label;
-                }
-                
-                
-            }
-            
-        }
-        
-    }
-    return nil;
 }
 
 
@@ -366,8 +341,8 @@ bool thumbNailPreview;
         [summaryArray addObject:[[NSDictionary alloc]initWithObjectsAndKeys:summaryStr,@"summary",partOfImage,@"image", nil]];
         //CGImageRelease(bigPageImage);
         //bigPageImage=nil;
-       // CGImageRelease(partOfBigImage);
-        //partOfBigImage=nil;
+       CGImageRelease(partOfBigImage);
+        partOfBigImage=nil;
         pageImage=nil;
     }
 }
@@ -428,10 +403,7 @@ bool thumbNailPreview;
 {
     
     
-    viewNew=[[UIView alloc]initWithFrame:CGRectMake(2.40694e-05, 16.2353, 760, 983.529)];
-    view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 1000, 1024)];
-    [view addSubview:viewNew];
-    summaryStr=@"";
+        summaryStr=@"";
     lineNumber=1;
     thumbNailPreview=preview;
     // Create the PDF context using the default page size of 612 x 792.
@@ -480,8 +452,6 @@ bool thumbNailPreview;
         //create empty page with corresponding bounds in new document
         UIGraphicsBeginPDFPageWithInfo(templatePageBounds, nil);
         context = UIGraphicsGetCurrentContext();
-        
-        viewNew.frame=templatePageBounds;
         
         //flip context due to different origins
         CGContextTranslateCTM(context, 0.0, templatePageBounds.size.height);
@@ -560,7 +530,7 @@ bool thumbNailPreview;
     templatePage=nil;
         
     //remove
-    
+
    
     
 }

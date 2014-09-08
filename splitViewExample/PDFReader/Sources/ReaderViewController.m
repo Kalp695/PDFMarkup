@@ -366,7 +366,7 @@ static ReaderViewController *sharedInstance = nil;
         }
     }
 
-    
+    [contentPageView setEdit:NO];
 }
 
 - (void)showDocument:(id)object
@@ -378,6 +378,7 @@ static ReaderViewController *sharedInstance = nil;
     document.lastOpen = [NSDate date]; // Update last opened date
     
     isVisible = YES; // iOS present modal bodge
+    
 }
 
 #pragma mark UIViewController methods
@@ -627,6 +628,9 @@ static ReaderViewController *sharedInstance = nil;
      {
      [view removeFromSuperview];
      }
+    
+    [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
      [contentViews removeAllObjects];
     
     //[self updateScrollViewContentViews];
@@ -669,6 +673,9 @@ static ReaderViewController *sharedInstance = nil;
 
 -(IBAction)closeButton_click:(id)sender{
     
+    [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [self dismissViewControllerAnimated:YES completion:nil];
     
 }
@@ -847,11 +854,10 @@ static ReaderViewController *sharedInstance = nil;
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:smallImage];
     
-    imageResizableView = [[SPUserResizableView alloc] initWithFrame:imageFrame];
-    imageResizableView.contentView = imageView;
-    imageResizableView.contentMode=UIViewContentModeScaleAspectFit;
-    
-    return imageResizableView;
+    SPUserResizableView *imageViewResizableView = [[SPUserResizableView alloc] initWithFrame:imageFrame];
+    imageViewResizableView.contentView = imageView;
+    imageViewResizableView.contentMode=UIViewContentModeScaleAspectFit;
+    return imageViewResizableView;
 }
 
 
@@ -1028,19 +1034,19 @@ static ReaderViewController *sharedInstance = nil;
 
 
     //saving frame
-    imageResizableView=[self getResizableImage:image withFrame:imageFrame];
+    SPUserResizableView *spUserResizableImageView=[self getResizableImage:image withFrame:imageFrame];
     
-    imageResizableView.tag=image_no;
+    spUserResizableImageView.tag=image_no;
         if(imageCollection==nil)
         imageCollection=[[NSMutableArray alloc]init];
    
     
     //[commonFunction saveAndGetImageFrame:frameArr inPageName:@"" inAppend:YES inDirectoryPath:_pdfFilePath inImageID:image_no];
     
-    imageResizableView.tag=image_no;
-    imageResizableView.delegate=self;
-    _lastEditedView=imageResizableView;
-    [contentViewPad addSubview:imageResizableView];
+    spUserResizableImageView.tag=image_no;
+    spUserResizableImageView.delegate=self;
+    _lastEditedView=spUserResizableImageView;
+    [_drawingPad addSubview:spUserResizableImageView];
 
 }
 
@@ -1265,6 +1271,7 @@ static ReaderViewController *sharedInstance = nil;
         [self.view addSubview:contentPageView];
         theScrollView.hidden=YES;
         toolBar.hidden=NO;
+        [contentPageView setEdit:YES];
         
     }
     else{
@@ -1305,9 +1312,12 @@ static ReaderViewController *sharedInstance = nil;
         
         photoEditDoneBarButton.title=@"Done";
         [self photoEditDoneBarButton_click:nil];
-        
+        [_lastEditedView hideEditingHandles];
+        [contentPageView setEdit:NO];
     }
     
+    
+    [_lastEditedView hideEditingHandles];
     _currentShape.startPoint=CGPointZero;
     _currentShape.endPoint=CGPointZero;
    
@@ -1420,6 +1430,7 @@ static ReaderViewController *sharedInstance = nil;
 	if (CGSizeEqualToSize(theScrollView.contentSize, CGSizeZero)) // First time
 	{
 		[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
+        
 	}
 
 #if (READER_DISABLE_IDLE == TRUE) // Option
@@ -1724,43 +1735,27 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)addAllLabelsWithBoundingBox :(myShape*)shapeToBeDrawn withDrawingPadView:(ReaderContentView*)padView{
     
-   
     
-    //copy SPUserResizable object
-    NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: shapeToBeDrawn.noteSPUserResizableView];
-    SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
-    UIView *middleView=nil;
-        for(UIView *view in [padView subviews])
-        {
-            if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]])
-            {
-                middleView=view;
-            }
-        }
     
-    //noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:middleView];
-    
-    //noteSPUserResizableViewCopy.frame=[middleView convertRect:noteSPUserResizableViewCopy.frame toView:padView];
-    
-    noteSPUserResizableViewCopy.fixBorder=YES;
-    _lastEditedView=noteSPUserResizableViewCopy;
-    
-    //end copy SPUserResizable object
+    _lastEditedView=shapeToBeDrawn.noteSPUserResizableView;
     
     _lastEditedView.delegate=self;
+    /*
     UITapGestureRecognizer *doubleTap =
     [[UITapGestureRecognizer alloc]
      initWithTarget:self
      action:@selector(tapDetected:)];
     doubleTap.numberOfTapsRequired = 2;
     [_lastEditedView addGestureRecognizer:doubleTap];
+    */
+    
     
     _lastEditedView.fixBorder=YES;
     [_lastEditedView hideEditingHandles];
     [self hideEditingHandles:nil];
     _lastEditedView.userInteractionEnabled=NO;
     
-    [padView addSubview:_lastEditedView];
+    [_drawingPad addSubview:_lastEditedView];
     
     
     
@@ -2253,9 +2248,12 @@ static ReaderViewController *sharedInstance = nil;
 
 - (void)contentView:(ReaderContentView *)contentView touchesBegan:(NSSet *)touches
 {
+    
     if([pdfEditDoneBarButton.title isEqualToString:@"Edit"])
         return;
-		
+	
+	[_lastEditedView hideEditingHandles];
+    
     // Receiving the touch event
     UITouch *touch = [touches anyObject];
     CGPoint tempPoint = [touch locationInView:_drawingPad];
@@ -3164,14 +3162,6 @@ static ReaderViewController *sharedInstance = nil;
         i.noteSPUserResizableView=noteSPUserResizableView;
     }
     
-    
-    //copy SPUserResizable
-    NSData *archivedViewData = [NSKeyedArchiver archivedDataWithRootObject: noteSPUserResizableView];
-    SPUserResizableView *noteSPUserResizableViewCopy = (SPUserResizableView*)[NSKeyedUnarchiver unarchiveObjectWithData:archivedViewData];
-    noteSPUserResizableViewCopy.fixBorder=YES;
-    //noteSPUserResizableViewCopy.frame=[_drawingPad convertRect:noteSPUserResizableViewCopy.frame toView:contentPageView];
-    
-    
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideEditingHandles:)];
     [gestureRecognizer setDelegate:self];
     
@@ -3183,21 +3173,22 @@ static ReaderViewController *sharedInstance = nil;
      initWithTarget:self
      action:@selector(tapDetected:)];
     doubleTap.numberOfTapsRequired = 2;
-    [noteSPUserResizableViewCopy addGestureRecognizer:doubleTap];
+    [noteSPUserResizableView addGestureRecognizer:doubleTap];
     
-    [noteSPUserResizableViewCopy hideEditingHandles];
+    [noteSPUserResizableView hideEditingHandles];
     
     // Notify the delegate we've ended our editing session.
     [self respondsToSelector:@selector(userResizableViewDidEndEditing:)];
-    [self userResizableViewDidEndEditing:noteSPUserResizableViewCopy];
-    //end copy SPUserResizable
+    [self userResizableViewDidEndEditing:noteSPUserResizableView];
+    
+    _lastEditedView=noteSPUserResizableView;
 
     
     
     
     
     if(noteLabel!=nil && noteLabel.text!=nil && ![noteLabel.text isEqualToString:@""]){
-        [_drawingPad addSubview:noteSPUserResizableViewCopy];
+        [_drawingPad addSubview:noteSPUserResizableView];
         
       
         
@@ -3405,9 +3396,9 @@ static ReaderViewController *sharedInstance = nil;
 }
 
 
-- (IBAction)tapDetected:(UIGestureRecognizer *)gesture {
+- (void)tapDetected:(SPUserResizableView *)spView {
     
-    _lastEditedView = (SPUserResizableView *)gesture.view;
+    _lastEditedView = spView;
     CGPoint point;
     myShape *i;
     for(i in _collection){

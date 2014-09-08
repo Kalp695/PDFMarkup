@@ -94,7 +94,7 @@
     UIImage *cameraImage;
     NSInteger TOCheckLoginViewAppearance;
     CGFloat xCrop,yCrop, widthCrop, heightCrop;
-    SPUserResizableView *imageResizableView;
+   __weak SPUserResizableView *imageResizableView;
     
     
     UILabel *XYLabel;
@@ -161,8 +161,8 @@
 @property (weak, nonatomic) IBOutlet UISlider *lineWidthSlider;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *shapeSelector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *lineWidthSegment;
-@property (nonatomic, retain) SPUserResizableView *currentlyEditingView;
-@property (nonatomic, retain) SPUserResizableView *lastEditedView;
+@property (nonatomic, weak) SPUserResizableView *currentlyEditingView;
+@property (nonatomic, weak) SPUserResizableView *lastEditedView;
 
 
 @property (weak, nonatomic) IBOutlet UIToolbar *toolBar;

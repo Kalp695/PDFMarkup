@@ -46,7 +46,7 @@
     UIBarButtonItem *editDoneItemBar;
 }
 
-@property (nonatomic, weak) id <ThumbsViewControllerDelegate> delegate;
+@property (nonatomic, weak, readwrite) id <ThumbsViewControllerDelegate> delegate;
 @property (nonatomic, weak) NSString *filePath;
 
 
