@@ -159,7 +159,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "809"
             endingLineNumber = "809"
-            landmarkName = "-CropViewPopOverDisplay"
+            landmarkName = "-loadPhotoToCrop:inImage_no:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -175,7 +175,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "652"
             endingLineNumber = "652"
-            landmarkName = "-thumbsViewController:gotoPage:withDocument:"
+            landmarkName = "-deleteTempPDFFile"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -982,12 +982,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "431964099.68888"
+            timestampString = "431971215.750345"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2198"
-            endingLineNumber = "2198"
-            landmarkName = "-rename"
+            startingLineNumber = "2140"
+            endingLineNumber = "2140"
+            landmarkName = "-confirmDelete"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
