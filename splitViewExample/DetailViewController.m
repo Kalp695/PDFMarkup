@@ -2238,6 +2238,8 @@ static DetailViewController *sharedInstance = nil;
         
         
         NSString * originalPath = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfPath"];
+        NSString * originalName = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"];
+
         for (int k =0; k < [renameArray count]; k++)
         {
             NSLog(@"originalPath %@",originalPath);
@@ -2245,22 +2247,26 @@ static DetailViewController *sharedInstance = nil;
             
             NSLog(@"Rename Text is %@",renameText );
             
+            
             // Rename the file, by moving the file
             NSString *filePath2;
-            NSString * extension = [[renameArray objectAtIndex:k] pathExtension];
             
             NSString *newFileName = [renameArray objectAtIndex:k];
             NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
             NSString * newPath = [NSString stringWithFormat:@"%@/%@",newPathToFile,newFileName];
+
+            NSString* original = [[originalName lastPathComponent] stringByDeletingPathExtension];
+            NSString * changedFileName = [newFileName stringByReplacingOccurrencesOfString:original withString:renameText];
+            
             NSLog(@"%@",newPath);
             if (loadData != nil)
             {
                 NSLog(@"%@",[[renameArray objectAtIndex:k] pathExtension]);
-                filePath2 = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,[NSString stringWithFormat:@"%@.%@",renameText,extension]];
+                filePath2 = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,[NSString stringWithFormat:@"%@",changedFileName]];
             }
             else
             {
-                filePath2  = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",renameText,extension]];
+                filePath2  = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",changedFileName]];
                 
             }
             
