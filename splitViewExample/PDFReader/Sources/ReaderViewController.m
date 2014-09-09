@@ -237,6 +237,8 @@ static ReaderViewController *sharedInstance = nil;
                     i++;
                 }
                 
+                [imageCollection removeAllObjects];
+                imageCollection=nil;
                 
                 
                 //End load images on page
@@ -1052,15 +1054,10 @@ static ReaderViewController *sharedInstance = nil;
 
 -(void)clearMarkupView{
     for(UIView *view in [_drawingPad subviews]){
-        if((([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]])) && (view.tag<1000))
+        if((([view isMemberOfClass:[SPUserResizableView class]])|| ([view isMemberOfClass:[UIImageView class]])) && (view.tag<1000) && !(view.tag>=151 && view.tag<=159))
             [view removeFromSuperview];
     }
     
-    for(UIView *view in [contentPageView subviews]){
-        if((([view isKindOfClass:[SPUserResizableView class]])|| ([view isKindOfClass:[UIImageView class]])) && (view.tag<1000))
-            [view removeFromSuperview];
-    }
-
 }
 
 
@@ -1321,7 +1318,10 @@ static ReaderViewController *sharedInstance = nil;
     _currentShape.startPoint=CGPointZero;
     _currentShape.endPoint=CGPointZero;
    
+    [self ShapeSelected:YES];
    [self.view bringSubviewToFront:toolBar];
+    
+    
     
 }
 
@@ -1366,7 +1366,10 @@ static ReaderViewController *sharedInstance = nil;
         }
 
         photoEditDoneBarButton.title=@"Done";
-        [self ShowPhotoMenuInView:_lastEditedView];
+        if(_lastEditedView.tag<1000)
+        {
+           [self ShowPhotoMenuInView:_lastEditedView];
+        }
         
     }
     else
@@ -1804,6 +1807,11 @@ static ReaderViewController *sharedInstance = nil;
             [drawingLayer removeFromSuperlayer];
         
     }
+    /************ remove shape selection ***********/
+    drawingLayer = [_drawingPad.layer valueForKey:@"rectangleSelection"];
+    /*************** End *************************/
+    
+    [drawingLayer removeFromSuperlayer];
     
     SPDotView *dotView;
     
@@ -1975,10 +1983,6 @@ static ReaderViewController *sharedInstance = nil;
                 
                 
             }
-            
-            
-            
-            
             
             //tapped = true;
             
@@ -2251,8 +2255,10 @@ static ReaderViewController *sharedInstance = nil;
     
     if([pdfEditDoneBarButton.title isEqualToString:@"Edit"])
         return;
-	
-	[_lastEditedView hideEditingHandles];
+	if(_lastEditedView.tag>=1000)
+    {
+        [_lastEditedView hideEditingHandles];
+    }
     
     // Receiving the touch event
     UITouch *touch = [touches anyObject];
@@ -2475,7 +2481,15 @@ static ReaderViewController *sharedInstance = nil;
         
         if(selectedIndex == -1){    // New shape object!
             [self setCurrentShapeProperties];
-            _currentShape.shape_no=shape_no;
+            __weak myShape *lastShape=(myShape*)[_collection lastObject];
+            if(lastShape==nil)
+            {
+            _currentShape.shape_no=1;
+            }
+            else
+            {
+              _currentShape.shape_no=lastShape.shape_no+1;
+            }
             _currentShape.pencilBezierPath=pencilBezierPath;
             shape_no++;
             
@@ -2865,6 +2879,12 @@ static ReaderViewController *sharedInstance = nil;
     _currentColor=[UIColor blackColor];
     
     [self shapeChangeWidthAndColor];
+    [NSTimer scheduledTimerWithTimeInterval:0.0
+                                     target:self
+                                   selector:@selector(saveToDisk:)
+                                   userInfo:nil
+                                    repeats:NO];
+
 }
 
 
@@ -2891,6 +2911,13 @@ static ReaderViewController *sharedInstance = nil;
     _currentColor=[UIColor whiteColor];
     
     [self shapeChangeWidthAndColor];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.0
+                                     target:self
+                                   selector:@selector(saveToDisk:)
+                                   userInfo:nil
+                                    repeats:NO];
+
 }
 
 -(IBAction)selectYellowColor:(id)sender{
@@ -2903,6 +2930,13 @@ static ReaderViewController *sharedInstance = nil;
     _currentColor=[UIColor yellowColor];
     
     [self shapeChangeWidthAndColor];
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.0
+                                     target:self
+                                   selector:@selector(saveToDisk:)
+                                   userInfo:nil
+                                    repeats:NO];
+
 }
 
 -(void)shapeChangeWidthAndColor{
@@ -3311,17 +3345,37 @@ static ReaderViewController *sharedInstance = nil;
 }
 
 - (void)userResizableViewDidEndEditing:(SPUserResizableView *)userResizableView {
+    
+    
+    
     _lastEditedView = userResizableView;
     
-    myShape *i;
-    for(i in _collection){
-        if([_lastEditedView isEqual:i.noteSPUserResizableView]|| _lastEditedView.tag == i.noteSPUserResizableView.tag){
-            i.noteSPUserResizableView=_lastEditedView;
+     /************* check label if it is label saveto collection view and exit otherwise it imageView *****************/
+    
+    if(_lastEditedView.tag>1000)
+    {
+        myShape *i;
+        for(i in _collection)
+        {
+            if([_lastEditedView isEqual:i.noteSPUserResizableView]|| _lastEditedView.tag == i.noteSPUserResizableView.tag)
+            {
+                i.noteSPUserResizableView=_lastEditedView;
             
-            //NSLog(@"lastEditedView.frame=%@",NSStringFromCGRect(lastEditedView.frame));
-            break;
+                [NSTimer scheduledTimerWithTimeInterval:0.0
+                                             target:self
+                                           selector:@selector(saveToDisk:)
+                                           userInfo:nil
+                                            repeats:NO];
+                return;
+            
+            }
         }
     }
+    
+    /************* End *****************/
+    
+   
+    /************* First save small size image in main thread *****************/
     
     for( pdfPageObject in imageCollection){
         if(pdfPageObject.image_no==_lastEditedView.tag){
@@ -3333,10 +3387,14 @@ static ReaderViewController *sharedInstance = nil;
     NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Small_%d",[document.pageNumber integerValue]]];
     [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollection];
     
+    /************* End *****************/
+    
+    
+    /************* save big size image using GCD  *****************/
     dispatch_queue_t queue=dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
       dispatch_async(queue,
                      ^{
-                         __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:[document.pageNumber integerValue]];
+                         __block NSMutableArray *imageCollectionBig=[self getImageCollectionWithSmallBig:@"Big" withPageNumber:[document.pageNumber integerValue]];
                          __block NSInteger pageNumber=[document.pageNumber integerValue];
                          
                         dispatch_sync(queue,
@@ -3350,30 +3408,24 @@ static ReaderViewController *sharedInstance = nil;
                                               }
                                           }
                                           
+                                          
+                                          
+                                              NSLog(@"Saving to Page1");
+                                          
                                           NSString *currentPageName=[[commonFunction getFileNameFromPath:_pdfFilePath]stringByAppendingString:[NSString stringWithFormat:@"Big_%d",pageNumber]];
                                           [commonFunction saveFileDataToDiskWithFilename:currentPageName withCollection:imageCollectionBig];
-
                                           
                                        }
                                      );
                      }
                    );
     
+    /************* End *****************/
     
-    if(_lastEditedView.tag<1000)
-    {
+    /****** showPopup view for save, delete, and copy image *******/
      [self ShowPhotoMenuInView:_lastEditedView];
-    }
     
-    
-    [NSTimer scheduledTimerWithTimeInterval:0.0
-                                     target:self
-                                   selector:@selector(saveToDisk:)
-                                   userInfo:nil
-                                    repeats:NO];
-    
-    
-    
+    /***** End ***********/
     
     
 }
