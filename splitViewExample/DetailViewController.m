@@ -2135,18 +2135,30 @@ static DetailViewController *sharedInstance = nil;
     
     
     NSLog(@"yup %@",filePathsArray);
+    
+    NSArray * deleteArray = [self getFileNames];
+    NSLog(@"deleting files is %@",deleteArray);
+    
     for (int k =0; k < [filePathsArray count]; k++)
     {
-        
-        NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] );
-        
-        
-        if ([fileMgr removeItemAtPath:[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] error:&error] != YES)
-            NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-        
-        // Show contents of Documents directory
-        NSLog(@"Documents directory: %@",
-              [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+        NSString * originalPath = [[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"];
+
+        for (int i=0; i<[deleteArray count]; i++)
+        {
+            NSString *newFileName = [deleteArray objectAtIndex:i];
+            NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
+            NSString * newPath = [NSString stringWithFormat:@"%@/%@",newPathToFile,newFileName];
+            NSLog(@"%@",newPath);
+            
+            
+            if ([fileMgr removeItemAtPath:newPath error:&error] != YES)
+                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+            
+            // Show contents of Documents directory
+            NSLog(@"Documents directory: %@",
+                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+
+        }
     }
     
     
@@ -2195,22 +2207,8 @@ static DetailViewController *sharedInstance = nil;
 }
 -(void)rename
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSArray *renameArray = [[NSFileManager defaultManager] subpathsOfDirectoryAtPath:documentsDirectory  error:nil];
-    NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
-    NSString* theFileName = [[myString lastPathComponent] stringByDeletingPathExtension];
     
-    NSArray * arr = [NSArray arrayWithObjects:@".pdf",@".DrawingPad",@".png", nil];
-    
-    for (int i =0; i<[arr count]; i++)
-    {
-        NSString * str = [NSString stringWithFormat:@"%@.%@",theFileName,[arr objectAtIndex:i]];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches[c] %@", str];
-        renameArray =  [renameArray filteredArrayUsingPredicate:predicate];
-    }
-   
-    NSLog(@"files array %@", renameArray);
+    NSArray * renameArray = [self getFileNames];
 
     if ([[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""]) {
         
@@ -2239,28 +2237,42 @@ static DetailViewController *sharedInstance = nil;
                                         stringByAppendingPathComponent:@"Documents"];
         
         
-        NSLog(@"yup %@",filePathsArray);
-        for (int k =0; k < [filePathsArray count]; k++)
+        NSString * originalPath = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfPath"];
+        NSString * originalName = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"];
+
+        for (int k =0; k < [renameArray count]; k++)
         {
+            NSLog(@"originalPath %@",originalPath);
             
-            NSLog(@"check %@",[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] );
+            
             NSLog(@"Rename Text is %@",renameText );
+            
             
             // Rename the file, by moving the file
             NSString *filePath2;
+            
+            NSString *newFileName = [renameArray objectAtIndex:k];
+            NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
+            NSString * newPath = [NSString stringWithFormat:@"%@/%@",newPathToFile,newFileName];
+
+            NSString* original = [[originalName lastPathComponent] stringByDeletingPathExtension];
+            NSString * changedFileName = [newFileName stringByReplacingOccurrencesOfString:original withString:renameText];
+            
+            NSLog(@"%@",newPath);
             if (loadData != nil)
             {
-                filePath2 = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,[NSString stringWithFormat:@"%@.pdf",renameText]];
+                NSLog(@"%@",[[renameArray objectAtIndex:k] pathExtension]);
+                filePath2 = [NSString stringWithFormat:@"%@/%@/%@",documentsDirectory,loadData,[NSString stringWithFormat:@"%@",changedFileName]];
             }
             else
             {
-                filePath2  = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.pdf",renameText]];
+                filePath2  = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",changedFileName]];
                 
             }
             
             
             // Attempt the move
-            if ([fileMgr moveItemAtPath:[[filePathsArray objectAtIndex:k] objectForKey:@"PdfPath"] toPath:filePath2 error:&error] != YES)
+            if ([fileMgr moveItemAtPath:newPath toPath:filePath2 error:&error] != YES)
                 NSLog(@"Unable to move file: %@", [error localizedDescription]);
             
             // Show contents of Documents directory
@@ -2296,6 +2308,39 @@ static DetailViewController *sharedInstance = nil;
     [self docDataToDisplay];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     
+}
+-(NSArray *)getFileNames
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    
+    NSArray *localArray = nil;
+    if (!loadData) {
+        localArray = [[NSFileManager defaultManager] directoryContentsAtPath: documentsDirectory];
+        
+    }
+    else
+    {
+        NSString *filename = [documentsDirectory stringByAppendingPathComponent:loadData];
+        NSError * error;
+        
+        // Rename array contains the list of all files in document directory.
+        localArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:filename error:&error];
+    }
+    
+    
+    NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
+    // Getting only the file name
+    NSString* theFileName = [[myString lastPathComponent] stringByDeletingPathExtension];
+    
+    NSString *strprdicate = [NSString stringWithFormat:@"SELF CONTAINS '%@'",theFileName];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:strprdicate];
+    
+    // Filtring only the same file names with different extensions .
+    localArray =  [localArray filteredArrayUsingPredicate:predicate];
+    
+    NSLog(@"files array %@", localArray);
+    return localArray;
 }
 #pragma mark - Alert View Delegate
 
