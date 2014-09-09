@@ -220,19 +220,22 @@ static ReaderViewController *sharedInstance = nil;
                 
                 imageCollection=[self getImageCollectionWithSmallBig:@"Small" withPageNumber:number];
                 int i=1;
+                
+                for(UIView *view in [[contentViews objectForKey:key] subviews]){
+                    if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
+                        for(UIView *view1 in [view subviews])
+                        {
+                            _drawingPad=view1;
+                        }
+                    }
+                }
+                
+
                 for(pdfPageObject in imageCollection){
                     UIImageView *imgView = [[UIImageView alloc]initWithFrame:CGRectMake(pdfPageObject.frame.origin.x+5.0f, pdfPageObject.frame.origin.y+5, CGRectGetWidth(pdfPageObject.frame)-8.0f, CGRectGetHeight(pdfPageObject.frame)-8.0f)];
                     imgView.image=pdfPageObject.image;
-                    for(UIView *view in [[contentViews objectForKey:key] subviews]){
-                        if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-                            for(UIView *view1 in [view subviews])
-                            {
-                            _drawingPad=view1;
-                            }
-                        }
-                    }
-                    
-                    [_drawingPad addSubview:imgView];
+                [_drawingPad addSubview:imgView];
+                    //[imgView removeFromSuperview];
                     
                     i++;
                 }
@@ -242,21 +245,6 @@ static ReaderViewController *sharedInstance = nil;
                 
                 
                 //End load images on page
-                
-                
-                //Loading shapes
-                
-                for(UIView *view in [contentView subviews]){
-                   
-                    if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
-                        for(UIView *view1 in [view subviews])
-                        {
-                            _drawingPad=view1;
-                        }
-
-                    }
-                    
-                }
                 
                 
                 [_collection removeAllObjects];
@@ -592,6 +580,10 @@ static ReaderViewController *sharedInstance = nil;
         [self pdfEditDoneBarButton_click:pdfEditDoneBarButton];
     }
     
+    [self clearViewsFromDrawing];
+    [contentViews removeAllObjects];
+
+    
     NSString *tempFilePath = [[_pdfFilePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     
     PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
@@ -610,6 +602,7 @@ static ReaderViewController *sharedInstance = nil;
     UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:thumbsViewController];
     
     [self presentViewController:navController1 animated:YES completion:nil];
+    
 
 }
 
@@ -631,11 +624,9 @@ static ReaderViewController *sharedInstance = nil;
      [view removeFromSuperview];
      }
     
-    [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
-     [contentViews removeAllObjects];
-    
+  
     //[self updateScrollViewContentViews];
+    
     
     [self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
     
@@ -659,15 +650,25 @@ static ReaderViewController *sharedInstance = nil;
 {
     [self deleteTempPDFFile];
 	document = [ReaderDocument withDocumentFilePath:_pdfFilePath password:nil];
-    
+    currentPage=0;
     readerDocument=nil;
+    
+    for(UIView *view in [theScrollView subviews])
+    {
+        [view removeFromSuperview];
+    }
+
+     document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
+    [self showDocumentPageNew:page]; // Show the page
+    //[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.0f];
     theScrollView.contentOffset=CGPointMake(CGRectGetWidth(theScrollView.frame)*(page-1), theScrollView.contentOffset.y);
    
-    document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
+   
    
 
+    //[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
     
-    [self showDocumentPageNew:page]; // Show the page
+    
     //[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.02];
     //[viewController dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
@@ -678,8 +679,38 @@ static ReaderViewController *sharedInstance = nil;
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+    [_collection removeAllObjects];
+    _collection=nil;
+    [self clearViewsFromDrawing];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
     
+    
+}
+
+
+-(void)clearViewsFromDrawing{
+    
+    for (NSInteger number = 1; number <= [document.pageCount integerValue]; number++)
+    {
+        NSNumber *key = [NSNumber numberWithInteger:number]; // # key
+        
+        ReaderContentView *contentView = [contentViews objectForKey:key];
+        
+        for(UIView *view in [contentView subviews]){
+            if([view isKindOfClass:[UIView class]] && ![view isKindOfClass:[SPUserResizableView class]]){
+                for(UIView *view1 in [view subviews])
+                {
+                    _drawingPad=view1;
+                    [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+                    [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
+                }
+                
+            }
+        }
+        
+    }
+
 }
 -(IBAction)cameraBarButton_click:(id)sender{
     
@@ -1743,15 +1774,6 @@ static ReaderViewController *sharedInstance = nil;
     _lastEditedView=shapeToBeDrawn.noteSPUserResizableView;
     
     _lastEditedView.delegate=self;
-    /*
-    UITapGestureRecognizer *doubleTap =
-    [[UITapGestureRecognizer alloc]
-     initWithTarget:self
-     action:@selector(tapDetected:)];
-    doubleTap.numberOfTapsRequired = 2;
-    [_lastEditedView addGestureRecognizer:doubleTap];
-    */
-    
     
     _lastEditedView.fixBorder=YES;
     [_lastEditedView hideEditingHandles];

@@ -157,7 +157,7 @@
 
 
 //drawing pad
-@property (weak, nonatomic) IBOutlet UIView *drawingPad;
+@property (strong, nonatomic) IBOutlet UIView *drawingPad;
 @property (weak, nonatomic) IBOutlet UISlider *lineWidthSlider;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *shapeSelector;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *lineWidthSegment;
