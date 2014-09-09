@@ -119,13 +119,20 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     //    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     //    self.navigationItem.rightBarButtonItem = addButton;
     
+    bgProcessArray = [[NSMutableArray alloc]init];
+    
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popStatusChange) name:@"popStatusNotification" object:nil];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart) name:@"DownloadStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart:) name:@"DownloadStart" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart:) name:@"UploadStart" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee) name:@"Download Success" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"UploadCompleted" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"Download Success" object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"DownloadComplete" object:nil];
 
-    
+
+
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *butImage = [[UIImage imageNamed:@"prefs2.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
     [button setBackgroundImage:butImage forState:UIControlStateNormal];
@@ -165,29 +172,56 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     
 }
--(void)downloadStart
+-(void)downloadStart:(NSNotification *)notification
 {
- 
+    
+    NSLog(@"sender obj is %@",notification.object);
+    [DownloadingSingletonClass getSharedInstance].activityViewStatus = notification.object;
+
+    if ([notification.name isEqualToString:@"UploadStart"])
+    {
+        if (![bgProcessArray containsObject:@"Uploading in progress"]) {
+            [bgProcessArray addObject:@"Uploading in progress"];
+
+        }
+    }
+    else
+    {
+        if (![bgProcessArray containsObject:@"Downloading in progress"]) {
+            [bgProcessArray addObject:@"Downloading in progress"];
+
+        }
+
+    }
+    
     [DownloadingSingletonClass getSharedInstance].activityView = YES;
     [self.tableView reloadData];
-//    ac = [[UIActivityIndicatorView alloc]
-//                                   initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-//    [ac startAnimating];
-//    
-//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(90, 450, 320, 50)];
-//    NSLog(@"view frame is %f",view.frame.origin.y);
-//    [view addSubview:ac];
-//    [self.tableView addSubview:view];
-
+    
 }
 
--(void)downloadCompletee
+-(void)downloadCompletee:(NSNotification *)notification
 {
-    [DownloadingSingletonClass getSharedInstance].activityView = NO;
-    [self.tableView reloadData];
+    
+    if ([notification.name isEqualToString:@"UploadCompleted"])
+    {
+        [bgProcessArray removeObject:@"Uploading in progress"];
+        
+    }
+    else
+    {
+       [bgProcessArray removeObject:@"Downloading in progress"];
+        
+    }
+    NSLog(@"sections array is %@",bgProcessArray);
+    if ([bgProcessArray count]==0)
+    {
+        [DownloadingSingletonClass getSharedInstance].activityView = NO;
 
+    }
+    [self.tableView reloadData];
     [ac removeFromSuperview];
     ac = nil;
+    
 }
 
 -(int)getNumberOfSections
@@ -366,7 +400,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     {
         if ([DownloadingSingletonClass getSharedInstance].activityView == YES)
         {
-            return 3;
+            int i = 2 + [bgProcessArray count];
+            return i;
  
         }
         else
@@ -410,10 +445,19 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         return @"Accounts";
         
     }
-    else
+    else if (section == 2)
     {
-        return @"Downloading in progress";
+        NSLog(@"Section title Array is %@",bgProcessArray );
+        
+          return [bgProcessArray objectAtIndex:0];
+
     }
+    else if(section ==3)
+    {
+        return [bgProcessArray objectAtIndex:1];
+        
+    }
+    return NO;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
