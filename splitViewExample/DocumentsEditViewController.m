@@ -201,7 +201,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadSucess" object:nil];
 
-    
+    [self.navigationController popViewControllerAnimated:NO];
     [self.navigationController popToRootViewControllerAnimated:YES];
     
 }

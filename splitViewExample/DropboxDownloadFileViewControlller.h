@@ -68,7 +68,6 @@
 
    // BOOL dropBoxDownload;
     BOOL dbEditing;
-    BOOL ftpDownload;
     
     //
     BOOL boxDownloadProcess;

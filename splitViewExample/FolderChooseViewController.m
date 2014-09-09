@@ -398,11 +398,12 @@ static FolderChooseViewController *sharedInstance = nil;
 
 -(IBAction)chooseBarButton_click:(id)sender
 {
-    
+
     [self dismissModalViewControllerAnimated:YES];
     //    [self.presentedViewController dismissViewControllerAnimated:YES completion:nil];
     
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadStart"
+                                                        object:@"upload"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadToFolder"
                                                         object:self];
     

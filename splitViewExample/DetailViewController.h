@@ -56,7 +56,14 @@
     BRRequestUpload *uploadFile;
     BRRequestCreateDirectory *createDir;
     
-    
+    // NSOperation Queue
+
+    NSOperationQueue * boxUploadOperationQueue;
+    NSOperationQueue * driveUploadOperationQueue;
+    NSOperationQueue * dropBoxUploadOperationQueue;
+    NSOperationQueue * ftpUploadOperationQueue;
+    NSOperationQueue * sugarSyncUploadOperationQueue;
+
 }
 +(DetailViewController*)getSharedInstance;
 

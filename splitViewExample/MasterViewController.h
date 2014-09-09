@@ -13,6 +13,7 @@
 @interface MasterViewController : UITableViewController
 {
     CGRect activityIndicatorframe;
+    NSMutableArray * bgProcessArray;
 }
 @property (strong, nonatomic) DetailViewController *detailViewController;
 @property(nonatomic,assign) BOOL popStatus;
