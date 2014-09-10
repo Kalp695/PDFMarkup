@@ -140,58 +140,7 @@
 	return theCell;
 }
 
--(ReaderThumbView*)addThumbViewCrossButton:(ReaderThumbView*)theCell{
-    
 
-    CommonFunction *commonFunction =[[CommonFunction alloc]init];
-    UIImageView __weak *thumbImageView=(UIImageView*)[theCell viewWithTag:1];
-    
-    for(UIView *view in [theCell subviews])
-    {
-        if([view isKindOfClass:[UIImageView class]])
-        {
-            thumbImageView=(UIImageView*)view;
-            NSLog(@"thumbImageView=%@",thumbImageView);
-        }
-        
-    }
-        
-    
-    FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(thumbImageView.frame)+38,thumbImageView.frame.origin.y-19,26,26)];
-    crossButton.tag=2;
-    
-    [crossButton setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
-                               kFRDLivelyButtonHighlightedColor: [commonFunction defaultSystemTintColor],
-                               kFRDLivelyButtonColor: [commonFunction defaultSystemTintColor],
-                               }];
-    [crossButton setStyle:kFRDLivelyButtonStyleCircleClose animated:NO];
-    [crossButton setBackgroundColor:    [UIColor whiteColor]];
-    crossButton.layer.borderColor = [[commonFunction defaultSystemTintColor] CGColor];
-    crossButton.layer.cornerRadius = 10.0f;
-    [crossButton addTarget:self action:@selector(thumbViewCloseButton_click:) forControlEvents:UIControlEventTouchUpInside];
-    crossButton.tag=theCell.tag;
-    crossButton.hidden=YES;
-    
-    if(theCell.tag+1>originalPageCount){
-        
-        
-        [thumbImageView addSubview:crossButton];
-    }
-    
- 
-    return theCell;
-}
-
-
--(IBAction)thumbViewCloseButton_click:(id)sender{
-    
-    if(delegate!=nil){
-        FRDLivelyButton *crossButton=(FRDLivelyButton*)sender;
-        [delegate thumbsView:crossButton crossButtonThumbWithIndex:crossButton.tag];
-        [crossButton removeFromSuperview];
-    }
-    
-}
 
 
 - (NSMutableIndexSet *)visibleIndexSetForContentOffset
@@ -379,30 +328,6 @@
 
 - (void)reloadThumbsCenterOnIndex:(NSInteger)index
 {
-    for(UIView *view in [self subviews])
-    {
-        UIImageView __weak *thumbImageView=(UIImageView*)[view viewWithTag:1];
-        
-        for(UIView *view1 in [view subviews])
-        {
-            if([view1 isKindOfClass:[UIImageView class]])
-            {
-                thumbImageView=(UIImageView*)view1;
-                
-                break;
-            }
-            
-        }
-        
-        for(UIView *view1 in [thumbImageView subviews])
-        {
-            if([view1 isKindOfClass:[FRDLivelyButton class]])
-            {
-                [view1 removeFromSuperview];
-                break;
-            }
-        }
-    }
 
     
    	assert(delegate != nil); // Check delegate
@@ -570,6 +495,7 @@
 	}
 }
 
+
 #pragma mark UIScrollViewDelegate methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -619,7 +545,6 @@
 						[delegate thumbsView:self updateThumbCell:tvCell forIndex:index];
 
 						tvCell.tag = index; tvCell.hidden = NO; // Tag and show it
-                        tvCell=[self addThumbViewCrossButton:tvCell];
 					}
 				}
 			];

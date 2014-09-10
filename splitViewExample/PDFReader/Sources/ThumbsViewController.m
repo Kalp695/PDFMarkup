@@ -257,11 +257,11 @@
 -(IBAction)editDoneThumbBarButton_click:(id)sender{
     if([editDoneItemBar.title isEqualToString:@"Edit"]){
         [editDoneItemBar setTitle:@"Done"];
-        [theThumbsView showHidecrossButtonMakeHide:NO];
+        [self showHidecrossButtonMakeHide:NO];
     }
     else{
         [editDoneItemBar setTitle:@"Edit"];
-        [theThumbsView showHidecrossButtonMakeHide:YES];
+        [self showHidecrossButtonMakeHide:YES];
         
     }
     
@@ -337,11 +337,15 @@
     
     NSString *tempFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
     [pdfRenderer drawPDFWithReportID:@"" withPDFFilePath:_filePath withSavePDFFilePath:tempFilePath withPreview:YES];
-
     
     document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
     
+    [self removeCrossButton];
+    
     [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
+    
+    [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(showHide) userInfo:nil repeats:NO];
+    
     
 }
 
@@ -400,8 +404,10 @@
 	
 }
 
--(void)thumbsView:(FRDLivelyButton *)thumbsViewCross crossButtonThumbWithIndex:(NSInteger)index{
+-(void)thumbViewCloseButton_clickWithIndex:(NSInteger)index
+{
     
+
     CGSize PDFSize = CGSizeFromString([[NSUserDefaults standardUserDefaults] stringForKey:@"PDFSize"]);
     
     NSString *newFilePath = [[_filePath stringByDeletingPathExtension] stringByAppendingString:@"Temp.pdf"] ;
@@ -459,11 +465,8 @@
     
     PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
     
+    [self removeCrossButton];
     
-    
-    [thumbsViewCross removeFromSuperview];
-    
-    [theThumbsView showHidecrossButtonMakeHide:NO];
     CommonFunction *commonFunction=[[CommonFunction alloc]init];
     NSString *folderPath=[commonFunction getFolderPathFromFullPath:_filePath];
     
@@ -504,11 +507,56 @@
     
     document = [ReaderDocument withDocumentFilePath:tempFilePath password:nil];
     
-    
+    [self removeCrossButton];
     [theThumbsView reloadThumbsCenterOnIndex:([document.pageNumber integerValue] - 1)]; // Page
     
+    [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(showHide) userInfo:nil repeats:NO];
+    
+
     
 }
+     
+-(void)showHide{
+    
+    if([editDoneItemBar.title isEqualToString:@"Edit"]){
+        [self showHidecrossButtonMakeHide:YES];
+    }
+    else{
+        [self showHidecrossButtonMakeHide:NO];
+    }
+         
+}
+
+
+-(void)showHidecrossButtonMakeHide:(BOOL)hide{
+    
+    FRDLivelyButton __weak *crossButton;
+        for(UIView *view in [theThumbsView subviews])
+        {
+            if([view isKindOfClass:[FRDLivelyButton class]])
+            {
+                crossButton=(FRDLivelyButton*)view;
+                crossButton.hidden=hide;
+                
+            }
+        }
+}
+
+-(void)removeCrossButton{
+    
+    FRDLivelyButton __weak *crossButton;
+    for(UIView *view in [theThumbsView subviews])
+    {
+        if([view isKindOfClass:[FRDLivelyButton class]])
+        {
+            crossButton=(FRDLivelyButton*)view;
+            [crossButton removeFromSuperview];
+        }
+    }
+
+}
+
+
 
 - (void)thumbsView:(ReaderThumbsView *)thumbsView didPressThumbWithIndex:(NSInteger)index
 {
@@ -663,8 +711,44 @@
 	backView.layer.shadowPath = [UIBezierPath bezierPathWithRect:backView.bounds].CGPath;
 
 #endif // end of READER_SHOW_SHADOWS Option
+    
+    
+    
+    
+    CommonFunction *commonFunction =[[CommonFunction alloc]init];
+   
+    
+    
+    FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(viewRect)-13,viewRect.origin.y-13,26,26)];
+    crossButton.tag=2;
+    
+    [crossButton setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
+                               kFRDLivelyButtonHighlightedColor: [commonFunction defaultSystemTintColor],
+                               kFRDLivelyButtonColor: [commonFunction defaultSystemTintColor],
+                               }];
+    [crossButton setStyle:kFRDLivelyButtonStyleCircleClose animated:NO];
+    [crossButton setBackgroundColor:    [UIColor whiteColor]];
+    crossButton.layer.borderColor = [[commonFunction defaultSystemTintColor] CGColor];
+    crossButton.layer.cornerRadius = 10.0f;
+    [crossButton addTarget:self action:@selector(thumbViewCloseButton_click:) forControlEvents:UIControlEventTouchUpInside];
+    
+    crossButton.hidden=YES;
+    UIView *view=imageView.superview.superview;
+    crossButton.frame=[imageView convertRect:crossButton.frame toView:view];
+    [view addSubview:crossButton];
+    
+
+    
 }
 
+-(IBAction)thumbViewCloseButton_click:(id)sender{
+    
+    UIButton *button=(UIButton*)sender;
+    ThumbsViewController *thumbViewController = (ThumbsViewController*)[self.superview.superview nextResponder];
+    [thumbViewController thumbViewCloseButton_clickWithIndex:button.tag];
+    
+
+}
 - (void)reuse
 {
 	[super reuse]; // Reuse thumb view

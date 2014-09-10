@@ -51,6 +51,7 @@
 
 
 - (id)initWithReaderDocument:(ReaderDocument *)object;
+- (void)thumbViewCloseButton_clickWithIndex:(NSInteger)index;
 
 @end
 

@@ -24,6 +24,7 @@
 //
 
 #import "ReaderThumbView.h"
+#import "ThumbsViewController.h"
 
 @implementation ReaderThumbView
 {
@@ -91,5 +92,7 @@
 
 	imageView.image = nil; // Release image
 }
+
+
 
 @end
