@@ -51,6 +51,7 @@
 		self.backgroundColor = [UIColor clearColor];
 
 		imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        imageView.tag=1;
 
 		imageView.autoresizesSubviews = NO;
 		imageView.userInteractionEnabled = NO;

@@ -144,7 +144,21 @@
     
 
     CommonFunction *commonFunction =[[CommonFunction alloc]init];
-    FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(theCell.frame)+theCell.frame.origin.x-56,theCell.frame.origin.y,26,26)];
+    UIImageView __weak *thumbImageView=(UIImageView*)[theCell viewWithTag:1];
+    
+    for(UIView *view in [theCell subviews])
+    {
+        if([view isKindOfClass:[UIImageView class]])
+        {
+            thumbImageView=(UIImageView*)view;
+            NSLog(@"thumbImageView=%@",thumbImageView);
+        }
+        
+    }
+        
+    
+    FRDLivelyButton * crossButton  = [[FRDLivelyButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(thumbImageView.frame)+38,thumbImageView.frame.origin.y-19,26,26)];
+    crossButton.tag=2;
     
     [crossButton setOptions:@{ kFRDLivelyButtonLineWidth: @(2.0f),
                                kFRDLivelyButtonHighlightedColor: [commonFunction defaultSystemTintColor],
@@ -159,7 +173,9 @@
     crossButton.hidden=YES;
     
     if(theCell.tag+1>originalPageCount){
-        [self addSubview:crossButton];
+        
+        
+        [thumbImageView addSubview:crossButton];
     }
     
  
@@ -332,10 +348,30 @@
 
 
 -(void)showHidecrossButtonMakeHide:(BOOL)hide{
-    for(UIView *view in [self subviews]){
-        if([view isKindOfClass:[FRDLivelyButton class]])
+    
+    for(UIView *view in [self subviews])
+    {
+        UIImageView __weak *thumbImageView=(UIImageView*)[view viewWithTag:1];
+        
+        for(UIView *view1 in [view subviews])
         {
-            view.hidden=hide;
+            if([view1 isKindOfClass:[UIImageView class]])
+            {
+                thumbImageView=(UIImageView*)view1;
+                
+                break;
+            }
+            
+        }
+        FRDLivelyButton __weak *crossButton;
+        for(UIView *view1 in [thumbImageView subviews])
+        {
+            if([view1 isKindOfClass:[FRDLivelyButton class]])
+            {
+                crossButton=(FRDLivelyButton*)view1;
+                crossButton.hidden=hide;
+                break;
+            }
         }
     }
 
@@ -343,14 +379,33 @@
 
 - (void)reloadThumbsCenterOnIndex:(NSInteger)index
 {
-    
-    for(UIView *view in [self subviews]){
-        if([view isKindOfClass:[FRDLivelyButton class]])
+    for(UIView *view in [self subviews])
+    {
+        UIImageView __weak *thumbImageView=(UIImageView*)[view viewWithTag:1];
+        
+        for(UIView *view1 in [view subviews])
         {
-            [view removeFromSuperview];
+            if([view1 isKindOfClass:[UIImageView class]])
+            {
+                thumbImageView=(UIImageView*)view1;
+                
+                break;
+            }
+            
+        }
+        
+        for(UIView *view1 in [thumbImageView subviews])
+        {
+            if([view1 isKindOfClass:[FRDLivelyButton class]])
+            {
+                [view1 removeFromSuperview];
+                break;
+            }
         }
     }
-	assert(delegate != nil); // Check delegate
+
+    
+   	assert(delegate != nil); // Check delegate
 
 	assert(CGSizeEqualToSize(_thumbSize, CGSizeZero) == false);
 

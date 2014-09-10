@@ -676,12 +676,14 @@ static ReaderViewController *sharedInstance = nil;
 
 -(IBAction)closeButton_click:(id)sender{
     
+    
     [self.view.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_drawingPad.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_drawingPad.layer.sublayers makeObjectsPerformSelector:@selector(removeFromSuperlayer)];
     [_collection removeAllObjects];
     _collection=nil;
     [self clearViewsFromDrawing];
+    
     
     [self dismissViewControllerAnimated:YES completion:nil];
     
