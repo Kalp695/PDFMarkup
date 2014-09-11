@@ -28,7 +28,7 @@
 typedef enum {
     SugarSyncLoginCancelled=0,
     SugarSyncLoginError,
-    SugarSyncLoginSuccess
+    SugarSyncLoginSuccess,
 } SugarSyncLoginStatus;
 
 

@@ -17,6 +17,8 @@
 #import "JSON.h"
 #import "DropboxDownloadFileViewControlller.h"
 #import "FTPLoginViewController.h"
+#import "SugarSyncLoginViewController.h"
+
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
 static NSString *const kClientID = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";
 static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
@@ -141,6 +143,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         [[DBSession sharedSession] linkFromController:self];
         // }
     }
+    
     else if ([sender tag]==2)
     {
         NSURL *authorizationURL = [BoxSDK sharedSDK].OAuth2Session.authorizeURL;
@@ -155,8 +158,21 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     }
     else if ([sender tag]==3)
     {
+        /*
+         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+         SugarSyncLoginViewController *sugarSyncLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"SugarSyncLoginViewController"];
+         sugarSyncLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+         
+         [self presentViewController:sugarSyncLoginViewController animated:YES completion:nil];
+         
+         */
         
-   }
+        SugarSyncLoginViewController * login =  [[SugarSyncLoginViewController alloc] initWithNibName:@"SugarSyncLoginView_ipad" bundle:nil];
+        login.view.frame = CGRectMake(0, 0, 500, 600);
+        UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:login];
+        [self.navigationController presentModalViewController:controller animated:YES];
+        
+    }
     else if ([sender tag]== 4)
     {
         
@@ -166,7 +182,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         
         [self presentViewController:ftpLoginViewController animated:YES completion:nil];
         
-
+        
     }
     else if ([sender tag] == 5)
     {
