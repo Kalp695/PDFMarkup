@@ -549,6 +549,9 @@ static DetailViewController *sharedInstance = nil;
 -(IBAction)gridViewButton_click:(id)sender
 {
     
+    [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-selected.png"] forState:UIControlStateNormal];
+    [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
+    
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDel.documentStatus = @"GridView";
     [documentView bringSubviewToFront:documentsCollectionView];
@@ -559,6 +562,9 @@ static DetailViewController *sharedInstance = nil;
 
 -(IBAction)tableViewButton_click:(id)sender
 {
+    [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
+    [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
+    
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     appDel.documentStatus = @"TableView";
     
@@ -674,7 +680,7 @@ static DetailViewController *sharedInstance = nil;
     
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
-        dropBoxUploadOperationQueue = [NSOperationQueue new];
+        /*
         NSInvocationOperation *dropBoxFlattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
                                                                                              selector:@selector(flattenedFile)
                                                                                                object:nil];
@@ -683,6 +689,18 @@ static DetailViewController *sharedInstance = nil;
         
         [dropBoxFlattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
         [dropBoxUploadOperationQueue addOperation:dropBoxFlattenedFileOperation];
+        */
+        dropBoxUploadOperationQueue = [NSOperationQueue new];
+
+        NSInvocationOperation *dropboxUploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                             selector:@selector(uploadToFolder)
+                                                                                               object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        [dropboxUploadOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [dropBoxUploadOperationQueue addOperation:dropboxUploadOperation];
+        
+        [DownloadingSingletonClass getSharedInstance].dropBoxUpload = NO;
 
         
     }
@@ -799,19 +817,7 @@ static DetailViewController *sharedInstance = nil;
         NSLog(@"gsfgdshfdsfgdssdgsgfsdgf %@",[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"]);
         }
     }
-    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
-    {
-    NSInvocationOperation *dropboxUploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                         selector:@selector(uploadToFolder)
-                                                                                           object:nil];
     
-    // Add the operation to the queue and let it to be executed.
-    [dropboxUploadOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-    [dropBoxUploadOperationQueue addOperation:dropboxUploadOperation];
-    
-    [DownloadingSingletonClass getSharedInstance].dropBoxUpload = NO;
-    }
-
 }
 -(void)deletingFakePath
 {
@@ -884,6 +890,8 @@ static DetailViewController *sharedInstance = nil;
                 
                 buploading = true;
                 filecount++;
+                
+                [self flattenedFile];
                 
                 NSString *strUploadpdfname = [[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"];
                 
@@ -2030,8 +2038,11 @@ static DetailViewController *sharedInstance = nil;
             buploading = true;
             filecount++;
             
+            PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+            [pdfRenderer drawPDFWithReportID:nil withPDFFilePath:[NSString stringWithFormat:@"%@/%@",folderpath,[directoryContent objectAtIndex:i]] withSavePDFFilePath:appFile withPreview:NO];
+
             
-            [[dbManager restClient] uploadFile:[directoryContent objectAtIndex:i] toPath:strdropboxpath withParentRev:nil fromPath:[NSString stringWithFormat:@"%@/%@",folderpath,[directoryContent objectAtIndex:i]]];
+            [[dbManager restClient] uploadFile:[directoryContent objectAtIndex:i] toPath:strdropboxpath withParentRev:nil fromPath:appFile];
             [arrFolderdoc addObject:[NSString stringWithFormat:@"%@/%@",folderpath,[directoryContent objectAtIndex:i]]];
             
         }
@@ -2150,7 +2161,6 @@ static DetailViewController *sharedInstance = nil;
     {
         
     }
-    [self deletingFakePath];
 
 }
 
@@ -2969,7 +2979,15 @@ static DetailViewController *sharedInstance = nil;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    if (tableView == documentsTableView)
+    {
+        return 75;
+
+    }
+    else
+    {
+        return 60;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -2995,16 +3013,24 @@ static DetailViewController *sharedInstance = nil;
         {
             [cell setChecked:item.isChecked];
         }
-        
+        cell.cellSeperatorImage.hidden = YES;
+
+        cell.label.frame = CGRectMake(99, 13, 485, 50);
         cell.label.text = [documenmtsArray objectAtIndex:indexPath.row];
         if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
         {
+            cell.folderImage.frame = CGRectMake(20, 5, 65, 50);
             cell.folderImage.image = [UIImage imageNamed:@"folder.png"];
+            
+            UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(420,25,25,25)];
+            dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
+            [cell addSubview:dot];
             
         }
         else
         {
-            
+            cell.folderImage.frame = CGRectMake(20, 10, 60, 50);
+
             NSString * name = [documenmtsArray objectAtIndex:indexPath.row];
             NSString* theFileName = [[name lastPathComponent] stringByDeletingPathExtension];
             
@@ -3028,9 +3054,7 @@ static DetailViewController *sharedInstance = nil;
             
             
         }
-        UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(390,15,25,25)];
-        dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
-        [cell addSubview:dot];
+      
         
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -3093,7 +3117,8 @@ static DetailViewController *sharedInstance = nil;
             
             static NSString *cellIdentifier = @"Cell";
             FileItemTableCell *cell = (FileItemTableCell *)[rightTableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            
+           // cell.cellSeperatorImage.hidden = NO;
+
             // If there is no cell to reuse, create a new one
             if(cell == nil)
             {
@@ -3103,11 +3128,17 @@ static DetailViewController *sharedInstance = nil;
             }
             
             Item* item = [items objectAtIndex:indexPath.row];
+             cell.label.frame = CGRectMake(99, 5, 485, 50);
             cell.label.text = item.title;
-            cell.folderImage.image = [UIImage imageNamed:@"Dropbox-small.png"];
+            cell.folderImage.hidden = NO;
+            cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
             if ([cell.label.text isEqualToString:@"Add Account"])
             {
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(340,10,30,30)];
+                cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
+
+                cell.folderImage.image = [UIImage imageNamed:@"plus.png"];
+
+                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
                 [cell addSubview:dot];
                 
@@ -3115,7 +3146,9 @@ static DetailViewController *sharedInstance = nil;
             }
             else
             {
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(340,10,30,30)];
+                cell.folderImage.image = item.image;
+
+                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"circularDisclosure.png"];
                 [cell addSubview:dot];
                 

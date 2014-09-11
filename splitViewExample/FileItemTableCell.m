@@ -11,7 +11,7 @@
 
 @implementation FileItemTableCell
 @synthesize label,folderImage,lblTitle,btnIcon,indicatorImageView;
-@synthesize folderImageDocuments,lblTitleDocuments,lblItemsCount;
+@synthesize folderImageDocuments,lblTitleDocuments,lblItemsCount,cellSeperatorImage;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
