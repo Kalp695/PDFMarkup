@@ -661,6 +661,7 @@ static ReaderViewController *sharedInstance = nil;
      document.pageNumber = [NSNumber numberWithInteger:page]; // Update page number
     [self showDocumentPageNew:page]; // Show the page
     //[self performSelector:@selector(showDocument:) withObject:nil afterDelay:0.0f];
+    [self updateScrollViewContentViews];
     theScrollView.contentOffset=CGPointMake(CGRectGetWidth(theScrollView.frame)*(page-1), theScrollView.contentOffset.y);
    
    
