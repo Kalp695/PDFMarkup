@@ -672,32 +672,32 @@ static DetailViewController *sharedInstance = nil;
 -(void)uploadFolders
 {
     
-    
     if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         dropBoxUploadOperationQueue = [NSOperationQueue new];
-        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                selector:@selector(uploadToFolder)
-                                                                                  object:nil];
-        
-        // Add the operation to the queue and let it to be executed.
-        
-        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-        [dropBoxUploadOperationQueue addOperation:operation];
-        [DownloadingSingletonClass getSharedInstance].dropBoxUpload = NO;
-    }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
-    {
-        
-        boxUploadOperationQueue = [NSOperationQueue new];
-        NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
+        NSInvocationOperation *dropBoxFlattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
                                                                                              selector:@selector(flattenedFile)
                                                                                                object:nil];
         
         // Add the operation to the queue and let it to be executed.
         
-        [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-        [boxUploadOperationQueue addOperation:flattenedFileOperation];
+        [dropBoxFlattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [dropBoxUploadOperationQueue addOperation:dropBoxFlattenedFileOperation];
+
+        
+    }
+    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    {
+        
+       boxUploadOperationQueue = [NSOperationQueue new];
+//        NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
+//                                                                                             selector:@selector(flattenedFile)
+//                                                                                               object:nil];
+//        
+//        // Add the operation to the queue and let it to be executed.
+//        
+//        [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+//        [boxUploadOperationQueue addOperation:flattenedFileOperation];
         
         
         NSInvocationOperation *uploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
@@ -705,10 +705,9 @@ static DetailViewController *sharedInstance = nil;
                                                                                         object:nil];
         
         // Add the operation to the queue and let it to be executed.
-        
+       // [uploadOperation addDependency:flattenedFileOperation];
+
         [uploadOperation setQueuePriority:NSOperationQueuePriorityHigh];
-        
-        [uploadOperation addDependency:flattenedFileOperation];
         
         [boxUploadOperationQueue addOperation:uploadOperation];
         
@@ -751,16 +750,35 @@ static DetailViewController *sharedInstance = nil;
 {
     for (int i = 0; i<[filePathsArray count];i++) {
         
+       
         tempPathArray = [[NSMutableArray alloc]init];
         
         NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
         NSString * originalName = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfName"];
-        
+        if ([[originalName pathExtension] isEqualToString: @""])
+        {
+            NSLog(@"no flattened file");
+        }
+        else{
         // appFile = [NSString stringWithFormat:@"%@-temp",originalName];
-        appFile = [[NSString alloc]initWithFormat:@"%@-temp.pdf",[originalName stringByDeletingPathExtension]]  ;
+        appFile = [[NSString alloc]initWithFormat:@"%@-PdfMarkUp.pdf",[originalName stringByDeletingPathExtension]]  ;
         
         NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
-        NSString * newPath = [NSString stringWithFormat:@"%@/%@",newPathToFile,appFile];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+        NSArray *firstSplit = [originalPath componentsSeparatedByString:@"Documents"];
+            NSLog(@"paths in doc is %@",firstSplit);
+            NSString * newPath;
+            if (![originalName isEqualToString:[firstSplit lastObject]])
+            {
+                newPath = [NSString stringWithFormat:@"%@%@",newPathToFile,appFile];
+
+            }
+            else{
+                newPath = [NSString stringWithFormat:@"%@%@",documentsDirectory,appFile];
+
+            }
         NSLog(@"%@",newPath);
         appFile = newPath;
         
@@ -774,22 +792,51 @@ static DetailViewController *sharedInstance = nil;
         [tempPathArray addObject:dic];
         
         
-        [filePathsArray replaceObjectAtIndex:i withObject:[tempPathArray objectAtIndex:i]];
+        [filePathsArray replaceObjectAtIndex:i withObject:[tempPathArray objectAtIndex:0]];
         
         //          [[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"] stringByReplacingOccurrencesOfString:[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"] withString:appFile ];
         
         NSLog(@"gsfgdshfdsfgdssdgsgfsdgf %@",[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"]);
+        }
     }
+    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    {
+    NSInvocationOperation *dropboxUploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                         selector:@selector(uploadToFolder)
+                                                                                           object:nil];
     
-}
+    // Add the operation to the queue and let it to be executed.
+    [dropboxUploadOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+    [dropBoxUploadOperationQueue addOperation:dropboxUploadOperation];
+    
+    [DownloadingSingletonClass getSharedInstance].dropBoxUpload = NO;
+    }
 
+}
+-(void)deletingFakePath
+{
+    // path will exixits in filepath array 1st object every time .
+    
+    NSString * originalPath = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfPath"];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSError *error;
+    NSString *documentsDirectory = [NSHomeDirectory()
+                                    stringByAppendingPathComponent:@"Documents"];
+    
+    if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
+        NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+    
+    // Show contents of Documents directory
+    NSLog(@"Documents directory: %@",
+          [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+
+}
 -(void)uploadToFolder
 {
     
     NSLog(@"uploading files is %@",filePathsArray);
     filecount = 0;
     
-    // [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
     
     uploadPdfCheck = FALSE;
     
@@ -896,6 +943,18 @@ static DetailViewController *sharedInstance = nil;
         NSString * extension = @"pdf";
         if ([[[[[filePathsArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
         {
+            
+//            boxUploadOperationQueue = [NSOperationQueue new];
+//            NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
+//                                                                                                 selector:@selector(flattenedFile)
+//                                                                                                   object:nil];
+//            
+//            // Add the operation to the queue and let it to be executed.
+//            
+//            [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+//            [boxUploadOperationQueue addOperation:flattenedFileOperation];
+            
+            [self flattenedFile];
             
             NSString *myString = [[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"];
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
@@ -1426,19 +1485,7 @@ static DetailViewController *sharedInstance = nil;
         
         if ([filePathsArray count]>0) {
             
-            NSString * originalPath = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfPath"];
-            NSFileManager *fileMgr = [NSFileManager defaultManager];
-            NSError *error;
-            NSString *documentsDirectory = [NSHomeDirectory()
-                                            stringByAppendingPathComponent:@"Documents"];
-            
-            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
-                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-            
-            // Show contents of Documents directory
-            NSLog(@"Documents directory: %@",
-                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-            
+            [self deletingFakePath];
             
             [filePathsArray removeObjectAtIndex:0];
             
@@ -1567,6 +1614,8 @@ static DetailViewController *sharedInstance = nil;
         {
             boxParentId = [[arrJson objectAtIndex:0]objectForKey:@"id"];
             boxFolderPaths = [boxFolderPaths stringByAppendingPathComponent:childFolderName];
+            
+            
             NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
                                                                                     selector:@selector(closeBoxUploadControllerr)
                                                                                       object:nil];
@@ -1598,14 +1647,35 @@ static DetailViewController *sharedInstance = nil;
             NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
             [dic setObject:bfolderName forKey:@"PdfName"];
             [dic setObject:bfolderPath forKey:@"PdfPath"];
-            
             [filePathsArray addObject:dic];
             
-            
         }
-        
-        
         [boxUploadingArray removeAllObjects];
+        
+//        boxUploadOperationQueue = [NSOperationQueue new];
+//        NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
+//                                                                                             selector:@selector(flattenedFile)
+//                                                                                               object:nil];
+//        
+//        // Add the operation to the queue and let it to be executed.
+//        
+//        [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+//        [boxUploadOperationQueue addOperation:flattenedFileOperation];
+//        
+//        
+//        NSInvocationOperation *uploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
+//                                                                                      selector:@selector(uploadToFolder)
+//                                                                                        object:nil];
+//        
+//        // Add the operation to the queue and let it to be executed.
+//        [uploadOperation addDependency:flattenedFileOperation];
+//        
+//        [uploadOperation setQueuePriority:NSOperationQueuePriorityHigh];
+//        
+//        [boxUploadOperationQueue addOperation:uploadOperation];
+
+        
+        
         [self uploadToFolder];
         
     }
@@ -2056,7 +2126,6 @@ static DetailViewController *sharedInstance = nil;
           metadata:(DBMetadata*)metadata{
     
     filecount -- ;
-    
     if ([[[[filePathsArray lastObject]objectForKey:@"PdfPath"] pathExtension] isEqualToString:@"pdf"]) {
         if ([[[filePathsArray lastObject]objectForKey:@"PdfPath"]isEqualToString:srcPath])
         {
@@ -2081,7 +2150,8 @@ static DetailViewController *sharedInstance = nil;
     {
         
     }
-    
+    [self deletingFakePath];
+
 }
 
 
@@ -2135,6 +2205,7 @@ static DetailViewController *sharedInstance = nil;
         
     }
 }
+
 -(void)chooseFolder
 {
     
@@ -2613,9 +2684,6 @@ static DetailViewController *sharedInstance = nil;
     {
         cell.editimage.hidden = YES;
     }
-    
-    
-    
     
     return cell;
 }
