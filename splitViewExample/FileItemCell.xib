@@ -18,11 +18,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="e74-AC-hnP">
-                        <rect key="frame" x="20" y="11" width="39" height="37"/>
+                        <rect key="frame" x="20" y="5" width="56" height="50"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </imageView>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="krT-gz-IX4">
-                        <rect key="frame" x="67" y="11" width="206" height="37"/>
+                        <rect key="frame" x="89" y="11" width="206" height="37"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>

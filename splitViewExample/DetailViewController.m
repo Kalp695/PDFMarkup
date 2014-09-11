@@ -2652,7 +2652,7 @@ static DetailViewController *sharedInstance = nil;
     if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
     {
         // cell.coll .image = [UIImage imageNamed:@"folder_large.png"];
-        cell.collectionViewImageView.image = [UIImage imageNamed:@"folder_large.png"];
+        cell.collectionViewImageView.image = [UIImage imageNamed:@"folder.png"];
         
     }
     else
@@ -3015,11 +3015,11 @@ static DetailViewController *sharedInstance = nil;
         }
         cell.cellSeperatorImage.hidden = YES;
 
-        cell.label.frame = CGRectMake(99, 13, 485, 50);
+        cell.label.frame = CGRectMake(80, 13, 485, 50);
         cell.label.text = [documenmtsArray objectAtIndex:indexPath.row];
         if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
         {
-            cell.folderImage.frame = CGRectMake(20, 5, 65, 50);
+            cell.folderImage.frame = CGRectMake(0, 5, 65, 43);
             cell.folderImage.image = [UIImage imageNamed:@"folder.png"];
             
             UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(420,25,25,25)];
@@ -3029,7 +3029,7 @@ static DetailViewController *sharedInstance = nil;
         }
         else
         {
-            cell.folderImage.frame = CGRectMake(20, 10, 60, 50);
+            cell.folderImage.frame = CGRectMake(5, 5, 56, 50);
 
             NSString * name = [documenmtsArray objectAtIndex:indexPath.row];
             NSString* theFileName = [[name lastPathComponent] stringByDeletingPathExtension];
