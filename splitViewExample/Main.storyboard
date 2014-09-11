@@ -45,9 +45,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="y19-YL-jTF">
-                                        <rect key="frame" x="474" y="20" width="46" height="30"/>
+                                        <rect key="frame" x="469" y="20" width="32" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="=">
+                                        <state key="normal" backgroundImage="grid-selected.png">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -56,12 +56,13 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="20j-g0-eZK">
-                                        <rect key="frame" x="520" y="20" width="46" height="30"/>
+                                        <rect key="frame" x="520" y="12" width="32" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="#">
+                                        <state key="normal" backgroundImage="table-normal.png">
                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" backgroundImage="table-selected.png"/>
                                         <connections>
                                             <action selector="tableViewButton_click:" destination="B47-E4-sti" eventType="touchUpInside" id="Zqt-ap-YgE"/>
                                         </connections>
@@ -173,7 +174,9 @@
                         <outlet property="documentsCollectionView" destination="Oix-vf-2cX" id="uGc-xT-IpT"/>
                         <outlet property="documentsTableView" destination="Tcu-sn-noO" id="aaH-7F-KNC"/>
                         <outlet property="editBarButton" destination="aPT-6j-fAR" id="qMn-ko-7p2"/>
+                        <outlet property="gridViewButton" destination="y19-YL-jTF" id="Yfp-Cq-fIv"/>
                         <outlet property="rightTableView" destination="NWL-h9-lNf" id="RpX-2r-1Fg"/>
+                        <outlet property="tableViewButton" destination="20j-g0-eZK" id="F4W-h5-BXg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5JQ-8Z-46p" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -442,26 +445,32 @@
         <scene sceneID="smW-Zh-WAh">
             <objects>
                 <tableViewController title="Master" clearsSelectionOnViewWillAppear="NO" id="7bK-jq-Zjz" customClass="MasterViewController" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="50" sectionHeaderHeight="22" sectionFooterHeight="22" id="r7i-6Z-zg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                        <color key="separatorColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="separatorColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="50" id="Z42-4k-clt" customClass="LeftTableViewCell">
-                                <rect key="frame" x="0.0" y="86" width="320" height="50"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="60" id="Z42-4k-clt" customClass="LeftTableViewCell">
+                                <rect key="frame" x="0.0" y="86" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z42-4k-clt" id="809-qe-MUN">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView appearanceType="aqua" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Nb3-bZ-rOL">
-                                            <rect key="frame" x="5" y="8" width="30" height="33"/>
+                                            <rect key="frame" x="5" y="8" width="30" height="34"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bgCell.png" id="2Wp-RA-fYS">
+                                            <rect key="frame" x="0.0" y="60" width="320" height="1"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
                                         <label appearanceType="aqua" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="CLT-Xu-ib8">
                                             <rect key="frame" x="74" y="15" width="148" height="21"/>
@@ -1164,12 +1173,14 @@
         <image name="Google-Drive.png" width="512" height="512"/>
         <image name="SugarSync.png" width="533" height="435"/>
         <image name="Unselected.png" width="29" height="29"/>
+        <image name="bgCell.png" width="475" height="6"/>
         <image name="black_blue.png" width="42" height="42"/>
         <image name="box.png" width="400" height="300"/>
         <image name="download.png" width="58" height="66"/>
         <image name="email.png" width="35" height="35"/>
         <image name="folder.png" width="63" height="59"/>
         <image name="ftp.png" width="256" height="256"/>
+        <image name="grid-selected.png" width="64" height="64"/>
         <image name="icon_drawcircle@4x.png" width="64" height="64"/>
         <image name="icon_drawline_active@4x.png" width="64" height="64"/>
         <image name="icon_drawsquare@4x.png" width="64" height="64"/>
@@ -1181,6 +1192,8 @@
         <image name="pencil_blue.png" width="18" height="30"/>
         <image name="red1.png" width="40" height="40"/>
         <image name="rename.png" width="35" height="32"/>
+        <image name="table-normal.png" width="48" height="64"/>
+        <image name="table-selected.png" width="48" height="64"/>
         <image name="trash.png" width="72" height="82"/>
         <image name="upload.png" width="58" height="66"/>
         <image name="white1.png" width="40" height="40"/>

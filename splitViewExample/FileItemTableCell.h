@@ -18,6 +18,7 @@
     IBOutlet UIImageView * indicatorImageView;
 
 	BOOL			m_checked;
+    IBOutlet UIImageView * cellSeperatorImage;
 
     
 }
@@ -39,5 +40,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *lblTitleDocuments;
 @property (nonatomic, strong) IBOutlet UILabel *lblItemsCount;
 @property (nonatomic, strong) IBOutlet UIImageView *folderImageDocuments;
+@property (nonatomic, strong) IBOutlet UIImageView *cellSeperatorImage;
+
 
 @end

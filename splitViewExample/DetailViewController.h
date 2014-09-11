@@ -18,6 +18,9 @@
     IBOutlet FileItemTableCell *fileItemTableCell;
     NSMutableArray *items;
     
+    IBOutlet UIButton * gridViewButton;
+    IBOutlet UIButton * tableViewButton;
+    
     IBOutlet UITableView *rightTableView;
     
     IBOutlet UILabel * accountsLabel;

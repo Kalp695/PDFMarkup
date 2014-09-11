@@ -14,7 +14,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bgCell.png" id="qw4-L5-H5q">
-                        <rect key="frame" x="0.0" y="55" width="480" height="9"/>
+                        <rect key="frame" x="0.0" y="58" width="480" height="4"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="e74-AC-hnP">
@@ -31,6 +31,7 @@
                 </subviews>
             </tableViewCellContentView>
             <connections>
+                <outlet property="cellSeperatorImage" destination="qw4-L5-H5q" id="7qK-UV-kYk"/>
                 <outlet property="folderImage" destination="e74-AC-hnP" id="gX3-LI-kSI"/>
                 <outlet property="label" destination="krT-gz-IX4" id="d6k-YC-OKt"/>
             </connections>
