@@ -48,6 +48,7 @@
 		1871BDAE19C1EA7F0069ED17 /* table-normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAA19C1EA7F0069ED17 /* table-normal.png */; };
 		1871BDAF19C1EA7F0069ED17 /* grid-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAB19C1EA7F0069ED17 /* grid-selected.png */; };
 		1871BDB019C1EA7F0069ED17 /* table-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAC19C1EA7F0069ED17 /* table-selected.png */; };
+		1871BDB219C1FA6F0069ED17 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDB119C1FA6F0069ED17 /* plus.png */; };
 		1888F6F919B2E8D100DBC547 /* FTPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */; };
 		1888F70019B2F8C600DBC547 /* BRRequestLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6FF19B2F8C600DBC547 /* BRRequestLogin.m */; };
 		1888F70319B301D700DBC547 /* FTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F70219B301D700DBC547 /* FTP.m */; };
@@ -411,6 +412,7 @@
 		1871BDAA19C1EA7F0069ED17 /* table-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table-normal.png"; sourceTree = "<group>"; };
 		1871BDAB19C1EA7F0069ED17 /* grid-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grid-selected.png"; sourceTree = "<group>"; };
 		1871BDAC19C1EA7F0069ED17 /* table-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table-selected.png"; sourceTree = "<group>"; };
+		1871BDB119C1FA6F0069ED17 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
 		1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPLoginViewController.h; sourceTree = "<group>"; };
 		1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPLoginViewController.m; sourceTree = "<group>"; };
 		1888F6FE19B2F8C600DBC547 /* BRRequestLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestLogin.h; sourceTree = "<group>"; };
@@ -1050,6 +1052,7 @@
 		189E7838197D12C400083F61 /* Network Images */ = {
 			isa = PBXGroup;
 			children = (
+				1871BDB119C1FA6F0069ED17 /* plus.png */,
 				FEA61E9919923D0F00021B15 /* Google_Drive_Small.png */,
 				18CD36E919ADB3EE006EB8CE /* blue.png */,
 				18A2AAC01994F918009D7E3A /* box_small.png */,
@@ -2320,6 +2323,7 @@
 				653E3BC8198183D600788965 /* thick_blue_3 pt.png in Resources */,
 				653E3BC1198183D600788965 /* red1.png in Resources */,
 				189F2634197EB6F900ADDF3F /* document.png in Resources */,
+				1871BDB219C1FA6F0069ED17 /* plus.png in Resources */,
 				653E3BB1198183D600788965 /* icon_thickness_thin@4x.png in Resources */,
 				184C093A197CD87000740DD0 /* document.png in Resources */,
 				653E3B9A198183D600788965 /* appSelectionProperty.plist in Resources */,

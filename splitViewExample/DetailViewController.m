@@ -3117,7 +3117,7 @@ static DetailViewController *sharedInstance = nil;
             
             static NSString *cellIdentifier = @"Cell";
             FileItemTableCell *cell = (FileItemTableCell *)[rightTableView dequeueReusableCellWithIdentifier:cellIdentifier];
-            cell.cellSeperatorImage.hidden = NO;
+           // cell.cellSeperatorImage.hidden = NO;
 
             // If there is no cell to reuse, create a new one
             if(cell == nil)
@@ -3128,11 +3128,17 @@ static DetailViewController *sharedInstance = nil;
             }
             
             Item* item = [items objectAtIndex:indexPath.row];
+             cell.label.frame = CGRectMake(99, 5, 485, 50);
             cell.label.text = item.title;
-            cell.folderImage.image = [UIImage imageNamed:@"Dropbox-small.png"];
+            cell.folderImage.hidden = NO;
+            cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
             if ([cell.label.text isEqualToString:@"Add Account"])
             {
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(340,10,30,30)];
+                cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
+
+                cell.folderImage.image = [UIImage imageNamed:@"plus.png"];
+
+                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
                 [cell addSubview:dot];
                 
@@ -3140,7 +3146,9 @@ static DetailViewController *sharedInstance = nil;
             }
             else
             {
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(340,10,30,30)];
+                cell.folderImage.image = item.image;
+
+                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"circularDisclosure.png"];
                 [cell addSubview:dot];
                 
