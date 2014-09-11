@@ -14,11 +14,11 @@
 @private
 	UIImageView*	m_checkImageView;
     IBOutlet UILabel *label;
-    IBOutlet UIImageView * folderImage;
-    IBOutlet UIImageView * indicatorImageView;
+    IBOutlet UIImageView __weak * folderImage;
+    IBOutlet UIImageView __weak * indicatorImageView;
 
-	BOOL			m_checked;
-    IBOutlet UIImageView * cellSeperatorImage;
+	BOOL m_checked;
+    IBOutlet UIImageView __weak * cellSeperatorImage;
 
     
 }
@@ -26,21 +26,21 @@
 - (void) setChecked:(BOOL)checked;
 // Add Account s
 @property(nonatomic,retain) UILabel *label;
-@property(nonatomic,retain)IBOutlet UIImageView * folderImage;
-@property(nonatomic,retain)IBOutlet UIImageView * indicatorImageView;
+@property(nonatomic,weak)IBOutlet UIImageView * folderImage;
+@property(nonatomic,weak)IBOutlet UIImageView * indicatorImageView;
 
 
 // Dropbox Cell
 
-@property (nonatomic, strong) IBOutlet UILabel *lblTitle;
-@property (nonatomic, strong) IBOutlet UIButton *btnIcon;
+@property (nonatomic, weak) IBOutlet UILabel *lblTitle;
+@property (nonatomic, weak) IBOutlet UIButton *btnIcon;
 
 //Documents Cell
 
-@property (nonatomic, strong) IBOutlet UILabel *lblTitleDocuments;
-@property (nonatomic, strong) IBOutlet UILabel *lblItemsCount;
-@property (nonatomic, strong) IBOutlet UIImageView *folderImageDocuments;
-@property (nonatomic, strong) IBOutlet UIImageView *cellSeperatorImage;
+@property (nonatomic, weak) IBOutlet UILabel *lblTitleDocuments;
+@property (nonatomic, weak) IBOutlet UILabel *lblItemsCount;
+@property (nonatomic, weak) IBOutlet UIImageView *folderImageDocuments;
+@property (nonatomic, weak) IBOutlet UIImageView *cellSeperatorImage;
 
 
 @end

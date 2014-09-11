@@ -432,6 +432,49 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 }
 
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    
+    
+
+    // Create the view for the header
+    UIView *sectionView;
+    
+    CGRect sectionFrame = CGRectMake(0.0, 0.0, 200.0, 60.0);
+    sectionView = [[UIView alloc] initWithFrame:sectionFrame];
+    sectionView.backgroundColor=[UIColor groupTableViewBackgroundColor];
+    sectionView.alpha = 0.9;
+    
+    
+    // Create the label
+    CGRect labelFrame = CGRectMake(15.0, 3.0, 200.0, 22.0);
+    UILabel *sectionLabel = [[UILabel alloc] initWithFrame:labelFrame];
+    if(section==1)
+    {
+    sectionLabel.text =  @"Account";
+    }
+    else if(section==2)
+    {
+        sectionLabel.text =  [bgProcessArray objectAtIndex:0];
+    }
+    else if(section==3)
+    {
+        sectionLabel.text =  [bgProcessArray objectAtIndex:1];
+    }
+    sectionLabel.font = [UIFont systemFontOfSize:15.0f];
+    sectionLabel.textColor = [UIColor blackColor];
+    sectionLabel.shadowColor = [UIColor grayColor];
+    sectionLabel.shadowOffset = CGSizeMake(0, 1);
+    sectionLabel.backgroundColor = [UIColor clearColor];
+    [sectionView addSubview:sectionLabel];
+    
+    // Return the header section view
+    return sectionView;
+}
+
+
+
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     
     if(section == 0)
@@ -460,6 +503,17 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     return NO;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    
+    if(section == 0)
+    {
+        return 0.0f;
+        
+    }
+    
+    return 30.0f;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section ==0)
@@ -467,10 +521,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         static NSString *CellIdentifier = @"Cell";
         LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
-        //cell.leftFolderImage.image = [UIImage imageNamed:[leftImagesArray objectAtIndex:indexPath.row] ];
-        cell.imageView.image =[UIImage imageNamed:[leftImagesArray objectAtIndex:indexPath.row]];
+        cell.leftFolderImage.image = [UIImage imageNamed:[leftImagesArray objectAtIndex:indexPath.row] ];
+        //cell.imageView.image =[UIImage imageNamed:[leftImagesArray objectAtIndex:indexPath.row]];
         cell.label.text = [leftArrayTitles objectAtIndex:indexPath.row ];
-        
+        cell.label.font=[UIFont systemFontOfSize:16.0f];
+        //cell.imageView.frame=CGRectMake(5, 8, 20, 20);
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
         
@@ -488,37 +543,35 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         static NSString *CellIdentifier = @"Cell";
         LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
+        cell.label.font=[UIFont systemFontOfSize:16.0f];
         if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
             
-            cell.imageView.image =[UIImage imageNamed:@"Dropbox-small.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"Dropbox-small.png"];
+            cell.leftFolderImage.frame=CGRectMake(5, 20, 30, 25);
             cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"username"];
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"])
         {
-            cell.imageView.image =[UIImage imageNamed:@"Google_Drive_Small.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"Google_Drive_Small.png"];
+            cell.leftFolderImage.frame=CGRectMake(5, 16, 30, 30);
             cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"email"] capitalizedString];
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"])
         {
-            cell.imageView.image =[UIImage imageNamed:@"box_small.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"box_small.png"];
+            cell.leftFolderImage.frame=CGRectMake(5, 12, 40, 30);
             cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"])
         {
-            cell.imageView.image =[UIImage imageNamed:@"ftp.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"ftp.png"];
+            cell.leftFolderImage.frame=CGRectMake(5, 12, 30, 30);
             cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"])
         {
-            cell.imageView.image =[UIImage imageNamed:@"box_small.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"box_small.png"];
+            cell.leftFolderImage.frame=CGRectMake(5, 12, 30, 30);
             cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
             
             
@@ -552,8 +605,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
               initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
         [ac startAnimating];
         
-        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(90, 10, 320, 50)];
-        NSLog(@"view frame is %f",view.frame.origin.y);
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(70, 10, 320, 50)];
+        //NSLog(@"view frame is %f",view.frame.origin.y);
         [view addSubview:ac];
         [cell addSubview:view];
         

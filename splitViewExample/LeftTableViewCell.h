@@ -12,13 +12,13 @@
 @interface LeftTableViewCell : UITableViewCell
 {
 @private
-    IBOutlet UILabel *label;
-    IBOutlet UIImageView * leftFolderImage;
+    IBOutlet UILabel __weak *label;
+    IBOutlet UIImageView __weak * leftFolderImage;
 }
-@property(nonatomic,retain)IBOutlet UIImageView * leftFolderImage;
+@property(nonatomic,weak)IBOutlet UIImageView * leftFolderImage;
 
 
-@property(nonatomic,retain) UILabel *label;
+@property(nonatomic,weak) UILabel *label;
 
 @end
 

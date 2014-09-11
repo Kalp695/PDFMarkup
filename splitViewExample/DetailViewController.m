@@ -3017,6 +3017,7 @@ static DetailViewController *sharedInstance = nil;
 
         cell.label.frame = CGRectMake(80, 13, 485, 50);
         cell.label.text = [documenmtsArray objectAtIndex:indexPath.row];
+        cell.label.font=[UIFont systemFontOfSize:14.0f];
         if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
         {
             cell.folderImage.frame = CGRectMake(0, 5, 65, 43);
