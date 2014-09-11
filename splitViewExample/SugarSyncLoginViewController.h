@@ -24,10 +24,14 @@
 @property (nonatomic, assign) IBOutlet UIButton *loginButton;
 @property (nonatomic, assign) IBOutlet UILabel *error;
 @property (nonatomic, assign) SugarSyncClient *client;
-@property (nonatomic, retain) void (^completionHandler)(SugarSyncLoginStatus, NSError*);
 
--(IBAction)login:(id)sender;
--(IBAction)cancel:(id)sender;
+//typedef void (^completionHandler)(SugarSyncLoginStatus, NSError*);
+//@property (nonatomic, copy) completionHandler completionHandler;
+
+@property (nonatomic, copy) void (^completionHandler)(SugarSyncLoginStatus, NSError*);
+
+-(IBAction)cancelClick:(id)sender;
+-(IBAction)loginClick:(id)sender;
 
 
 @end

@@ -123,16 +123,16 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(popStatusChange) name:@"popStatusNotification" object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart:) name:@"DownloadStart" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart:) name:@"UploadStart" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"UploadCompleted" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"Download Success" object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"DownloadComplete" object:nil];
-
-
-
+    
+    
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *butImage = [[UIImage imageNamed:@"prefs2.png"] stretchableImageWithLeftCapWidth:10 topCapHeight:10];
     [button setBackgroundImage:butImage forState:UIControlStateNormal];
@@ -156,7 +156,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     // self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-   
+    
     [self.tableView reloadData ];
     
     [MasterViewController sharedInstance].popStatus = YES;
@@ -165,10 +165,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     [MasterViewController sharedInstance].popStatus = YES;
     
-        if ([MasterViewController sharedInstance].popStatus == YES)
-        {
-            self.tableView.userInteractionEnabled = YES;
-        }
+    if ([MasterViewController sharedInstance].popStatus == YES)
+    {
+        self.tableView.userInteractionEnabled = YES;
+    }
     
     
 }
@@ -177,21 +177,21 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     NSLog(@"sender obj is %@",notification.object);
     [DownloadingSingletonClass getSharedInstance].activityViewStatus = notification.object;
-
+    
     if ([notification.name isEqualToString:@"UploadStart"])
     {
         if (![bgProcessArray containsObject:@"Uploading in progress"]) {
             [bgProcessArray addObject:@"Uploading in progress"];
-
+            
         }
     }
     else
     {
         if (![bgProcessArray containsObject:@"Downloading in progress"]) {
             [bgProcessArray addObject:@"Downloading in progress"];
-
+            
         }
-
+        
     }
     
     [DownloadingSingletonClass getSharedInstance].activityView = YES;
@@ -209,14 +209,14 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     }
     else
     {
-       [bgProcessArray removeObject:@"Downloading in progress"];
+        [bgProcessArray removeObject:@"Downloading in progress"];
         
     }
     NSLog(@"sections array is %@",bgProcessArray);
     if ([bgProcessArray count]==0)
     {
         [DownloadingSingletonClass getSharedInstance].activityView = NO;
-
+        
     }
     [self.tableView reloadData];
     [ac removeFromSuperview];
@@ -402,7 +402,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         {
             int i = 2 + [bgProcessArray count];
             return i;
- 
+            
         }
         else
         {
@@ -449,8 +449,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     {
         NSLog(@"Section title Array is %@",bgProcessArray );
         
-          return [bgProcessArray objectAtIndex:0];
-
+        return [bgProcessArray objectAtIndex:0];
+        
     }
     else if(section ==3)
     {
@@ -473,8 +473,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
-        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
-
+        
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
         UIView *bgColorView = [[UIView alloc] init];
         bgColorView.layer.cornerRadius = 0;
@@ -526,9 +525,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         }
         //activityIndicatorframe = cell.label.frame;
         
-      // activityIndicatorframe = cell.label.frame;
+        // activityIndicatorframe = cell.label.frame;
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
-        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
         cell.label.font = [UIFont fontWithName:@"System" size:14];
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         
@@ -546,7 +544,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     {
         static NSString *CellIdentifier = @"Cell";
         LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
+        
         cell.imageView.hidden = YES;
         cell.label.hidden = YES;
         
@@ -561,7 +559,6 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
-        NSLog(@"acitity frame is %f",activityIndicatorframe.origin.y);
         
         
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
@@ -572,7 +569,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [cell setSelectedBackgroundView:bgColorView];
         
         return cell;
-
+        
     }
 }
 
@@ -612,7 +609,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     // UITableViewCellSelectionStyleGray
     
-        
+    
     NSDate *object = _objects[indexPath.row];
     if ([MasterViewController sharedInstance].popStatus == YES)
     {
@@ -669,7 +666,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             //        [self.navigationController pushViewController: detail animated: YES];
             
         }
-
+        
     }
     
     
