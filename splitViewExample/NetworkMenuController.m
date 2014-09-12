@@ -68,17 +68,21 @@
     renameButton.userInteractionEnabled = NO;
 
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"MultipleFiles" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"MultipleFiles" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"SingleFile" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"SingleFile" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"NoFiles" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"NoFiles" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(docDataToDisplay:) name:@"Download Success" object:nil];
 
 }
-- (void) receiveTestNotification:(NSNotification *) notification
+- (void) receiveNotification:(NSNotification *) notification
 {
+    
+    NSMutableArray * array = [[NSMutableArray alloc]init];
+    array = [notification object];
+    selectedLabel.text = [NSString stringWithFormat:@"%d",[array count]];
     
     if ([[notification name] isEqualToString:@"MultipleFiles"])
     {
@@ -160,7 +164,6 @@
     if ([btn tag] == 1)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadClick" object:self];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
 
 
     }

@@ -180,16 +180,28 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     if ([notification.name isEqualToString:@"UploadStart"])
     {
-        if (![bgProcessArray containsObject:@"Uploading in progress"]) {
-            [bgProcessArray addObject:@"Uploading in progress"];
-            
-        }
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadStart" object:nil];
+
+//        if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Uploading"])
+//        {
+            if (![bgProcessArray containsObject:@"Uploading in progress"]) {
+                [bgProcessArray addObject:@"Uploading in progress"];
+                
+            }
+       // }
+
+      
     }
     else
     {
-        if (![bgProcessArray containsObject:@"Downloading in progress"]) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadStart" object:nil];
+
+//        if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
+//        {
+            if (![bgProcessArray containsObject:@"Downloading in progress"]) {
             [bgProcessArray addObject:@"Downloading in progress"];
             
+      //  }
         }
         
     }
@@ -204,11 +216,17 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     if ([notification.name isEqualToString:@"UploadCompleted"])
     {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCompleted" object:nil];
+
         [bgProcessArray removeObject:@"Uploading in progress"];
         
     }
     else
     {
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadComplete" object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Download Success" object:nil];
+
         [bgProcessArray removeObject:@"Downloading in progress"];
         
     }
@@ -218,6 +236,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [DownloadingSingletonClass getSharedInstance].activityView = NO;
         
     }
+    
     [self.tableView reloadData];
     [ac removeFromSuperview];
     ac = nil;

@@ -28,6 +28,7 @@
 @synthesize boxSelectedFiles;
 @synthesize accountIndex;
 @synthesize ftpDownloadpath;
+@synthesize bgRunningStatus;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     

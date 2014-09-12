@@ -49,6 +49,12 @@
 		1871BDAF19C1EA7F0069ED17 /* grid-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAB19C1EA7F0069ED17 /* grid-selected.png */; };
 		1871BDB019C1EA7F0069ED17 /* table-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAC19C1EA7F0069ED17 /* table-selected.png */; };
 		1871BDB219C1FA6F0069ED17 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDB119C1FA6F0069ED17 /* plus.png */; };
+		1887D87B19C2DA8600A3E4CF /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1887D87A19C2DA8600A3E4CF /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		1887D88D19C3190800A3E4CF /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 1887D88C19C3190800A3E4CF /* SSZipArchive.m */; };
+		1887D89919C31BD200A3E4CF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 1887D89119C31BD200A3E4CF /* ioapi.c */; };
+		1887D89A19C31BD200A3E4CF /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 1887D89319C31BD200A3E4CF /* mztools.c */; };
+		1887D89B19C31BD200A3E4CF /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1887D89519C31BD200A3E4CF /* unzip.c */; };
+		1887D89C19C31BD200A3E4CF /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 1887D89719C31BD200A3E4CF /* zip.c */; };
 		1888F6F919B2E8D100DBC547 /* FTPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */; };
 		1888F70019B2F8C600DBC547 /* BRRequestLogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F6FF19B2F8C600DBC547 /* BRRequestLogin.m */; };
 		1888F70319B301D700DBC547 /* FTP.m in Sources */ = {isa = PBXBuildFile; fileRef = 1888F70219B301D700DBC547 /* FTP.m */; };
@@ -413,6 +419,19 @@
 		1871BDAB19C1EA7F0069ED17 /* grid-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grid-selected.png"; sourceTree = "<group>"; };
 		1871BDAC19C1EA7F0069ED17 /* table-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table-selected.png"; sourceTree = "<group>"; };
 		1871BDB119C1FA6F0069ED17 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
+		1887D87919C2DA8600A3E4CF /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		1887D87A19C2DA8600A3E4CF /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
+		1887D88B19C3190800A3E4CF /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
+		1887D88C19C3190800A3E4CF /* SSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSZipArchive.m; sourceTree = "<group>"; };
+		1887D89019C31BD200A3E4CF /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		1887D89119C31BD200A3E4CF /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
+		1887D89219C31BD200A3E4CF /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		1887D89319C31BD200A3E4CF /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
+		1887D89419C31BD200A3E4CF /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		1887D89519C31BD200A3E4CF /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
+		1887D89619C31BD200A3E4CF /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		1887D89719C31BD200A3E4CF /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
+		1887D89819C31BD200A3E4CF /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPLoginViewController.h; sourceTree = "<group>"; };
 		1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPLoginViewController.m; sourceTree = "<group>"; };
 		1888F6FE19B2F8C600DBC547 /* BRRequestLogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRequestLogin.h; sourceTree = "<group>"; };
@@ -1047,6 +1066,34 @@
 				1871BDA519C17C0E0069ED17 /* SugarSyncWorkspace.h */,
 			);
 			name = Public;
+			sourceTree = "<group>";
+		};
+		1887D87C19C2DC3500A3E4CF /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				1887D89019C31BD200A3E4CF /* crypt.h */,
+				1887D89119C31BD200A3E4CF /* ioapi.c */,
+				1887D89219C31BD200A3E4CF /* ioapi.h */,
+				1887D89319C31BD200A3E4CF /* mztools.c */,
+				1887D89419C31BD200A3E4CF /* mztools.h */,
+				1887D89519C31BD200A3E4CF /* unzip.c */,
+				1887D89619C31BD200A3E4CF /* unzip.h */,
+				1887D89719C31BD200A3E4CF /* zip.c */,
+				1887D89819C31BD200A3E4CF /* zip.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
+		1887D89F19C3335200A3E4CF /* Zip Archive Classes */ = {
+			isa = PBXGroup;
+			children = (
+				1887D87919C2DA8600A3E4CF /* ZipArchive.h */,
+				1887D87A19C2DA8600A3E4CF /* ZipArchive.mm */,
+				1887D88B19C3190800A3E4CF /* SSZipArchive.h */,
+				1887D88C19C3190800A3E4CF /* SSZipArchive.m */,
+				1887D87C19C2DC3500A3E4CF /* minizip */,
+			);
+			name = "Zip Archive Classes";
 			sourceTree = "<group>";
 		};
 		189E7838197D12C400083F61 /* Network Images */ = {
@@ -1966,16 +2013,17 @@
 				184C093C197CDB1C00740DD0 /* LeftTableViewCell.m */,
 				658EF43A19797D5600E6FA0A /* DetailViewController.h */,
 				658EF43B19797D5600E6FA0A /* DetailViewController.m */,
+				1887D89F19C3335200A3E4CF /* Zip Archive Classes */,
 				18A0C85C197D465600534CF4 /* DropBox Download Controller */,
 				18B84EFE199D350300F9E383 /* Upload Documents */,
 				18B84EFF199D355600F9E383 /* Export documents */,
 				18B84F00199D358D00F9E383 /* Add Account */,
+				18AF56191986481200CAA234 /* Uploading Menu Left */,
 				18AF561A1986482900CAA234 /* Downloading Menu Left */,
 				18A2AAA11994D50B009D7E3A /* Box Classes */,
 				FEF2C9B51990F3E60044CE0C /* Google Drive */,
 				18AF4E4F19AF2C8C00E26E42 /* Sugar Sync */,
 				18AF4EAB19AF716100E26E42 /* FTP */,
-				18AF56191986481200CAA234 /* Uploading Menu Left */,
 				18B84F02199D35C800F9E383 /* Table view classes */,
 				18B84F01199D35A500F9E383 /* Table view cell xibs */,
 				18A0C869197D46F700534CF4 /* DB */,
@@ -2406,7 +2454,9 @@
 				18A0C86C197D476700534CF4 /* DropboxCell.m in Sources */,
 				653E3B90198183D600788965 /* CGPDFDocument.m in Sources */,
 				18B6A1C619A60A9D008F99FA /* GTLQuery.m in Sources */,
+				1887D89C19C31BD200A3E4CF /* zip.c in Sources */,
 				18B84EEE199D33CD00F9E383 /* ASIInputStream.m in Sources */,
+				1887D89A19C31BD200A3E4CF /* mztools.c in Sources */,
 				18FE907319B1F9B60042CB15 /* BRRequestQueue.m in Sources */,
 				1888F6F919B2E8D100DBC547 /* FTPLoginViewController.m in Sources */,
 				653E3B95198183D600788965 /* ReaderDocument.m in Sources */,
@@ -2420,6 +2470,7 @@
 				1871BD9919C17BFE0069ED17 /* SugarSyncXMLTemplate.m in Sources */,
 				1871BD7819C17AF20069ED17 /* KeychainItemWrapper.m in Sources */,
 				1871BD8F19C17BFE0069ED17 /* SugarSyncClient.m in Sources */,
+				1887D89919C31BD200A3E4CF /* ioapi.c in Sources */,
 				184C094B197CF1B100740DD0 /* AddAccountViewController.m in Sources */,
 				659691501993FEEB002BE628 /* ThumbsViewController.m in Sources */,
 				18B6A1C219A60A9D008F99FA /* GTLBatchResult.m in Sources */,
@@ -2435,6 +2486,7 @@
 				65D59C17199BF0C6008D4E75 /* UIImage+Compress.m in Sources */,
 				18B6A1C719A60A9D008F99FA /* GTLRuntimeCommon.m in Sources */,
 				18B6A1C819A60A9D008F99FA /* GTLService.m in Sources */,
+				1887D88D19C3190800A3E4CF /* SSZipArchive.m in Sources */,
 				653E3B97198183D600788965 /* ReaderViewController.m in Sources */,
 				18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */,
 				18FE907819B201DE0042CB15 /* FTPMainViewController.m in Sources */,
@@ -2469,6 +2521,7 @@
 				18B6A17319A60A34008F99FA /* GTLDrivePermission.m in Sources */,
 				1871BD9119C17BFE0069ED17 /* SugarSyncContact.m in Sources */,
 				659691671993FFA7002BE628 /* ReaderThumbQueue.m in Sources */,
+				1887D89B19C31BD200A3E4CF /* unzip.c in Sources */,
 				18B6A18919A60A7D008F99FA /* GTMOAuth2SignIn.m in Sources */,
 				653E3B89198183D600788965 /* FRDLivelyButton.m in Sources */,
 				1871BD9519C17BFE0069ED17 /* SugarSyncReceivedShare.m in Sources */,
@@ -2499,6 +2552,7 @@
 				18A2AABA1994E275009D7E3A /* NSString+SBJSON.m in Sources */,
 				18B6A1AD19A60A93008F99FA /* GTLJSONParser.m in Sources */,
 				18FE907119B1F9B60042CB15 /* BRRequestError.m in Sources */,
+				1887D87B19C2DA8600A3E4CF /* ZipArchive.mm in Sources */,
 				18B84EE7199D33CD00F9E383 /* Reachability.m in Sources */,
 				18B6A16A19A60A34008F99FA /* GTLDriveChange.m in Sources */,
 				18B6A17119A60A34008F99FA /* GTLDriveParentList.m in Sources */,
@@ -2657,8 +2711,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Barry Calvagna (HQTV7X2X2N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Barry Calvagna (HQTV7X2X2N)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2676,13 +2730,14 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3A5B7D04-F3A9-4AE4-B8F2-DECFCA8A8697";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2694,8 +2749,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Barry Calvagna (HQTV7X2X2N)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Barry Calvagna (HQTV7X2X2N)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2713,13 +2768,14 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3A5B7D04-F3A9-4AE4-B8F2-DECFCA8A8697";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

@@ -18,7 +18,8 @@
     IBOutlet UIButton * mailToButton;
     IBOutlet UIButton * openInOtherFolder;
 
-    
+    IBOutlet UILabel * selectedLabel;
+
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;

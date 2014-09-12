@@ -12,8 +12,9 @@
 #import "CollectionViewCell.h"
 #import "BRRequestUpload.h"
 #import "BRRequestCreateDirectory.h"
+#import <MessageUI/MessageUI.h>
 
-@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,UITableViewDelegate,UITableViewDataSource,DBRestClientDelegate,UICollectionViewDataSource,UICollectionViewDelegate,BRRequestDelegate>{
+@interface DetailViewController : UIViewController <UISplitViewControllerDelegate,UITableViewDelegate,UITableViewDataSource,DBRestClientDelegate,UICollectionViewDataSource,UICollectionViewDelegate,BRRequestDelegate,MFMailComposeViewControllerDelegate>{
     IBOutlet UIBarButtonItem *editBarButton;
     IBOutlet FileItemTableCell *fileItemTableCell;
     NSMutableArray *items;

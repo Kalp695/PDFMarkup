@@ -27,6 +27,8 @@
 @property (assign, nonatomic)  int accountIndex;
 @property (strong,nonatomic)  NSString *ftpDownloadpath;
 
+// downloading check
+@property (strong,nonatomic)  NSString * bgRunningStatus;
 
 - (void)setRefreshTokenInKeychain:(NSString *)refreshToken;
 

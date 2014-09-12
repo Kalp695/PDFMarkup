@@ -22,6 +22,7 @@
     }
     return self;
 }
+
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
@@ -44,14 +45,21 @@
     
     
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"UploadMultipleFiles" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"UploadMultipleFiles" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"UploadSingleFile" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"UploadSingleFile" object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveTestNotification:) name:@"UploadNoFiles" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receiveNotification:) name:@"UploadNoFiles" object:nil];
 }
-- (void) receiveTestNotification:(NSNotification *) notification
+- (void) receiveNotification:(NSNotification *) notification
 {
+    
+    NSLog(@"sdfdsg %d",[[notification object]count]);
+    
+    NSMutableArray * array = [[NSMutableArray alloc]init];
+    array = [notification object];
+
+    selectedLabel.text = [NSString stringWithFormat:@"%d",[array count]];
     
     if ([[notification name] isEqualToString:@"UploadMultipleFiles"])
     {
@@ -122,10 +130,6 @@
 }
 -(IBAction)action_btn:(id)sender
 {
-  
-    
-    
-    
     UIButton * btn = (UIButton *)sender;
     
     if ([btn tag] == 1)
@@ -150,6 +154,8 @@
     if ([btn tag] == 3)
     {
         NSLog(@"Mail To");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MailClick" object:self];
+
     }
 
     if ([btn tag] == 4)
@@ -160,7 +166,6 @@
 
         NSLog(@"Upload");
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadClick" object:self];
     }
 
     if ([btn tag]==5)

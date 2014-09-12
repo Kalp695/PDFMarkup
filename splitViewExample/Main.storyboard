@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="14A343f" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" initialViewController="H1p-Uh-vWS">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
+        <deployment defaultVersion="1552" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
@@ -371,13 +371,6 @@
                                     <outlet property="delegate" destination="cdq-Ti-xGY" id="6Jp-Ic-CIR"/>
                                 </connections>
                             </tableView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dropbox Files" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="T34-Zi-11C">
-                                <rect key="frame" x="279" y="20" width="128" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -502,7 +495,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="iuJ-Dh-lAZ">
-                                <rect key="frame" x="125" y="35" width="20" height="21"/>
+                                <rect key="frame" x="125" y="35" width="54" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -578,6 +571,7 @@
                         <outlet property="deleteButton" destination="CSn-zd-wzf" id="gDK-pK-nWe"/>
                         <outlet property="downloadButton" destination="WEH-mt-ywV" id="uJo-ml-H0h"/>
                         <outlet property="renameButton" destination="Zs3-gF-CbP" id="niX-P9-UPC"/>
+                        <outlet property="selectedLabel" destination="iuJ-Dh-lAZ" id="z7j-HV-jJd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KpR-lD-cvv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -906,7 +900,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Fhm-6c-Rvm">
-                                <rect key="frame" x="125" y="35" width="20" height="21"/>
+                                <rect key="frame" x="125" y="35" width="72" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -1014,6 +1008,7 @@
                         <outlet property="mailToButton" destination="ojC-s9-3EN" id="DDr-Wa-X8x"/>
                         <outlet property="openInOtherFolder" destination="3aL-FT-lCT" id="Iak-hK-zln"/>
                         <outlet property="renameButton" destination="EbA-YA-zuD" id="IRa-Vh-PeE"/>
+                        <outlet property="selectedLabel" destination="Fhm-6c-Rvm" id="u5B-uE-0iC"/>
                         <outlet property="uploadButton" destination="KSL-do-tIj" id="t91-eN-4BH"/>
                     </connections>
                 </viewController>

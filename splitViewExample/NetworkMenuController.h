@@ -14,7 +14,7 @@
     IBOutlet UIButton * deleteButton;
     IBOutlet UIButton * renameButton;
     IBOutlet UIButton * createFolderButton;
-
+    IBOutlet UILabel * selectedLabel;
 }
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
