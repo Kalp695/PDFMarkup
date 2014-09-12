@@ -164,6 +164,7 @@
     if ([btn tag] == 1)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadClick" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
 
 
     }

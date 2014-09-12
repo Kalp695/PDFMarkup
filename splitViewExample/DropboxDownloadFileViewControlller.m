@@ -122,8 +122,7 @@ NSString *wastepath = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(btnDownloadPress:) name:@"DownloadClick" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(multipleFileDownload:) name:@"DownloadClick" object:nil];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -1172,7 +1171,9 @@ NSString *wastepath = nil;
             
             if ([data.path isEqualToString:[NSString stringWithFormat:@"/%@",filename]] ) {
                 
-                
+                [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
                 
@@ -2093,7 +2094,7 @@ NSString *wastepath = nil;
 -(IBAction)btnDownloadPress:(id)sender
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
-
+    
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
         [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
@@ -2103,13 +2104,13 @@ NSString *wastepath = nil;
     {
         [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
         [self multipleFileDownload:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
-
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
+        
         
     }
     
     NSLog(@"Status issssssssssssssssss %@",[AppDelegate sharedInstance].bgRunningStatus);
-
+    
 }
 -(void)spinner
 {
@@ -2120,100 +2121,98 @@ NSString *wastepath = nil;
 
 -(IBAction)multipleFileDownload:(id)sender
 {
+    fetching = NO;
+    [self docDataToDisplay];
     
-
-        fetching = NO;
-        [self docDataToDisplay];
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+        dbEditing = NO;
+        dropBoxOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadFromdropbox)
+                                                                                  object:nil];
         
-        if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [dropBoxOperationQueue addOperation:operation];
+        [DownloadingSingletonClass getSharedInstance].dropBoxDownload = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+    }
+    
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
+        //[self performSelector:@selector(spinner) withObject:nil];
+        
+        NSLog(@"box files array %@",boxFilePathsArray);
+        NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
+        if (boxDownloadProcess == YES)
         {
-            dbEditing = NO;
-            dropBoxOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadFromdropbox)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [dropBoxOperationQueue addOperation:operation];
-            [DownloadingSingletonClass getSharedInstance].dropBoxDownload = NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
+            // [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
         }
         
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
-        {
-            //[self performSelector:@selector(spinner) withObject:nil];
-            
-            NSLog(@"box files array %@",boxFilePathsArray);
-            NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
-            if (boxDownloadProcess == YES)
-            {
-                // [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
-            }
-            
-            boxOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadfrombox)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [boxOperationQueue addOperation:operation];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-            //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-        }
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
-        {
-            NSLog(@"box files array %@",driveFilePathsArray);
-            
-            [self downloadFromDrive];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        }
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
-        {
-            NSLog(@"box files array %@",ftpFilePathsArray);
-            //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            
-            ftpStatus = @"Downloading";
-            
-            ftpOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadFromFTPServer)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [ftpOperationQueue addOperation:operation];
-            [DownloadingSingletonClass getSharedInstance].ftpDownload= NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-            
-            // [self downloadFromFTPServer];
-            
-            
-        }
- 
+        boxOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadfrombox)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [boxOperationQueue addOperation:operation];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    {
+        NSLog(@"box files array %@",driveFilePathsArray);
+        
+        [self downloadFromDrive];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        NSLog(@"box files array %@",ftpFilePathsArray);
+        //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        ftpStatus = @"Downloading";
+        
+        ftpOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadFromFTPServer)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [ftpOperationQueue addOperation:operation];
+        [DownloadingSingletonClass getSharedInstance].ftpDownload= NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        
+        // [self downloadFromFTPServer];
+        
+        
+    }
+    
     
     
 }
@@ -2960,7 +2959,7 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
-
+        
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }

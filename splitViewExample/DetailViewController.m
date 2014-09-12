@@ -3645,7 +3645,7 @@ static DetailViewController *sharedInstance = nil;
     }
     
      NSString *archivePath;
-    if ([filePathsArray count]>1&&[[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+    if ([filePathsArray count]>1&&![[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
     {
        
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -3690,24 +3690,42 @@ static DetailViewController *sharedInstance = nil;
         [SSZipArchive createZipFileAtPath:docDirectory withContentsOfDirectory:[[mailArray objectAtIndex:0]objectForKey:@"PdfPath"]];
 
     }
-    [self deletingFakePath];
-    
-    
-    
+    for (int i =0; i<[filePathsArray count]; i++)
+    {
+        if ([[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfPath"]pathExtension]isEqualToString:@""])
+        {
+            NSLog(@"Folder");
+        }
+        else{
+            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            NSError *error;
+            NSString *documentsDirectory = [NSHomeDirectory()
+                                            stringByAppendingPathComponent:@"Documents"];
+            
+            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
+                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+            
+            // Show contents of Documents directory
+            NSLog(@"Documents directory: %@",
+                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+        }
+
+    }
     if ( [MFMailComposeViewController canSendMail])
     {
         
         MFMailComposeViewController * mailComposer = [[MFMailComposeViewController alloc] init];
         mailComposer.mailComposeDelegate = self;
         NSString * filename = [[[mailArray objectAtIndex:0]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""];
-        if ((folder = YES))
+        if ([filePathsArray count]==1&&![[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
         {
-            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:@"PDF Markup.zip"];
+            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:filename];
 
         }
         else
         {
-            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:filename];
+            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:@"PDF Markup.zip"];
 
         }
         [mailComposer setSubject:@"PDF MarkUp!"];
