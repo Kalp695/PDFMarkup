@@ -686,7 +686,9 @@ static ReaderViewController *sharedInstance = nil;
     [self clearViewsFromDrawing];
     
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+   [self dismissViewControllerAnimated:YES completion:nil];
+   // [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+
     
     
 }

@@ -113,6 +113,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    float currentVersion = 7.0;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= currentVersion) {
+        // iOS 7
+        self.navigationController.navigationBar.frame = CGRectMake(self.navigationController.navigationBar.frame.origin.x, self.navigationController.navigationBar.frame.origin.y, self.navigationController.navigationBar.frame.size.width, 64);
+    }
+    
 	// Do any additional setup after loading the view, typically from a nib.
     //  self.navigationItem.leftBarButtonItem = self.editButtonItem;
     

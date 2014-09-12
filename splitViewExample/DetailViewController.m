@@ -396,6 +396,31 @@ static DetailViewController *sharedInstance = nil;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+//    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
+//    
+//    if ([[vComp objectAtIndex:0] intValue] >= 7)
+//    {
+//        for (id Send in [self.view subviews])
+//        {
+//            if (Send) {
+//                if ([Send isKindOfClass:[UIView class]])
+//                {
+//                    UIView *img=(UIView *)Send;
+//                    img.frame=CGRectMake(img.frame.origin.x, img.frame.origin.y+20, img.frame.size.width, img.frame.size.height);
+//                }
+//            }
+//        }
+//    }
+//    
+    
+    float currentVersion = 7.0;
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= currentVersion) {
+        // iOS 7
+        self.navigationController.navigationBar.frame = CGRectMake(self.navigationController.navigationBar.frame.origin.x, self.navigationController.navigationBar.frame.origin.y, self.navigationController.navigationBar.frame.size.width, 64);
+    }
+    
+    
     [self configureView];
     
     if (!loadData) {
@@ -3060,16 +3085,7 @@ static DetailViewController *sharedInstance = nil;
     if (tableView == documentsTableView)
     {
         
-        static NSString *CellIdentifier = @"Cell";
-        FileItemTableCell *cell;
-        cell = (FileItemTableCell*)[documentsTableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        
-        if(cell == nil)
-        {
-            NSArray *nib;
-            nib = [[NSBundle mainBundle] loadNibNamed:@"FileItemCell" owner:self options:nil];
-            cell = [nib objectAtIndex:0];
-        }
+        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
         
         
         Item * item = [checkableArray objectAtIndex:indexPath.row];
@@ -3079,14 +3095,13 @@ static DetailViewController *sharedInstance = nil;
             [cell setChecked:item.isChecked];
         }
         cell.cellSeperatorImage.hidden = YES;
-
-        cell.label.frame = CGRectMake(80, 13, 485, 50);
-        cell.label.text = [documenmtsArray objectAtIndex:indexPath.row];
+        cell.lblTitle.text = [documenmtsArray objectAtIndex:indexPath.row];
         cell.label.font=[UIFont systemFontOfSize:14.0f];
         if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
         {
-            cell.folderImage.frame = CGRectMake(0, 5, 65, 43);
-            cell.folderImage.image = [UIImage imageNamed:@"folder.png"];
+            
+            //cell.folderImage.frame = CGRectMake(0, 5, 65, 43);
+            cell.imageView.image = [UIImage imageNamed:@"folder.png"];
             
             UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(420,25,25,25)];
             dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
@@ -3095,7 +3110,7 @@ static DetailViewController *sharedInstance = nil;
         }
         else
         {
-            cell.folderImage.frame = CGRectMake(5, 5, 56, 50);
+            //cell.folderImage.frame = CGRectMake(5, 5, 56, 50);
 
             NSString * name = [documenmtsArray objectAtIndex:indexPath.row];
             NSString* theFileName = [[name lastPathComponent] stringByDeletingPathExtension];
@@ -3115,7 +3130,7 @@ static DetailViewController *sharedInstance = nil;
             }
             UIImage *thumbnailImage = [UIImage imageWithContentsOfFile:pdfFilePath];
             
-            cell.folderImage.image = thumbnailImage;
+            cell.imageView.image = thumbnailImage;
             
             
             
