@@ -81,8 +81,12 @@
 {
     
     NSMutableArray * array = [[NSMutableArray alloc]init];
-    array = [notification object];
-    selectedLabel.text = [NSString stringWithFormat:@"%d",[array count]];
+    [array addObject:[notification object]];
+    if (array!=nil)
+    {
+        selectedLabel.text = [NSString stringWithFormat:@"%d",[array count]];
+
+    }
     
     if ([[notification name] isEqualToString:@"MultipleFiles"])
     {
@@ -164,6 +168,7 @@
     if ([btn tag] == 1)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadClick" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
 
 
     }

@@ -122,9 +122,8 @@ NSString *wastepath = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(btnDownloadPress:) name:@"DownloadClick" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadClick) name:@"DownloadClick" object:nil];
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(createFolder)
@@ -144,8 +143,6 @@ NSString *wastepath = nil;
     {
         NSLog(@"Box");
         self.title = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-        
-        
         folderItemsArray = [[NSMutableArray alloc]init];
         boxInsideFolderArray = [[NSMutableArray alloc]init];
         if (!boxFolderId) {
@@ -282,8 +279,9 @@ NSString *wastepath = nil;
     else
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        
+        if (fetching == YES) {
         [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
+        }
         
     }
     return secRemaining;
@@ -881,10 +879,10 @@ NSString *wastepath = nil;
     }
     if (fetching == YES) {
         [tbDownload reloadData];
-        
+        [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
+
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
-    [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
     
     
 }
@@ -918,7 +916,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
-        
+        [AppDelegate sharedInstance].popStatus = YES;
+
         //[[NSNotificationCenter defaultCenter] removeObserver:self];
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
@@ -928,6 +927,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         
+        NSLog(@"pop from box class");
+        [AppDelegate sharedInstance].popStatus = YES;
         NSLog(@"Box");
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
@@ -936,7 +937,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
-        
+        [AppDelegate sharedInstance].popStatus = YES;
+
         NSLog(@"google");
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
@@ -945,7 +947,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
-        
+        [AppDelegate sharedInstance].popStatus = YES;
+
         NSLog(@"ftp");
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
@@ -954,10 +957,13 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
-        
+        [AppDelegate sharedInstance].popStatus = YES;
+
         NSLog(@"sugarsync");
     }
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
 }
 
 #pragma mark - Edit Click
@@ -1138,7 +1144,7 @@ NSString *wastepath = nil;
     }
     while ([DownloadingSingletonClass getSharedInstance].dropBoxDownload == NO)
     {
-        NSLog(@"thread is running .....");
+        NSLog(@"dropbox thread is running .....");
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
     
@@ -1156,8 +1162,6 @@ NSString *wastepath = nil;
     NSLog(@"sdsd %@",filename);
     if ([sqliteRowsArray containsObject:filename])
     {
-        
-        
         [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:YES];
         [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
         [dropBoxOperationQueue cancelAllOperations];
@@ -1172,7 +1176,9 @@ NSString *wastepath = nil;
             
             if ([data.path isEqualToString:[NSString stringWithFormat:@"/%@",filename]] ) {
                 
-                
+                [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
                 FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
                 
@@ -1306,6 +1312,7 @@ NSString *wastepath = nil;
 {
     hash=metadata.hash;
     if(!tbDownload.editing&&dbEditing == YES){
+        
         for (int i = 0; i < [metadata.contents count]; i++) {
             DBMetadata *data = [metadata.contents objectAtIndex:i];
             if ([[data.path pathExtension]isEqualToString:@"pdf"]||[[data.path pathExtension]isEqualToString:@""]||[[data.path pathExtension]isEqualToString:@"PDF"])
@@ -1319,6 +1326,8 @@ NSString *wastepath = nil;
             [arrmetadata addObject:item];
             
         }
+        [tbDownload reloadData];
+
         [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
         
     }
@@ -1351,6 +1360,8 @@ NSString *wastepath = nil;
         if(metadata.isDirectory){
             if (![[NSFileManager defaultManager] fileExistsAtPath:strDirPath])
                 [[NSFileManager defaultManager] createDirectoryAtPath:strDirPath withIntermediateDirectories:NO attributes:nil error:&error];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+
             bisprocessing = false;
         }
         else{
@@ -1423,7 +1434,6 @@ NSString *wastepath = nil;
         }
     }
     NSLog(@"check the rocking output %@",arrdownlaodfiels);
-    [tbDownload reloadData];
     if ([filePathsArray count]==0)
     {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1457,7 +1467,6 @@ NSString *wastepath = nil;
 {
     
     NSLog(@"file path is %@",[destPath lastPathComponent]);
-    
     
     NSLog(@"%@",filePathsArray);
     if ([arrdownlaodfiels count] != 0) {
@@ -2090,10 +2099,16 @@ NSString *wastepath = nil;
 }
 
 #pragma mark - Action Methods
+-(void)downloadClick
+{
+    [self performSelectorOnMainThread:@selector(btnDownloadPress:) withObject:nil waitUntilDone:NO];
+
+}
+
 -(IBAction)btnDownloadPress:(id)sender
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
-
+   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
+    
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
         [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
@@ -2103,13 +2118,13 @@ NSString *wastepath = nil;
     {
         [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
         [self multipleFileDownload:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
-
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
+        
         
     }
     
     NSLog(@"Status issssssssssssssssss %@",[AppDelegate sharedInstance].bgRunningStatus);
-
+    
 }
 -(void)spinner
 {
@@ -2120,100 +2135,94 @@ NSString *wastepath = nil;
 
 -(IBAction)multipleFileDownload:(id)sender
 {
+    fetching = NO;
+    [self docDataToDisplay];
     
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
+    {
+        dbEditing = NO;
+        dropBoxOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadFromdropbox)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [dropBoxOperationQueue addOperation:operation];
+        [DownloadingSingletonClass getSharedInstance].dropBoxDownload = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
+    {
+        NSLog(@"box files array %@",boxFilePathsArray);
+        NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
+        if (boxDownloadProcess == YES)
+        {
+            // [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
+        }
+        boxOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadfrombox)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [boxOperationQueue addOperation:operation];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
+    {
+        NSLog(@"box files array %@",driveFilePathsArray);
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        [self.navigationController popToRootViewControllerAnimated:YES];
 
-        fetching = NO;
-        [self docDataToDisplay];
+        [self downloadFromDrive];
+    
+    }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        NSLog(@"box files array %@",ftpFilePathsArray);
+        //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
-        if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
-        {
-            dbEditing = NO;
-            dropBoxOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadFromdropbox)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [dropBoxOperationQueue addOperation:operation];
-            [DownloadingSingletonClass getSharedInstance].dropBoxDownload = NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-        }
+        ftpStatus = @"Downloading";
         
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
-        {
-            //[self performSelector:@selector(spinner) withObject:nil];
-            
-            NSLog(@"box files array %@",boxFilePathsArray);
-            NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
-            if (boxDownloadProcess == YES)
-            {
-                // [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
-            }
-            
-            boxOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadfrombox)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [boxOperationQueue addOperation:operation];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-            //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-        }
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
-        {
-            NSLog(@"box files array %@",driveFilePathsArray);
-            
-            [self downloadFromDrive];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-        }
-        else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
-        {
-            NSLog(@"box files array %@",ftpFilePathsArray);
-            //  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            
-            ftpStatus = @"Downloading";
-            
-            ftpOperationQueue = [NSOperationQueue new];
-            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-                                                                                    selector:@selector(downloadFromFTPServer)
-                                                                                      object:nil];
-            
-            // Add the operation to the queue and let it to be executed.
-            
-            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            [ftpOperationQueue addOperation:operation];
-            [DownloadingSingletonClass getSharedInstance].ftpDownload= NO;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
-            
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            
-            
-            // [self downloadFromFTPServer];
-            
-            
-        }
- 
+        ftpOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadFromFTPServer)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [ftpOperationQueue addOperation:operation];
+        [DownloadingSingletonClass getSharedInstance].ftpDownload= NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentViewNotification" object:nil];
+        
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+        
+        // [self downloadFromFTPServer];
+        
+        
+    }
+    
     
     
 }
@@ -2629,6 +2638,7 @@ NSString *wastepath = nil;
             [driveFilePathsArray removeAllObjects];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
             
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
             
@@ -2701,8 +2711,6 @@ NSString *wastepath = nil;
             FolderItem* item = [arrmetadata objectAtIndex:i];
             item.isChecked = NO;
             
-            
-            
             [cell setChecked:item.isChecked];
             
             [tbDownload reloadData];
@@ -2766,6 +2774,8 @@ NSString *wastepath = nil;
                  [dic setObject:str forKey:@"type"];
                  [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
                  [boxFilesItemsArray addObject: dic];
+                // [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+
                  
              }
          }
@@ -2908,6 +2918,7 @@ NSString *wastepath = nil;
     }
     else
     {
+        //[AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
         [self performSelector:@selector(closeDriveControllerr) withObject:nil afterDelay:0];
         
     }
@@ -2948,20 +2959,19 @@ NSString *wastepath = nil;
             
         }
         [boxFilesItemsArray removeAllObjects];
-        [self multipleFileDownload:nil];
+        [self downloadFromDrive];
         
     }
     
     if ([driveFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
     {
-        
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [driveFilePathsArray removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
-
-        [self.navigationController popToRootViewControllerAnimated:YES];
+        
+       // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 
@@ -3235,7 +3245,7 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
-        [self.navigationController popToRootViewControllerAnimated:YES];
+       // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
 

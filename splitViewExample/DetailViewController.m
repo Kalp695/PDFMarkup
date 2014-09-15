@@ -166,14 +166,26 @@ static DetailViewController *sharedInstance = nil;
     }
     else if ([accountInfo isEqualToString:@"box"])
     {
-        UIStoryboard * storyboard = self.storyboard;
         
-        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
-        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
-        [FolderChooseViewController getSharedInstance].accountName = @"box";
-        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
-        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [self.navigationController pushViewController: detail animated: YES];
+        NSLog(@"push to box class");
+
+        UIStoryboard * storyboard = self.storyboard;
+//        if ([AppDelegate sharedInstance].popStatus==NO)
+//        {
+//            [mbp];
+//        }
+//        
+//        if ([AppDelegate sharedInstance].popStatus == YES)
+//        {
+            [AppDelegate sharedInstance].popStatus = NO;
+            DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+            [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"box";
+            [FolderChooseViewController getSharedInstance].accountName = @"box";
+            [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+            [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            [self.navigationController pushViewController: detail animated: YES];
+
+      //  }
         
     }
     else if ([accountInfo isEqualToString:@"google"])
@@ -250,7 +262,7 @@ static DetailViewController *sharedInstance = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     // Notifier for Upload Click Event
-    
+
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     
@@ -395,6 +407,7 @@ static DetailViewController *sharedInstance = nil;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 	// Do any additional setup after loading the view, typically from a nib.
     
 //    NSArray *vComp = [[UIDevice currentDevice].systemVersion componentsSeparatedByString:@"."];
@@ -414,11 +427,11 @@ static DetailViewController *sharedInstance = nil;
 //    }
 //    
     
-    float currentVersion = 7.0;
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= currentVersion) {
-        // iOS 7
-        self.navigationController.navigationBar.frame = CGRectMake(self.navigationController.navigationBar.frame.origin.x, self.navigationController.navigationBar.frame.origin.y, self.navigationController.navigationBar.frame.size.width, 64);
-    }
+//    float currentVersion = 7.0;
+//    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= currentVersion) {
+//        // iOS 7
+//        self.navigationController.navigationBar.frame = CGRectMake(self.navigationController.navigationBar.frame.origin.x, self.navigationController.navigationBar.frame.origin.y, self.navigationController.navigationBar.frame.size.width, 64);
+//    }
     
     
     [self configureView];
@@ -680,6 +693,16 @@ static DetailViewController *sharedInstance = nil;
 //[[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"]
 -(void)UploadClick
 {
+    
+    [self performSelectorOnMainThread:@selector(uploadInBg) withObject:nil waitUntilDone:NO];
+
+       //  [self chooseFolder];
+    //  NSLog(@"DropBox uploading files array is %@",[[filePathsArray objectAtIndex:pdfValue]objectForKey:@"PdfName"] );
+    
+}
+-(void)uploadInBg
+{
+    
     pdfValue = 0;
     arrJsonn = [[NSMutableArray alloc]init];
     
@@ -694,10 +717,9 @@ static DetailViewController *sharedInstance = nil;
         UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"No network available to upload" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
         [alert show];
     }
-    //  [self chooseFolder];
-    //  NSLog(@"DropBox uploading files array is %@",[[filePathsArray objectAtIndex:pdfValue]objectForKey:@"PdfName"] );
-    
+
 }
+
 -(void)popOver
 {
     UIViewController *popoverContent=[[UIViewController alloc] init];
@@ -731,14 +753,14 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)uploadToNetwork
 {
-    if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Uploading"])
+    if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"])
     {
         [self performSelectorOnMainThread:@selector(uploadInProgress) withObject:nil waitUntilDone:NO];
         
     }
     else
     {
-        [AppDelegate sharedInstance].bgRunningStatus = @"Uploading";
+        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Uploading";
         [self uploadFolders];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadClick" object:self];
 
@@ -1484,7 +1506,7 @@ static DetailViewController *sharedInstance = nil;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
-        [AppDelegate sharedInstance].bgRunningStatus = @"Upload completed";
+        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
 
         [documentsCollectionView reloadData];
         
@@ -1783,7 +1805,7 @@ static DetailViewController *sharedInstance = nil;
         
         [filePathsArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        [AppDelegate sharedInstance].bgRunningStatus = @"Upload completed";
+        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
 
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
@@ -2056,7 +2078,7 @@ static DetailViewController *sharedInstance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
-        [AppDelegate sharedInstance].bgRunningStatus = @"Upload completed";
+        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
 
         [documentsCollectionView reloadData];
         
@@ -2273,7 +2295,7 @@ static DetailViewController *sharedInstance = nil;
         
         pdfValue = 0;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:nil];
-        [AppDelegate sharedInstance].bgRunningStatus = @"Upload completed";
+        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
 
         [DownloadingSingletonClass getSharedInstance].dropBoxUpload = YES;
         NSLog(@"thread is Stopped.....");
@@ -2505,7 +2527,6 @@ static DetailViewController *sharedInstance = nil;
                 
             }
             
-            
             // Attempt the move
             if ([fileMgr moveItemAtPath:newPath toPath:filePath2 error:&error] != YES)
                 NSLog(@"Unable to move file: %@", [error localizedDescription]);
@@ -2513,7 +2534,6 @@ static DetailViewController *sharedInstance = nil;
             // Show contents of Documents directory
             NSLog(@"Documents directory: %@",
                   [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-            
             
         }
     }
@@ -2562,7 +2582,6 @@ static DetailViewController *sharedInstance = nil;
         // Rename array contains the list of all files in document directory.
         localArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:filename error:&error];
     }
-    
     
     NSString *myString = [[filePathsArray objectAtIndex:indexValue]objectForKey:@"PdfName"];
     // Getting only the file name
@@ -2719,8 +2738,6 @@ static DetailViewController *sharedInstance = nil;
     [self docDataToDisplay];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"CreateFolderSuccess" object:self userInfo:nil];
-    
-    
 }
 
 
@@ -3628,26 +3645,40 @@ static DetailViewController *sharedInstance = nil;
 #pragma mark - Split view
 -(void)mailClick
 {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     [self mail:filePathsArray];
 }
 
 -(void)mail:(NSArray *)mailArray
 {
-    
     [self flattenedFile];
-    NSData *pdfData;
+    NSData *pdfData = [[NSData alloc]init];
+   // NSData * folderData;
     BOOL folder;
-    if ([filePathsArray count]==1&&![[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-    {
-        NSString *path = [[mailArray objectAtIndex:0] objectForKey:@"PdfPath"];
-        pdfData = [NSData dataWithContentsOfFile: path];
-        folder = NO;
+    int pdfCount = 0;
+    for (int k =0;k<[filePathsArray count];k++) {
+        if (![[[[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+        {
+            pdfCount = pdfCount +1;
+        }
     }
     
-     NSString *archivePath;
-    if ([filePathsArray count]>1&&[[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+    for (int i =0; i<[filePathsArray count]; i++)
     {
-       
+        
+    
+    
+     NSString *archivePath;
+    if (![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+    {
+        if (pdfCount ==1) {
+            NSString *path = [[mailArray objectAtIndex:i] objectForKey:@"PdfPath"];
+            pdfData = [NSData dataWithContentsOfFile: path];
+            folder = NO;
+        }
+        else{
+            
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *docDirectory = [paths objectAtIndex:0];
         
@@ -3655,14 +3686,13 @@ static DetailViewController *sharedInstance = nil;
         archivePath = [docDirectory stringByAppendingString:@"/doc.zip"];
         ZipArchive *archiver = [[ZipArchive alloc] init];
         [archiver CreateZipFile2:archivePath];
-        //BOOL isDir=NO;
-        NSFileManager *fileManager = [NSFileManager defaultManager];
-        for (int i =0; i<[mailArray count]; i++)
-        {
+       // NSFileManager *fileManager = [NSFileManager defaultManager];
+//        for (int i =0; i<[mailArray count]; i++)
+//        {
             
             [archiver addFileToZip:[[mailArray objectAtIndex:i]objectForKey:@"PdfPath"] newname:[[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""]];
 
-        }
+        //}
         BOOL successCompressing = [archiver CloseZipFile2];
         if(successCompressing)
         {
@@ -3678,38 +3708,105 @@ static DetailViewController *sharedInstance = nil;
             [alert show];
         }
         
-        
         NSString *path = archivePath;
         pdfData = [NSData dataWithContentsOfFile: path];
-
+      }
     }
-    if([[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+    else if([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
     {
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         NSString *docDirectory = [paths objectAtIndex:0];
-        [SSZipArchive createZipFileAtPath:docDirectory withContentsOfDirectory:[[mailArray objectAtIndex:0]objectForKey:@"PdfPath"]];
+        BOOL isDir=NO;
+        NSArray *directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath: docDirectory];
+        
+            NSString *exportPath = [[mailArray objectAtIndex:i]objectForKey:@"PdfPath"];
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            if ([fileManager fileExistsAtPath:exportPath isDirectory:&isDir] && isDir){
+                directoryContents = [fileManager subpathsAtPath:exportPath];
+            }
+            archivePath = [exportPath stringByAppendingString:@".zip"];
+            ZipArchive *archiver = [[ZipArchive alloc] init];
+            [archiver CreateZipFile2:archivePath];
+            for(NSString *path in directoryContents)
+            {
+                NSString *longPath = [exportPath stringByAppendingPathComponent:path];
+                if([fileManager fileExistsAtPath:longPath isDirectory:&isDir] && !isDir)
+                {
+                    NSString * extension = @"pdf";
+                    if ([[longPath pathExtension]isEqualToString:@""]||[[[longPath pathExtension]lowercaseString]isEqualToString:extension]) {
+                        [archiver addFileToZip:longPath newname:path];
 
+                    }
+                }
+            }
+            BOOL successCompressing = [archiver CloseZipFile2];
+            if(successCompressing)
+                NSLog(@"Success");
+            else
+                NSLog(@"Fail");
+
+        
+        NSString *path = archivePath;
+        pdfData = [NSData dataWithContentsOfFile: path];
     }
-    [self deletingFakePath];
-    
-    
-    
+  
+// deleting
+        
+    if ([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfPath"]pathExtension]isEqualToString:@""])
+    {
+            NSLog(@"Folder");
+            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+            NSString * zipName = [originalPath stringByDeletingPathExtension];
+            NSString * finalZipPath = [zipName stringByAppendingPathExtension:@"zip"];
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            NSError *error;
+            NSString *documentsDirectory = [NSHomeDirectory()
+                                            stringByAppendingPathComponent:@"Documents"];
+            
+            if ([fileMgr removeItemAtPath:finalZipPath error:&error] != YES)
+                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+            
+            // Show contents of Documents directory
+            NSLog(@"Documents directory: %@",
+                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+
+            
+    }
+    else{
+            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+            NSFileManager *fileMgr = [NSFileManager defaultManager];
+            NSError *error;
+            NSString *documentsDirectory = [NSHomeDirectory()
+                                            stringByAppendingPathComponent:@"Documents"];
+            
+            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
+                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+            
+            // Show contents of Documents directory
+            NSLog(@"Documents directory: %@",
+                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+        }
+        
+        
     if ( [MFMailComposeViewController canSendMail])
     {
         
         MFMailComposeViewController * mailComposer = [[MFMailComposeViewController alloc] init];
         mailComposer.mailComposeDelegate = self;
-        NSString * filename = [[[mailArray objectAtIndex:0]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""];
-        if ((folder = YES))
-        {
-            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:@"PDF Markup.zip"];
+        NSString * filename = [[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+       
+            if (![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+            {
+                [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:filename];
 
+            }
+            else
+            {
+                [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:[NSString stringWithFormat:@"%@.zip",[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]]];
+                
         }
-        else
-        {
-            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:filename];
-
-        }
+        
+       
         [mailComposer setSubject:@"PDF MarkUp!"];
         
         NSString *emailBody =
@@ -3718,7 +3815,9 @@ static DetailViewController *sharedInstance = nil;
         [mailComposer setMessageBody:emailBody isHTML:YES];
         [self presentViewController:mailComposer animated:YES completion:nil];
     }
+}
     
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)mailComposer didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error

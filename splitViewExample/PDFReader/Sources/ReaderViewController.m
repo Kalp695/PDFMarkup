@@ -674,7 +674,6 @@ static ReaderViewController *sharedInstance = nil;
     //[viewController dismissViewControllerAnimated:YES completion:nil]; // Dismiss
 }
 
-
 -(IBAction)closeButton_click:(id)sender{
     
     
@@ -684,13 +683,10 @@ static ReaderViewController *sharedInstance = nil;
     [_collection removeAllObjects];
     _collection=nil;
     [self clearViewsFromDrawing];
-    
-    
-   [self dismissViewControllerAnimated:YES completion:nil];
-   // [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 
+   [self dismissViewControllerAnimated:YES completion:nil];
     
-    
+   // [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 
@@ -1450,6 +1446,7 @@ static ReaderViewController *sharedInstance = nil;
 - (void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationNone];
 
 	if (CGSizeEqualToSize(lastAppearSize, CGSizeZero) == false)
 	{
@@ -1494,6 +1491,8 @@ static ReaderViewController *sharedInstance = nil;
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+
 	[super viewDidDisappear:animated];
 }
 
@@ -1502,9 +1501,7 @@ static ReaderViewController *sharedInstance = nil;
 #ifdef DEBUG
 	NSLog(@"%s", __FUNCTION__);
 #endif
-
-
-
+    
 	theScrollView = nil; contentViews = nil; lastHideTime = nil;
 
 	lastAppearSize = CGSizeZero; currentPage = 0;

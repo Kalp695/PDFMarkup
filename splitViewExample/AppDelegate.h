@@ -29,6 +29,13 @@
 
 // downloading check
 @property (strong,nonatomic)  NSString * bgRunningStatus;
+@property (strong,nonatomic)  NSString * bgRunningStatusUpload;
+
+
+// For checking the controller pop or not . (code written for the fast taping left side menu crash)
+// Calling pushViewController before viewDidAppear .(check wheter it is popped or not)
+
+@property(nonatomic,assign,readwrite) BOOL popStatus;
 
 - (void)setRefreshTokenInKeychain:(NSString *)refreshToken;
 

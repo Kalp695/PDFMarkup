@@ -163,6 +163,7 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadSucessNotifier:) name:@"UploadSucess" object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(uploadSucessNotifier:) name:@"UploadCancelled" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadClick" object:self];
 
         NSLog(@"Upload");
 
