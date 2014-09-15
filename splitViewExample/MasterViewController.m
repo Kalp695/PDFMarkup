@@ -48,9 +48,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 }
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
+
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
-    
     NSLog(@"check %@",[arrUseraccounts valueForKey:@"AccountType"]);
     accountsArray = [[NSMutableArray alloc ]init];
     accountsImagesArray = [[NSMutableArray alloc ]init];
@@ -135,7 +136,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadStart:) name:@"UploadStart" object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"UploadCompleted" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"Download Success" object:self];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"Download Success" object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCompletee:) name:@"DownloadComplete" object:nil];
     
     
@@ -187,7 +188,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     if ([notification.name isEqualToString:@"UploadStart"])
     {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadStart" object:nil];
+   //     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadStart" object:nil];
 
 //        if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Uploading"])
 //        {
@@ -201,8 +202,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     }
     else
     {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadStart" object:nil];
-
+   //     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadStart" object:nil];
+//
 //        if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
 //        {
             if (![bgProcessArray containsObject:@"Downloading in progress"]) {
@@ -223,7 +224,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     
     if ([notification.name isEqualToString:@"UploadCompleted"])
     {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCompleted" object:nil];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCompleted" object:nil];
 
         [bgProcessArray removeObject:@"Uploading in progress"];
         
@@ -231,8 +232,8 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     else
     {
         
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadComplete" object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Download Success" object:nil];
+        //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadComplete" object:nil];
+       // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Download Success" object:nil];
 
         [bgProcessArray removeObject:@"Downloading in progress"];
         
@@ -328,8 +329,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"removeAccount" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RefreshLefttable" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BoxRefreshLefttable" object:nil];
-    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"NetworkController" object:nil];
+    
+    
 }
 
 - (void)receiveNetworkEdittNotification:(NSNotification *) notification

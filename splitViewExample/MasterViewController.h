@@ -22,8 +22,8 @@
 @property (strong, nonatomic) NSMutableArray * leftImagesArray;
 @property (strong, nonatomic) NSMutableArray * accountsArray;
 @property (strong, nonatomic) NSMutableArray *arrUseraccounts;
-
 @property (strong, nonatomic) NSMutableArray * accountsImagesArray;
+
 -(void)insertNewSection:(id)sender;
 + (MasterViewController *) sharedInstance;
 @end
