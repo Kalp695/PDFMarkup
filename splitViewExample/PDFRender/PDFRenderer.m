@@ -676,7 +676,7 @@ bool thumbNailPreview;
 	
 	CGContextTranslateCTM(pageContext, -cropBox.origin.x, -cropBox.origin.y);
 	
-	CGContextDrawPDFPage(pageContext, page);
+	CGContextDrawPDFPage(pageContext, page);                
 	
 	CGContextRestoreGState(pageContext);
 }
