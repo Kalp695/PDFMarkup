@@ -98,6 +98,9 @@
         [BoxSDK sharedSDK].OAuth2Session.refreshToken = storedRefreshToken;
     }
     [AppDelegate sharedInstance].popStatus = YES;
+    
+    [AppDelegate sharedInstance].bgRunningStatus = @"notDownloading";
+
     // FTP
     ftpDownloadpath = [[NSString alloc]init];
     //     [[NetworkManager sharedInstance] addObserver:self forKeyPath:@"networkOperationCount" options:NSKeyValueObservingOptionInitial context:&self->_networkOperationCountDummy];
