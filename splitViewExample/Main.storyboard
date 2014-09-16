@@ -452,7 +452,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bgCell.png" id="2Wp-RA-fYS">
-                                            <rect key="frame" x="0.0" y="60" width="320" height="1"/>
+                                            <rect key="frame" x="0.0" y="59" width="320" height="1"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -473,6 +473,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
+                                    <outlet property="cellSeperator" destination="2Wp-RA-fYS" id="tGq-3U-pPu"/>
                                     <outlet property="label" destination="CLT-Xu-ib8" id="57p-oI-oOG"/>
                                     <outlet property="leftFolderImage" destination="jz9-SS-9Cw" id="iPa-di-uOo"/>
                                 </connections>

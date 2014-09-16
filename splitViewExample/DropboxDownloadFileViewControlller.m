@@ -279,6 +279,7 @@ NSString *wastepath = nil;
     else
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
         if (fetching == YES) {
         [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
         }
@@ -879,12 +880,16 @@ NSString *wastepath = nil;
     }
     if (fetching == YES) {
         [tbDownload reloadData];
-        [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
 
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
     
-    
+    [self performSelectorOnMainThread:@selector(post) withObject:nil waitUntilDone:NO];
+
+}
+-(void)post
+{
+    [self performSelector:@selector(postNoftifier) withObject:nil afterDelay:0.5];
 }
 -(void)postNoftifier
 {
@@ -1177,6 +1182,8 @@ NSString *wastepath = nil;
             if ([data.path isEqualToString:[NSString stringWithFormat:@"/%@",filename]] ) {
                 
                 [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+                NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
@@ -1498,6 +1505,8 @@ NSString *wastepath = nil;
         [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
         NSLog(@"Thread is stopped.....");
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
         [arrLocalFilepaths removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
@@ -2108,7 +2117,7 @@ NSString *wastepath = nil;
 -(IBAction)btnDownloadPress:(id)sender
 {
    // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
-    
+    NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
         [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
@@ -2230,6 +2239,7 @@ NSString *wastepath = nil;
 {
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Please Wait...." message:@"Downloading In Progress" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show ];
+    
 }
 #pragma mark Box Download Methods
 
@@ -2262,7 +2272,8 @@ NSString *wastepath = nil;
                 FolderItem* item = [arrmetadata objectAtIndex:i];
                 item.isChecked = NO;
                 [cell setChecked:item.isChecked];
-                
+                NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
                 [tbDownload reloadData];
                 
             }
@@ -2385,7 +2396,8 @@ NSString *wastepath = nil;
     [alert show ];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
     
-    
+    [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+
 }
 
 -(void)downloadableFolderFiles:(NSString *)folderID name:(NSString *)name
@@ -2458,8 +2470,6 @@ NSString *wastepath = nil;
             
             
             //[self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
-            
-            
             
         }
         
@@ -2588,7 +2598,7 @@ NSString *wastepath = nil;
         
     }
     
-    if ([driveFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
+    if ([[AppDelegate sharedInstance].boxSelectedFiles count]==0 && [boxFilesItemsArray count]==0)
     {
         boxDownloadProcess = NO;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -2596,6 +2606,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+    
         [boxOperationQueue cancelAllOperations];
         // [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -2970,7 +2982,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
-        
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
        // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
@@ -3245,6 +3258,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
        // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }

@@ -67,6 +67,8 @@ static DetailViewController *sharedInstance = nil;
 {
     
     // temp file
+    BOOL isFolder;
+    NSMutableData  *pdfData;
     
     NSString * appFile;
     NSMutableArray * tempPathArray;
@@ -374,7 +376,8 @@ static DetailViewController *sharedInstance = nil;
 -(void)viewWillAppear:(BOOL)animated
 {
     // Notifier for Upload Click Event
-    
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     
@@ -664,15 +667,19 @@ static DetailViewController *sharedInstance = nil;
                 }
                 else
                 {
-                    [documenmtsArray addObject:[tempArray objectAtIndex:j]];
+                    NSString *string = [tempArray objectAtIndex:j];
+                    if ([string rangeOfString:@"-PdfMarkUp"].location == NSNotFound) {
+                        [documenmtsArray addObject:[tempArray objectAtIndex:j]];
+                    } else
+                    {
+                        NSLog(@"string contains -PdfMarkUp");
+                    }
                     
                 }
                 
             }
         }
     }
-    
-    
     
     NSLog(@"files and Folder at main path %@ ",documenmtsArray);
     
@@ -3731,188 +3738,370 @@ static DetailViewController *sharedInstance = nil;
     return @"Remove";
 }
 
-#pragma mark - Split view
+#pragma mark - Mail
+
+-(void)copyingDataToFolder
+{
+    NSString *dataPath;
+    pdfData = [[NSMutableData alloc]init];
+
+    if ([filePathsArray count]==1&&![[[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+    {
+        [self flattenedFile];
+
+        NSString *path = [[filePathsArray objectAtIndex:0] objectForKey:@"PdfPath"];
+        pdfData = [NSMutableData dataWithContentsOfFile: path];
+        isFolder = NO;
+        
+        [self deletingFakePath];
+    }
+    else
+    {
+        isFolder = YES;
+
+        // Created a temporary folder
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+    NSLog(@"%@",loadData);
+    if (loadData != nil)
+    {
+        dataPath = [NSString stringWithFormat:@"%@%@/%@",documentsDirectory,loadData,@"PDFMarkUp"];
+    }
+    else
+    {
+        dataPath  = [documentsDirectory stringByAppendingPathComponent:@"PDFMarkUp"];
+        
+    }
+    NSError * error;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
+        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
+
+        
+        // Copied files to temporary folder
+
+    for (int i =0;i<[filePathsArray count];i++)
+    {
+            NSLog(@"Copying directory");
+            
+            NSString *oldPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+            NSError *error = nil;
+            NSLog(@"data path is %@",dataPath);
+  
+            NSError *Error = nil;
+           NSFileManager *fileManager = [NSFileManager defaultManager];
+
+        if ([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]pathExtension]isEqualToString: @""])
+        {
+            NSString * copyFolderPath = [NSString stringWithFormat:@"%@/%@",dataPath,[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]];
+
+            [fileManager createDirectoryAtPath:copyFolderPath withIntermediateDirectories:NO attributes:nil error:&error];
+            
+            NSArray *fileList = [fileManager contentsOfDirectoryAtPath:oldPath error:&error];
+            for (NSString *s in fileList) {
+                
+                NSString *oldFilePath = [oldPath stringByAppendingPathComponent:s];
+                NSString *newFilePath = [copyFolderPath stringByAppendingPathComponent:s];
+
+                if (![fileManager fileExistsAtPath:newFilePath]) {
+                    //File does not exist, copy it
+                    [fileManager copyItemAtPath:oldFilePath toPath:newFilePath error:&error];
+                    PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+                    [pdfRenderer drawPDFWithReportID:nil withPDFFilePath:oldPath withSavePDFFilePath:newFilePath withPreview:NO];
+
+                } else {
+                    NSLog(@"File exists: %@", newFilePath);
+                }
+            }
+
+
+        }
+        else
+        {
+            NSString * copyFile =[NSString stringWithFormat:@"%@/%@",dataPath,[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]];
+            [fileManager copyItemAtPath:oldPath toPath:copyFile error:&error];
+
+            PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
+            [pdfRenderer drawPDFWithReportID:nil withPDFFilePath:oldPath withSavePDFFilePath:copyFile withPreview:NO];
+        }
+  }
+        
+        
+    // Archiving the temporary folder
+   
+        
+    NSString *archivePath;
+
+    BOOL isDir=NO;
+    NSArray *directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath: documentsDirectory];
+    
+    NSString *exportPath = dataPath;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager fileExistsAtPath:exportPath isDirectory:&isDir] && isDir){
+        directoryContents = [fileManager subpathsAtPath:exportPath];
+    }
+    archivePath = [exportPath stringByAppendingString:[NSString stringWithFormat:@".zip"]];
+    
+    ZipArchive *archiver = [[ZipArchive alloc] init];
+    [archiver CreateZipFile2:archivePath];
+    for(NSString *path in directoryContents)
+    {
+        NSString *longPath = [exportPath stringByAppendingPathComponent:path];
+        if([fileManager fileExistsAtPath:longPath isDirectory:&isDir] && !isDir)
+        {
+            NSString * extension = @"pdf";
+            if ([[longPath pathExtension]isEqualToString:@""]||[[[longPath pathExtension]lowercaseString]isEqualToString:extension]) {
+                [archiver addFileToZip:longPath newname:path];
+                
+            }
+        }
+    }
+    BOOL successCompressing = [archiver CloseZipFile2];
+    if(successCompressing)
+        NSLog(@"Success");
+    else
+        NSLog(@"Fail");
+    NSString *path = archivePath;
+    [pdfData appendData:[NSMutableData dataWithContentsOfFile: path]];
+    }
+    
+    
+    // deleting the temporary Copied files
+    
+    NSLog(@"Folder");
+    NSString * originalPath = dataPath;
+    NSString * finalZipPath = [originalPath stringByAppendingPathExtension:@"zip"];
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSError *error;
+    NSString *documentsDirectory = [NSHomeDirectory()
+                                    stringByAppendingPathComponent:@"Documents"];
+    
+    if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
+        NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+    
+    if ([fileMgr removeItemAtPath:finalZipPath error:&error] != YES)
+        NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+    
+    // Show contents of Documents directory
+    NSLog(@"Documents directory: %@",
+          [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+    
+    
+    [self performSelector:@selector(sendMail) withObject:nil afterDelay:1];
+
+}
+
 -(void)mailClick
 {
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [self mail:filePathsArray];
+    [self copyingDataToFolder];
 }
 
--(void)mail:(NSArray *)mailArray
+//-(void)mail:(NSArray *)mailArray
+//{
+//    pdfData = [[NSMutableData alloc]init];
+//     //NSData * folderData;
+//    NSString *archivePath;
+//
+//    for (int i =0; i<[filePathsArray count]; i++)
+//    {
+//        
+//            if ([filePathsArray count]==1&&![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+//            {
+//                NSString *path = [[mailArray objectAtIndex:i] objectForKey:@"PdfPath"];
+//                pdfData = [NSMutableData dataWithContentsOfFile: path];
+//                isFolder = NO;
+//            }
+//            else if([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+//            {
+//                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                NSString *docDirectory = [paths objectAtIndex:0];
+//                BOOL isDir=NO;
+//                NSArray *directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath: docDirectory];
+//                
+//                NSString *exportPath = [[mailArray objectAtIndex:i]objectForKey:@"PdfPath"];
+//                NSFileManager *fileManager = [NSFileManager defaultManager];
+//                if ([fileManager fileExistsAtPath:exportPath isDirectory:&isDir] && isDir){
+//                    directoryContents = [fileManager subpathsAtPath:exportPath];
+//                }
+//                archivePath = [exportPath stringByAppendingString:[NSString stringWithFormat:@"%@.zip",[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]]];
+//                
+//                ZipArchive *archiver = [[ZipArchive alloc] init];
+//                [archiver CreateZipFile2:archivePath];
+//                for(NSString *path in directoryContents)
+//                {
+//                    NSString *longPath = [exportPath stringByAppendingPathComponent:path];
+//                    if([fileManager fileExistsAtPath:longPath isDirectory:&isDir] && !isDir)
+//                    {
+//                        NSString * extension = @"pdf";
+//                        if ([[longPath pathExtension]isEqualToString:@""]||[[[longPath pathExtension]lowercaseString]isEqualToString:extension]) {
+//                            [archiver addFileToZip:longPath newname:path];
+//                            
+//                        }
+//                    }
+//                }
+//                BOOL successCompressing = [archiver CloseZipFile2];
+//                if(successCompressing)
+//                    NSLog(@"Success");
+//                else
+//                    NSLog(@"Fail");
+//                
+//                
+//                NSString *path = archivePath;
+//                [pdfData appendData:[NSMutableData dataWithContentsOfFile: path]];
+//            }
+//    
+//             else
+//            {
+//                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//                NSString *docDirectory = [paths objectAtIndex:0];
+//                
+//                isFolder = YES;
+//                archivePath = [docDirectory stringByAppendingString:@"/pdfMarkup.zip"];
+//                ZipArchive *archiver = [[ZipArchive alloc] init];
+//                [archiver CreateZipFile2:archivePath];
+//                // NSFileManager *fileManager = [NSFileManager defaultManager];
+//                for (int i =0; i<[mailArray count]; i++)
+//                {
+//                
+//                [archiver addFileToZip:[[mailArray objectAtIndex:i]objectForKey:@"PdfPath"] newname:[[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""]];
+//                
+//                }
+//                BOOL successCompressing = [archiver CloseZipFile2];
+//                if(successCompressing)
+//                {
+//                    NSLog(@"Zipp successfull");
+//                }
+//                else
+//                {
+//                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                    message:@"Cannot zip Docs Folder"
+//                                                                   delegate:nil
+//                                                          cancelButtonTitle:@"OK"
+//                                                          otherButtonTitles:nil];
+//                    [alert show];
+//                }
+//                
+//                NSString *path = archivePath;
+//                [pdfData appendData:[NSMutableData dataWithContentsOfFile: path]];
+//    
+//        
+//            }
+//    
+//        
+//        
+//        // deleting
+//    
+//        if ([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfPath"]pathExtension]isEqualToString:@""])
+//        {
+//            NSLog(@"Folder");
+//            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+//            NSString * zipName = [originalPath stringByDeletingPathExtension];
+//            NSString * finalZipPath = [zipName stringByAppendingPathExtension:@"zip"];
+//            NSFileManager *fileMgr = [NSFileManager defaultManager];
+//            NSError *error;
+//            NSString *documentsDirectory = [NSHomeDirectory()
+//                                            stringByAppendingPathComponent:@"Documents"];
+//            
+//            if ([fileMgr removeItemAtPath:finalZipPath error:&error] != YES)
+//                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+//            
+//            // Show contents of Documents directory
+//            NSLog(@"Documents directory: %@",
+//                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+//            
+//            
+//        }
+//        else{
+//            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
+//            NSFileManager *fileMgr = [NSFileManager defaultManager];
+//            NSError *error;
+//            NSString *documentsDirectory = [NSHomeDirectory()
+//                                            stringByAppendingPathComponent:@"Documents"];
+//            
+//            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
+//                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
+//            
+//            // Show contents of Documents directory
+//            NSLog(@"Documents directory: %@",
+//                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
+//        }
+//    
+//    }
+//        
+//    [self performSelector:@selector(sendMail) withObject:nil afterDelay:1];
+//    
+//}
+-(void)sendMail
 {
-    [self flattenedFile];
-    NSData *pdfData = [[NSData alloc]init];
-    // NSData * folderData;
-    BOOL folder;
-    int pdfCount = 0;
-    for (int k =0;k<[filePathsArray count];k++) {
-        if (![[[[filePathsArray objectAtIndex:k]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-        {
-            pdfCount = pdfCount +1;
-        }
-    }
-    
-    for (int i =0; i<[filePathsArray count]; i++)
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    if ( [MFMailComposeViewController canSendMail])
     {
         
+        MFMailComposeViewController * mailComposer = [[MFMailComposeViewController alloc] init];
+        mailComposer.mailComposeDelegate = self;
         
         
-        NSString *archivePath;
-        if (![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
+        if (!isFolder)
         {
-            if (pdfCount ==1) {
-                NSString *path = [[mailArray objectAtIndex:i] objectForKey:@"PdfPath"];
-                pdfData = [NSData dataWithContentsOfFile: path];
-                folder = NO;
-            }
-            else{
-                
-                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-                NSString *docDirectory = [paths objectAtIndex:0];
-                
-                folder = YES;
-                archivePath = [docDirectory stringByAppendingString:@"/doc.zip"];
-                ZipArchive *archiver = [[ZipArchive alloc] init];
-                [archiver CreateZipFile2:archivePath];
-                // NSFileManager *fileManager = [NSFileManager defaultManager];
-                //        for (int i =0; i<[mailArray count]; i++)
-                //        {
-                
-                [archiver addFileToZip:[[mailArray objectAtIndex:i]objectForKey:@"PdfPath"] newname:[[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""]];
-                
-                //}
-                BOOL successCompressing = [archiver CloseZipFile2];
-                if(successCompressing)
-                {
-                    NSLog(@"Zipp successfull");
-                }
-                else
-                {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                    message:@"Cannot zip Docs Folder"
-                                                                   delegate:nil
-                                                          cancelButtonTitle:@"OK"
-                                                          otherButtonTitles:nil];
-                    [alert show];
-                }
-                
-                NSString *path = archivePath;
-                pdfData = [NSData dataWithContentsOfFile: path];
-            }
-        }
-        else if([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-        {
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *docDirectory = [paths objectAtIndex:0];
-            BOOL isDir=NO;
-            NSArray *directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath: docDirectory];
-            
-            NSString *exportPath = [[mailArray objectAtIndex:i]objectForKey:@"PdfPath"];
-            NSFileManager *fileManager = [NSFileManager defaultManager];
-            if ([fileManager fileExistsAtPath:exportPath isDirectory:&isDir] && isDir){
-                directoryContents = [fileManager subpathsAtPath:exportPath];
-            }
-            archivePath = [exportPath stringByAppendingString:@".zip"];
-            ZipArchive *archiver = [[ZipArchive alloc] init];
-            [archiver CreateZipFile2:archivePath];
-            for(NSString *path in directoryContents)
-            {
-                NSString *longPath = [exportPath stringByAppendingPathComponent:path];
-                if([fileManager fileExistsAtPath:longPath isDirectory:&isDir] && !isDir)
-                {
-                    NSString * extension = @"pdf";
-                    if ([[longPath pathExtension]isEqualToString:@""]||[[[longPath pathExtension]lowercaseString]isEqualToString:extension]) {
-                        [archiver addFileToZip:longPath newname:path];
-                        
-                    }
-                }
-            }
-            BOOL successCompressing = [archiver CloseZipFile2];
-            if(successCompressing)
-                NSLog(@"Success");
-            else
-                NSLog(@"Fail");
-            
-            
-            NSString *path = archivePath;
-            pdfData = [NSData dataWithContentsOfFile: path];
-        }
-        
-        // deleting
-        
-        if ([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfPath"]pathExtension]isEqualToString:@""])
-        {
-            NSLog(@"Folder");
-            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
-            NSString * zipName = [originalPath stringByDeletingPathExtension];
-            NSString * finalZipPath = [zipName stringByAppendingPathExtension:@"zip"];
-            NSFileManager *fileMgr = [NSFileManager defaultManager];
-            NSError *error;
-            NSString *documentsDirectory = [NSHomeDirectory()
-                                            stringByAppendingPathComponent:@"Documents"];
-            
-            if ([fileMgr removeItemAtPath:finalZipPath error:&error] != YES)
-                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-            
-            // Show contents of Documents directory
-            NSLog(@"Documents directory: %@",
-                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-            
+            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:[[filePathsArray objectAtIndex:0]objectForKey:@"PdfName"]];
             
         }
-        else{
-            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
-            NSFileManager *fileMgr = [NSFileManager defaultManager];
-            NSError *error;
-            NSString *documentsDirectory = [NSHomeDirectory()
-                                            stringByAppendingPathComponent:@"Documents"];
-            
-            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
-                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-            
-            // Show contents of Documents directory
-            NSLog(@"Documents directory: %@",
-                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-        }
-        
-        
-        if ( [MFMailComposeViewController canSendMail])
+        else
         {
             
-            MFMailComposeViewController * mailComposer = [[MFMailComposeViewController alloc] init];
-            mailComposer.mailComposeDelegate = self;
-            NSString * filename = [[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""];
+            [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:@"PdfMarkup.zip"];
             
-            if (![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-            {
-                [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/pdf" fileName:filename];
-                
-            }
-            else
-            {
-                
-                NSString * fileNamee = [NSString stringWithFormat:@"%@.zip",filename];
-                [mailComposer addAttachmentData:pdfData mimeType:@"mimeType = 'application/zip" fileName:fileNamee];
-                
-            }
-            
-            
-            [mailComposer setSubject:@"PDF MarkUp!"];
-            
-            NSString *emailBody =
-            @"Hello,<br/><br/>PDF File from PDF Markup ..!<br/><aDownload Now</a>";
-            
-            [mailComposer setMessageBody:emailBody isHTML:YES];
-            [self presentViewController:mailComposer animated:YES completion:nil];
         }
-    }
-    
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
-}
+        
+        
 
+        [mailComposer setSubject:@"PDF MarkUp!"];
+        
+        NSString *emailBody =
+        @"Hello,<br/><br/>PDF File from PDF Markup ..!<br/><aDownload Now</a>";
+        
+        [mailComposer setMessageBody:emailBody isHTML:YES];
+        [self presentViewController:mailComposer animated:YES completion:nil];
+    }
+else
+{
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF MarkUp" message:@"Please Add your account" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [alert show];
+    [self uploadCancel];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentsEditCancel"
+                                                        object:self];
+    [documentsCollectionView reloadData];
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+}
+    
+}
 - (void)mailComposeController:(MFMailComposeViewController*)mailComposer didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+    NSString *msg1;
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            msg1 =@"Sending Mail is cancelled";
+            break;
+        case MFMailComposeResultSaved:
+            msg1=@"Sending Mail is Saved";
+            break;
+        case MFMailComposeResultSent:
+            msg1 =@"Your Mail has been sent successfully";
+            break;
+        case MFMailComposeResultFailed:
+            msg1 =@"Message sending failed";
+            break;
+        default:
+            msg1 =@"Your Mail is not Sent";
+            break;
+    }
+    
+    NSLog(@"result is %@",msg1);
     [self uploadCancel];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentsEditCancel"
                                                         object:self];
