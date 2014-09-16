@@ -1177,6 +1177,8 @@ NSString *wastepath = nil;
             if ([data.path isEqualToString:[NSString stringWithFormat:@"/%@",filename]] ) {
                 
                 [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+                NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
                 NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
@@ -1498,6 +1500,8 @@ NSString *wastepath = nil;
         [DownloadingSingletonClass getSharedInstance].dropBoxDownload = YES;
         NSLog(@"Thread is stopped.....");
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
         [arrLocalFilepaths removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
@@ -2108,7 +2112,7 @@ NSString *wastepath = nil;
 -(IBAction)btnDownloadPress:(id)sender
 {
    // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
-    
+    NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
         [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
@@ -2230,6 +2234,7 @@ NSString *wastepath = nil;
 {
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Please Wait...." message:@"Downloading In Progress" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
     [alert show ];
+    
 }
 #pragma mark Box Download Methods
 
@@ -2262,7 +2267,8 @@ NSString *wastepath = nil;
                 FolderItem* item = [arrmetadata objectAtIndex:i];
                 item.isChecked = NO;
                 [cell setChecked:item.isChecked];
-                
+                NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
                 [tbDownload reloadData];
                 
             }
@@ -2385,7 +2391,8 @@ NSString *wastepath = nil;
     [alert show ];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:self];
     
-    
+    [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+
 }
 
 -(void)downloadableFolderFiles:(NSString *)folderID name:(NSString *)name
@@ -2596,6 +2603,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
         [boxOperationQueue cancelAllOperations];
         // [self.navigationController popToRootViewControllerAnimated:YES];
     }
@@ -2970,7 +2979,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
-        
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
        // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
@@ -3245,6 +3255,8 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+
        // [self.navigationController popToRootViewControllerAnimated:YES];
     }
 }
