@@ -76,10 +76,10 @@
 - (BOOL)connected;
 
 +(DropboxDownloadFileViewControlller*)getSharedInstance;
-@property (nonatomic, strong) NSString *accountStatus;
+@property (atomic, strong) NSString *accountStatus;
 
-@property(nonatomic,strong) NSMutableArray *filePathsArray;
-@property(nonatomic,strong) NSMutableArray *boxFilePathsArray;
+@property(atomic,strong) NSMutableArray *filePathsArray;
+@property(atomic,strong) NSMutableArray *boxFilePathsArray;
 
 -(NSString*)getDropBoxDirectoryPath:(NSString*)path withfilename:(NSString *)filename;
 -(void)upload:(id)sender;

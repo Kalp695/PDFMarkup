@@ -693,6 +693,30 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 {
     // UITableViewCellSelectionStyleGray
 
+    
+    /*********************** Do not edit if download is in progress ***********/
+    
+    if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
+        {
+        if(indexPath.section==0 && (indexPath.row==0)) //load the document tab
+        {
+            
+        }
+        else
+        {
+            
+            [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
+            return;
+        }
+        
+        
+        }
+    
+    
+    /*********************** End ***********/
+    
+    
+    
     NSDate *object = _objects[indexPath.row];
     if ([MasterViewController sharedInstance].popStatus == YES)
     {
@@ -705,7 +729,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         if (indexPath.section == 1)
         {
             [MasterViewController sharedInstance].popStatus = NO;
-            self.tableView.userInteractionEnabled = NO;
+            //self.tableView.userInteractionEnabled = NO;
             if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
                 
                 
@@ -752,6 +776,14 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
     }
     
+    
+}
+
+
+-(void)downloadInProgress
+{
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Please Wait...." message:@"Downloading In Progress" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+    [alert show ];
     
 }
 
