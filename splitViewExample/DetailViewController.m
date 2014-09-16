@@ -4079,7 +4079,8 @@ else
 }
 - (void)mailComposeController:(MFMailComposeViewController*)mailComposer didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
-    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+
     NSString *msg1;
     switch (result)
     {

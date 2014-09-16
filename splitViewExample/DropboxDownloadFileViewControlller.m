@@ -279,6 +279,7 @@ NSString *wastepath = nil;
     else
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
         if (fetching == YES) {
         [self fetchFolderItemsWithFolderID:boxFolderId name:boxFolderName];
         }
@@ -879,12 +880,16 @@ NSString *wastepath = nil;
     }
     if (fetching == YES) {
         [tbDownload reloadData];
-        [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
 
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
     
-    
+    [self performSelectorOnMainThread:@selector(post) withObject:nil waitUntilDone:NO];
+
+}
+-(void)post
+{
+    [self performSelector:@selector(postNoftifier) withObject:nil afterDelay:0.5];
 }
 -(void)postNoftifier
 {
@@ -2466,8 +2471,6 @@ NSString *wastepath = nil;
             
             //[self performSelector:@selector(closeBoxControllerr) withObject:nil afterDelay:0];
             
-            
-            
         }
         
     }
@@ -2595,7 +2598,7 @@ NSString *wastepath = nil;
         
     }
     
-    if ([driveFilePathsArray count]==0 && [boxFilesItemsArray count]==0)
+    if ([[AppDelegate sharedInstance].boxSelectedFiles count]==0 && [boxFilesItemsArray count]==0)
     {
         boxDownloadProcess = NO;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -2604,7 +2607,7 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
         NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
-
+    
         [boxOperationQueue cancelAllOperations];
         // [self.navigationController popToRootViewControllerAnimated:YES];
     }

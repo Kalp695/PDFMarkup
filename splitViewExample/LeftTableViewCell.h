@@ -16,8 +16,7 @@
     IBOutlet UIImageView __weak * leftFolderImage;
 }
 @property(nonatomic,weak)IBOutlet UIImageView * leftFolderImage;
-
-
+@property (strong, nonatomic) IBOutlet UIImageView * cellSeperator;
 @property(nonatomic,weak) UILabel *label;
 
 @end

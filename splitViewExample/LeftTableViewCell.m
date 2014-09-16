@@ -12,7 +12,7 @@
 @implementation LeftTableViewCell
 @synthesize label,leftFolderImage;
 
-
+@synthesize cellSeperator;
 
 
 

@@ -171,13 +171,13 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 }
 -(void)popStatusChange
 {
+   
     [MasterViewController sharedInstance].popStatus = YES;
     
     if ([MasterViewController sharedInstance].popStatus == YES)
     {
         self.tableView.userInteractionEnabled = YES;
     }
-    
     
 }
 -(void)downloadStart:(NSNotification *)notification
@@ -244,13 +244,19 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [DownloadingSingletonClass getSharedInstance].activityView = NO;
         
     }
-    
-    [self.tableView reloadData];
+    self.tableView.userInteractionEnabled = YES;
+
+  
+    [self performSelectorOnMainThread:@selector(reloadDat) withObject:nil waitUntilDone:NO];
+
+}
+-(void)reloadDat
+{
     [ac removeFromSuperview];
     ac = nil;
-    
-}
+    [self.tableView reloadData];
 
+}
 -(int)getNumberOfSections
 {
     
@@ -462,10 +468,6 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    
-    
-    
-
     // Create the view for the header
     UIView *sectionView;
     
@@ -572,6 +574,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         LeftTableViewCell *cell = (LeftTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
         cell.label.font=[UIFont systemFontOfSize:16.0f];
+        cell.cellSeperator.hidden = NO;
         if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
             
             cell.leftFolderImage.image =[UIImage imageNamed:@"Dropbox-small.png"];
@@ -689,8 +692,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // UITableViewCellSelectionStyleGray
-    
-    
+
     NSDate *object = _objects[indexPath.row];
     if ([MasterViewController sharedInstance].popStatus == YES)
     {
