@@ -232,6 +232,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     else
     {
         //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadComplete" object:nil];
+       [[NSNotificationCenter defaultCenter] removeObserver:self name:@"BGDownloadSuccess" object:nil];
         
         [bgProcessArray removeObject:@"Downloading in progress"];
     }
