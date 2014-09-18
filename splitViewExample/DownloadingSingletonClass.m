@@ -19,6 +19,7 @@ static DownloadingSingletonClass *sharedInstance = nil;
 @synthesize ftpUpload;
 @synthesize activityViewStatus;
 @synthesize dropBoxUpload;
+@synthesize boxUpload;
 
 +(DownloadingSingletonClass*)getSharedInstance{
     if (!sharedInstance) {

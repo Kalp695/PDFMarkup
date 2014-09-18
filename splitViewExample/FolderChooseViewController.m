@@ -94,8 +94,8 @@ static FolderChooseViewController *sharedInstance = nil;
             boxFolderName =@"All Files";
         }
         [self checkExpiredBoxToken];
-        
     }
+    
     else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
     {
         NSLog(@"Upload Files to drive");
@@ -406,6 +406,8 @@ static FolderChooseViewController *sharedInstance = nil;
                                                         object:@"upload"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadToFolder"
                                                         object:self];
+    
+    NSLog(@"box id = %@",[DetailViewController getSharedInstance].folderID);
     
 }
 

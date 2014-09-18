@@ -49,6 +49,7 @@
 		1871BDAF19C1EA7F0069ED17 /* grid-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAB19C1EA7F0069ED17 /* grid-selected.png */; };
 		1871BDB019C1EA7F0069ED17 /* table-selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDAC19C1EA7F0069ED17 /* table-selected.png */; };
 		1871BDB219C1FA6F0069ED17 /* plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 1871BDB119C1FA6F0069ED17 /* plus.png */; };
+		1880BB0119CB2C950007D39D /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 1880BB0019CB2C950007D39D /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1887D87B19C2DA8600A3E4CF /* ZipArchive.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1887D87A19C2DA8600A3E4CF /* ZipArchive.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		1887D88D19C3190800A3E4CF /* SSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = 1887D88C19C3190800A3E4CF /* SSZipArchive.m */; };
 		1887D89919C31BD200A3E4CF /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 1887D89119C31BD200A3E4CF /* ioapi.c */; };
@@ -151,7 +152,6 @@
 		18B6A1C719A60A9D008F99FA /* GTLRuntimeCommon.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A1BC19A60A9D008F99FA /* GTLRuntimeCommon.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A1C819A60A9D008F99FA /* GTLService.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A1BE19A60A9D008F99FA /* GTLService.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B6A1C919A60A9D008F99FA /* GTLUploadParameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B6A1C019A60A9D008F99FA /* GTLUploadParameters.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		18B84EE7199D33CD00F9E383 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B84ED2199D33CD00F9E383 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B84EE8199D33CD00F9E383 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B84ED4199D33CD00F9E383 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B84EE9199D33CD00F9E383 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B84ED7199D33CD00F9E383 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18B84EEA199D33CD00F9E383 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 18B84ED9199D33CD00F9E383 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -419,6 +419,8 @@
 		1871BDAB19C1EA7F0069ED17 /* grid-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grid-selected.png"; sourceTree = "<group>"; };
 		1871BDAC19C1EA7F0069ED17 /* table-selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table-selected.png"; sourceTree = "<group>"; };
 		1871BDB119C1FA6F0069ED17 /* plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plus.png; sourceTree = "<group>"; };
+		1880BAFF19CB2C950007D39D /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		1880BB0019CB2C950007D39D /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		1887D87919C2DA8600A3E4CF /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		1887D87A19C2DA8600A3E4CF /* ZipArchive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ZipArchive.mm; sourceTree = "<group>"; };
 		1887D88B19C3190800A3E4CF /* SSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSZipArchive.h; sourceTree = "<group>"; };
@@ -598,8 +600,6 @@
 		18B6A1BF19A60A9D008F99FA /* GTLUploadParameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLUploadParameters.h; sourceTree = "<group>"; };
 		18B6A1C019A60A9D008F99FA /* GTLUploadParameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLUploadParameters.m; sourceTree = "<group>"; };
 		18B6A1CA19A60AAA008F99FA /* GTLDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLDefines.h; sourceTree = "<group>"; };
-		18B84ED1199D33CD00F9E383 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		18B84ED2199D33CD00F9E383 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		18B84ED3199D33CD00F9E383 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		18B84ED4199D33CD00F9E383 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		18B84ED5199D33CD00F9E383 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -1068,6 +1068,15 @@
 			name = Public;
 			sourceTree = "<group>";
 		};
+		1880BAFE19CB2C790007D39D /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				1880BAFF19CB2C950007D39D /* Reachability.h */,
+				1880BB0019CB2C950007D39D /* Reachability.m */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
 		1887D87C19C2DC3500A3E4CF /* minizip */ = {
 			isa = PBXGroup;
 			children = (
@@ -1374,8 +1383,6 @@
 		18B84EC8199D33BD00F9E383 /* ASI HTTP */ = {
 			isa = PBXGroup;
 			children = (
-				18B84ED1199D33CD00F9E383 /* Reachability.h */,
-				18B84ED2199D33CD00F9E383 /* Reachability.m */,
 				18B84ED3199D33CD00F9E383 /* ASIAuthenticationDialog.h */,
 				18B84ED4199D33CD00F9E383 /* ASIAuthenticationDialog.m */,
 				18B84ED5199D33CD00F9E383 /* ASICacheDelegate.h */,
@@ -2030,6 +2037,7 @@
 				18A2E0B019813ED9002B4E64 /* Images */,
 				189F262A197EB66C00ADDF3F /* New Images */,
 				18A0C860197D46BA00534CF4 /* MBProgressHUD */,
+				1880BAFE19CB2C790007D39D /* Reachability */,
 				18B84EC8199D33BD00F9E383 /* ASI HTTP */,
 				186D58DA19828641007D0C48 /* Previous Used Files */,
 				658EF43D19797D5600E6FA0A /* Images.xcassets */,
@@ -2410,6 +2418,7 @@
 				1888F70019B2F8C600DBC547 /* BRRequestLogin.m in Sources */,
 				18A2AAB91994E275009D7E3A /* NSObject+SBJSON.m in Sources */,
 				1871BD7B19C17AF20069ED17 /* SSHttpFetcher.m in Sources */,
+				1880BB0119CB2C950007D39D /* Reachability.m in Sources */,
 				189A604019A4C42100408AEF /* CheckInternet.m in Sources */,
 				18B6A16919A60A34008F99FA /* GTLDriveAppList.m in Sources */,
 				1871BD7A19C17AF20069ED17 /* SSErrorUtil.m in Sources */,
@@ -2550,7 +2559,6 @@
 				18B6A1AD19A60A93008F99FA /* GTLJSONParser.m in Sources */,
 				18FE907119B1F9B60042CB15 /* BRRequestError.m in Sources */,
 				1887D87B19C2DA8600A3E4CF /* ZipArchive.mm in Sources */,
-				18B84EE7199D33CD00F9E383 /* Reachability.m in Sources */,
 				18B6A16A19A60A34008F99FA /* GTLDriveChange.m in Sources */,
 				18B6A17119A60A34008F99FA /* GTLDriveParentList.m in Sources */,
 				18B84EEF199D33CD00F9E383 /* ASINetworkQueue.m in Sources */,
@@ -2708,8 +2716,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2734,7 +2742,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3A5B7D04-F3A9-4AE4-B8F2-DECFCA8A8697";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2746,8 +2754,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2772,7 +2780,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "3A5B7D04-F3A9-4AE4-B8F2-DECFCA8A8697";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

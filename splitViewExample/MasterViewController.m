@@ -231,12 +231,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
     }
     else
     {
-        
         //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadComplete" object:nil];
-       // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Download Success" object:nil];
-
-        [bgProcessArray removeObject:@"Downloading in progress"];
         
+        [bgProcessArray removeObject:@"Downloading in progress"];
     }
     NSLog(@"sections array is %@",bgProcessArray);
     if ([bgProcessArray count]==0)

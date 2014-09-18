@@ -126,6 +126,19 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 
 -(IBAction)accountsButtonAction:(id)sender
 {
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        
+        UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Please check your network connectivity."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    else{
+        
     if ([sender tag]==1)
     {
         NSLog(@"Drop Box");
@@ -194,6 +207,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         
         [self presentViewController:googleLoginViewController animated:YES completion:nil];
         //     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+    }
     }
 }
 

@@ -17,6 +17,8 @@
 #import "BRRequestDownload.h"
 #import "BRRequestDelete.h"
 #import "BRRequest+_UserData.h"
+#import "Reachability.h"
+#import <SystemConfiguration/SystemConfiguration.h>
 
 @interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate,ASIHTTPRequestDelegate,BRRequestDelegate>
 {
@@ -72,8 +74,8 @@
     //
     BOOL boxDownloadProcess;
     
+    
 }
-- (BOOL)connected;
 
 +(DropboxDownloadFileViewControlller*)getSharedInstance;
 @property (atomic, strong) NSString *accountStatus;

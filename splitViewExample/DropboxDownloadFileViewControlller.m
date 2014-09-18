@@ -29,6 +29,7 @@ NSString * folderDocpath;
 #import "PDFThumbnail.h"
 #import "DetailViewController.h"
 #import "DownloadingSingletonClass.h"
+#import "Reachability.h"
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -121,7 +122,19 @@ NSString *wastepath = nil;
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        [self performSelector:@selector(postNoftifier) withObject:nil afterDelay:0.5];
+        
+        UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Please check your network connectivity."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    else{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadClick) name:@"DownloadClick" object:nil];
 
     
@@ -184,11 +197,54 @@ NSString *wastepath = nil;
         [self listDirectory:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
         
     }
+    }
 }
+
+-(int) checkInternet
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        [self showAlert:0];
+        return -1;
+    }
+    return 1;
+}
+-(void) showAlert : (int) status
+{
+    
+    NSString *msg = @"";
+    if(status==0)
+        msg = @"Please check your network connectivity.";
+    
+    UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                    message:msg
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 #pragma mark - View lifecycle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+//    if([self checkInternet]==1)
+//    {
+//        
+//    } else
+//    {
+//        NSLog(@" connected");
+//    }
+    
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        NSLog(@"There IS NO internet connection");
+
+    } else {
+      
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         if (!loadData)
@@ -204,7 +260,7 @@ NSString *wastepath = nil;
     
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
     {
-        
+        [AppDelegate sharedInstance].bgRunningStatus = @"not downloading";
         NSLog(@"refresh token is %@",[[AppDelegate sharedInstance ] appdelRefreshToken]);
         NSLog(@"Box name");
         boxFilesItemsArray = [[NSMutableArray alloc]init];
@@ -254,6 +310,7 @@ NSString *wastepath = nil;
                   action:@selector(editBarButton_clickk:)];
     editBarButton.title = @"Edit";
     self.navigationItem.rightBarButtonItem = editButton;
+    }
     
 }
 
@@ -576,8 +633,8 @@ NSString *wastepath = nil;
             
             downloadData = nil;
             downloadFile = nil;
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
-            
+            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
+
             if ([ftpFilePathsArray count]>0) {
                 
                 [self pdfThumbnail:filePath];
@@ -751,14 +808,15 @@ NSString *wastepath = nil;
                                                       } else {
                                                           
                                                           NSLog(@"An error occurred: %@", error);
+                                                          [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
+
                                                           [MBProgressHUD hideHUDForView:self.view animated:YES];
                                                       }
                                                   }];
     
     //[MBProgressHUD hideHUDForView:self.view animated:YES];
-    
-    
 }
+
 -(void)addFileMetaDataInfo:(GTLDriveFile*)file numberOfChilderns:(int)totalChildren
 {
     NSString *fileName = @"";
@@ -838,6 +896,20 @@ NSString *wastepath = nil;
     NSURLResponse *response;
     NSError *error;
     
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        [self performSelector:@selector(postNoftifier) withObject:nil afterDelay:0.5];
+        
+        UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Please check your network connectivity."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    else{
+
     NSData * data = [NSURLConnection sendSynchronousRequest:request
                                           returningResponse:&response
                                                       error:&error];
@@ -883,7 +955,7 @@ NSString *wastepath = nil;
 
         [MBProgressHUD hideHUDForView:self.view animated:YES];
     }
-    
+  }
     [self performSelectorOnMainThread:@selector(post) withObject:nil waitUntilDone:NO];
 
 }
@@ -932,7 +1004,6 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
         
-        NSLog(@"pop from box class");
         [AppDelegate sharedInstance].popStatus = YES;
         NSLog(@"Box");
     }
@@ -1367,7 +1438,7 @@ NSString *wastepath = nil;
         if(metadata.isDirectory){
             if (![[NSFileManager defaultManager] fileExistsAtPath:strDirPath])
                 [[NSFileManager defaultManager] createDirectoryAtPath:strDirPath withIntermediateDirectories:NO attributes:nil error:&error];
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
 
             bisprocessing = false;
         }
@@ -1396,7 +1467,6 @@ NSString *wastepath = nil;
                 if ([wastepath length]>0) {
                     strDirPath = [strDirPath stringByReplacingOccurrencesOfString:wastepath withString:@""];
                 }
-                
                 
                 //    strDirPath= [dataPath stringByAppendingPathComponent:[self getDropBoxDirectoryPath:path withfilename:metadata.filename]];
                 NSLog(@"check this  path for childs %@",strDirPath);
@@ -1467,6 +1537,11 @@ NSString *wastepath = nil;
     [DownloadingSingletonClass getSharedInstance].dropBoxDownload =YES;
     [tbDownload reloadData];
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+    [arrLocalFilepaths removeAllObjects];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:self];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
 }
 
 #pragma mark - DBRestClientDelegate Methods Load File for Download Data
@@ -1482,7 +1557,7 @@ NSString *wastepath = nil;
         
         
         [self pdfThumbnail:[[arrdownlaodfiels objectAtIndex:0] objectForKey:@"documentspath"]];
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+        [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
         [arrdownlaodfiels removeObjectAtIndex:0];
     }
     
@@ -2117,7 +2192,7 @@ NSString *wastepath = nil;
 -(IBAction)btnDownloadPress:(id)sender
 {
    // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
-    NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+    NSLog(@"download Statusss %@",[AppDelegate sharedInstance].bgRunningStatus);
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
         [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
@@ -2127,8 +2202,7 @@ NSString *wastepath = nil;
     {
         [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
         [self multipleFileDownload:nil];
-        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"];
-        
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"]
         
     }
     
@@ -2174,7 +2248,6 @@ NSString *wastepath = nil;
         NSLog(@"temp array is %@",[AppDelegate sharedInstance].boxSelectedFiles);
         if (boxDownloadProcess == YES)
         {
-            // [self performSelectorOnMainThread:@selector(downloadInProgress) withObject:nil waitUntilDone:NO];
         }
         boxOperationQueue = [NSOperationQueue new];
         NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
@@ -2250,8 +2323,8 @@ NSString *wastepath = nil;
     NSLog(@"%@",[AppDelegate sharedInstance].boxSelectedFiles);
     if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0)
     {
-        filename = [[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"folderName"];
         
+        filename = [[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"folderName"];
         NSLog(@"%@",[[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"path"]);
         
         NSString * str = [NSString stringWithFormat:@"%@%@",[[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"path"],filename];
@@ -2336,7 +2409,7 @@ NSString *wastepath = nil;
                                 NSLog(@"error");
                             else
                                 NSLog(@"completed");
-                            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+                            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
                             
                             
                         }];
@@ -2388,6 +2461,7 @@ NSString *wastepath = nil;
         
     }
 }
+
 -(void)boxShowAlert:(id)sender
 {
     NSLog(@"sender is %@",sender);
@@ -2542,7 +2616,8 @@ NSString *wastepath = nil;
         {
             filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
             [data writeToFile:filePath atomically:YES];
-            
+            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
+
         }
         else
         {
@@ -2557,13 +2632,17 @@ NSString *wastepath = nil;
                 [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
             [data writeToFile:dataPath atomically:YES];
             
-            [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
-            
+            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
             
         }
         
         
     }
+}
+-(void)refreshDocTable
+{
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+
 }
 
 -(void)closeBoxControllerr
@@ -2835,6 +2914,7 @@ NSString *wastepath = nil;
                                                           
                                                       } else {
                                                           NSLog(@"An error occurred: %@", error);
+                                                          
                                                       }
                                                   }];
     
@@ -2898,10 +2978,12 @@ NSString *wastepath = nil;
                     PDFThumbnail *pdfThumbnail=[[PDFThumbnail alloc]init];
                     [pdfThumbnail createThumbnailFromPDFFilePath:filePath];
                     
-                    [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+                    [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
+
                     if ([driveFilePathsArray count]==0) {
                         
-                        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+                        [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
+
                     }
                 } else {
                     NSLog(@"An error occurred: %@", error);
@@ -3127,7 +3209,7 @@ NSString *wastepath = nil;
         if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
             [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
         
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+        [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
         
         listDir = [[BRRequestListDirectory alloc] initWithDelegate:self];
         listDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
@@ -3251,7 +3333,8 @@ NSString *wastepath = nil;
         [ftpFilePathsArray removeAllObjects];
         [DownloadingSingletonClass getSharedInstance].ftpDownload = YES;
         NSLog(@"Ftp thread stopped ............ ");
-        [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
+        [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
+
         [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";

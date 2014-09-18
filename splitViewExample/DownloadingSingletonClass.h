@@ -22,6 +22,8 @@
 
 // Upload
 @property(atomic,assign,readwrite) BOOL dropBoxUpload;
+@property(atomic,assign,readwrite) BOOL boxUpload;
+
 @property(atomic,assign,readwrite) BOOL ftpUpload;
 
 @end
