@@ -144,9 +144,7 @@ static DetailViewController *sharedInstance = nil;
         [self docDataToDisplay];
         
         self.navigationController.view.backgroundColor=[UIColor whiteColor];
-        
         [self.navigationController popToRootViewControllerAnimated:YES];
-        
     }
     else if ([self.title isEqualToString:@"Network" ])
     {
@@ -186,7 +184,7 @@ static DetailViewController *sharedInstance = nil;
         [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
         [FolderChooseViewController getSharedInstance].accountName = @"sugarsync";
         [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
-        [self.navigationController pushViewController: detail animated: YES];
+        [self.navigationController pushViewController:detail animated: YES];
         
     }
     else if ([accountInfo isEqualToString:@"ftp"])
@@ -204,17 +202,20 @@ static DetailViewController *sharedInstance = nil;
         [rightTableView reloadData];
         
     }
-    if ([appDel.documentStatus isEqualToString:@"GridView"])
+    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
     {
+        [self.view bringSubviewToFront:documentView];
         [documentView bringSubviewToFront:documentsCollectionView];
         documentsCollectionView.hidden = NO;
         documentsTableView.hidden = YES;
-        [self gridViewButton_click:appDel.documentStatus ];
+        [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
         [documentsCollectionView reloadData];
         
     }
-    else if([appDel.documentStatus isEqualToString:@"TableView"])
+    else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
     {
+        [self.view bringSubviewToFront:documentView];
+        [documentView bringSubviewToFront:documentsTableView];
         documentsCollectionView.hidden = YES;
         documentsTableView.hidden = NO;
         [documentsTableView reloadData ];
@@ -392,17 +393,18 @@ static DetailViewController *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(docDataToDisplay) name:@"Download Success" object:nil];
     
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if ([appDel.documentStatus isEqualToString:@"GridView"])
+    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
     {
+        [self.view bringSubviewToFront:documentView];
+        [documentView bringSubviewToFront:documentsCollectionView];
         [documentView bringSubviewToFront:documentsCollectionView];
         documentsCollectionView.hidden = NO;
         documentsTableView.hidden = YES;
-        [self gridViewButton_click:appDel.documentStatus ];
+        [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
         [documentsCollectionView reloadData];
         
     }
-    else if([appDel.documentStatus isEqualToString:@"TableView"])
+    else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
     {
         documentsCollectionView.hidden = YES;
         documentsTableView.hidden = NO;
@@ -448,18 +450,18 @@ static DetailViewController *sharedInstance = nil;
     
     //docFolderPath = [[NSString alloc]init];
     appDel = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    NSLog(@"doc status %@",appDel.documentStatus);
+    NSLog(@"doc status %@",[AppDelegate sharedInstance].documentStatus);
     
     boxUploadingArray = [[NSMutableArray alloc]init];
-    if ([appDel.documentStatus isEqualToString:@"GridView"])
+    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
     {
         [documentView bringSubviewToFront:documentsCollectionView];
         documentsCollectionView.hidden = NO;
         documentsTableView.hidden = YES;
-        [self gridViewButton_click:appDel.documentStatus ];
+        [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
         
     }
-    else if([appDel.documentStatus isEqualToString:@"TableView"])
+    else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
     {
         documentsCollectionView.hidden = YES;
         documentsTableView.hidden = NO;
@@ -520,23 +522,20 @@ static DetailViewController *sharedInstance = nil;
     
     
 }
--(void)DriveDownloadSuccess
-{
-    rightTableView.hidden = YES;
-    accountsLabel.hidden = YES;
-    documentView.hidden  = NO;
-    self.title = @"Documents";
-    
-    [self docDataToDisplay];
-}
+
 -(void)DriveDownloadSucces
 {
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"BGDownloadSuccess" object:nil];
-    
-    rightTableView.hidden = YES;
-    accountsLabel.hidden = YES;
-    documentView.hidden  = NO;
-    self.title = @"Documents";
+
+//    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"]) {
+//        [documentView bringSubviewToFront:documentsCollectionView];
+//        documentView.hidden  = NO;
+//        documentsCollectionView.hidden = NO;
+//    }
+//    
+//    
+
+    NSLog(@"Document Status is %@",[AppDelegate sharedInstance].documentStatus);
+        self.title = @"Documents";
     
     [self docDataToDisplay];
 }
@@ -627,12 +626,37 @@ static DetailViewController *sharedInstance = nil;
         tableViewButton.hidden = NO;
         
     }
-    documentView.hidden = NO;
-    [documentsCollectionView reloadData];
-    [documentsTableView reloadData];
+    
+    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
+    {
+        [self.view bringSubviewToFront:documentView];
+        [documentView bringSubviewToFront:documentsCollectionView];
+        documentView.hidden  = NO;
+        documentsTableView.hidden = YES;
+        documentsCollectionView.hidden = NO;
+        [documentsCollectionView reloadData];
+
+    }
+   else
+   {
+       [self.view bringSubviewToFront:documentView];
+       documentsCollectionView.hidden = YES;
+       documentsTableView.hidden = NO;
+       [documentsTableView reloadData];
+       [documentView bringSubviewToFront:documentsTableView];
+   }
+    
     
 }
-
+-(void)DriveDownloadSuccess
+{
+    rightTableView.hidden = YES;
+    accountsLabel.hidden = YES;
+    documentView.hidden  = NO;
+    self.title = @"Documents";
+    
+    [self docDataToDisplay];
+}
 -(IBAction)gridViewButton_click:(id)sender
 {
     
@@ -640,7 +664,7 @@ static DetailViewController *sharedInstance = nil;
     [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
     
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDel.documentStatus = @"GridView";
+    [AppDelegate sharedInstance].documentStatus = @"GridView";
     [documentView bringSubviewToFront:documentsCollectionView];
     documentsTableView.hidden = YES;
     documentsCollectionView.hidden = NO;
@@ -653,7 +677,7 @@ static DetailViewController *sharedInstance = nil;
     [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
     
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    appDel.documentStatus = @"TableView";
+    [AppDelegate sharedInstance].documentStatus = @"TableView";
     
     
     documentsTableView.hidden = NO;
@@ -3375,7 +3399,7 @@ static DetailViewController *sharedInstance = nil;
                 }
                 appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                 
-                [appDel.documentStatus isEqualToString:@"TableView"];
+                [[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"];
                 [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
                 [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
                 

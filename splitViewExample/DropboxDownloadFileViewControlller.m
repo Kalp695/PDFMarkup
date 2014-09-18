@@ -2616,8 +2616,7 @@ NSString *wastepath = nil;
         {
             filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
             [data writeToFile:filePath atomically:YES];
-            [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
-
+            
         }
         else
         {
@@ -2644,7 +2643,6 @@ NSString *wastepath = nil;
     [[NSNotificationCenter defaultCenter]postNotificationName:@"BGDownloadSuccess" object:nil];
 
 }
-
 -(void)closeBoxControllerr
 {
     

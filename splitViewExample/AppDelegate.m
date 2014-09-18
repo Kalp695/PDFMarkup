@@ -101,6 +101,9 @@
     
     [AppDelegate sharedInstance].bgRunningStatus = @"notDownloading";
     [AppDelegate sharedInstance].bgRunningStatusUpload = @"notUploading";
+    
+    [AppDelegate sharedInstance].documentStatus = @"GridView";
+
     // FTP
     ftpDownloadpath = [[NSString alloc]init];
     //     [[NetworkManager sharedInstance] addObserver:self forKeyPath:@"networkOperationCount" options:NSKeyValueObservingOptionInitial context:&self->_networkOperationCountDummy];
