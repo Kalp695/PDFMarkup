@@ -2359,7 +2359,7 @@ NSString *wastepath = nil;
                 if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
                     
                     
-                    [self downloadfrombox];
+                    [self multipleFileDownload:nil];
                     
                 }
                 else
@@ -2453,7 +2453,7 @@ NSString *wastepath = nil;
         if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0) {
             
             
-            [self downloadfrombox];
+            [self multipleFileDownload:nil];
             
         }
         else
@@ -2588,10 +2588,7 @@ NSString *wastepath = nil;
             [dic setObject:type forKey:@"type"];
             [dic setObject:[[boxFilesItemsArray objectAtIndex:k]objectForKey:@"path"] forKey:@"path"];
             [[AppDelegate sharedInstance].boxSelectedFiles addObject:dic];
-            
-            
         }
-        
         
         [boxFilesItemsArray removeAllObjects];
         [self multipleFileDownload:nil];

@@ -653,6 +653,14 @@ static FolderChooseViewController *sharedInstance = nil;
 	return UITableViewCellEditingStyleNone;
 }
 
+#pragma mark disappear
+-(void)viewWillDisappear:(BOOL)animated
+{
+ //   [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadClick" object:nil];
+}
+
+#pragma mark Memory Warning
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
