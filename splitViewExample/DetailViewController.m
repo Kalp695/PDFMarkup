@@ -291,7 +291,6 @@ static DetailViewController *sharedInstance = nil;
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(UploadClick) name:@"UploadClick" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mailClick) name:@"MailClick" object:nil];
     
@@ -337,41 +336,30 @@ static DetailViewController *sharedInstance = nil;
             item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"username"];
             item.image = [UIImage imageNamed:@"Dropbox-small.png" ];
             item.accounttype = @"dropbox";
-            
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
             
             item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"email"];
             item.image = [UIImage imageNamed:@"Google_Drive_Small.png" ];
             item.accounttype = @"google";
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"box"]) {
             
             item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"name"];
             item.image = [UIImage imageNamed:@"box_small.png" ];
             item.accounttype = @"box";
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"ftp"]) {
             
             item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"host"];
             item.image = [UIImage imageNamed:@"ftp.png" ];
             item.accounttype = @"ftp";
-            
-            
         }
         else if ([[[arrUseraccounts objectAtIndex:i] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"]) {
             
             item.title = [[arrUseraccounts objectAtIndex:i] objectForKey:@"name"];
             item.image = [UIImage imageNamed:@"SugarSync.png" ];
             item.accounttype = @"sugarsync";
-            
-            
         }
         item.isChecked = NO;
         
@@ -523,6 +511,10 @@ static DetailViewController *sharedInstance = nil;
     
 }
 
+-(void)runOnMainThread
+{
+    
+}
 -(void)DriveDownloadSucces
 {
 
@@ -750,20 +742,7 @@ static DetailViewController *sharedInstance = nil;
     }
   else
   {
-    if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"])
-    {
-        [self performSelectorOnMainThread:@selector(uploadInProgress) withObject:nil waitUntilDone:NO];
-        [documentsTableView setEditing:NO animated:YES];
-        editBarButton.title = @"Edit";
-        [documentsTableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentsEditCancel"
-                                                            object:self];
-        [documentsCollectionView reloadData];
 
-        return;
-        
-    }
-    else{
       pdfValue = 0;
       arrJsonn = [[NSMutableArray alloc]init];
     
@@ -778,7 +757,7 @@ static DetailViewController *sharedInstance = nil;
           UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF Markup" message:@"No network available to upload" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
           [alert show];
       }
-   }
+   
   }
 }
 -(void)popOver
@@ -824,8 +803,8 @@ static DetailViewController *sharedInstance = nil;
     
     [AppDelegate sharedInstance].bgRunningStatusUpload = @"Uploading";
     [self uploadFolders];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"UploadClick" object:self];
-
+    
+//[[NSNotificationCenter defaultCenter] postNotificationName:@"UploadClick" object:self];
 //    
 //    if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"])
 //    {
@@ -843,6 +822,13 @@ static DetailViewController *sharedInstance = nil;
 {
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Please Wait...." message:@"Uploading In Progress" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show ];
+    [documentsTableView setEditing:NO animated:YES];
+    editBarButton.title = @"Edit";
+    [documentsTableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DocumentsEditCancel"
+                                                        object:self];
+    [documentsCollectionView reloadData];
+
 }
 
 -(void)uploadFolders
@@ -852,8 +838,6 @@ static DetailViewController *sharedInstance = nil;
     
     NSLog(@"uploading files is %@",uploadingArray);
     filecount = 0;
-    
-    
     uploadPdfCheck = FALSE;
     
     NSLog(@"yup %@",uploadingArray);
@@ -915,7 +899,7 @@ static DetailViewController *sharedInstance = nil;
         [uploadOperation setQueuePriority:NSOperationQueuePriorityHigh];
         
         [boxUploadOperationQueue addOperation:uploadOperation];
-        
+      
         
     }
     else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
@@ -1129,22 +1113,21 @@ static DetailViewController *sharedInstance = nil;
         
         //[self performSelectorOnMainThread:@selector(showOnMainThread) withObject:nil waitUntilDone:NO];
         
-        
         NSString * extension = @"pdf";
         if ([[[[[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
         {
             
-            //            boxUploadOperationQueue = [NSOperationQueue new];
-            //            NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
-            //                                                                                                 selector:@selector(flattenedFile)
-            //                                                                                                   object:nil];
-            //
-            //            // Add the operation to the queue and let it to be executed.
-            //
-            //            [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-            //            [boxUploadOperationQueue addOperation:flattenedFileOperation];
+            boxUploadOperationQueue = [NSOperationQueue new];
+            NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                                             selector:@selector(flattenedFile)
+                                                                                                               object:nil];
             
-            [self flattenedFile];
+             // Add the operation to the queue and let it to be executed.
+            
+            [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+            [boxUploadOperationQueue addOperation:flattenedFileOperation];
+            
+            //[self flattenedFile];
             
             NSString *myString = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"];
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
@@ -1159,11 +1142,7 @@ static DetailViewController *sharedInstance = nil;
             NSString * docfilepath = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfPath"];
             [self uploadFileToBox:0 :filename :boxParentId :docfilepath];
             
-            while ([DownloadingSingletonClass getSharedInstance].boxUpload == NO)
-            {
-                //NSLog(@"thread is running .....");
-                [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-            }
+           
             
         }
         else
@@ -1177,6 +1156,8 @@ static DetailViewController *sharedInstance = nil;
             }
             [self uploadFolderToBox:0 :filename :boxParentId];
         }
+        
+       
         
     }
     else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
@@ -1203,7 +1184,6 @@ static DetailViewController *sharedInstance = nil;
                 driveParentId =[DetailViewController  getSharedInstance].folderID;
             }
             [self uploadPdfToDrive:fileData :docfileName :driveParentId :myString];
-            
         }
         else
         {
@@ -1218,8 +1198,8 @@ static DetailViewController *sharedInstance = nil;
                 NSLog(@"drive parent ID %@",driveParentId);
             }
             [self uploadFolderToDrive:docfileName :driveParentId :myString];
-            
         }
+        
 //        editBarButton.title = @"Edit";
 //        [documentsTableView setEditing:NO];
 //        [documentsCollectionView reloadData];
@@ -1547,7 +1527,8 @@ static DetailViewController *sharedInstance = nil;
         
         uploadFile = nil;
     }
-    
+    [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
 }
 
 -(void)closeFtpUploadControllerr
@@ -1585,11 +1566,8 @@ static DetailViewController *sharedInstance = nil;
         editBarButton.title = @"Edit";
         [DownloadingSingletonClass getSharedInstance].ftpUpload = YES;
         [uploadingArray removeAllObjects];
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
-        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
+        [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
         
         [documentsCollectionView reloadData];
         
@@ -1834,6 +1812,13 @@ static DetailViewController *sharedInstance = nil;
         
     }
 }
+- (void)requestFail:(ASIHTTPRequest *)request
+{
+    NSLog(@"%@", request.error);
+    [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
+}
+
 -(void)closeBoxUploadControllerr
 {
     
@@ -1891,13 +1876,7 @@ static DetailViewController *sharedInstance = nil;
         boxParentId = nil;
         [uploadingArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
-        [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
-        
-        [documentsCollectionView reloadData];
-        
+        [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
         for (int i =0; i< [checkableArray count]; i++) {
             
             Item *item = (Item *)[checkableArray objectAtIndex:i];
@@ -1910,6 +1889,16 @@ static DetailViewController *sharedInstance = nil;
         
     }
     
+}
+-(void)uploadCompleted
+{
+    [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
+    [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
+    
+    [documentsCollectionView reloadData];
+
 }
 #pragma mark - Upload to Drive
 
@@ -2160,11 +2149,8 @@ static DetailViewController *sharedInstance = nil;
         editBarButton.title = @"Edit";
         [DetailViewController getSharedInstance].folderPath = nil;
         [uploadingArray removeAllObjects];
-        [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:self userInfo:nil];
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
-        [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
+        [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
         
         [documentsCollectionView reloadData];
         
@@ -2941,7 +2927,15 @@ static DetailViewController *sharedInstance = nil;
     else
     {
         Item * item = [checkableArray objectAtIndex:indexPath.row];
-        
+        if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"])
+        {
+            [self performSelectorOnMainThread:@selector(uploadInProgress) withObject:nil waitUntilDone:NO];
+            
+            return;
+            
+        }
+        else{
+            
         if ([editBarButton.title isEqualToString:@"Cancel"])
         {
             CollectionViewCell *cell = (CollectionViewCell*)[collectionView cellForItemAtIndexPath:indexPath];
@@ -3043,8 +3037,8 @@ static DetailViewController *sharedInstance = nil;
             
         }
         
-        
-        
+     }
+    
         
     }
     
@@ -3432,9 +3426,7 @@ static DetailViewController *sharedInstance = nil;
                 
                 [dic setValue:pdfFilePath forKey:@"PdfPath"];
                 [filePathsArray addObject:dic];
-                
                 [arrLocalFilepaths setObject:loadData forKey:pdfFilePath];
-                
                 
             }
             else
@@ -3472,13 +3464,11 @@ static DetailViewController *sharedInstance = nil;
                             
                             [filePathsArray removeObjectAtIndex:i];
                             
-                        }
                     }
-                    
-                    
-                    
                 }
+                    
             }
+        }
         if ([filePathsArray count]==1)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSingleFile" object:filePathsArray];
@@ -3494,8 +3484,8 @@ static DetailViewController *sharedInstance = nil;
             
         }
         
-        
     }
+    
     else if (tableView == popDisplayTableView)
     {
        

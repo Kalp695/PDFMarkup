@@ -723,7 +723,8 @@ NSString *wastepath = nil;
     {
         NSLog(@"%@", request.error.message);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
+        [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
         downloadFile = nil;
     }
     
@@ -1597,6 +1598,10 @@ NSString *wastepath = nil;
 
 -(void)restClient:(DBRestClient *)client loadFileFailedWithError:(NSError *)error
 {
+    [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+
+    [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
+
     [DownloadingSingletonClass getSharedInstance].dropBoxDownload  = YES;
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -1833,7 +1838,6 @@ NSString *wastepath = nil;
     
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
-        
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         DBMetadata *metadata = [marrDownloadData objectAtIndex:indexPath.row];
         
@@ -2312,6 +2316,7 @@ NSString *wastepath = nil;
     [alert show ];
     
 }
+
 #pragma mark Box Download Methods
 
 -(void)downloadfrombox
@@ -2321,7 +2326,6 @@ NSString *wastepath = nil;
     NSLog(@"%@",[AppDelegate sharedInstance].boxSelectedFiles);
     if ([[AppDelegate sharedInstance].boxSelectedFiles count]>0)
     {
-        
         filename = [[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"folderName"];
         NSLog(@"%@",[[[AppDelegate sharedInstance].boxSelectedFiles objectAtIndex:0]objectForKey:@"path"]);
         
@@ -2556,7 +2560,6 @@ NSString *wastepath = nil;
     
     arrdownlaodfiels = [[NSMutableArray alloc] init];
     
-    
     NSLog(@"check %@",sqliteRowsArray);
     NSLog(@"sdsd %@",folderID);
     if ([sqliteRowsArray containsObject:name])
@@ -2574,21 +2577,15 @@ NSString *wastepath = nil;
             FolderItem* item = [arrmetadata objectAtIndex:i];
             item.isChecked = NO;
             
-            
-            
             [cell setChecked:item.isChecked];
             
             [tbDownload reloadData];
             
-            
             break;
             
         }
-        
-        
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         fetching = YES;
-        
     }
     else
     {
