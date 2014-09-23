@@ -1157,7 +1157,11 @@ static DetailViewController *sharedInstance = nil;
             [self uploadFolderToBox:0 :filename :boxParentId];
         }
         
-       
+        while ([DownloadingSingletonClass getSharedInstance].boxUpload == NO)
+        {
+            //NSLog(@"thread is running .....");
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
         
     }
     else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
@@ -1815,6 +1819,8 @@ static DetailViewController *sharedInstance = nil;
 - (void)requestFail:(ASIHTTPRequest *)request
 {
     NSLog(@"%@", request.error);
+    [self deletingFakePath];
+
     [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
 
 }
@@ -1839,7 +1845,8 @@ static DetailViewController *sharedInstance = nil;
             
         }
         [boxUploadingArray removeAllObjects];
-        
+        [self uploadToFolder];
+
         //        boxUploadOperationQueue = [NSOperationQueue new];
         //        NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
         //                                                                                             selector:@selector(flattenedFile)
@@ -1864,7 +1871,6 @@ static DetailViewController *sharedInstance = nil;
         
         
         
-        [self uploadToFolder];
         
     }
     if ([uploadingArray count]==0 && [boxUploadingArray count]==0)
@@ -1876,6 +1882,7 @@ static DetailViewController *sharedInstance = nil;
         boxParentId = nil;
         [uploadingArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
         [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
         for (int i =0; i< [checkableArray count]; i++) {
             
@@ -1950,8 +1957,13 @@ static DetailViewController *sharedInstance = nil;
                                                       }
                                                       else
                                                       {
+                                                          [self deletingFakePath];
+
                                                           NSLog(@"An error occurred: %@", error);
-                                                          [CommonMethods showAlert:@"PDF MarkUp" MSG:@"Sorry, an error occurred!"];
+                                                          [CommonMethods showAlert:@"PDF MarkUp" MSG:@"An error occurred! Please try Again"];
+                                                          
+                                                          [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
                                                       }
                                                   }];
     
@@ -2004,8 +2016,12 @@ static DetailViewController *sharedInstance = nil;
                                                       
                                                       else
                                                       {
-                                                          NSLog(@"error %@",error);
-                                                      }
+                                                          [self deletingFakePath];
+
+                                                          NSLog(@"An error occurred: %@", error);
+                                                          [CommonMethods showAlert:@"PDF MarkUp" MSG:@"An error occurred! Please try Again"];
+                                                          
+                                                          [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];                                                      }
                                                   }];
     
     /*
@@ -3885,147 +3901,13 @@ static DetailViewController *sharedInstance = nil;
     }
   else
   {
-      [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+      //[MBProgressHUD showHUDAddedTo:self.view animated:YES];
       [self copyingDataToFolder];
   }
    
 }
 
-//-(void)mail:(NSArray *)mailArray
-//{
-//    pdfData = [[NSMutableData alloc]init];
-//     //NSData * folderData;
-//    NSString *archivePath;
-//
-//    for (int i =0; i<[filePathsArray count]; i++)
-//    {
-//        
-//            if ([filePathsArray count]==1&&![[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-//            {
-//                NSString *path = [[mailArray objectAtIndex:i] objectForKey:@"PdfPath"];
-//                pdfData = [NSMutableData dataWithContentsOfFile: path];
-//                isFolder = NO;
-//            }
-//            else if([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"] pathExtension]isEqualToString:@""])
-//            {
-//                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//                NSString *docDirectory = [paths objectAtIndex:0];
-//                BOOL isDir=NO;
-//                NSArray *directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath: docDirectory];
-//                
-//                NSString *exportPath = [[mailArray objectAtIndex:i]objectForKey:@"PdfPath"];
-//                NSFileManager *fileManager = [NSFileManager defaultManager];
-//                if ([fileManager fileExistsAtPath:exportPath isDirectory:&isDir] && isDir){
-//                    directoryContents = [fileManager subpathsAtPath:exportPath];
-//                }
-//                archivePath = [exportPath stringByAppendingString:[NSString stringWithFormat:@"%@.zip",[[filePathsArray objectAtIndex:i]objectForKey:@"PdfName"]]];
-//                
-//                ZipArchive *archiver = [[ZipArchive alloc] init];
-//                [archiver CreateZipFile2:archivePath];
-//                for(NSString *path in directoryContents)
-//                {
-//                    NSString *longPath = [exportPath stringByAppendingPathComponent:path];
-//                    if([fileManager fileExistsAtPath:longPath isDirectory:&isDir] && !isDir)
-//                    {
-//                        NSString * extension = @"pdf";
-//                        if ([[longPath pathExtension]isEqualToString:@""]||[[[longPath pathExtension]lowercaseString]isEqualToString:extension]) {
-//                            [archiver addFileToZip:longPath newname:path];
-//                            
-//                        }
-//                    }
-//                }
-//                BOOL successCompressing = [archiver CloseZipFile2];
-//                if(successCompressing)
-//                    NSLog(@"Success");
-//                else
-//                    NSLog(@"Fail");
-//                
-//                
-//                NSString *path = archivePath;
-//                [pdfData appendData:[NSMutableData dataWithContentsOfFile: path]];
-//            }
-//    
-//             else
-//            {
-//                NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//                NSString *docDirectory = [paths objectAtIndex:0];
-//                
-//                isFolder = YES;
-//                archivePath = [docDirectory stringByAppendingString:@"/pdfMarkup.zip"];
-//                ZipArchive *archiver = [[ZipArchive alloc] init];
-//                [archiver CreateZipFile2:archivePath];
-//                // NSFileManager *fileManager = [NSFileManager defaultManager];
-//                for (int i =0; i<[mailArray count]; i++)
-//                {
-//                
-//                [archiver addFileToZip:[[mailArray objectAtIndex:i]objectForKey:@"PdfPath"] newname:[[[mailArray objectAtIndex:i]objectForKey:@"PdfName"] stringByReplacingOccurrencesOfString:@"/" withString:@""]];
-//                
-//                }
-//                BOOL successCompressing = [archiver CloseZipFile2];
-//                if(successCompressing)
-//                {
-//                    NSLog(@"Zipp successfull");
-//                }
-//                else
-//                {
-//                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                    message:@"Cannot zip Docs Folder"
-//                                                                   delegate:nil
-//                                                          cancelButtonTitle:@"OK"
-//                                                          otherButtonTitles:nil];
-//                    [alert show];
-//                }
-//                
-//                NSString *path = archivePath;
-//                [pdfData appendData:[NSMutableData dataWithContentsOfFile: path]];
-//    
-//        
-//            }
-//    
-//        
-//        
-//        // deleting
-//    
-//        if ([[[[filePathsArray objectAtIndex:i]objectForKey:@"PdfPath"]pathExtension]isEqualToString:@""])
-//        {
-//            NSLog(@"Folder");
-//            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
-//            NSString * zipName = [originalPath stringByDeletingPathExtension];
-//            NSString * finalZipPath = [zipName stringByAppendingPathExtension:@"zip"];
-//            NSFileManager *fileMgr = [NSFileManager defaultManager];
-//            NSError *error;
-//            NSString *documentsDirectory = [NSHomeDirectory()
-//                                            stringByAppendingPathComponent:@"Documents"];
-//            
-//            if ([fileMgr removeItemAtPath:finalZipPath error:&error] != YES)
-//                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-//            
-//            // Show contents of Documents directory
-//            NSLog(@"Documents directory: %@",
-//                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-//            
-//            
-//        }
-//        else{
-//            NSString * originalPath = [[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"];
-//            NSFileManager *fileMgr = [NSFileManager defaultManager];
-//            NSError *error;
-//            NSString *documentsDirectory = [NSHomeDirectory()
-//                                            stringByAppendingPathComponent:@"Documents"];
-//            
-//            if ([fileMgr removeItemAtPath:originalPath error:&error] != YES)
-//                NSLog(@"Unable to delete file: %@", [error localizedDescription]);
-//            
-//            // Show contents of Documents directory
-//            NSLog(@"Documents directory: %@",
-//                  [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
-//        }
-//    
-//    }
-//        
-//    [self performSelector:@selector(sendMail) withObject:nil afterDelay:1];
-//    
-//}
+
 -(void)sendMail
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];

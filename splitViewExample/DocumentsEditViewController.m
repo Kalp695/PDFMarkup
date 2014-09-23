@@ -63,7 +63,7 @@
     
     if ([[notification name] isEqualToString:@"UploadMultipleFiles"])
     {
-       mailToButton.titleLabel.textColor = [UIColor whiteColor];
+        mailToButton.titleLabel.textColor = [UIColor whiteColor];
         deleteButton.titleLabel.textColor = [UIColor whiteColor];
         createFolderButton.titleLabel.textColor = [UIColor whiteColor];
         uploadButton.titleLabel.textColor = [UIColor whiteColor];

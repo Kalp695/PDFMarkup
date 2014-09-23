@@ -977,11 +977,8 @@ NSString *wastepath = nil;
 
 #pragma mark - View Disappear
 
-
-
 -(void)viewDidDisappear:(BOOL)animated
 {
-    
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
         if (tbDownload.isEditing) {
@@ -989,7 +986,6 @@ NSString *wastepath = nil;
             editBarButton.title = @"Edit";
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkControllerCancel"
                                                                 object:self];
-            
         }
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
@@ -1914,6 +1910,7 @@ NSString *wastepath = nil;
         else
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:filePathsArray];
+            
             
         }
         
