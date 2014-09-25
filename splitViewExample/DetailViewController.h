@@ -47,6 +47,10 @@
     NSMutableArray *marrDownloadData;
     NSMutableArray *arrmetadata;
     NSMutableArray *arrFolderdoc;
+    NSMutableArray *arrboxIDS;
+    BOOL issubfolder;
+    NSMutableString *strfinalPath;
+    NSString *strRootpath;
     
     // code for pop over
     NSMutableArray * popOverListArray;
