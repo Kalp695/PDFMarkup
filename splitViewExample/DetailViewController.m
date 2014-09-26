@@ -99,7 +99,8 @@ static DetailViewController *sharedInstance = nil;
     NSString * driveFolder;
     
     NSMutableArray * uploadingArray;
-    
+    NSMutableArray * uploadingUserAcntsArray;
+
 }
 +(DetailViewController*)getSharedInstance{
     if (!sharedInstance) {
@@ -834,7 +835,8 @@ static DetailViewController *sharedInstance = nil;
 -(void)uploadFolders
 {
     
-    uploadingArray = filePathsArray;
+    uploadingArray =[[NSMutableArray alloc]initWithArray:filePathsArray];
+    uploadingUserAcntsArray = [[NSMutableArray alloc]initWithArray:arrUseraccounts];
     
     NSLog(@"uploading files is %@",uploadingArray);
     filecount = 0;
@@ -849,7 +851,7 @@ static DetailViewController *sharedInstance = nil;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
 
-    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         /*
          NSInvocationOperation *dropBoxFlattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
@@ -875,7 +877,7 @@ static DetailViewController *sharedInstance = nil;
         
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
         
         boxUploadOperationQueue = [NSOperationQueue new];
@@ -902,13 +904,13 @@ static DetailViewController *sharedInstance = nil;
       
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
     {
         
         [self uploadToFolder];
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
     {
         ftpUploadOperationQueue = [NSOperationQueue new];
         NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
@@ -963,15 +965,17 @@ static DetailViewController *sharedInstance = nil;
             NSArray *firstSplit = [originalPath componentsSeparatedByString:@"Documents"];
             NSLog(@"paths in doc is %@",firstSplit);
             NSString * newPath;
-            if (![originalName isEqualToString:[firstSplit lastObject]])
-            {
-                newPath = [NSString stringWithFormat:@"%@%@",newPathToFile,appFile];
-                
-            }
-            else{
-                newPath = [NSString stringWithFormat:@"%@%@",documentsDirectory,appFile];
-                
-            }
+//            if (![originalName isEqualToString:[firstSplit lastObject]])
+//            {
+//                newPath = [NSString stringWithFormat:@"%@%@",newPathToFile,appFile];
+//                
+//            }
+//            else{
+//                newPath = [NSString stringWithFormat:@"%@%@",documentsDirectory,appFile];
+//                
+//            }
+            newPath = [NSString stringWithFormat:@"%@%@",documentsDirectory,appFile];
+
             NSLog(@"%@",newPath);
             appFile = newPath;
             
@@ -1028,7 +1032,7 @@ static DetailViewController *sharedInstance = nil;
 -(void)uploadToFolder
 {
     
-    if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
+    if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
         
@@ -1113,7 +1117,7 @@ static DetailViewController *sharedInstance = nil;
         }
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"box"])
     {
         // https://developers.box.com/docs/#files-upload-a-file
         
@@ -1223,7 +1227,7 @@ static DetailViewController *sharedInstance = nil;
         }
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
         
     {
         NSLog(@"folder path is %@", docFolderPath);
@@ -1295,7 +1299,7 @@ static DetailViewController *sharedInstance = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
         
     }
-    else if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
+    else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"ftp"])
     {
         
         // [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -1632,7 +1636,6 @@ static DetailViewController *sharedInstance = nil;
             
             [uploadingArray addObject:dic];
             
-            
         }
         
         
@@ -1959,30 +1962,6 @@ static DetailViewController *sharedInstance = nil;
         
         issubfolder = TRUE;
         [self uploadToFolder];
-
-        //        boxUploadOperationQueue = [NSOperationQueue new];
-        //        NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
-        //                                                                                             selector:@selector(flattenedFile)
-        //                                                                                               object:nil];
-        //
-        //        // Add the operation to the queue and let it to be executed.
-        //
-        //        [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-        //        [boxUploadOperationQueue addOperation:flattenedFileOperation];
-        //
-        //
-        //        NSInvocationOperation *uploadOperation = [[NSInvocationOperation alloc] initWithTarget:self
-        //                                                                                      selector:@selector(uploadToFolder)
-        //                                                                                        object:nil];
-        //
-        //        // Add the operation to the queue and let it to be executed.
-        //        [uploadOperation addDependency:flattenedFileOperation];
-        //
-        //        [uploadOperation setQueuePriority:NSOperationQueuePriorityHigh];
-        //
-        //        [boxUploadOperationQueue addOperation:uploadOperation];
-        
-        
         
         
     }
@@ -1993,6 +1972,8 @@ static DetailViewController *sharedInstance = nil;
         [documentsTableView setEditing:NO];
         editBarButton.title = @"Edit";
         boxParentId = nil;
+        boxFolderPaths = nil;
+        
         [uploadingArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
@@ -2007,7 +1988,6 @@ static DetailViewController *sharedInstance = nil;
         strRootpath = nil;
         
         [documentsTableView reloadData];
-        
         
     }
     

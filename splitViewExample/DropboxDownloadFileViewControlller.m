@@ -715,7 +715,8 @@ NSString *wastepath = nil;
         
         NSLog(@"%@", request.error.message);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
-        
+        [self performSelector:@selector(postNoftifier) withObject:self afterDelay:0.5 ];
+
         listDir = nil;
     }
     
@@ -734,6 +735,9 @@ NSString *wastepath = nil;
         NSLog(@"%@", request.error.message);
         deleteFile = nil;
     }
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF MarkUp" message:@"Server Error.! Please try Again" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
+
 }
 
 #pragma mark Drive Methods

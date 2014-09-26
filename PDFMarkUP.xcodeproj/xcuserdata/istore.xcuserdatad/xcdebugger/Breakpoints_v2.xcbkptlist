@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433355455.23433"
+            timestampString = "433417504.484564"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1619"
-            endingLineNumber = "1619"
+            startingLineNumber = "1623"
+            endingLineNumber = "1623"
             landmarkName = "-closeFtpUploadControllerr"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433355455.23433"
+            timestampString = "433417504.484564"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1598"
-            endingLineNumber = "1598"
+            startingLineNumber = "1602"
+            endingLineNumber = "1602"
             landmarkName = "-requestFail:"
             landmarkType = "5">
          </BreakpointContent>
@@ -52,27 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433355455.23433"
+            timestampString = "433419416.832589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1518"
-            endingLineNumber = "1518"
-            landmarkName = "-requestCompleted:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433355455.23433"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1822"
-            endingLineNumber = "1822"
+            startingLineNumber = "1825"
+            endingLineNumber = "1825"
             landmarkName = "-requestFinished:"
             landmarkType = "5">
          </BreakpointContent>
@@ -84,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433355455.23433"
+            timestampString = "433419416.832589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1656"
-            endingLineNumber = "1656"
+            startingLineNumber = "1659"
+            endingLineNumber = "1659"
             landmarkName = "-closeFtpUploadControllerr"
             landmarkType = "5">
          </BreakpointContent>
@@ -100,12 +84,60 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "433181923.506417"
+            timestampString = "433417504.484564"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1023"
-            endingLineNumber = "1023"
+            startingLineNumber = "1027"
+            endingLineNumber = "1027"
             landmarkName = "-deletingFakePath"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DetailViewController.m"
+            timestampString = "433418474.64111"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1304"
+            endingLineNumber = "1304"
+            landmarkName = "-uploadToFolder"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DetailViewController.m"
+            timestampString = "433418790.486215"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1398"
+            endingLineNumber = "1398"
+            landmarkName = "-uploadFolderToFtp::"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DetailViewController.m"
+            timestampString = "433418855.541444"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1450"
+            endingLineNumber = "1450"
+            landmarkName = "-requestCompleted:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
