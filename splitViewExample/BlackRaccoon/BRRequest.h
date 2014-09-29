@@ -132,7 +132,7 @@
 
 /// requestFailed
 /// \param request The request object
-- (void)requestFailed:(BRRequest *)request;
+- (void)requestFail:(BRRequest *)request;
 
 /// shouldOverwriteFileWithRequest
 /// \param request The request object;

@@ -148,7 +148,7 @@
         InfoLog(@"The host name is nil!");
         self.error = [[BRRequestError alloc] init];
         self.error.errorCode = kBRFTPClientHostnameIsNil;
-        [self.delegate requestFailed:self];
+        [self.delegate requestFail:self];
         return;
     }
     
@@ -211,9 +211,9 @@
 // returns:		none
 //
 
-- (void)requestFailed:(BRRequest *)request
+- (void)requestFail:(BRRequest *)request
 {
-    [self.delegate requestFailed:request];
+    [self.delegate requestFail:request];
 }
 
 

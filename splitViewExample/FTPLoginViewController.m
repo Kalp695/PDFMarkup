@@ -90,7 +90,7 @@
 //				requestFailed
 
 
--(void) requestFailed:(BRRequest *) request
+-(void) requestFail:(BRRequest *) request
 {
     if (request == login)
     {

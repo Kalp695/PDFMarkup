@@ -148,11 +148,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "433695946.233688"
+            timestampString = "433698570.347453"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4023"
-            endingLineNumber = "4023"
+            startingLineNumber = "4024"
+            endingLineNumber = "4024"
             landmarkName = "-confirmDelete"
             landmarkType = "5">
          </BreakpointContent>

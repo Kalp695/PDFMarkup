@@ -193,9 +193,9 @@
 // returns:		none
 //
 
-- (void)requestFailed:(BRRequest *)request
+- (void)requestFail:(BRRequest *)request
 {
-    [self.delegate requestFailed:request];
+    [self.delegate requestFail:request];
 }
 
 

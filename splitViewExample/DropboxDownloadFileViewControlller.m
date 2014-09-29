@@ -691,7 +691,7 @@ NSString *wastepath = nil;
 // returns:		none
 //
 
--(void) requestFailed:(BRRequest *) request
+-(void) requestFail:(BRRequest *) request
 {
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
@@ -725,6 +725,7 @@ NSString *wastepath = nil;
         NSLog(@"%@", request.error.message);
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+        [DownloadingSingletonClass getSharedInstance].ftpDownload = YES;
         [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
         downloadFile = nil;
     }

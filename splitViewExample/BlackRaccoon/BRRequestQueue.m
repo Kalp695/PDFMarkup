@@ -342,9 +342,9 @@
 // returns:		none
 //
 
-- (void)requestFailed:(BRRequest *)request
+- (void)requestFail:(BRRequest *)request
 {
-    [self.queueDelegate requestFailed:request];
+    [self.queueDelegate requestFail:request];
     
     headRequest = headRequest.nextRequest;    
     

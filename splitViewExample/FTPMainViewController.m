@@ -601,7 +601,7 @@
 // returns:		none
 //
 
--(void) requestFailed:(BRRequest *) request
+-(void) requestFail:(BRRequest *) request
 {
     if (request == createDir)
     {
