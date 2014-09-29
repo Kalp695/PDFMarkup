@@ -71,9 +71,11 @@
     NSOperationQueue * dropBoxUploadOperationQueue;
     NSOperationQueue * ftpUploadOperationQueue;
     NSOperationQueue * sugarSyncUploadOperationQueue;
+    NSTimer *ftptimer;
 
 }
 +(DetailViewController*)getSharedInstance;
+@property(atomic,assign,readwrite) NSInteger uploadIndex;
 
 @property(nonatomic,retain)  NSString * folderPath;
 @property(nonatomic,retain)  NSString * docFolderPath;

@@ -101,6 +101,8 @@
 		18A2AABD1994E275009D7E3A /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAB61994E275009D7E3A /* SBJsonParser.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18A2AABE1994E275009D7E3A /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A2AAB81994E275009D7E3A /* SBJsonWriter.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		18A2AAC11994F918009D7E3A /* box_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A2AAC01994F918009D7E3A /* box_small.png */; };
+		18A35FC819D9A4C600042633 /* FTPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A35FC519D9A4C600042633 /* FTPManager.m */; };
+		18A35FC919D9A4C600042633 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18A35FC719D9A4C600042633 /* DetailViewController.m */; };
 		18A8F0BD197F83B0008967E8 /* topNavigation.png in Resources */ = {isa = PBXBuildFile; fileRef = 18A8F0BC197F83B0008967E8 /* topNavigation.png */; };
 		18ABDF1F198022B2000C002B /* pdf_Large.png in Resources */ = {isa = PBXBuildFile; fileRef = 18ABDF1E198022B2000C002B /* pdf_Large.png */; };
 		18ADE2E219892B8900CDE991 /* FolderChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18ADE2E119892B8900CDE991 /* FolderChooseViewController.m */; };
@@ -261,7 +263,6 @@
 		658EF42F19797D5600E6FA0A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF42E19797D5600E6FA0A /* main.m */; };
 		658EF43319797D5600E6FA0A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43219797D5600E6FA0A /* AppDelegate.m */; };
 		658EF43919797D5600E6FA0A /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43819797D5600E6FA0A /* MasterViewController.m */; };
-		658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 658EF43B19797D5600E6FA0A /* DetailViewController.m */; };
 		658EF43E19797D5600E6FA0A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 658EF43D19797D5600E6FA0A /* Images.xcassets */; };
 		658EF44519797D5600E6FA0A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658EF44419797D5600E6FA0A /* XCTest.framework */; };
 		658EF44619797D5600E6FA0A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658EF42219797D5600E6FA0A /* Foundation.framework */; };
@@ -501,6 +502,10 @@
 		18A2AAB71994E275009D7E3A /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		18A2AAB81994E275009D7E3A /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		18A2AAC01994F918009D7E3A /* box_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = box_small.png; sourceTree = "<group>"; };
+		18A35FC419D9A4C600042633 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		18A35FC519D9A4C600042633 /* FTPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FTPManager.m; sourceTree = "<group>"; };
+		18A35FC619D9A4C600042633 /* FTPManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FTPManager.h; sourceTree = "<group>"; };
+		18A35FC719D9A4C600042633 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		18A8F0BC197F83B0008967E8 /* topNavigation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topNavigation.png; sourceTree = "<group>"; };
 		18ABDF1E198022B2000C002B /* pdf_Large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pdf_Large.png; sourceTree = "<group>"; };
 		18ADE2E019892B8900CDE991 /* FolderChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderChooseViewController.h; sourceTree = "<group>"; };
@@ -874,8 +879,6 @@
 		658EF43219797D5600E6FA0A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		658EF43719797D5600E6FA0A /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		658EF43819797D5600E6FA0A /* MasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MasterViewController.m; sourceTree = "<group>"; };
-		658EF43A19797D5600E6FA0A /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		658EF43B19797D5600E6FA0A /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		658EF43D19797D5600E6FA0A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		658EF44319797D5600E6FA0A /* PDFMarkUPTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PDFMarkUPTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		658EF44419797D5600E6FA0A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -1246,6 +1249,8 @@
 		18AF4EAB19AF716100E26E42 /* FTP */ = {
 			isa = PBXGroup;
 			children = (
+				18A35FC519D9A4C600042633 /* FTPManager.m */,
+				18A35FC619D9A4C600042633 /* FTPManager.h */,
 				1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */,
 				1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */,
 				1888F70119B301D700DBC547 /* FTP.h */,
@@ -2016,8 +2021,8 @@
 				18BEF3EB19B60F5E00EFF819 /* Main.storyboard */,
 				658EF43719797D5600E6FA0A /* MasterViewController.h */,
 				658EF43819797D5600E6FA0A /* MasterViewController.m */,
-				658EF43A19797D5600E6FA0A /* DetailViewController.h */,
-				658EF43B19797D5600E6FA0A /* DetailViewController.m */,
+				18A35FC419D9A4C600042633 /* DetailViewController.h */,
+				18A35FC719D9A4C600042633 /* DetailViewController.m */,
 				184C093B197CDB1C00740DD0 /* LeftTableViewCell.h */,
 				184C093C197CDB1C00740DD0 /* LeftTableViewCell.m */,
 				1887D89F19C3335200A3E4CF /* Zip Archive Classes */,
@@ -2444,6 +2449,7 @@
 				1888F70319B301D700DBC547 /* FTP.m in Sources */,
 				18B6A19E19A60A88008F99FA /* GTMHTTPFetchHistory.m in Sources */,
 				18A2AABB1994E275009D7E3A /* SBJSON.m in Sources */,
+				18A35FC819D9A4C600042633 /* FTPManager.m in Sources */,
 				6596916B1993FFA7002BE628 /* ReaderThumbView.m in Sources */,
 				1871BD8E19C17BFE0069ED17 /* SugarSyncAlbum.m in Sources */,
 				653E3B94198183D600788965 /* ReaderContentView.m in Sources */,
@@ -2537,8 +2543,8 @@
 				65D59C04199BD6B0008D4E75 /* BFViewController.m in Sources */,
 				653E3B8C198183D600788965 /* myShape.m in Sources */,
 				18B6A17E19A60A6C008F99FA /* GTMOAuth2WindowController.m in Sources */,
+				18A35FC919D9A4C600042633 /* DetailViewController.m in Sources */,
 				18A0C863197D46D500534CF4 /* MBProgressHUD.m in Sources */,
-				658EF43C19797D5600E6FA0A /* DetailViewController.m in Sources */,
 				18ADE2E219892B8900CDE991 /* FolderChooseViewController.m in Sources */,
 				658EF4641979BA4500E6FA0A /* FileItemTableCell.m in Sources */,
 				18B6A19D19A60A88008F99FA /* GTMHTTPFetcherService.m in Sources */,

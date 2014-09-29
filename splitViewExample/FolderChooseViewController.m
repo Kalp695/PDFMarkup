@@ -649,6 +649,8 @@ static FolderChooseViewController *sharedInstance = nil;
         
         
     }
+    [DetailViewController getSharedInstance].uploadIndex = indexPath.row;
+
 }
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
