@@ -637,14 +637,23 @@ static DetailViewController *sharedInstance = nil;
                 }
                 else
                 {
-                    [documenmtsArray addObject:[tempArray objectAtIndex:j]];
+                    NSString *string = [tempArray objectAtIndex:j];
+                    if ([string rangeOfString:@"-PdfMarkUpTemp"].location == NSNotFound) {
+                        [documenmtsArray addObject:[tempArray objectAtIndex:j]];
+                        
+                    } else
+                    {
+                        //NSLog(@"string contains -PdfMarkUp");
+                        NSString *docRootPath = [documentsDirectory stringByAppendingPathComponent:loadData];
+                        NSString * fakePath = [docRootPath stringByAppendingPathComponent:string];
+                        NSFileManager *fileMgr = [NSFileManager defaultManager];
+                        NSError *error;
+                        if ([fileMgr removeItemAtPath:fakePath error:&error] != YES)
+                            NSLog(@"Unable to delete file: %@", [error localizedDescription]);
 
-                   // NSString *string = [tempArray objectAtIndex:j];
-                   // if ([string rangeOfString:@"-PdfMarkUp"].location == NSNotFound) {
-                  //  } else
-                  //  {
-                   //     NSLog(@"string contains -PdfMarkUp");
-                   // }
+                        
+                    }
+
                     
                 }
                 
@@ -694,6 +703,7 @@ static DetailViewController *sharedInstance = nil;
     
     
 }
+
 -(void)DriveDownloadSuccess
 {
     rightTableView.hidden = YES;
@@ -1085,11 +1095,11 @@ static DetailViewController *sharedInstance = nil;
         }
         else{
             // appFile = [NSString stringWithFormat:@"%@-temp",originalName];
-            appFile = [[NSString alloc]initWithFormat:@"%@-PdfMarkUp.pdf",[originalName stringByDeletingPathExtension]]  ;
+            appFile = [[NSString alloc]initWithFormat:@"%@--PdfMarkUpTemp.pdf",[originalName stringByDeletingPathExtension]]  ;
             
-            NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
+//            NSString *newPathToFile = [originalPath stringByDeletingLastPathComponent];
+//            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//            NSString *documentsDirectory = [paths objectAtIndex:0];
             
             NSArray *firstSplit = [originalPath componentsSeparatedByString:@"Documents"];
             NSLog(@"paths in doc is %@",firstSplit);
@@ -1113,7 +1123,7 @@ static DetailViewController *sharedInstance = nil;
             appFile = newPath;
             
             
-            NSString *strFakepath = [originalPath stringByReplacingOccurrencesOfString:@".pdf" withString:@"-PdfMarkUp.pdf"];
+            NSString *strFakepath = [originalPath stringByReplacingOccurrencesOfString:@".pdf" withString:@"--PdfMarkUpTemp.pdf"];
             PDFRenderer *pdfRenderer=[[PDFRenderer alloc]init];
             [pdfRenderer drawPDFWithReportID:nil withPDFFilePath:originalPath withSavePDFFilePath:strFakepath withPreview:NO];
             
@@ -2066,7 +2076,9 @@ static DetailViewController *sharedInstance = nil;
     ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
     postParams.delegate = self ;
     postParams.userInfo = [NSDictionary dictionaryWithObject:@"upload" forKey:@"id"];
-    [postParams setFile:filePath forKey:@"filename"];
+    NSData *data = [NSData dataWithContentsOfFile:filePath];
+    [postParams setData:data withFileName:fileName andContentType:@"application/pdf" forKey:@"filename"];
+    //[postParams setFile:filePath forKey:@"filename"];
     [postParams startAsynchronous];
     NSLog(@"pdf file");
     
