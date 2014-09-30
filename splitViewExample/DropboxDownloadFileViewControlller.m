@@ -1606,19 +1606,23 @@ NSString *wastepath = nil;
     [DownloadingSingletonClass getSharedInstance].dropBoxDownload  = YES;
     
     [MBProgressHUD hideHUDForView:self.view animated:YES];
-    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Download"
-                                                   message:@"Failed to download"
-                                                  delegate:nil
-                                         cancelButtonTitle:@"Ok"
-                                         otherButtonTitles:nil];
-    [alert show];
+    [self performSelectorOnMainThread:@selector(failedToDownload) withObject:nil waitUntilDone:NO];
+
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
     
     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
 }
-
+-(void)failedToDownload
+{
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Download"
+                                                   message:@"Failed to download"
+                                                  delegate:nil
+                                         cancelButtonTitle:@"Ok"
+                                         otherButtonTitles:nil];
+    [alert show];
+}
 #pragma mark - UITableView Delegate Methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {

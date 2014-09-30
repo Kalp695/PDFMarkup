@@ -1145,6 +1145,7 @@ static DetailViewController *sharedInstance = nil;
     }
     
 }
+
 -(void)deletingFakePath
 {
     // path will exixits in filepath array 1st object every time .
@@ -1190,6 +1191,7 @@ static DetailViewController *sharedInstance = nil;
             [timerobj invalidate];
             timerobj = nil;
         }
+        
         timer = [NSTimer scheduledTimerWithTimeInterval: 1
                                                  target: self
                                                selector: @selector(checkProcess)
@@ -1206,7 +1208,7 @@ static DetailViewController *sharedInstance = nil;
         for (int k =0; k < [uploadingArray count]; k++)
         {
             NSLog(@"check %@",[[uploadingArray objectAtIndex:k] objectForKey:@"PdfName"] );
-            if ([[[[uploadingArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]) {
+            if ([[[[uploadingArray objectAtIndex:k] objectForKey:@"PdfName"] pathExtension] isEqualToString:@"pdf"]){
                 
                 buploading = true;
                 filecount++;
@@ -1392,15 +1394,12 @@ static DetailViewController *sharedInstance = nil;
             {
                 driveParentId =[DetailViewController  getSharedInstance].folderID;
             }
-            
-            
             if ([[uploadingArray objectAtIndex:0] objectForKey:@"folderID"] != nil) {
                 
                 driveParentId =[[uploadingArray objectAtIndex:0] objectForKey:@"folderID"];
                 
             }
             
-        
             [self uploadPdfToDrive:fileData :docfileName :driveParentId :myString];
         }
         else
@@ -2859,7 +2858,6 @@ static DetailViewController *sharedInstance = nil;
             
         }
         
-        
     }
     else
     {
@@ -2908,12 +2906,8 @@ static DetailViewController *sharedInstance = nil;
         
         for (int i =0; i< [checkableArray count]; i++) {
             
-            
             Item *item = (Item *)[checkableArray objectAtIndex:i];
             item.isChecked = NO;
-            
-            
-            
             
         }
         
@@ -2941,12 +2935,8 @@ static DetailViewController *sharedInstance = nil;
     // viewcontroller.delegate = self;
     
     nav.modalPresentationStyle = UIModalPresentationFormSheet;
-    [self presentModalViewController:nav animated:YES];
-    
+    [self presentViewController:nav animated:YES completion:nil];
     nav.view.superview.frame = CGRectMake(57,200,500,500);
-    
-    
-    
     
 }
 //- (void)restClient:(DBRestClient*)client loadedMetadata:(DBMetadata *)metadata
