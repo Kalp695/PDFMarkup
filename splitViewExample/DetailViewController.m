@@ -1175,7 +1175,6 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)uploadToFolder
 {
-    
     if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"dropbox"])
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadSucess" object:self userInfo:nil];
@@ -3354,6 +3353,7 @@ static DetailViewController *sharedInstance = nil;
         // cell.coll .image = [UIImage imageNamed:@"folder_large.png"];
         cell.collectionViewImageView.image = [UIImage imageNamed:@"folder.png"];
         
+        
     }
     else
     {
@@ -4044,6 +4044,8 @@ static DetailViewController *sharedInstance = nil;
             [FolderChooseViewController getSharedInstance].accountName = @"box";
             
         }
+        [DetailViewController getSharedInstance].uploadIndex = indexPath.row;
+        NSLog(@"uploading index is %d",[DetailViewController getSharedInstance].uploadIndex);
         [self chooseFolder];
     }
     
