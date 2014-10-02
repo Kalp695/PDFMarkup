@@ -30,6 +30,10 @@ NSString * folderDocpath;
 #import "DetailViewController.h"
 #import "DownloadingSingletonClass.h"
 #import "Reachability.h"
+#import "FTPManager.h"
+#import "SugarSyncConstants.h"
+#import "SugarSyncClient.h"
+#import "SugarSyncHelper.h"
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -71,7 +75,10 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     
     NSMutableArray *arrUseraccounts;
     
-    
+    FMServer* server;
+    FTPManager* mangr;
+    BOOL succeeded;
+
     // BOX
     NSMutableArray * folderItemsArray;
     NSMutableArray * boxFilesItemsArray;
@@ -89,7 +96,8 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     NSMutableArray * fileNames;
 }
 
-+(DropboxDownloadFileViewControlller*)getSharedInstance{
++(DropboxDownloadFileViewControlller*)getSharedInstance
+{
     if (!sharedInstance) {
         sharedInstance = [[super allocWithZone:NULL]init];
         
@@ -197,7 +205,11 @@ NSString *wastepath = nil;
         [self listDirectory:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
         
     }
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
+    {
+        [self listSugarSyncFiles:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
     }
+   }
 }
 
 -(int) checkInternet
@@ -738,6 +750,26 @@ NSString *wastepath = nil;
     }
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF MarkUp" message:@"Server Error.! Please try Again" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
+
+}
+#pragma mark sugarsync
+-(void)listSugarSyncFiles:(id)sugarSyncDetails
+{
+             NSURL * url = [NSURL URLWithString:@"https://api.sugarsync.com/user/8194615/folders/contents"];
+             
+             [[SugarSyncClient sharedInstance] getFolderWithURL:url completionHandler:^(SugarSyncFolder *aFolder, NSError *error) {
+                 
+                 
+                 if (!error)
+                 {
+                     NSLog(@"folders is %@",aFolder.collections);
+                     
+                 }
+                 
+                 
+             }];
+    
+    [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
 
 }
 
@@ -4017,51 +4049,68 @@ NSString *wastepath = nil;
     {
         for (int k =0; k < [ftpFilePathsArray count]; k++)
         {
+            
             NSString*fname = [[ftpFilePathsArray objectAtIndex:k] objectForKey:@"folderName"];
             
             NSArray *nameArray = [fname componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
             NSString * docfileName = [nameArray lastObject];
             
-            if ([[fname pathExtension]isEqualToString:@""])
-            {
-                deleteDir = [[BRRequestDelete alloc] initWithDelegate:self];
-                
-                deleteDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-                
-                if (!ftpFolderPath) {
-                    ftpFolderPath = @"";
-                }
-                else
-                {
-                    fname = [NSString stringWithFormat:@"%@",fname];
-                    
-                }
-                deleteDir.path = [NSString stringWithFormat:@"%@%@/",[AppDelegate sharedInstance].ftpDownloadpath,docfileName];
-                deleteDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-                deleteDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-                
-                [deleteDir start];
-                
-            }
-            else
-            {
-                deleteFile = [[BRRequestDelete alloc] initWithDelegate:self];
-                deleteFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-                if (!ftpFolderPath) {
-                    ftpFolderPath = @"";
-                }
-                else
-                {
-                    fname = [NSString stringWithFormat:@"/%@",fname];
-                    
-                }
-                deleteFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
-                deleteFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-                deleteFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-                
-                [deleteFile start];
-                
-            }
+            NSLog(@"deleting file is %@",[NSString stringWithFormat:@"%@%@",[AppDelegate sharedInstance].ftpDownloadpath,docfileName]);
+            
+            
+            FMServer * fm = [FMServer serverWithDestination:[[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"] stringByAppendingPathComponent:[AppDelegate sharedInstance].ftpDownloadpath] username:[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"] password:[[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"]];
+        
+            succeeded = [mangr deleteFileNamed:docfileName fromServer:fm];
+              if (succeeded) {
+                  [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+                  
+                  [self viewWillAppear:YES];
+                  [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+              }
+            
+            
+            
+//            if ([[fname pathExtension]isEqualToString:@""])
+//            {
+//                deleteDir = [[BRRequestDelete alloc] initWithDelegate:self];
+//                
+//                deleteDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+//                
+//                if (!ftpFolderPath) {
+//                    ftpFolderPath = @"";
+//                }
+//                else
+//                {
+//                    fname = [NSString stringWithFormat:@"%@",fname];
+//                    
+//                }
+//                deleteDir.path = [NSString stringWithFormat:@"%@%@/",[AppDelegate sharedInstance].ftpDownloadpath,docfileName];
+//                deleteDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+//                deleteDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+//                
+//                [deleteDir start];
+//                
+//            }
+//            else
+//            {
+//                deleteFile = [[BRRequestDelete alloc] initWithDelegate:self];
+//                deleteFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+//                if (!ftpFolderPath) {
+//                    ftpFolderPath = @"";
+//                }
+//                else
+//                {
+//                    fname = [NSString stringWithFormat:@"/%@",fname];
+//                    
+//                }
+//                deleteFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
+//                deleteFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+//                deleteFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+//                
+//                [deleteFile start];
+//                
+//            }
             
         }
     }

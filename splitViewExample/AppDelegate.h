@@ -15,6 +15,7 @@
     NSString *relinkUserId;
     
 }
+
 @property (strong,nonatomic)  NSString *documentStatus;
 @property (strong,nonatomic)  NSString *appdelRefreshToken;
 

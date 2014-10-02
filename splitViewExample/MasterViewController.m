@@ -305,7 +305,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
                 
             }
         }
-        else if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"sugar"]) {
+        else if ([[[arrUseraccounts valueForKey:@"AccountType"] objectAtIndex:i] isEqualToString:@"sugarsync"]) {
             if (bsugar) {
                 break;
             }
@@ -599,14 +599,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"])
         {
-            cell.leftFolderImage.image =[UIImage imageNamed:@"box_small.png"];
+            cell.leftFolderImage.image =[UIImage imageNamed:@"SugarSync.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 12, 30, 30);
             cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
-            
-            
         }
         //activityIndicatorframe = cell.label.frame;
-        
         // activityIndicatorframe = cell.label.frame;
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
         cell.label.font = [UIFont fontWithName:@"System" size:14];

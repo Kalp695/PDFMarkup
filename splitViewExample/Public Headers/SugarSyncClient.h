@@ -28,7 +28,7 @@
 typedef enum {
     SugarSyncLoginCancelled=0,
     SugarSyncLoginError,
-    SugarSyncLoginSuccess,
+    SugarSyncLoginSuccess
 } SugarSyncLoginStatus;
 
 
@@ -253,6 +253,9 @@ typedef enum {
  *  An NSArray of SugarSyncFile objects will be returned or an error if the album does not exist.
  */
 -(void) getAlbumContentsWithURL:(NSURL *)aURL completionHandler:(void (^)(NSArray *theAlbumContents, NSError *error))handler;
+
+-(BOOL) isAccessTokenExpired;
+-(void) refreshAccessToken:(void (^)(NSError *error))handler;
 
 @end
 

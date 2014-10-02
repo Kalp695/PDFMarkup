@@ -18,6 +18,20 @@
 #import "DropboxDownloadFileViewControlller.h"
 #import "FTPLoginViewController.h"
 #import "SugarSyncLoginViewController.h"
+#import "SugarSyncConstants.h"
+#import "SugarSyncHelper.h"
+#import "JSON.h"
+#import "ASIHTTPRequest.h"
+#import "ASIFormDataRequest.h"
+#import "KeychainItemWrapperr.h"
+#import "SugarSyncXMLTemplate.h"
+#import "SSHttpFetcher.h"
+#import "XPathQuery.h"
+#import "SSXMLLibUtil.h"
+#import "SSErrorUtil.h"
+#import "SSC9Log.h"
+#import "KeychainItemWrapper.h"
+
 
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
 static NSString *const kClientID = @"118052793139-trvujb5d8eldudv3csbupksss6amfn5b.apps.googleusercontent.com";
@@ -35,6 +49,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 {
     NSMutableData * responseData;
 }
+@synthesize keychain;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -83,6 +98,109 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     
     
 }
+-(IBAction)accountsButtonAction:(id)sender
+{
+    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
+    if (networkStatus == NotReachable) {
+        
+        UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Please check your network connectivity."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }
+    else{
+        
+        if ([sender tag]==1)
+        {
+            NSLog(@"Drop Box");
+            
+            // if (![[DBSession sharedSession] isLinked])
+            // {
+            
+            for (int i =0; i<[[[AppDelegate sharedInstance] arrDropboxUserids] count]; i++) {
+                
+                //  [[DBSession sharedSession] unlinkUserId:[[[AppDelegate sharedInstance] arrDropboxUserids] objectAtIndex:i]];
+                
+                
+            }
+            
+            [[DBSession sharedSession] linkFromController:self];
+            // }
+        }
+        
+        else if ([sender tag]==2)
+        {
+            NSURL *authorizationURL = [BoxSDK sharedSDK].OAuth2Session.authorizeURL;
+            NSString *redirectURI = [BoxSDK sharedSDK].OAuth2Session.redirectURIString;
+            BoxAuthorizationViewController *authorizationViewController = [[BoxAuthorizationViewController alloc] initWithAuthorizationURL:authorizationURL redirectURI:redirectURI];
+            BoxAuthorizationNavigationController *loginNavigation = [[BoxAuthorizationNavigationController alloc] initWithRootViewController:authorizationViewController];
+            authorizationViewController.delegate = loginNavigation;
+            loginNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            [self presentViewController:loginNavigation animated:YES completion:nil];
+            
+        }
+        else if ([sender tag]==3)
+        {
+            
+            SugarSyncClient *sugarSyncClient = [SugarSyncClient createWithApplicationId:Sugar_createWithApplicationId accessKey:Sugar_accessKey privateAccessKey:Sugar_privateAccessKey userAgent:Sugar_userAgent];
+            
+            if ( !sugarSyncClient.isLoggedIn )
+            {
+                [sugarSyncClient displayLoginDialogWithCompletionHandler:^(SugarSyncLoginStatus aStatus, NSError *error) {
+                
+                    [[SugarSyncClient sharedInstance] getUserWithCompletionHandler:^(SugarSyncUser *aUser, NSError *error) {
+                        
+                        NSLog(@"get logged user details %@,%@",aUser.nickname,aUser.username);
+                        [self sugarSyncUserDetails:aUser];
+
+                       
+                        
+
+                    }];
+                    
+                }];
+                
+            }
+            else
+            {
+                [[SugarSyncClient sharedInstance] getUserWithCompletionHandler:^(SugarSyncUser *aUser, NSError *error)
+                {
+                    
+                    NSLog(@"get logged user details %@",aUser);
+                    
+                    [self sugarSyncUserDetails:aUser];
+                }];
+            }
+        }
+        else if ([sender tag]== 4)
+        {
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            FTPLoginViewController * ftpLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"FTPLoginViewController"];
+            ftpLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            [self presentViewController:ftpLoginViewController animated:YES completion:nil];
+            
+            
+        }
+        else if ([sender tag] == 5)
+        {
+            
+            
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
+            googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
+            
+            [self presentViewController:googleLoginViewController animated:YES completion:nil];
+            //     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        }
+    }
+}
+
 -(void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"isDropboxLinked" object:nil];
@@ -124,92 +242,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     
 }
 
--(IBAction)accountsButtonAction:(id)sender
-{
-    Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
-    NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
-    if (networkStatus == NotReachable) {
-        
-        UIAlertView	*alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Please check your network connectivity."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-    }
-    else{
-        
-    if ([sender tag]==1)
-    {
-        NSLog(@"Drop Box");
-        
-        // if (![[DBSession sharedSession] isLinked])
-        // {
-        
-        for (int i =0; i<[[[AppDelegate sharedInstance] arrDropboxUserids] count]; i++) {
-            
-            //  [[DBSession sharedSession] unlinkUserId:[[[AppDelegate sharedInstance] arrDropboxUserids] objectAtIndex:i]];
-            
-            
-        }
-        
-        [[DBSession sharedSession] linkFromController:self];
-        // }
-    }
-    
-    else if ([sender tag]==2)
-    {
-        NSURL *authorizationURL = [BoxSDK sharedSDK].OAuth2Session.authorizeURL;
-        NSString *redirectURI = [BoxSDK sharedSDK].OAuth2Session.redirectURIString;
-        BoxAuthorizationViewController *authorizationViewController = [[BoxAuthorizationViewController alloc] initWithAuthorizationURL:authorizationURL redirectURI:redirectURI];
-        BoxAuthorizationNavigationController *loginNavigation = [[BoxAuthorizationNavigationController alloc] initWithRootViewController:authorizationViewController];
-        authorizationViewController.delegate = loginNavigation;
-        loginNavigation.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        [self presentViewController:loginNavigation animated:YES completion:nil];
-        
-    }
-    else if ([sender tag]==3)
-    {
-        /*
-         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-         SugarSyncLoginViewController *sugarSyncLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"SugarSyncLoginViewController"];
-         sugarSyncLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-         
-         [self presentViewController:sugarSyncLoginViewController animated:YES completion:nil];
-         
-         */
-        
-        SugarSyncLoginViewController * login =  [[SugarSyncLoginViewController alloc] initWithNibName:@"SugarSyncLoginView_ipad" bundle:nil];
-        login.view.frame = CGRectMake(0, 0, 500, 600);
-        UINavigationController *controller = [[UINavigationController alloc] initWithRootViewController:login];
-        [self.navigationController presentModalViewController:controller animated:YES];
-        
-    }
-    else if ([sender tag]== 4)
-    {
-        
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        FTPLoginViewController * ftpLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"FTPLoginViewController"];
-        ftpLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        [self presentViewController:ftpLoginViewController animated:YES completion:nil];
-        
-        
-    }
-    else if ([sender tag] == 5)
-    {
-        
-        
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-        GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
-        googleLoginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
-        
-        [self presentViewController:googleLoginViewController animated:YES completion:nil];
-        //     //   [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
-    }
-    }
-}
+
 
 -(void)boxuserDetails:(NSString *)str_access_token :(NSString *)str_refresh_token :(NSDate *)expireDate
 {
@@ -305,7 +338,33 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     });
 }
 
+// Sugar Sync
+#pragma mark SugarSYnc
 
+-(void)sugarSyncUserDetails:(SugarSyncUser *)userDetails
+{
+    NSLog(@"workspaces is %@",userDetails.workspaces);
+    NSMutableArray *arruseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+    NSMutableDictionary *userdata = [[NSMutableDictionary alloc] init];
+    [userdata setObject:userDetails.nickname forKey:@"name"];
+    [userdata setObject:userDetails.username forKey:@"email"];
+    [userdata setObject:Sugar_accessKey forKey:@"acces_token"];
+    [userdata setObject:@"sugarsync" forKey:@"AccountType"];
+    [SugarSyncHelper getSharedInstance].userDetails = userDetails;
+    [arruseraccounts addObject:userdata];
+    NSLog(@"sugar sync details is %@",arruseraccounts);
+    [arruseraccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+    
+    NSLog(@"check %@",[self.navigationController viewControllers]);
+    [self performSelector:@selector(closeBoxController) withObject:nil afterDelay:1.0];
+}
+
+-(void)sugarSyncAccessToken
+{
+
+    
+    
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

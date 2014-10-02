@@ -185,13 +185,7 @@ static DetailViewController *sharedInstance = nil;
     }
     else if ([accountInfo isEqualToString:@"sugarsync"])
     {
-        UIStoryboard * storyboard = self.storyboard;
-        
-        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
-        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
-        [FolderChooseViewController getSharedInstance].accountName = @"sugarsync";
-        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
-        [self.navigationController pushViewController:detail animated: YES];
+        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
         
     }
     else if ([accountInfo isEqualToString:@"ftp"])
@@ -258,13 +252,9 @@ static DetailViewController *sharedInstance = nil;
     }
     else if ([accountInfo isEqualToString:@"sugarsync"])
     {
-        UIStoryboard * storyboard = self.storyboard;
-        
-        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
-        [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
-        [FolderChooseViewController getSharedInstance].accountName = @"sugarsync";
-        [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
-        [self.navigationController pushViewController:detail animated: YES];
+        [self performSelectorOnMainThread:@selector(sugarSyncPush) withObject:nil waitUntilDone:NO];
+
+    
         
     }
     else if ([accountInfo isEqualToString:@"ftp"])
@@ -325,6 +315,16 @@ static DetailViewController *sharedInstance = nil;
     [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
     [self.navigationController pushViewController: detail animated: YES];
     
+}
+-(void)sugarSyncPush
+{
+    UIStoryboard * storyboard = self.storyboard;
+    
+    DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @"DropboxDownloadFileViewControlller"];
+    [DropboxDownloadFileViewControlller getSharedInstance].accountStatus = @"sugarsync";
+    [FolderChooseViewController getSharedInstance].accountName = @"sugarsync";
+    [DropboxDownloadFileViewControlller getSharedInstance].index = indexPathh;
+    [self.navigationController pushViewController:detail animated: YES];
 }
 - (void)configureView
 {

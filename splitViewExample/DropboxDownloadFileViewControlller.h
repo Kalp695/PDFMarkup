@@ -22,6 +22,8 @@
 
 @interface DropboxDownloadFileViewControlller : UIViewController<DBRestClientDelegate,ASIHTTPRequestDelegate,BRRequestDelegate>
 {
+      
+    
     NSMutableArray *marrDownloadData;
     NSMutableArray *arrmetadata;
     // DBRestClient *restClient;

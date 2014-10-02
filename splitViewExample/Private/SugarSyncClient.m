@@ -97,7 +97,16 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     [AccessTokenExpiryFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'.'SSSZZZZ"];
     
 }
-
++(SugarSyncClient *) sharedInstance
+{
+    @synchronized ([SugarSyncClient class])
+    {
+        NSAssert(_sugarSyncClientSingleton, @"getInstance cannot be called until the client has been created");
+        
+        return _sugarSyncClientSingleton;
+        
+    }
+}
 +(SugarSyncClient *) createWithApplicationId:(NSString *)anApplicationId accessKey:(NSString *)anAccessKey privateAccessKey:(NSString *)aPrivateAccessKey userAgent:(NSString *)aUserAgent
 {
     @synchronized ([SugarSyncClient class])
@@ -111,16 +120,7 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     
 }
 
-+(SugarSyncClient *) sharedInstance
-{
-    @synchronized ([SugarSyncClient class])
-    {
-        NSAssert(_sugarSyncClientSingleton, @"getInstance cannot be called until the client has been created");
-        
-        return _sugarSyncClientSingleton;
 
-    }
-}
            
 #pragma mark Initialization
 -(id) initWithApplicationId:(NSString *)appId accessKey:(NSString *)anAccessKey privateAccessKey:(NSString *)aPrivateAccessKey userAgent:(NSString *)aUserAgent;
@@ -162,18 +162,19 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
 
 -(void) displayLoginDialogWithCompletionHandler:(void (^)(SugarSyncLoginStatus aStatus, NSError *error))handler
 {
-    //NSBundle *myBundle = [NSBundle bundleWithPath:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Frameworks/SugarSyncSDK.framework"]];
+    NSBundle *myBundle = [NSBundle bundleWithPath:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Frameworks/SugarSyncSDK.framework"]];
     
     NSString *nib = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ?
         @"SugarSyncLoginView_ipad" : @"SugarSyncLoginView_iphone";
     
-    loginViewController = [[SugarSyncLoginViewController alloc] initWithNibName:nib bundle:nil];
+    loginViewController = [[SugarSyncLoginViewController alloc] initWithNibName:nib bundle:myBundle];
     loginViewController.modalPresentationStyle = UIModalPresentationFormSheet;
     
     loginViewController.client = self;
     loginViewController.completionHandler = Block_copy(handler);
     
     [[[[[UIApplication sharedApplication] delegate] window] rootViewController] presentModalViewController:loginViewController animated:YES];
+    
     
 }
 
@@ -209,7 +210,6 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
                 [loginViewController dismissViewControllerAnimated:YES completion:nil];
             }
             
-            NSLog(@"sugarsync Login Status %d ",SugarSyncLoginSuccess);
             handler(SugarSyncLoginSuccess, nil);
             
         }
@@ -318,10 +318,12 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
             aFolder = [[[SugarSyncFolder alloc] initFromXMLContent:xmlResponse[0]] autorelease];
         }
         
+        
         handler(aFolder, anError);
         
     }];
 }
+
 
 -(void) getFolderContentsWithURL:(NSURL *)aURL completionHandler:(void (^)(NSArray *, NSError *))handler
 {

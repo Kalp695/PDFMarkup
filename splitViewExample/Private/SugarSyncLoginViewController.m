@@ -12,7 +12,7 @@
 
 
 #import "SugarSyncLoginViewController.h"
-#import "SugarSyncUser.h"
+
 static int const USERNAME_MIN = 5;
 static int const USERNAME_MAX = 50;
 static int const PASSWORD_MIN = 5;
@@ -26,12 +26,7 @@ static int const PASSWORD_MAX = 20;
 {
     [super viewDidLoad];
     
-    //[self revalidate:nil];
-
-    _client = [SugarSyncClient createWithApplicationId:@"/sc/8194615/806_119125461" accessKey:@"ODE5NDYxNTE0MTAzNDAzMTUzODQ" privateAccessKey:@"NDMyYzYyNDRjNTYxNGYyOGFiZWVlMjJmNzA0NmNlYTU" userAgent:@"SugarSync API Sample/1.1"];
-    
-             
-            //Shows a modal login view
+    [self revalidate:nil];
 
 }
 
@@ -43,7 +38,7 @@ static int const PASSWORD_MAX = 20;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    [self performSelector:@selector(revalidate:) withObject:nil afterDelay:.0f];
+    [self performSelector:@selector(revalidate:) withObject:nil afterDelay:.5f];
     return YES;
     
 }
@@ -52,7 +47,6 @@ static int const PASSWORD_MAX = 20;
 
 -(void) revalidate:(id)sender
 {
-    
     self.error.hidden = YES;
     
     if ( self.userNameField.text.length >=USERNAME_MIN  && self.userNameField.text.length <=USERNAME_MAX  &&
@@ -70,20 +64,19 @@ static int const PASSWORD_MAX = 20;
 
 #pragma mark User Actions
 
--(IBAction)loginClick:(id)sender
+-(IBAction) login:(id)sender
 {
-    NSLog(@"Sugar Sync Login  id is %@",_userNameField.text);
     [_client loginWithUserName:_userNameField.text password:_passwordField.text completionHandler:self.completionHandler];
     
 }
 
-
--(IBAction)cancelClick:(id)sender
+-(IBAction)cancel:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
- //   _completionHandler(SugarSyncLoginCancelled, nil);
-}
 
+    [self dismissViewControllerAnimated:YES completion:nil];
+    _completionHandler(SugarSyncLoginCancelled, nil);
+
+}
 
 
 #pragma mark Deallocation

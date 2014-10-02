@@ -12,6 +12,7 @@
 #import <GLKit/GLKit.h>
 #import "GTMOAuth2ViewControllerTouch.h"
 #import "GTLDrive.h"
+#import "KeychainItemWrapper.h"
 
 @class DBRestClient;
 
@@ -20,7 +21,7 @@
     AddAccountViewController * addAccount;
     
 }
-
+@property(nonatomic,retain,readonly) KeychainItemWrapper * keychain;
 
 -(IBAction)accountsButtonAction:(id)sender;
 @end

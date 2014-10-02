@@ -32,7 +32,7 @@ static NSString *TemplateAccessToken = @"accessToken";
 
 +(SugarSyncXMLTemplate *) loadTemplateNamed:(NSString *)aTemplateName
 {
-  //  NSBundle *myBundle = [NSBundle bundleWithPath:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Frameworks/SugarSyncSDK.framework"]];
+   // NSBundle *myBundle = [NSBundle bundleWithPath:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Frameworks/SugarSyncSDK.framework"]];
     NSString *filePath = [[NSBundle mainBundle] pathForResource:aTemplateName ofType:@"xml"];
     
     NSError *error = nil;
