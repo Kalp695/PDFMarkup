@@ -68,8 +68,7 @@ NSString *visibleactions = @"http://schemas.google.com/AddActivity";
                                                         keychainItemName:kKeyChainItemName
                                                                 delegate:self
                                                         finishedSelector:@selector(viewController:finishedWithAuth:error:)];
-    [authController.view setFrame:CGRectMake(-20,35,500,600)];
-
+    [authController.view setFrame:CGRectMake(-20,35,self.view.frame.size.width,self.view.frame.size.height)];
     [self.view addSubview:authController.view];
 
     return authController;

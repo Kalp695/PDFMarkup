@@ -31,6 +31,7 @@
 @synthesize bgRunningStatus;
 @synthesize bgRunningStatusUpload;
 @synthesize popStatus;
+@synthesize topTitle;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     

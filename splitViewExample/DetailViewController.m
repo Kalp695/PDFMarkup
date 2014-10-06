@@ -142,9 +142,21 @@ static DetailViewController *sharedInstance = nil;
         [self.masterPopoverController dismissPopoverAnimated:YES];
     }
     self.title = titleTop;
-    NSLog(@"push to Data class");
+    NSLog(@"toptile is %@",[AppDelegate sharedInstance].topTitle);
     
-    if ([self.title isEqualToString:@"Documents" ]) {
+    if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
+    {
+        
+        accountsLabel.hidden = NO;
+        documentView.hidden = YES;
+        rightTableView.hidden = NO;
+        [rightTableView reloadData];
+        [self.navigationController popToRootViewControllerAnimated:YES];
+
+     
+    }
+    else
+    {
         rightTableView.hidden = YES;
         accountsLabel.hidden = YES;
         documentView.hidden  = NO;
@@ -153,15 +165,11 @@ static DetailViewController *sharedInstance = nil;
         self.navigationController.view.backgroundColor=[UIColor whiteColor];
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
+    if ([self.title isEqualToString:@"Documents" ]) {
+       
+    }
     else if ([self.title isEqualToString:@"Network" ])
     {
-        accountsLabel.hidden = NO;
-        documentView.hidden = YES;
-        rightTableView.hidden = NO;
-        [rightTableView reloadData];
-        [self.navigationController popToRootViewControllerAnimated:YES];
-        
-        
     }
     
     else if ([accountInfo isEqualToString:@"DropBox"])
@@ -433,22 +441,38 @@ static DetailViewController *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(docDataToDisplay) name:@"Download Success" object:nil];
     
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
+   
+    if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
     {
-        [self.view bringSubviewToFront:documentView];
-        [documentView bringSubviewToFront:documentsCollectionView];
-        [documentView bringSubviewToFront:documentsCollectionView];
-        documentsCollectionView.hidden = NO;
-        documentsTableView.hidden = YES;
-        [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
-        [documentsCollectionView reloadData];
-        
+        NSLog(@"network ");
+        accountsLabel.hidden = NO;
+        documentView.hidden = YES;
+        rightTableView.hidden = NO;
+        [rightTableView reloadData];
+
     }
-    else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
+    else
     {
-        documentsCollectionView.hidden = YES;
-        documentsTableView.hidden = NO;
-        [documentsTableView reloadData ];
+        rightTableView.hidden = YES;
+        accountsLabel.hidden = YES;
+        documentView.hidden  = NO;
+        NSLog(@"Documents ");
+        if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
+        {
+            [self.view bringSubviewToFront:documentView];
+            [documentView bringSubviewToFront:documentsCollectionView];
+            documentsCollectionView.hidden = NO;
+            documentsTableView.hidden = YES;
+            [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
+            [documentsCollectionView reloadData];
+            
+        }
+        else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
+        {
+            documentsCollectionView.hidden = YES;
+            documentsTableView.hidden = NO;
+            [documentsTableView reloadData ];
+        }
     }
     
     [self docDataToDisplay];
@@ -458,6 +482,7 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
+    [AppDelegate sharedInstance].topTitle = @"";
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadClick" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCancel" object:nil];
@@ -498,14 +523,16 @@ static DetailViewController *sharedInstance = nil;
         [documentView bringSubviewToFront:documentsCollectionView];
         documentsCollectionView.hidden = NO;
         documentsTableView.hidden = YES;
-        [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
-        
+        [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-selected.png"] forState:UIControlStateNormal];
+        [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
     }
     else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
     {
         documentsCollectionView.hidden = YES;
         documentsTableView.hidden = NO;
         [documentsTableView reloadData ];
+        [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
+        [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
     }
     
     documentsTableView.allowsSelectionDuringEditing=YES;
@@ -681,7 +708,22 @@ static DetailViewController *sharedInstance = nil;
         tableViewButton.hidden = NO;
         
     }
-    
+    if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
+    {
+        NSLog(@"network ");
+        accountsLabel.hidden = NO;
+        documentView.hidden = YES;
+        rightTableView.hidden = NO;
+        [rightTableView reloadData];
+        
+    }
+    else
+    {
+        rightTableView.hidden = YES;
+        accountsLabel.hidden = YES;
+        documentView.hidden  = NO;
+        NSLog(@"Documents ");
+
     if ([[AppDelegate sharedInstance].documentStatus isEqualToString:@"GridView"])
     {
         [self.view bringSubviewToFront:documentView];
@@ -701,14 +743,14 @@ static DetailViewController *sharedInstance = nil;
        [documentView bringSubviewToFront:documentsTableView];
    }
     
-    
+    }
 }
 
 -(void)DriveDownloadSuccess
 {
-    rightTableView.hidden = YES;
-    accountsLabel.hidden = YES;
-    documentView.hidden  = NO;
+   // rightTableView.hidden = YES;
+  //  accountsLabel.hidden = YES;
+   // documentView.hidden  = NO;
     self.title = @"Documents";
     
     [self docDataToDisplay];
@@ -718,7 +760,7 @@ static DetailViewController *sharedInstance = nil;
     
     [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-selected.png"] forState:UIControlStateNormal];
     [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
-    
+  
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [AppDelegate sharedInstance].documentStatus = @"GridView";
     [documentView bringSubviewToFront:documentsCollectionView];
@@ -1301,7 +1343,7 @@ static DetailViewController *sharedInstance = nil;
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
             NSArray* words = [[nameArray lastObject] componentsSeparatedByCharactersInSet :[NSCharacterSet whitespaceCharacterSet]];
             NSString* nospacestring = [words componentsJoinedByString:@""];
-            NSString * filename = [NSString stringWithFormat:@"@%@",nospacestring];
+            NSString * filename = [NSString stringWithFormat:@"%@",nospacestring];
             
             
             
@@ -2071,7 +2113,7 @@ static DetailViewController *sharedInstance = nil;
     
     NSString * accessToken =  [[arrUseraccounts objectAtIndex:[DetailViewController getSharedInstance].uploadIndex] objectForKey:@"acces_token"];
     
-    NSString *str =  [NSString stringWithFormat:@"https://upload.box.com/api/2.0/files/content?access_token=%@&filename=%@&parent_id=%@",accessToken,fileName,parentId];
+    NSString *str =  [NSString stringWithFormat:@"https://upload.box.com/api/2.0/files/content?access_token=%@&filename=@%@&parent_id=%@",accessToken,fileName,parentId];
     
     ASIFormDataRequest *postParams = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:str]];
     postParams.delegate = self ;

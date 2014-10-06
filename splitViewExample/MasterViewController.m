@@ -640,7 +640,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
         
         
-        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIView *bgColorView = [[UIView alloc] init];
         bgColorView.layer.cornerRadius = 0;
         bgColorView.layer.masksToBounds = YES;
@@ -697,6 +697,10 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         {
             
         }
+        else if (indexPath.section == 2)
+        {
+                // downloading / uploading progress section
+        }
         else
         {
             
@@ -718,6 +722,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         if (indexPath.section == 0)
         {
             self.detailViewController.titleTop = [leftArrayTitles objectAtIndex:indexPath.row ];
+            [AppDelegate sharedInstance].topTitle = [leftArrayTitles objectAtIndex:indexPath.row];
             self.detailViewController.detailItem = object;
             
         }
@@ -726,7 +731,6 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             [MasterViewController sharedInstance].popStatus = NO;
             //self.tableView.userInteractionEnabled = NO;
             if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"dropbox"]) {
-                
                 
                 self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
                 self.detailViewController.accountInfo =  @"DropBox";
@@ -737,6 +741,7 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"google"]) {
                 
                 self.detailViewController.titleTop = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+                
                 self.detailViewController.accountInfo =  @"google";
                 self.detailViewController.detailItem = object;
             }
@@ -761,11 +766,6 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
                 self.detailViewController.indexPathh = indexPath.row;
                 self.detailViewController.detailItem = object;
             }
-            //        UIStoryboard * storyboard = self.storyboard;
-            //
-            //        DetailViewController * detail = [storyboard instantiateViewControllerWithIdentifier: @ "DropboxDownloadFileViewControlller"];
-            //
-            //        [self.navigationController pushViewController: detail animated: YES];
             
         }
         

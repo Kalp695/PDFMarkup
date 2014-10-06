@@ -742,7 +742,6 @@ NSString *wastepath = nil;
         downloadFile = nil;
     }
     
-    
     if (request == deleteFile)
     {
         NSLog(@"%@", request.error.message);

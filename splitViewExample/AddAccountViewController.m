@@ -31,6 +31,7 @@
 #import "SSErrorUtil.h"
 #import "SSC9Log.h"
 #import "KeychainItemWrapper.h"
+#import "DetailViewController.h"
 
 
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
@@ -82,7 +83,6 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 -(void)viewDidAppear
 {
     
-    
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -113,6 +113,8 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     }
     else{
         
+        [AppDelegate sharedInstance].topTitle = @"Network" ;
+
         if ([sender tag]==1)
         {
             NSLog(@"Drop Box");
@@ -205,7 +207,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"isDropboxLinked" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"googleSucces" object:nil];
-    
+
 }
 
 -(void)receiveDropboxNotification:(NSNotification *)notification
