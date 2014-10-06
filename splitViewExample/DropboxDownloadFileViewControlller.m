@@ -2711,7 +2711,7 @@ NSString *wastepath = nil;
         boxDownloadProcess = NO;
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [driveFilePathsArray removeAllObjects];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
         NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
@@ -3091,7 +3091,7 @@ NSString *wastepath = nil;
     {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         [driveFilePathsArray removeAllObjects];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+      //  [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
         NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
@@ -3369,7 +3369,7 @@ NSString *wastepath = nil;
         NSLog(@"Ftp thread stopped ............ ");
         [self performSelectorOnMainThread:@selector(refreshDocTable) withObject:nil waitUntilDone:NO];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
         NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
@@ -3990,7 +3990,6 @@ NSString *wastepath = nil;
 
 -(void)DeleteClick
 {
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Delete"
                                                     message:@"Are you sure you want to Delete ?"
@@ -4006,6 +4005,8 @@ NSString *wastepath = nil;
 -(void)confirmDelete
 {
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DeleteClick" object:nil];
+
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     // For error information
     

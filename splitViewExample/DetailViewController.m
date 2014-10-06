@@ -1418,7 +1418,7 @@ static DetailViewController *sharedInstance = nil;
         
         while ([DownloadingSingletonClass getSharedInstance].boxUpload == NO)
         {
-            //NSLog(@"thread is running .....");
+            NSLog(@"thread is running .....");
             [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
         }
         
@@ -2949,9 +2949,10 @@ static DetailViewController *sharedInstance = nil;
         [documentsCollectionView reloadData];
         
         pdfValue = 0;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:nil];
+       // [[NSNotificationCenter defaultCenter] postNotificationName:@"UploadCompleted" object:nil];
         [AppDelegate sharedInstance].bgRunningStatusUpload = @"Upload completed";
-        
+        [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
         [DownloadingSingletonClass getSharedInstance].dropBoxUpload = YES;
         NSLog(@"thread is Stopped.....");
         
