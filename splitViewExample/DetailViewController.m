@@ -3713,6 +3713,7 @@ static DetailViewController *sharedInstance = nil;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
+    
     if (tableView == documentsTableView)
     {
         return 1;
@@ -3731,6 +3732,7 @@ static DetailViewController *sharedInstance = nil;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    
     if (tableView == documentsTableView)
     {
         NSLog(@"--> %@",documenmtsArray);
@@ -3770,6 +3772,7 @@ static DetailViewController *sharedInstance = nil;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (tableView == documentsTableView)
     {
         
@@ -3884,28 +3887,30 @@ static DetailViewController *sharedInstance = nil;
     {
         if ([titleTop isEqualToString:@"Network"]) {
             
-            static NSString *cellIdentifier = @"Cell";
-            FileItemTableCell *cell = (FileItemTableCell *)[rightTableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
+
+//            static NSString *cellIdentifier = @"Cell";
+//            FileItemTableCell *cell = (FileItemTableCell *)[rightTableView dequeueReusableCellWithIdentifier:cellIdentifier];
             // cell.cellSeperatorImage.hidden = NO;
             
             // If there is no cell to reuse, create a new one
-            if(cell == nil)
-            {
-                NSArray *nib;
-                nib = [[NSBundle mainBundle] loadNibNamed:@"FileItemCell" owner:self options:nil];
-                cell = [nib objectAtIndex:0];
-            }
+//            if(cell == nil)
+//            {
+//                NSArray *nib;
+//                nib = [[NSBundle mainBundle] loadNibNamed:@"FileItemCell" owner:self options:nil];
+//                cell = [nib objectAtIndex:0];
+//            }
             
             Item* item = [items objectAtIndex:indexPath.row];
-            cell.label.frame = CGRectMake(99, 5, 485, 50);
-            cell.label.text = item.title;
-            cell.folderImage.hidden = NO;
-            cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
-            if ([cell.label.text isEqualToString:@"Add Account"])
+            cell.lblTitle.frame = CGRectMake(99, 5, 485, 50);
+            cell.lblTitle.text = item.title;
+            //cell.folderImage.hidden = NO;
+            cell.imageView.frame = CGRectMake(15, 5, 100, 40);
+            if ([cell.lblTitle.text isEqualToString:@"Add Account"])
             {
-                cell.folderImage.frame = CGRectMake(15, 5, 100, 40);
+                cell.imageView.frame = CGRectMake(15, 5, 100, 40);
                 
-                cell.folderImage.image = [UIImage imageNamed:@"plus.png"];
+                cell.imageView.image = [UIImage imageNamed:@"plus.png"];
                 
                 UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
@@ -3915,7 +3920,7 @@ static DetailViewController *sharedInstance = nil;
             }
             else
             {
-                cell.folderImage.image = item.image;
+                cell.imageView.image = item.image;
                 
                 UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
                 dot.image=[UIImage imageNamed:@"circularDisclosure.png"];
@@ -4254,13 +4259,12 @@ static DetailViewController *sharedInstance = nil;
             NSLog(@"%@",arrUseraccounts);
             
             
-            for (int k=0; k<[arrUseraccounts count]; k++)
-            {
+            
                 if ([item.accounttype isEqualToString:@"box"])
                 {
-                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:k]objectForKey:@"name"]]) {
+                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"name"]]) {
                         
-                        [arrUseraccounts removeObjectAtIndex:k];
+                        [arrUseraccounts removeObjectAtIndex:indexPath.row];
                         
                         NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
                         arrUpdatedUserAccounts = arrUseraccounts;
@@ -4273,12 +4277,13 @@ static DetailViewController *sharedInstance = nil;
                 }
                 else if ([item.accounttype isEqualToString:@"dropbox"])
                 {
-                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:k]objectForKey:@"username"]]) {
+                    if ([item.title isEqualToString:[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"username"]]) {
                         
-                        //[[DBSession sharedSession] unlinkAll];
-                        [[DBSession sharedSession] unlinkUserId:[[arrUseraccounts objectAtIndex:k]objectForKey:@"userid"]];
+                        NSLog(@"unlink id is %@",[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"userid"]);
+                        [[DBSession sharedSession] unlinkAll];
+                        [[DBSession sharedSession] unlinkUserId:[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"userid"]];
                         
-                        [arrUseraccounts removeObjectAtIndex:k];
+                        [arrUseraccounts removeObjectAtIndex:indexPath.row];
                         
                         NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
                         arrUpdatedUserAccounts = arrUseraccounts;
@@ -4289,7 +4294,7 @@ static DetailViewController *sharedInstance = nil;
                 }
                 else if ([item.accounttype isEqualToString:@"google"])
                 {
-                    [arrUseraccounts removeObjectAtIndex:k];
+                    [arrUseraccounts removeObjectAtIndex:indexPath.row];
                     [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
                     [[self driveService] setAuthorizer:nil];
                     // self.isAuthorized = NO;
@@ -4298,9 +4303,23 @@ static DetailViewController *sharedInstance = nil;
                     arrUpdatedUserAccounts = arrUseraccounts;
                     [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
                 }
-                
-            }
+                else if ([item.accounttype isEqualToString:@"ftp"])
+                {
+                    [arrUseraccounts removeObjectAtIndex:indexPath.row];
+                    NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+                    arrUpdatedUserAccounts = arrUseraccounts;
+                    [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+                }
+                else if ([item.accounttype isEqualToString:@"sugarsync"])
+                {
+                    [arrUseraccounts removeObjectAtIndex:indexPath.row];
+                    NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
+                    arrUpdatedUserAccounts = arrUseraccounts;
+                    [arrUpdatedUserAccounts writeToFile:[[DocumentManager getSharedInstance] getUserAccountpath] atomically:YES];
+                }
+            
             [self viewWillAppear:YES];
+            
             [[NSNotificationCenter defaultCenter]postNotificationName:@"removeAccount" object:nil];
         }
         
