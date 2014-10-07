@@ -347,7 +347,12 @@ static DetailViewController *sharedInstance = nil;
 {
     // Notifier for Upload Click Event
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    NSLog(@"toptile is %@",[AppDelegate sharedInstance].topTitle);
 
+    if (![[AppDelegate sharedInstance].topTitle isEqualToString:@""]) {
+        self.title = [AppDelegate sharedInstance].topTitle;
+        titleTop =[AppDelegate sharedInstance].topTitle;
+    }
     arrUseraccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
     
     
@@ -445,6 +450,7 @@ static DetailViewController *sharedInstance = nil;
     if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
     {
         NSLog(@"network ");
+        NSLog(@"array values is %@",items);
         accountsLabel.hidden = NO;
         documentView.hidden = YES;
         rightTableView.hidden = NO;
@@ -465,6 +471,10 @@ static DetailViewController *sharedInstance = nil;
             documentsTableView.hidden = YES;
             [self gridViewButton_click:[AppDelegate sharedInstance].documentStatus ];
             [documentsCollectionView reloadData];
+            [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-selected.png"] forState:UIControlStateNormal];
+            [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
+            
+           
             
         }
         else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
@@ -472,6 +482,9 @@ static DetailViewController *sharedInstance = nil;
             documentsCollectionView.hidden = YES;
             documentsTableView.hidden = NO;
             [documentsTableView reloadData ];
+            
+            [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
+            [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
         }
     }
     
@@ -482,7 +495,7 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    [AppDelegate sharedInstance].topTitle = @"";
+    //[AppDelegate sharedInstance].topTitle = @"";
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadClick" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"UploadCancel" object:nil];
@@ -499,8 +512,6 @@ static DetailViewController *sharedInstance = nil;
 {
     [super viewDidLoad];
 
-    
-    
     [self configureView];
     
     if (!loadData) {
@@ -525,6 +536,8 @@ static DetailViewController *sharedInstance = nil;
         documentsTableView.hidden = YES;
         [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-selected.png"] forState:UIControlStateNormal];
         [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-normal.png"] forState:UIControlStateNormal];
+        
+
     }
     else if([[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"])
     {

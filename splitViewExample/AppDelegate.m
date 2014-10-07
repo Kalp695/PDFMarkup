@@ -57,7 +57,8 @@
     
 	[DBRequest setNetworkRequestDelegate:self];
     arrDropboxUserids = [[NSMutableArray alloc] init];
-    
+   [AppDelegate sharedInstance].topTitle = @"" ;
+
     if ([[NSUserDefaults standardUserDefaults] valueForKey:@"Dropboxuser"] !=nil) {
         
         

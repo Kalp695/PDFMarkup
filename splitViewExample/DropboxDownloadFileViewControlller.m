@@ -130,6 +130,8 @@ NSString *wastepath = nil;
 
 -(void)viewWillAppear:(BOOL)animated
 {
+    
+    [AppDelegate sharedInstance].topTitle = @"Network" ;
     Reachability *networkReachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus networkStatus = [networkReachability currentReachabilityStatus];
     if (networkStatus == NotReachable) {
@@ -1620,8 +1622,6 @@ NSString *wastepath = nil;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
         [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
         
-        //[self.navigationController popViewControllerAnimated:YES];
-        
         
     }
     //[MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -2259,6 +2259,8 @@ NSString *wastepath = nil;
 
 -(IBAction)multipleFileDownload:(id)sender
 {
+    [AppDelegate sharedInstance].topTitle = @"" ;
+
     fetching = NO;
     [self docDataToDisplay];
     

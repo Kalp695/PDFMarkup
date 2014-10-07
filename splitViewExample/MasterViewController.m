@@ -641,11 +641,11 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        UIView *bgColorView = [[UIView alloc] init];
-        bgColorView.layer.cornerRadius = 0;
-        bgColorView.layer.masksToBounds = YES;
-        [bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
-        [cell setSelectedBackgroundView:bgColorView];
+      //  UIView *bgColorView = [[UIView alloc] init];
+      //  bgColorView.layer.cornerRadius = 0;
+       // bgColorView.layer.masksToBounds = YES;
+        //[bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
+      //  [cell setSelectedBackgroundView:bgColorView];
         
         return cell;
         
@@ -697,9 +697,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         {
             
         }
-        else if (indexPath.section == 2)
+        else if (indexPath.section == 2||indexPath.section == 3)
         {
-                // downloading / uploading progress section
+                // downloading or uploading progress section
         }
         else
         {
