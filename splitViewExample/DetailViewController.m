@@ -87,7 +87,7 @@ static DetailViewController *sharedInstance = nil;
     NSArray * foldersListArray;
     
     NSString * renameText;
-    
+    int passValueDidSelect;
     UITableView *popDisplayTableView;
     
     BOOL bprocessing;
@@ -1437,7 +1437,6 @@ static DetailViewController *sharedInstance = nil;
         
     }
     else if([[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"google"])
-        
     {
         NSLog(@"folder path is %@", docFolderPath);
         if (docFolderPath == nil)
@@ -2270,9 +2269,38 @@ static DetailViewController *sharedInstance = nil;
         if ([[[arrJson objectAtIndex:0]objectForKey:@"message"]isEqualToString:@"Item with the same name already exists"]) {
             
             NSLog(@"already exists");
-          
+            [uploadingArray removeAllObjects];
+            [arrboxIDS removeAllObjects];
+            [boxUploadingArray removeAllObjects];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            [documentsTableView setEditing:NO];
+            editBarButton.title = @"Edit";
+            boxParentId = nil;
+            boxFolderPaths = nil;
+            
+            [uploadingArray removeAllObjects];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
+            [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+            [self performSelectorOnMainThread:@selector(sameName) withObject:nil waitUntilDone:NO];
+
+            for (int i =0; i< [checkableArray count]; i++) {
+                
+                Item *item = (Item *)[checkableArray objectAtIndex:i];
+                item.isChecked = NO;
+                
+            }
+            
+            strRootpath = nil;
+            
+            [documentsTableView reloadData];
+
         }
-       // NSString * childFolderName = [[arrJson objectAtIndex:0]objectForKey:@"name"];
+        else
+        {
+            
+        // NSString * childFolderName = [[arrJson objectAtIndex:0]objectForKey:@"name"];
         NSString * childFolderName = [[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"];
         NSLog(@"uploading array is >>>>>>>>>>>>>%@",[[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"]);
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -2306,20 +2334,6 @@ static DetailViewController *sharedInstance = nil;
         NSLog(@"after file path is %@",strpath);
         
         NSString *folderpath = nil;
-//        if ([boxFolderPaths length]>0) {
-//            
-//            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",strRootpath,strpath]];
-//            
-//        }
-//        else
-//        {
-//            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-//            
-//        }
-        
-       // folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-
-        //    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
         
         NSError *error;
         NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:strRootpath error:&error];
@@ -2336,7 +2350,7 @@ static DetailViewController *sharedInstance = nil;
                 
                 buploading = true;
                 filecount++;
-                
+                NSLog(@"arrjson is %@",arrJson);
                 NSMutableDictionary * dic = [[NSMutableDictionary alloc] init ];
                 [dic setObject:strdropboxpath forKey:@"PdfPath"];
                 [dic setObject:[NSString stringWithFormat:@"/%@",[directoryContent objectAtIndex:i]] forKey:@"PdfName"];
@@ -2357,20 +2371,6 @@ static DetailViewController *sharedInstance = nil;
             }
             
         }
-        
-        
-        //[arrboxIDS addObject:[[arrJson objectAtIndex:0]objectForKey:@"id"]];
-        //boxParentId = [[arrJson objectAtIndex:0]objectForKey:@"id"];
-        
-        
-        //            NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
-        //                                                                                    selector:@selector(closeBoxUploadControllerr)
-        //                                                                                      object:nil];
-        //
-        //            // Add the operation to the queue and let it to be executed.
-        //
-        //            [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-        //            [boxUploadOperationQueue addOperation:operation];
         
         if ([uploadingArray count]>0) {
             
@@ -2398,8 +2398,13 @@ static DetailViewController *sharedInstance = nil;
             
         }
         
-        
+        }
     }
+}
+-(void)sameName
+{
+    UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"Failed To Upload" message:@"Same name already exists" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
 }
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
@@ -2552,14 +2557,14 @@ static DetailViewController *sharedInstance = nil;
     // To create a folder in a specific parent folder, specify the identifier
     // of the parent:
     // _resourceId is the identifier from the parent folder
-    if ([DetailViewController getSharedInstance].folderID.length && ![parentId isEqualToString:@"0"]) {
+    if (parentId.length && ![parentId isEqualToString:@"0"]) {
         GTLDriveParentReference *parentRef = [GTLDriveParentReference object];
         parentRef.identifier = parentId;
         folderObj.parents = [NSArray arrayWithObject:parentRef];
     }
     
     GTLQueryDrive *query = [GTLQueryDrive queryForFilesInsertWithObject:folderObj uploadParameters:nil];
-    GTLServiceTicket *queryTicket =
+    //GTLServiceTicket *queryTicket =
     [[DriveHelperClass getSharedInstance].driveService executeQuery:query
                                                   completionHandler:^(GTLServiceTicket *ticket, id object,
                                                                       NSError *error) {
@@ -3483,7 +3488,13 @@ static DetailViewController *sharedInstance = nil;
             
         }
         
-        
+        if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"] ) {
+            
+            passValueDidSelect = indexPath.row;
+            [self performSelectorOnMainThread:@selector(didSelectOnMainThread:) withObject:pdfFilePath waitUntilDone:NO];
+        }
+        else
+        {
         if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
         {
             
@@ -3515,7 +3526,7 @@ static DetailViewController *sharedInstance = nil;
             
             [self.navigationController presentViewController:navController animated:YES completion:nil];
         }
-        
+        }
     }
     else
     {
@@ -3974,40 +3985,50 @@ static DetailViewController *sharedInstance = nil;
         
         if (!tableView.editing)
         {
-            if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
-            {
+            
+            if ([[AppDelegate sharedInstance].bgRunningStatusUpload isEqualToString:@"Uploading"] ) {
                 
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
-                DetailViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
-                if (loadData) {
-                    dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@/%@",loadData,[documenmtsArray objectAtIndex:indexPath.row]];
+                passValueDidSelect = indexPath.row;
+                [self performSelectorOnMainThread:@selector(didSelectOnMainThread:) withObject:pdfFilePath waitUntilDone:NO];
+            }
+            else
+            {
+                if ([[[documenmtsArray objectAtIndex:indexPath.row]pathExtension] isEqualToString:@""] )
+                {
+                    
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+                    DetailViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+                    if (loadData) {
+                        dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@/%@",loadData,[documenmtsArray objectAtIndex:indexPath.row]];
+                        
+                    }
+                    else
+                    {
+                        dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@",[documenmtsArray objectAtIndex:indexPath.row]];
+                        
+                        
+                    }
+                    appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    
+                    [[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"];
+                    [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
+                    [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
+                    
+                    [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+                    
                     
                 }
                 else
                 {
-                    dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@",[documenmtsArray objectAtIndex:indexPath.row]];
+                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+                    UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"Nav_reader"];
+                    ReaderViewController *readerViewController=(ReaderViewController*)[navController.viewControllers objectAtIndex:0];
+                    [readerViewController setPdfFilePath:pdfFilePath];
                     
-                    
+                    [self.navigationController presentViewController:navController animated:YES completion:nil];
                 }
-                appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-                
-                [[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"];
-                [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
-                [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
-                
-                [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
-                
-                
             }
-            else
-            {
-                UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-                UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"Nav_reader"];
-                ReaderViewController *readerViewController=(ReaderViewController*)[navController.viewControllers objectAtIndex:0];
-                [readerViewController setPdfFilePath:pdfFilePath];
-                
-                [self.navigationController presentViewController:navController animated:YES completion:nil];
-            }
+            
             
         }
         
@@ -4216,7 +4237,45 @@ static DetailViewController *sharedInstance = nil;
     }
     
 }
+-(void)didSelectOnMainThread:(id)pdfFilePath
+{
+    NSLog(@"did select called on main thread");
+    if ([[[documenmtsArray objectAtIndex:passValueDidSelect]pathExtension] isEqualToString:@""] )
+    {
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+        DetailViewController *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
+        if (loadData) {
+            dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@/%@",loadData,[documenmtsArray objectAtIndex:passValueDidSelect]];
+            
+        }
+        else
+        {
+            dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@",[documenmtsArray objectAtIndex:passValueDidSelect]];
+            
+            
+        }
+        appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        
+        [[AppDelegate sharedInstance].documentStatus isEqualToString:@"TableView"];
+        [gridViewButton setBackgroundImage:[UIImage imageNamed:@"grid-normal.png"] forState:UIControlStateNormal];
+        [tableViewButton setBackgroundImage:[UIImage imageNamed:@"table-selected.png"] forState:UIControlStateNormal];
+        
+        [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        
+        
+    }
+    else
+    {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UINavigationController *navController = [storyboard instantiateViewControllerWithIdentifier:@"Nav_reader"];
+        ReaderViewController *readerViewController=(ReaderViewController*)[navController.viewControllers objectAtIndex:0];
+        [readerViewController setPdfFilePath:pdfFilePath];
+        
+        [self.navigationController presentViewController:navController animated:YES completion:nil];
+    }
 
+}
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == rightTableView)
@@ -4296,8 +4355,9 @@ static DetailViewController *sharedInstance = nil;
                 {
                     [arrUseraccounts removeObjectAtIndex:indexPath.row];
                     [GTMOAuth2ViewControllerTouch removeAuthFromKeychainForName:kKeychainItemName];
-                    [[self driveService] setAuthorizer:nil];
+                    [[DriveHelperClass getSharedInstance].driveService setAuthorizer:nil];
                     // self.isAuthorized = NO;
+
                     
                     NSMutableArray *arrUpdatedUserAccounts = [[NSMutableArray alloc] initWithContentsOfFile:[[DocumentManager getSharedInstance] getUserAccountpath]];
                     arrUpdatedUserAccounts = arrUseraccounts;

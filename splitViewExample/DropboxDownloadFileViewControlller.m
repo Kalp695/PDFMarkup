@@ -2232,7 +2232,7 @@ NSString *wastepath = nil;
 
 -(IBAction)btnDownloadPress:(id)sender
 {
-   // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
     NSLog(@"download Statusss %@",[AppDelegate sharedInstance].bgRunningStatus);
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {
@@ -2241,7 +2241,6 @@ NSString *wastepath = nil;
     }
     else
     {
-        [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
         [self multipleFileDownload:nil];
         //[[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadStart" object:@"download"]
         
@@ -2336,6 +2335,8 @@ NSString *wastepath = nil;
         
     }
     
+    [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
+
     
     
 }

@@ -584,25 +584,25 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         {
             cell.leftFolderImage.image =[UIImage imageNamed:@"Google_Drive_Small.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 16, 30, 30);
-            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"email"] capitalizedString];
+            cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"email"];
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"box"])
         {
             cell.leftFolderImage.image =[UIImage imageNamed:@"box_small.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 12, 40, 30);
-            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"];
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"])
         {
             cell.leftFolderImage.image =[UIImage imageNamed:@"ftp.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 12, 30, 30);
-            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"];
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"sugarsync"])
         {
             cell.leftFolderImage.image =[UIImage imageNamed:@"SugarSync.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 12, 30, 30);
-            cell.label.text = [[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"] capitalizedString];
+            cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"];
         }
         //activityIndicatorframe = cell.label.frame;
         // activityIndicatorframe = cell.label.frame;
