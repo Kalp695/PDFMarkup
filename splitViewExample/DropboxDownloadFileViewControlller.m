@@ -2226,13 +2226,14 @@ NSString *wastepath = nil;
 #pragma mark - Action Methods
 -(void)downloadClick
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
+
     [self performSelectorOnMainThread:@selector(btnDownloadPress:) withObject:nil waitUntilDone:NO];
 
 }
 
 -(IBAction)btnDownloadPress:(id)sender
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"DownloadClick" object:nil];
     NSLog(@"download Statusss %@",[AppDelegate sharedInstance].bgRunningStatus);
     if ([[AppDelegate sharedInstance].bgRunningStatus isEqualToString:@"Downloading"])
     {

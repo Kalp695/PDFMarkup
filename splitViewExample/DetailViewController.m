@@ -147,6 +147,7 @@ static DetailViewController *sharedInstance = nil;
     if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
     {
         
+        editBarButton.title = @"";
         accountsLabel.hidden = NO;
         documentView.hidden = YES;
         rightTableView.hidden = NO;
@@ -166,7 +167,8 @@ static DetailViewController *sharedInstance = nil;
         [self.navigationController popToRootViewControllerAnimated:YES];
     }
     if ([self.title isEqualToString:@"Documents" ]) {
-       
+        editBarButton.title = @"Edit";
+
     }
     else if ([self.title isEqualToString:@"Network" ])
     {
@@ -800,7 +802,11 @@ static DetailViewController *sharedInstance = nil;
 {
     UIBarButtonItem *btn = (UIBarButtonItem *)sender;
     NSLog(@"%@",btn.title);
-    
+    if ([[AppDelegate sharedInstance].topTitle isEqualToString:@"Network"])
+    {
+    }
+    else
+    {
     if([btn.title isEqualToString:@"Edit"]){
         btn.title=@"Cancel";
         
@@ -833,7 +839,7 @@ static DetailViewController *sharedInstance = nil;
     }
     
     [documentsCollectionView reloadData];
-    
+    }
     
 }
 
@@ -1135,14 +1141,14 @@ static DetailViewController *sharedInstance = nil;
 -(void)flattenedFile
 {
     
-    for (int i = 0; i<[uploadingArray count];i++) {
+    //for (int i = 0; i<[uploadingArray count];i++) {
         
         
         tempPathArray = [[NSMutableArray alloc]init];
         
-        NSString * originalPath = [[uploadingArray objectAtIndex:i] objectForKey:@"PdfPath"];
-        NSString * originalName = [[uploadingArray objectAtIndex:i] objectForKey:@"PdfName"];
-        NSString * originalID = [[uploadingArray objectAtIndex:i] objectForKey:@"folderID"];
+        NSString * originalPath = [[uploadingArray objectAtIndex:0] objectForKey:@"PdfPath"];
+        NSString * originalName = [[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"];
+        NSString * originalID = [[uploadingArray objectAtIndex:0] objectForKey:@"folderID"];
 
         if ([[originalName pathExtension] isEqualToString: @""])
         {
@@ -1201,13 +1207,13 @@ static DetailViewController *sharedInstance = nil;
             [tempPathArray addObject:dic];
             
             
-            [uploadingArray replaceObjectAtIndex:i withObject:[tempPathArray objectAtIndex:0]];
+            [uploadingArray replaceObjectAtIndex:0 withObject:[tempPathArray objectAtIndex:0]];
             
             //          [[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"] stringByReplacingOccurrencesOfString:[[filePathsArray objectAtIndex:i] objectForKey:@"PdfPath"] withString:appFile ];
             
-            NSLog(@"gsfgdshfdsfgdssdgsgfsdgf %@",[[uploadingArray objectAtIndex:i] objectForKey:@"PdfPath"]);
+            NSLog(@"gsfgdshfdsfgdssdgsgfsdgf %@",[[uploadingArray objectAtIndex:0] objectForKey:@"PdfPath"]);
         }
-    }
+   // }
     
 }
 
@@ -2735,9 +2741,7 @@ static DetailViewController *sharedInstance = nil;
             [dic setObject:bfolderPath forKey:@"PdfPath"];
             
             [uploadingArray addObject:dic];
-            
         }
-        
         
         [driveUploadingArray removeAllObjects];
         [self uploadToFolder];
@@ -2752,6 +2756,7 @@ static DetailViewController *sharedInstance = nil;
         editBarButton.title = @"Edit";
         [DetailViewController getSharedInstance].folderPath = nil;
         [uploadingArray removeAllObjects];
+        driveParentId = nil;
         [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
 
         
@@ -3922,10 +3927,11 @@ static DetailViewController *sharedInstance = nil;
                 cell.imageView.frame = CGRectMake(15, 5, 100, 40);
                 
                 cell.imageView.image = [UIImage imageNamed:@"plus.png"];
-                
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
-                dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
-                [cell addSubview:dot];
+                cell.disclosureImageView.image = [UIImage imageNamed:@"normalDisclosure.png"];
+
+//                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
+//                dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
+//                [cell addSubview:dot];
                 
                 
             }
@@ -3933,9 +3939,11 @@ static DetailViewController *sharedInstance = nil;
             {
                 cell.imageView.image = item.image;
                 
-                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
-                dot.image=[UIImage imageNamed:@"circularDisclosure.png"];
-                [cell addSubview:dot];
+                cell.disclosureImageView.image = [UIImage imageNamed:@"circularDisclosure.png"];
+                
+//                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
+//                dot.image=[UIImage imageNamed:@"circularDisclosure.png"];
+//                [cell addSubview:dot];
                 
             }
             tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

@@ -591,6 +591,9 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
             cell.leftFolderImage.image =[UIImage imageNamed:@"box_small.png"];
             cell.leftFolderImage.frame=CGRectMake(5, 12, 40, 30);
             cell.label.text = [[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"];
+            NSLog(@"left side box name is %@",[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"name"]);
+            NSLog(@"left side box label is %@",cell.label.text);
+
         }
         else if ([[[arrUseraccounts objectAtIndex:indexPath.row] objectForKey:@"AccountType"] isEqualToString:@"ftp"])
         {
@@ -637,16 +640,12 @@ bool bdropbox,bgoogle,bbox,bftp,bsugar;
         [view addSubview:ac];
         [cell addSubview:view];
         
+        cell.leftFolderImage.image = nil;
         tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
         activityIndicatorframe.origin.y = activityIndicatorframe.origin.y+cell.frame.origin.y+cell.frame.size.height;
         
         
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-      //  UIView *bgColorView = [[UIView alloc] init];
-      //  bgColorView.layer.cornerRadius = 0;
-       // bgColorView.layer.masksToBounds = YES;
-        //[bgColorView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"blue.png"]]];
-      //  [cell setSelectedBackgroundView:bgColorView];
         
         return cell;
         

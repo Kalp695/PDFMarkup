@@ -18,6 +18,7 @@
 @property(atomic,assign,readwrite) BOOL activityView;
 @property(atomic,retain) NSString * activityViewStatus;
 
+
 @property(atomic,assign,readwrite) BOOL ftpDownload;
 
 // Upload

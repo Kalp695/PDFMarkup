@@ -35,6 +35,10 @@
 @property (nonatomic, weak) IBOutlet UILabel *lblTitle;
 @property (nonatomic, weak) IBOutlet UIButton *btnIcon;
 
+//Documents
+@property(nonatomic,weak)IBOutlet UIImageView * disclosureImageView;
+
+
 //Documents Cell
 
 @property (nonatomic, weak) IBOutlet UILabel *lblTitleDocuments;
