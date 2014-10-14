@@ -58,10 +58,15 @@
                                                     <rect key="frame" x="380" y="10" width="30" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="efh-BA-Rz4">
+                                                    <rect key="frame" x="59" y="15" width="30" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="disclosureImageView" destination="Z7s-R3-j4S" id="mIc-lN-kVJ"/>
+                                            <outlet property="folderImage" destination="efh-BA-Rz4" id="UkH-CG-piz"/>
                                             <outlet property="lblTitle" destination="vJj-mF-D1v" id="2T4-Kr-nDZ"/>
                                         </connections>
                                     </tableViewCell>

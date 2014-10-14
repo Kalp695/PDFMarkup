@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "434561387.910989"
+            timestampString = "434974104.893437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4251"
-            endingLineNumber = "4251"
+            startingLineNumber = "4249"
+            endingLineNumber = "4249"
             landmarkName = "-didSelectOnMainThread:"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "434561387.910989"
+            timestampString = "434974104.893437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1457"
-            endingLineNumber = "1457"
+            startingLineNumber = "1455"
+            endingLineNumber = "1455"
             landmarkName = "-uploadToFolder"
             landmarkType = "5">
          </BreakpointContent>
@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "434561387.910989"
+            timestampString = "434974104.893437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2555"
-            endingLineNumber = "2555"
+            startingLineNumber = "2553"
+            endingLineNumber = "2553"
             landmarkName = "-uploadFolderToDrive:::"
             landmarkType = "5">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "434561387.910989"
+            timestampString = "434974104.893437"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2601"
-            endingLineNumber = "2601"
+            startingLineNumber = "2599"
+            endingLineNumber = "2599"
             landmarkName = "-uploadFolderToDrive:::"
             landmarkType = "5">
          </BreakpointContent>

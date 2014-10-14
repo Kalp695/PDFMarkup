@@ -845,9 +845,7 @@ static DetailViewController *sharedInstance = nil;
 
 -(void)listOfPDFFiles
 {
-    
-    
-    
+
 }
 
 #pragma mark - Upload to Dropbox from Doc Directory
@@ -3921,12 +3919,12 @@ static DetailViewController *sharedInstance = nil;
             cell.lblTitle.frame = CGRectMake(99, 5, 485, 50);
             cell.lblTitle.text = item.title;
             //cell.folderImage.hidden = NO;
-            cell.imageView.frame = CGRectMake(15, 5, 100, 40);
+            cell.folderImage.frame = CGRectMake(15, 5, 40, 40);
             if ([cell.lblTitle.text isEqualToString:@"Add Account"])
             {
-                cell.imageView.frame = CGRectMake(15, 5, 100, 40);
+                cell.folderImage.frame = CGRectMake(15, 5, 40, 40);
                 
-                cell.imageView.image = [UIImage imageNamed:@"plus.png"];
+                cell.folderImage.image = [UIImage imageNamed:@"plus.png"];
                 cell.disclosureImageView.image = [UIImage imageNamed:@"normalDisclosure.png"];
 
 //                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
@@ -3937,7 +3935,7 @@ static DetailViewController *sharedInstance = nil;
             }
             else
             {
-                cell.imageView.image = item.image;
+                cell.folderImage.image = item.image;
                 
                 cell.disclosureImageView.image = [UIImage imageNamed:@"circularDisclosure.png"];
                 
