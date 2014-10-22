@@ -2365,7 +2365,7 @@ NSString *wastepath = nil;
                 
                 pdfValue = pdfValue+1;
               
-                if (![driveFilePathsArray containsObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"name"]])
+                if (![sugarSyncFilePathArray containsObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"name"]])
                 {
                     //[dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"id"] forKey:@"id"];
                     [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"title"];
@@ -2373,7 +2373,7 @@ NSString *wastepath = nil;
                     [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] forKey:@"contents"];
                     [dic setObject:@"/" forKey:@"path"];
                     
-                    [driveFilePathsArray addObject:dic];
+                    [sugarSyncFilePathArray addObject:dic];
                 }
                 //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
             }
@@ -3754,6 +3754,35 @@ NSString *wastepath = nil;
             FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
             item.isChecked = NO;
         }
+    }
+    else
+    {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+        [[SugarSyncClient getSharedInstance]createFolderNamed:tempString parentFolderURL:[NSURL URLWithString:@"https://api.sugarsync.com/folder/"] completionHandler:^(NSURL * newFolderUrl, NSError * error){
+          
+            NSLog(@"new url is %@",newFolderUrl);
+            if (!error) {
+                NSLog(@"Folder created");
+                [tbDownload setEditing:NO];
+                editButton.title = @"Edit";
+                
+                pdfValue = 0;
+                [self viewWillAppear:YES];
+                [tbDownload reloadData];
+                
+                for (int i =0; i< [arrmetadata count]; i++) {
+                    
+                    FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+                    item.isChecked = NO;
+                    
+                }
+            }
+        }];
+        
+        
+       
+
     }
 }
 
