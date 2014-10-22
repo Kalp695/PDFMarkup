@@ -124,6 +124,7 @@
 @property (nonatomic,retain) NSMutableArray * sugarSyncFiles;
 @property (nonatomic,retain) NSMutableArray * sugarSyncFilePathArray;
 @property (nonatomic,retain) NSString * sugarSyncUrl;
+@property (nonatomic,retain) NSString * sugarSyncFolderUrl;
 
 
 

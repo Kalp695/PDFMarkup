@@ -115,7 +115,7 @@
                   symbolName = "-[SugarSyncClient getFolderWithURL:completionHandler:]"
                   moduleName = "PDFMarkUP"
                   urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
-                  timestampString = "435685706.291941"
+                  timestampString = "435687926.265739"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "325"
@@ -129,7 +129,7 @@
                   symbolName = "__54-[SugarSyncClient getFolderWithURL:completionHandler:]_block_invoke"
                   moduleName = "PDFMarkUP"
                   urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
-                  timestampString = "435685706.292232"
+                  timestampString = "435687926.26591"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "326"
@@ -194,27 +194,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "435680920.635112"
+            timestampString = "435687676.944095"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "775"
-            endingLineNumber = "775"
-            landmarkName = "-listSugarSyncFiles:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "435685705.816332"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3763"
-            endingLineNumber = "3763"
+            startingLineNumber = "3799"
+            endingLineNumber = "3799"
             landmarkName = "-folder"
             landmarkType = "5">
          </BreakpointContent>

@@ -133,6 +133,7 @@ NSString *wastepath = nil;
 //Sugar Sync
 @synthesize sugarSyncFilePathArray,sugarSyncFiles;
 @synthesize sugarSyncUrl;
+@synthesize sugarSyncFolderUrl;
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -2350,6 +2351,7 @@ NSString *wastepath = nil;
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
          
             [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] ;
+            [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncFolderUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"reference"] ;
             NSLog(@"sugarsync url is %@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl);
             [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
         }
@@ -3587,15 +3589,51 @@ NSString *wastepath = nil;
 -(void)createFolder
 {
     // [[NSNotificationCenter defaultCenter] removeObserver:self name:@"CreateFolderClick" object:nil];
-    
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Folder"
-                                                    message:@"Enter folder name"
-                                                   delegate:self
-                                          cancelButtonTitle:@"Cancel"
-                                          otherButtonTitles:@"Done",nil];
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    alert.tag = 1;
-    [alert show];
+    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
+    {
+        if (![DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl) {
+            UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"Failed to create folder" message:@"You Can't Create Folder directly in Workspace" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+            [alertView show];
+            [tbDownload setEditing:NO];
+            editButton.title = @"Edit";
+            
+            pdfValue = 0;
+            [self viewWillAppear:YES];
+            [tbDownload reloadData];
+            
+            for (int i =0; i< [arrmetadata count]; i++) {
+                
+                FolderItem *item = (FolderItem *)[arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                
+            }
+
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Folder"
+                                                            message:@"Enter folder name"
+                                                           delegate:self
+                                                  cancelButtonTitle:@"Cancel"
+                                                  otherButtonTitles:@"Done",nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            alert.tag = 1;
+            [alert show];
+
+        }
+    }
+    else
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Create Folder"
+                                                        message:@"Enter folder name"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Cancel"
+                                              otherButtonTitles:@"Done",nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        alert.tag = 1;
+        [alert show];
+
+    }
     
 }
 -(void)folder
@@ -3759,7 +3797,10 @@ NSString *wastepath = nil;
     {
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         
-        [[SugarSyncClient getSharedInstance]createFolderNamed:tempString parentFolderURL:[NSURL URLWithString:@"https://api.sugarsync.com/folder/"] completionHandler:^(NSURL * newFolderUrl, NSError * error){
+        NSString * str =[NSString stringWithFormat:@"%@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncFolderUrl];
+        NSLog(@"%@",str);
+        NSURL * url = [NSURL URLWithString:str];
+        [[SugarSyncClient getSharedInstance]createFolderNamed:tempString parentFolderURL:url completionHandler:^(NSURL * newFolderUrl, NSError * error){
           
             NSLog(@"new url is %@",newFolderUrl);
             if (!error) {
@@ -3777,12 +3818,15 @@ NSString *wastepath = nil;
                     item.isChecked = NO;
                     
                 }
+                [marrDownloadData removeAllObjects];
+                [arrmetadata removeAllObjects];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxCreateFolderSuccess" object:self userInfo:nil];
+                
+
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
             }
         }];
         
-        
-       
-
     }
 }
 
