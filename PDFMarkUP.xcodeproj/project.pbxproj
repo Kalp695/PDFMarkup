@@ -2746,8 +2746,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dilantha desilva (7MV8HVMUXF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dilantha desilva (7MV8HVMUXF)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2772,7 +2772,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "00A64DF2-C1DF-4CA2-96D3-4EBC00926DC0";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2784,8 +2784,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Dilantha desilva (7MV8HVMUXF)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Dilantha desilva (7MV8HVMUXF)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)",
 					"$(inherited)",
@@ -2810,7 +2810,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = PDFMarkUP;
-				PROVISIONING_PROFILE = "00A64DF2-C1DF-4CA2-96D3-4EBC00926DC0";
+				PROVISIONING_PROFILE = "";
 				VALID_ARCHS = "arm8 armv7 armv7s";
 				WRAPPER_EXTENSION = app;
 			};

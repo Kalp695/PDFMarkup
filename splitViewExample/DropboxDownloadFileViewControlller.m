@@ -34,6 +34,7 @@ NSString * folderDocpath;
 #import "SugarSyncConstants.h"
 #import "SugarSyncClient.h"
 #import "SugarSyncHelper.h"
+#import "KeychainItemWrapper.h"
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -128,6 +129,11 @@ NSString *wastepath = nil;
 @synthesize ftpStatus;
 @synthesize downloadingName;
 
+
+//Sugar Sync
+@synthesize sugarSyncFilePathArray,sugarSyncFiles;
+@synthesize sugarSyncUrl;
+
 -(void)viewWillAppear:(BOOL)animated
 {
     
@@ -209,6 +215,8 @@ NSString *wastepath = nil;
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
     {
+        sugarSyncFiles = [[NSMutableArray alloc]init];
+        sugarSyncFilePathArray = [[NSMutableArray alloc]init];
         [self listSugarSyncFiles:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
     }
    }
@@ -292,6 +300,11 @@ NSString *wastepath = nil;
         ftpListArray = [[NSMutableArray alloc]init];
         ftpFilePathsArray = [[NSMutableArray alloc]init];
         boxFilesItemsArray = [[NSMutableArray alloc]init];
+    }
+    else
+    {
+        sugarSyncFiles = [[NSMutableArray alloc]init];
+        sugarSyncFilePathArray = [[NSMutableArray alloc]init];
     }
     
     pdfValue = 0;
@@ -751,27 +764,101 @@ NSString *wastepath = nil;
     }
     UIAlertView * alert = [[UIAlertView alloc]initWithTitle:@"PDF MarkUp" message:@"Server Error.! Please try Again" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
     [alert show];
-
 }
+
+
 #pragma mark sugarsync
 -(void)listSugarSyncFiles:(id)sugarSyncDetails
 {
-             NSURL * url = [NSURL URLWithString:@"https://api.sugarsync.com/user/8194615/folders/contents"];
-             
-             [[SugarSyncClient sharedInstance] getFolderWithURL:url completionHandler:^(SugarSyncFolder *aFolder, NSError *error) {
-                 
-                 
-                 if (!error)
-                 {
-                     NSLog(@"folders is %@",aFolder.collections);
-                     
-                 }
-                 
-                 
-             }];
-    
-    [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
+    if([DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl)
+    {
+        NSString * str =[NSString stringWithFormat:@"%@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl];
+        NSLog(@"%@",str);
+        NSURL * url = [NSURL URLWithString:str];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
+        {
+            NSLog(@"collections count is %d",[theFolderContents count]);
+            for (int i =0;i<[theFolderContents count]; i++)
+            {
+                
+                NSLog(@"collections count is %@",[theFolderContents objectAtIndex:i]);
 
+                if ([[theFolderContents objectAtIndex:i] isKindOfClass:[SugarSyncCollection class]]) {
+                    
+                    SugarSyncCollection * content = [theFolderContents objectAtIndex:i];
+                    NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            
+                    [dic setObject:content.displayName                                                                        forKey:@"title"];
+                    [dic setObject:content.ref                                                                        forKey:@"reference"];
+                    [dic setObject:content.contents                                                                        forKey:@"contents"];
+                    [sugarSyncFiles addObject:dic];
+                    FolderItem *item = [[FolderItem alloc] init];
+                    item.isChecked = NO;
+                    [arrmetadata addObject:item];
+                }
+                else
+                {
+                    SugarSyncFile * content = [theFolderContents objectAtIndex:i];
+                    NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                    
+                    [dic setObject:content.displayName                                                                        forKey:@"title"];
+              
+                    [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                    NSString * str = @"pdf";
+                    if ([[[content.displayName pathExtension]lowercaseString] isEqualToString:str ]) {
+                        [sugarSyncFiles addObject:dic];
+                        FolderItem *item = [[FolderItem alloc] init];
+                        item.isChecked = NO;
+                        [arrmetadata addObject:item];
+                    }
+
+                }
+                
+                [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
+
+            }
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [tbDownload reloadData];
+
+        }];
+        
+    }
+    else
+    {
+        NSURL * url = [NSURL URLWithString:@"https://api.sugarsync.com/user/8194615/folders/contents?type=folder"];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[SugarSyncClient getSharedInstance]getCollectionWithURL:url completionHandler:^(NSArray * aCollection,NSError *error)
+         {
+             NSLog(@"collections count is %d",[aCollection count]);
+             
+             for (int i =0;i<[aCollection count]; i++)
+             {
+                 
+                 SugarSyncCollection * coll = [aCollection objectAtIndex:i];
+                 
+                 NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                 
+                 [dic setObject:coll.displayName                                                                        forKey:@"title"];
+                 [dic setObject:coll.contents                                                                        forKey:@"contents"];
+                 [dic setObject:coll.ref                                                                        forKey:@"reference"];
+                 
+                 // [dic setObject:file.downloadUrl forKey:@"url"];
+                 [sugarSyncFiles addObject:dic];
+                 
+                 FolderItem *item = [[FolderItem alloc] init];
+                 item.isChecked = NO;
+                 [arrmetadata addObject:item];
+                 [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
+                 
+             }
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             [tbDownload reloadData];
+             
+         }];
+ 
+    }
+    
 }
 
 #pragma mark Drive Methods
@@ -1150,7 +1237,6 @@ NSString *wastepath = nil;
             
         }
         else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"google"])
-            
         {
             for (int i =0; i< [driveFilesArray count]; i++) {
                 
@@ -1203,6 +1289,32 @@ NSString *wastepath = nil;
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
                                                                 object:self];
             
+        }
+        else
+        {
+            for (int i =0; i< [sugarSyncFiles count]; i++) {
+                
+                // DBMetadata *data = [marrDownloadData objectAtIndex:i];
+                //NSLog(@"selected %@",data.path);
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                
+                [tbDownload reloadData];
+                
+            }
+            [tbDownload setEditing:YES animated:YES];
+            [tbDownload performSelector:@selector(reloadData) withObject:nil afterDelay:0.3];
+            
+            [sugarSyncFilePathArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NetworkController"
+                                                                object:self];
+
         }
     }
     
@@ -1260,6 +1372,7 @@ NSString *wastepath = nil;
     }
     
 }
+
 -(void)downloadFileFromDropBox:(NSString *)filePath
 {
     
@@ -1684,14 +1797,15 @@ NSString *wastepath = nil;
         return [driveFilesArray count];
         
     }
-    if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
     {
         return [ftpListArray count];
         
     }
     else
     {
-        return 0;
+        
+        return [sugarSyncFiles count];
     }
 }
 
@@ -1834,9 +1948,9 @@ NSString *wastepath = nil;
     }
     else
     {
-        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
         
-        [cell.btnIcon setTitle:[[[[folderItemsArray objectAtIndex:0] objectForKey:@"entries"] objectAtIndex:indexPath.row] objectForKey:@"name"] forState:UIControlStateDisabled];
+        FileItemTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Dropbox_Cell"];
+        [cell.btnIcon setTitle:[sugarSyncFiles objectAtIndex:indexPath.row] forState:UIControlStateDisabled];
         
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         
@@ -1844,12 +1958,12 @@ NSString *wastepath = nil;
         {
             [cell setChecked:item.isChecked];
         }
-        cell.lblTitle.text = [[driveFilesArray objectAtIndex:indexPath.row] objectForKey:@"title"];
+        cell.lblTitle.text = [[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"];
         
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.btnIcon.hidden = NO;
         
-        NSString * str = [[driveFilesArray objectAtIndex:indexPath.row]objectForKey:@"title"];
+        NSString * str = [[sugarSyncFiles objectAtIndex:indexPath.row]objectForKey:@"title"];
         if ([[str pathExtension]isEqualToString:@"pdf"])
         {
             cell.accessoryType = UITableViewCellAccessoryNone;
@@ -2213,6 +2327,89 @@ NSString *wastepath = nil;
         else
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:ftpFilePathsArray];
+        }
+        
+    }
+    else
+    {
+        FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
+        if (tableView.editing)
+        {
+            FileItemTableCell *cell = (FileItemTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+            item.isChecked = !item.isChecked;
+            
+            folder_file=[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"];
+            [cell setChecked:item.isChecked];
+        }
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        NSString * str = [[sugarSyncFiles objectAtIndex:indexPath.row]objectForKey:@"title" ];
+        if ([[str pathExtension] isEqualToString:@""]&& !tableView.editing)
+        {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
+            DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
+         
+            [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] ;
+            NSLog(@"sugarsync url is %@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl);
+            [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
+        }
+        else
+        {
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            
+            if (item.isChecked == YES)
+            {
+                //selectedCell.accessoryType = UITableViewCellAccessoryCheckmark;
+                [downloadingButton setTitle:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"] forState:UIControlStateDisabled];
+                
+                pdfValue = pdfValue+1;
+              
+                if (![driveFilePathsArray containsObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"name"]])
+                {
+                    //[dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"id"] forKey:@"id"];
+                    [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"title"];
+                    [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"reference"] forKey:@"reference"];
+                    [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] forKey:@"contents"];
+                    [dic setObject:@"/" forKey:@"path"];
+                    
+                    [driveFilePathsArray addObject:dic];
+                }
+                //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
+            }
+            
+            else
+            {
+                if (item.isChecked == NO)
+                {
+                    pdfValue = pdfValue-1;
+                    
+                    
+                    for (int i =0; i<[self.sugarSyncFilePathArray count]; i++)
+                    {
+                        
+                        if ([[[sugarSyncFiles objectAtIndex:indexPath.row]objectForKey:@"title"] isEqualToString:[[sugarSyncFilePathArray objectAtIndex:i]objectForKey:@"folderName"]]) {
+                            [self.sugarSyncFilePathArray removeObjectAtIndex:i];
+                        }
+                    }
+                    //[AppDelegate sharedInstance].boxSelectedFiles = boxFilePathsArray;
+                }
+            }
+        }
+        
+        NSLog(@"boxFilePathsArray array is %@",sugarSyncFilePathArray);
+        
+        if ([sugarSyncFilePathArray count]==1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"SingleFile" object:sugarSyncFilePathArray];
+        }
+        else if([sugarSyncFilePathArray count]>1)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MultipleFiles" object:sugarSyncFilePathArray];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:sugarSyncFilePathArray];
         }
         
     }

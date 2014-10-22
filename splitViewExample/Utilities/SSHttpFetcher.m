@@ -13,6 +13,7 @@
 
 #import "SSHttpFetcher.h"
 #import "SSC9Log.h"
+#import "SugarSyncConstants.h"
 
 @implementation SSHttpFetcher {
     BOOL isHTTPS;
@@ -87,7 +88,10 @@
     {
         userHeaders = [[NSMutableDictionary dictionaryWithCapacity:10] retain];
     }
-    
+    if (aValue == nil) {
+        
+        aValue = Sugar_userAgent;
+    }
     [userHeaders setObject:aValue forKey:aKey];
 }
 

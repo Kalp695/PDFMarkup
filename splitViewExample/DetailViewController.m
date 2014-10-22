@@ -519,6 +519,7 @@ static DetailViewController *sharedInstance = nil;
     if (!loadData) {
         loadData = @"";
     }
+    
     folderPath = [[NSString alloc]init];
     boxFolderPaths = [[NSString alloc]init];
     driveFolderPaths = [[NSString alloc]init];
@@ -770,6 +771,7 @@ static DetailViewController *sharedInstance = nil;
     
     [self docDataToDisplay];
 }
+
 -(IBAction)gridViewButton_click:(id)sender
 {
     
@@ -791,7 +793,6 @@ static DetailViewController *sharedInstance = nil;
     
     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [AppDelegate sharedInstance].documentStatus = @"TableView";
-    
     
     documentsTableView.hidden = NO;
     [documentsTableView reloadData];
@@ -3930,7 +3931,6 @@ static DetailViewController *sharedInstance = nil;
 //                UIImageView *dot =[[UIImageView alloc] initWithFrame:CGRectMake(380,10,30,30)];
 //                dot.image=[UIImage imageNamed:@"normalDisclosure.png"];
 //                [cell addSubview:dot];
-                
                 
             }
             else

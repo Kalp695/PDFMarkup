@@ -8,7 +8,6 @@
 
 #import "DocumentManager.h"
 
-
 static DocumentManager *sharedInstance = nil;
 
 @implementation DocumentManager

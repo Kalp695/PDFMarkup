@@ -59,6 +59,8 @@ typedef enum {
  */
 +(SugarSyncClient *) sharedInstance;
 
++(SugarSyncClient *) getSharedInstance;
+
 /*
  * The single SugarSyncUser instance returned from the authentication process
  */
@@ -68,6 +70,10 @@ typedef enum {
  * Check this property to determine whether to prompt the user to login to their SugarSync account
  */
 @property (nonatomic, readonly, getter = loggedIn) BOOL isLoggedIn;
+
+@property(nonatomic,retain)  NSURL *refreshToken;
+@property(nonatomic,retain) NSString *accessKey;
+@property(nonatomic,retain) NSString *privateAccessKey;
 
 /*
  * Displays a modal dialog window in an OS X Cocoa application to prompt for user name and password

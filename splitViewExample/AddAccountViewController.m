@@ -62,8 +62,6 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     return self;
 }
 
-
-
 - (void)viewDidLoad
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -153,15 +151,15 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
             if ( !sugarSyncClient.isLoggedIn )
             {
                 [sugarSyncClient displayLoginDialogWithCompletionHandler:^(SugarSyncLoginStatus aStatus, NSError *error) {
-                
+                    
                     [[SugarSyncClient sharedInstance] getUserWithCompletionHandler:^(SugarSyncUser *aUser, NSError *error) {
+                        
                         
                         NSLog(@"get logged user details %@,%@",aUser.nickname,aUser.username);
                         [self sugarSyncUserDetails:aUser];
 
-                       
                         
-
+                       
                     }];
                     
                 }];
@@ -191,7 +189,6 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
         }
         else if ([sender tag] == 5)
         {
-            
             
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             GoogleLoginViewController *googleLoginViewController = [storyboard instantiateViewControllerWithIdentifier:@"GoogleLoginViewController"];
@@ -224,6 +221,7 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
 }
 
 - (void)restClient:(DBRestClient*)client loadedAccountInfo:(DBAccountInfo*)info {
+    
     NSLog(@"UserID: %@ %@", [info displayName], [info userId]);
     
     NSDictionary *dicdetails = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:[info displayName],[info userId],@"dropbox", nil] forKeys:[NSArray arrayWithObjects:@"username",@"userid",@"AccountType", nil]];

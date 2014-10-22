@@ -20,11 +20,12 @@
 #import "SSErrorUtil.h"
 #import "SSC9Log.h"
 #import "KeychainItemWrapper.h"
+#import "SugarSyncConstants.h"
 
 
 //shared instance
 static SugarSyncClient *_sugarSyncClientSingleton;
-
+static SugarSyncClient *sharedInstace = nil;
 //API Locations
 static NSURL *AppAuthorizationAPI;
 static NSURL *AuthorizationAPI;
@@ -73,10 +74,10 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
 @implementation SugarSyncClient {
 
 @private
-    NSURL *refreshToken;
     NSURL *accessToken;
     NSURL *userResource;
     NSString *applicationId;
+    NSURL *refreshToken;
     NSString *accessKey;
     NSString *privateAccessKey;
     NSString *applicationUserAgent;
@@ -85,7 +86,7 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     BOOL refreshingToken;
     SugarSyncLoginViewController *loginViewController;
 }
-
+@synthesize accessKey,refreshToken,privateAccessKey;
 #pragma mark Class Methods
 
 +(void) initialize
@@ -97,6 +98,17 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     [AccessTokenExpiryFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss'.'SSSZZZZ"];
     
 }
++(SugarSyncClient *) getSharedInstance
+{
+    if (!sharedInstace)
+    {
+        sharedInstace = [[super allocWithZone:NULL]init];
+        
+    }
+    return sharedInstace;
+   
+}
+
 +(SugarSyncClient *) sharedInstance
 {
     @synchronized ([SugarSyncClient class])
@@ -260,7 +272,7 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
         
         if ( !anError )
         {
-            NSArray *nodeList = PerformXMLXPathQuery( theResource, XPathCollectionNode );
+            NSArray *nodeList = PerformXMLXPathQuery(theResource, XPathCollectionNode );
             
             if ( nodeList.count )
             {
@@ -693,6 +705,7 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     [keyChain setObject:refreshToken.description forKey:kSecValueData];
 
     [keyChain release];
+    
 }
 
 #pragma mark Access Token
@@ -745,8 +758,21 @@ static NSString *XMLKeyNodeContent = @"nodeContent";
     
     refreshingToken = YES;
     
-    NSString *resourceXML = [SugarSyncXMLTemplate.accessToken fill:@[accessKey, privateAccessKey, refreshToken]];
+    NSString *resourceXML;
+    if (accessKey.length >0)
+    {
+       resourceXML = [SugarSyncXMLTemplate.accessToken fill:@[accessKey, privateAccessKey, refreshToken]];
 
+    }
+   else
+   {
+       NSString *itemKey = [[[NSBundle mainBundle] bundleIdentifier] stringByAppendingString:@":SugarSync"];
+       KeychainItemWrapper *keyChain = [[KeychainItemWrapper alloc] initWithIdentifier:itemKey accessGroup:nil];
+       NSString *refresh = [keyChain objectForKey:kSecValueData];
+       [keyChain release];
+       resourceXML = [SugarSyncXMLTemplate.accessToken fill:@[Sugar_accessKey,Sugar_privateAccessKey,refresh]];
+       
+    }
     [self createResource:resourceXML atLocation:AuthorizationAPI resourceKey:@"accessToken" requiredXMLResponse:XPathAuthorizationDocument completionHandler:^(NSURL *newResource, NSArray *xmlResponse, NSError *anError)
      {
          if ( anError )
