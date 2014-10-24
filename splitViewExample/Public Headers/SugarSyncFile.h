@@ -21,7 +21,7 @@
  */
 @interface SugarSyncFile : NSObject
 
-@property (nonatomic, retain) NSString *displayName;
+@property (nonatomic, retain , readwrite) NSString *displayName;
 @property (nonatomic, retain) NSURL *parent;
 @property (nonatomic, retain) NSString *mediaType;
 @property (nonatomic, assign) BOOL publicLinkEnabled;
@@ -32,6 +32,7 @@
 @property (nonatomic, retain, readonly) NSString *lastModified;
 @property (nonatomic, retain, readonly) NSString *timeCreated;
 @property (nonatomic, retain, readonly) NSURL *fileData;
+@property (nonatomic, retain, readonly) NSURL *ref;
 @property (nonatomic, retain, readonly) NSURL *versions;
 @property (nonatomic, retain, readonly) NSURL *publicLink;
 @property (nonatomic, retain, readonly) SugarSyncFileImage *image;

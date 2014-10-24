@@ -45,7 +45,8 @@ static NSURL *FileAPI;
     _presentOnServer = [[obj objectForKey:@"presentOnServer"] isEqualToString:@"true"] ? YES :NO;
     _versions = [[NSURL URLWithString:[obj objectForKey:@"versions"]] retain];
     _parent = [[NSURL URLWithString:[obj objectForKey:@"parent"]] retain];
-    
+    _ref = [[NSURL URLWithString:[obj objectForKey:@"ref"]] retain];
+
     NSDictionary *attrs = [obj objectForKey:@"publicLink$attributes"];
     _publicLinkEnabled = [[attrs objectForKey:@"enabled"] isEqualToString:@"true"] ? YES :NO;
     

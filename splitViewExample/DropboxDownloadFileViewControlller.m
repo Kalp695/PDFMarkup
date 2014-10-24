@@ -95,6 +95,11 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     BOOL fileFetchStatusFailure;
     int count;
     NSMutableArray * fileNames;
+    
+    //Sugarsync
+    
+    NSMutableArray * sugarSyncFilesItemsArray;
+
 }
 
 +(DropboxDownloadFileViewControlller*)getSharedInstance
@@ -306,6 +311,7 @@ NSString *wastepath = nil;
     {
         sugarSyncFiles = [[NSMutableArray alloc]init];
         sugarSyncFilePathArray = [[NSMutableArray alloc]init];
+        sugarSyncFilesItemsArray = [[NSMutableArray alloc]init];
     }
     
     pdfValue = 0;
@@ -793,6 +799,7 @@ NSString *wastepath = nil;
                     [dic setObject:content.displayName                                                                        forKey:@"title"];
                     [dic setObject:content.ref                                                                        forKey:@"reference"];
                     [dic setObject:content.contents                                                                        forKey:@"contents"];
+                    [dic setObject:content forKey:@"SugarSyncType"];
                     [sugarSyncFiles addObject:dic];
                     FolderItem *item = [[FolderItem alloc] init];
                     item.isChecked = NO;
@@ -804,8 +811,9 @@ NSString *wastepath = nil;
                     NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
                     
                     [dic setObject:content.displayName                                                                        forKey:@"title"];
-              
+                    [dic setObject:content.ref                                                                        forKey:@"reference"];
                     [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                    [dic setObject:content forKey:@"SugarSyncType"];
                     NSString * str = @"pdf";
                     if ([[[content.displayName pathExtension]lowercaseString] isEqualToString:str ]) {
                         [sugarSyncFiles addObject:dic];
@@ -827,7 +835,9 @@ NSString *wastepath = nil;
     }
     else
     {
-        NSURL * url = [NSURL URLWithString:@"https://api.sugarsync.com/user/8194615/folders/contents?type=folder"];
+        NSString * userid = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"userid"];
+        NSString * urlString = [NSString stringWithFormat:@"https://api.sugarsync.com/user/%@/folders/contents?type=folder",userid];
+        NSURL * url = [NSURL URLWithString:urlString];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [[SugarSyncClient getSharedInstance]getCollectionWithURL:url completionHandler:^(NSArray * aCollection,NSError *error)
          {
@@ -835,7 +845,6 @@ NSString *wastepath = nil;
              
              for (int i =0;i<[aCollection count]; i++)
              {
-                 
                  SugarSyncCollection * coll = [aCollection objectAtIndex:i];
                  
                  NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
@@ -843,7 +852,7 @@ NSString *wastepath = nil;
                  [dic setObject:coll.displayName                                                                        forKey:@"title"];
                  [dic setObject:coll.contents                                                                        forKey:@"contents"];
                  [dic setObject:coll.ref                                                                        forKey:@"reference"];
-                 
+                 [dic setObject:coll forKey:@"SugarSyncType"];
                  // [dic setObject:file.downloadUrl forKey:@"url"];
                  [sugarSyncFiles addObject:dic];
                  
@@ -2373,11 +2382,13 @@ NSString *wastepath = nil;
                     [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"title"] forKey:@"title"];
                     [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"reference"] forKey:@"reference"];
                     [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] forKey:@"contents"];
+                    [dic setObject:[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"SugarSyncType"] forKey:@"SugarSyncType"];
+
                     [dic setObject:@"/" forKey:@"path"];
                     
                     [sugarSyncFilePathArray addObject:dic];
                 }
-                //[AppDelegate sharedInstance].boxSelectedFiles = driveFilePathsArray;
+
             }
             
             else
@@ -2534,7 +2545,21 @@ NSString *wastepath = nil;
         
         
     }
-    
+    else
+    {
+        sugarOperationQueue = [NSOperationQueue new];
+        NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                                selector:@selector(downloadFromSugarSync)
+                                                                                  object:nil];
+        
+        // Add the operation to the queue and let it to be executed.
+        
+        [operation setQueuePriority:NSOperationQueuePriorityVeryHigh];
+        [sugarOperationQueue addOperation:operation];
+        [DownloadingSingletonClass getSharedInstance].sugarDownload= NO;
+        
+        [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
+    }
     [AppDelegate sharedInstance].bgRunningStatus = @"Downloading";
 
     
@@ -2925,6 +2950,313 @@ NSString *wastepath = nil;
     }
     
 }
+#pragma mark Sugar Sync Download Methods
+-(void)downloadFromSugarSync
+{
+    NSString *filename = nil;
+    
+    NSLog(@"%@",sugarSyncFilePathArray);
+    if ([sugarSyncFilePathArray count]>0)
+    {
+        filename = [[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"title"];
+        NSLog(@"%@",[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"path"]);
+        
+        NSString * str = [NSString stringWithFormat:@"%@%@",[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"path"],filename];
+        if ([sqliteRowsArray containsObject:str])
+        {
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+            
+            [boxOperationQueue cancelAllOperations];
+            [self performSelectorOnMainThread:@selector(boxShowAlert:) withObject:filename waitUntilDone:NO];
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
+            for (int i =0; i< [marrDownloadData count]; i++) {
+                
+                NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+                FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+                
+                FolderItem* item = [arrmetadata objectAtIndex:i];
+                item.isChecked = NO;
+                [cell setChecked:item.isChecked];
+                NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+                
+                [tbDownload reloadData];
+                
+            }
+            
+            [sugarSyncFilePathArray removeAllObjects];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NoFiles" object:self];
+            
+            
+        }
+        else
+        {
+            
+            pdfCount = pdfCount + 1;
+            filesCount = filesCount + 1;
+            NSLog(@"files is %@",[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"title"]);
+            NSString * folderName =[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"title"];
+            NSURL * fileUrl = [[sugarSyncFilePathArray objectAtIndex:0] objectForKey:@"contents"];
+           // NSURL * folderUrl = [[sugarSyncFilePathArray objectAtIndex:0] objectForKey:@"reference"];
+
+            if ([[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"path"] length]>0)
+            {
+                root = [[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"path"];
+            }
+            if ([[folderName pathExtension]isEqualToString:@""])
+            {
+                boxDownloadingType = @"folder";
+                [self downloadFoldersFromSugarSync:folderName];
+                
+                boxFolderPath =[NSString stringWithFormat:@"%@",folderName];
+                root = [root stringByAppendingString:boxFolderPath];
+                [self downloadChildSugarFiles:fileUrl];
+
+            }
+            
+            else
+            {
+                boxDownloadingType = @"file";
+                boxFolderPath = @"";
+                itemCount = 0;
+                [self downloadFilesFromSugarSync:folderName :fileUrl];
+                
+            }
+        }
+        while ([DownloadingSingletonClass getSharedInstance].sugarDownload==NO)
+        {
+           // NSLog(@"sugar thread Running ............ ");
+            
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+
+    }
+
+}
+-(void)downloadFoldersFromSugarSync:(NSString *)name
+{
+    NSLog(@"check %@",sqliteRowsArray);
+    if ([sqliteRowsArray containsObject:name])
+    {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",name ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show ];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        for (int i =0; i< [folderItemsArray count]; i++) {
+            
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+            
+            FolderItem* item = [arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+            [cell setChecked:item.isChecked];
+            
+            [tbDownload reloadData];
+            
+            
+            break;
+            
+        }
+        
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        fetching = YES;
+        
+    }
+    else
+    {
+        NSError * error;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0]; // Get documents folder
+        if (boxFolderPath == nil) {
+            boxFolderPath = @"";
+        }
+        
+        NSString *dataPath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:dataPath])
+            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:NO attributes:nil error:&error];
+    }
+
+}
+-(void)downloadChildSugarFiles:(NSURL * )url
+{
+    [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
+     {
+         NSLog(@"collections count is %d",[theFolderContents count]);
+         for (int i =0;i<[theFolderContents count]; i++)
+         {
+             
+             NSLog(@"collections count is %@",[theFolderContents objectAtIndex:i]);
+             
+             if ([[theFolderContents objectAtIndex:i] isKindOfClass:[SugarSyncCollection class]]) {
+                 
+                 SugarSyncCollection * content = [theFolderContents objectAtIndex:i];
+                 NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                 
+                 [dic setObject:content.displayName                                                                        forKey:@"title"];
+                 [dic setObject:content.ref                                                                        forKey:@"reference"];
+                 [dic setObject:content.contents                                                                        forKey:@"contents"];
+                 [dic setObject:content forKey:@"SugarSyncType"];
+                 [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
+                 [sugarSyncFilesItemsArray addObject:dic];
+                 FolderItem *item = [[FolderItem alloc] init];
+                 item.isChecked = NO;
+                 [arrmetadata addObject:item];
+             }
+             else
+             {
+                 SugarSyncFile * content = [theFolderContents objectAtIndex:i];
+                 NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                 
+                 [dic setObject:content.displayName                                                                        forKey:@"title"];
+                 [dic setObject:content.ref                                                                        forKey:@"reference"];
+                 [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                 [dic setObject:content forKey:@"SugarSyncType"];
+                 [dic setObject:[NSString stringWithFormat:@"%@/",root] forKey:@"path"];
+                 NSString * str = @"pdf";
+                 if ([[[content.displayName pathExtension]lowercaseString] isEqualToString:str ]) {
+                     [sugarSyncFilesItemsArray addObject:dic];
+                     FolderItem *item = [[FolderItem alloc] init];
+                     item.isChecked = NO;
+                     [arrmetadata addObject:item];
+                 }
+                 
+             }
+             
+         }
+         
+         if ([sugarSyncFilePathArray count]>0) {
+             
+             [sugarSyncFilePathArray removeObjectAtIndex:0];
+             root = @"";
+             
+         }
+         if ([sugarSyncFilePathArray count]>0) {
+             [self downloadFromSugarSync];
+             
+         }
+         else
+         {
+             [self performSelector:@selector(closeSugarSyncControllerr) withObject:nil afterDelay:0];
+             
+         }
+
+     }];
+}
+-(void)downloadFilesFromSugarSync:(NSString *)name :(NSURL *)url
+{
+    if ([sqliteRowsArray containsObject:name])
+    {
+        UIAlertView * alert = [[UIAlertView alloc]initWithTitle:[NSString stringWithFormat:@"%@",name ] message:@"File Already Exists" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+        [alert show ];
+        
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
+        for (int i =0; i< [folderItemsArray count]; i++) {
+            
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:i inSection:0];
+            FileItemTableCell *cell = (FileItemTableCell*)[tbDownload cellForRowAtIndexPath:newIndexPath];
+            
+            FolderItem* item = [arrmetadata objectAtIndex:i];
+            item.isChecked = NO;
+            
+            [cell setChecked:item.isChecked];
+            
+            [tbDownload reloadData];
+            
+            break;
+            
+        }
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        fetching = YES;
+    }
+    else
+    {
+        
+        [[SugarSyncClient getSharedInstance]getFileDataWithURL:url completionHandler:^(NSData *data,NSError *error)
+         {
+             NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,name]];
+             [data writeToFile:filePath atomically:YES];
+             
+             if ([sugarSyncFilePathArray count]>0) {
+                 
+                 NSString * filePath  = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",root,[[sugarSyncFilePathArray objectAtIndex:0]objectForKey:@"title"]]];
+                 NSLog(@"thumbnail file path is %@",filePath);
+                 
+                 
+                 PDFThumbnail *pdfThumbnail=[[PDFThumbnail alloc]init];
+                 [pdfThumbnail createThumbnailFromPDFFilePath:filePath];
+                 
+                 [sugarSyncFilePathArray removeObjectAtIndex:0];
+                 root = @"";
+                 
+             }
+             if ([sugarSyncFilePathArray count]>0) {
+                 
+                 
+                 [self multipleFileDownload:nil];
+                 
+             }
+             else
+             {
+                 [self closeSugarSyncControllerr];
+             }
+         }];
+
+    }
+
+}
+-(void)closeSugarSyncControllerr
+{
+        if ([sugarSyncFilesItemsArray count]>0)
+        {
+            [sugarSyncFilePathArray removeAllObjects];
+            
+            NSLog(@"%@",root);
+            //  boxFilePath = root;
+            for (int k = 0; k<[sugarSyncFilesItemsArray count]; k++)
+            {
+                NSLog(@"%d",[sugarSyncFilesItemsArray count]);
+               
+                NSString * reference =  [[sugarSyncFilesItemsArray objectAtIndex:k] objectForKey:@"reference"];
+                NSString *   folderName =  [[sugarSyncFilesItemsArray objectAtIndex:k]objectForKey:@"title"];
+                NSString *    type =  [[sugarSyncFilesItemsArray objectAtIndex:k]objectForKey:@"SugarSyncType"];
+                NSString *    path =  [[sugarSyncFilesItemsArray objectAtIndex:k]objectForKey:@"path"];
+                NSString *    contents =  [[sugarSyncFilesItemsArray objectAtIndex:k]objectForKey:@"contents"];
+
+                NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                [dic setObject:reference forKey:@"reference"];
+                [dic setObject:folderName forKey:@"title"];
+                [dic setObject:contents forKey:@"contents"];
+                [dic setObject:type forKey:@"SugarSyncType"];
+                [dic setObject:path forKey:@"path"];
+                [sugarSyncFilePathArray addObject:dic];
+            }
+            
+            [sugarSyncFilesItemsArray removeAllObjects];
+            [self multipleFileDownload:nil];
+            
+        }
+        if ([sugarSyncFilePathArray count]==0 && [sugarSyncFilesItemsArray count]==0)
+        {
+            boxDownloadProcess = NO;
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [driveFilePathsArray removeAllObjects];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:@"Download Success" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DownloadComplete" object:nil];
+            [AppDelegate sharedInstance].bgRunningStatus = @"Download completed";
+            NSLog(@"download Status %@",[AppDelegate sharedInstance].bgRunningStatus);
+            [sugarOperationQueue cancelAllOperations];
+            [DownloadingSingletonClass getSharedInstance].sugarDownload = YES;
+            [self performSelectorOnMainThread:@selector(runOnMainThread) withObject:nil waitUntilDone:YES];
+            // [self.navigationController popToRootViewControllerAnimated:YES];
+        }
+        
+    }
 #pragma mark - Drive Download
 
 -(void)downloadFromDrive
@@ -2976,7 +3308,7 @@ NSString *wastepath = nil;
             NSString * folderId =[[driveFilePathsArray objectAtIndex:0]objectForKey:@"folderId"];
             NSString * folderName =[[driveFilePathsArray objectAtIndex:0]objectForKey:@"folderName"];
             NSString * type =[[driveFilePathsArray objectAtIndex:0]objectForKey:@"type"];
-            
+
             if ([[[driveFilePathsArray objectAtIndex:0]objectForKey:@"path"] length]>0)
             {
                 root = [[driveFilePathsArray objectAtIndex:0]objectForKey:@"path"];
@@ -2990,7 +3322,6 @@ NSString *wastepath = nil;
                 root = [root stringByAppendingString:boxFolderPath];
                 [self getFileMetadataWithService:folderId];
                 
-                // [self downloadableFolderFiles:folderId name:folderName];
                 
             }
             
@@ -3991,7 +4322,6 @@ NSString *wastepath = nil;
         
         [tbDownload setEditing:NO];
         editButton.title = @"Edit";
-        
         [filePathsArray removeAllObjects];
     }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"box"])
@@ -4075,6 +4405,46 @@ NSString *wastepath = nil;
         [tbDownload setEditing:NO];
         editButton.title = @"Edit";
         [boxFilePathsArray removeAllObjects];
+    }
+  
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
+    {
+        for (int k =0; k < [sugarSyncFilePathArray count]; k++)
+        {
+            
+            NSString *newDirectoryName;
+            
+            NSLog(@"Sugar Sync Type is %@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"SugarSyncType"]);
+            
+            if ([[sugarSyncFilePathArray objectAtIndex:k] isKindOfClass:[SugarSyncCollection class]]) {
+                newDirectoryName =tempString;
+                SugarSyncFolder * folder = [sugarSyncFilePathArray objectAtIndex:k];
+                [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
+                 {
+                     
+                 }];
+
+            }
+            else
+            {
+                newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+                SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
+                
+                //NSLog(@"files is %@",files.displayName);
+                
+                [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                {
+                    
+                }];
+            }
+        }
+        [self viewWillAppear:YES];
+        [tbDownload reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        [sugarSyncFilePathArray removeAllObjects];
     }
     
     pdfValue = 0;
@@ -4343,50 +4713,41 @@ NSString *wastepath = nil;
 
               }
             
-            
-            
-//            if ([[fname pathExtension]isEqualToString:@""])
-//            {
-//                deleteDir = [[BRRequestDelete alloc] initWithDelegate:self];
-//                
-//                deleteDir.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-//                
-//                if (!ftpFolderPath) {
-//                    ftpFolderPath = @"";
-//                }
-//                else
-//                {
-//                    fname = [NSString stringWithFormat:@"%@",fname];
-//                    
-//                }
-//                deleteDir.path = [NSString stringWithFormat:@"%@%@/",[AppDelegate sharedInstance].ftpDownloadpath,docfileName];
-//                deleteDir.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-//                deleteDir.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-//                
-//                [deleteDir start];
-//                
-//            }
-//            else
-//            {
-//                deleteFile = [[BRRequestDelete alloc] initWithDelegate:self];
-//                deleteFile.hostname = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
-//                if (!ftpFolderPath) {
-//                    ftpFolderPath = @"";
-//                }
-//                else
-//                {
-//                    fname = [NSString stringWithFormat:@"/%@",fname];
-//                    
-//                }
-//                deleteFile.path = [NSString stringWithFormat:@"%@%@",ftpFolderPath,fname];
-//                deleteFile.username = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
-//                deleteFile.password = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
-//                
-//                [deleteFile start];
-//                
-//            }
+
             
         }
+    }
+    else
+    {
+        for (int k =0; k < [sugarSyncFilePathArray count]; k++)
+        {
+            NSLog(@"ref url is %@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"reference"]);
+            NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"reference"]]];
+            
+            if ([[[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"title"]pathExtension] isEqualToString:@""]) {
+                
+                [[SugarSyncClient getSharedInstance]deleteFolderWithURL:url completionHandler:^(NSError * error)
+                 {
+                     NSLog(@"folder deleted successfully");
+                     
+                 }];
+            }
+           else
+           {
+               [[SugarSyncClient getSharedInstance]deleteFileWithURL:url completionHandler:^(NSError * error)
+               {
+                 
+                   NSLog(@"file deleted successfully");
+
+               }];
+           }
+    
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxDeleteSucess" object:self userInfo:nil];
+        [self viewWillAppear:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [tbDownload reloadData];
+        [sugarSyncFilePathArray removeAllObjects];
     }
     
     
@@ -4398,8 +4759,6 @@ NSString *wastepath = nil;
     
     
     pdfValue = 0;
-    
-    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
     
     for (int i =0; i< [arrmetadata count]; i++)
     {

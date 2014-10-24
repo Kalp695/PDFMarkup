@@ -67,6 +67,7 @@
     NSOperationQueue * driveOperationQueue;
     NSOperationQueue * dropBoxOperationQueue;
     NSOperationQueue * ftpOperationQueue;
+    NSOperationQueue * sugarOperationQueue;
 
     // Asynch
 

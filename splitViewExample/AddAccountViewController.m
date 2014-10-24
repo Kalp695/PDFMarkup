@@ -348,6 +348,8 @@ static NSString *const kClientSecret = @"tp1UdMtjm_ExEPnKKYGd55Al";
     NSMutableDictionary *userdata = [[NSMutableDictionary alloc] init];
     [userdata setObject:userDetails.nickname forKey:@"name"];
     [userdata setObject:userDetails.username forKey:@"email"];
+    NSLog(@"path comp is %@",[userDetails.workspaces pathComponents]);
+    [userdata setObject:[[userDetails.workspaces pathComponents] objectAtIndex:2] forKey:@"userid"];
     [userdata setObject:Sugar_accessKey forKey:@"acces_token"];
     [userdata setObject:@"sugarsync" forKey:@"AccountType"];
     [SugarSyncHelper getSharedInstance].userDetails = userDetails;
