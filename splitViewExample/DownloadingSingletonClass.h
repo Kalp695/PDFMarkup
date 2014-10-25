@@ -27,5 +27,6 @@
 @property(atomic,assign,readwrite) BOOL boxUpload;
 
 @property(atomic,assign,readwrite) BOOL ftpUpload;
+@property(atomic,assign,readwrite) BOOL sugarUpload;
 
 @end

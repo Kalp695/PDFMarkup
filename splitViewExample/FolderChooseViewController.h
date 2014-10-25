@@ -37,6 +37,12 @@
 @property(nonatomic,retain) NSString * ftpFolderName;
 //@property(nonatomic,retain) NSString * ftpFolderPath;
 
+//sugar
+@property(nonatomic,retain) NSMutableArray * sugarFoldersList;
+@property(nonatomic,retain) NSString * sugarFilesId;
+
+
+
 @property (nonatomic, strong) NSString *loadData;
 @property (nonatomic, strong) IBOutlet UITableView *tbDownload;
 -(IBAction)chooseBarButton_click:(id)sender;

@@ -17,6 +17,9 @@
 #import "ASIFormDataRequest.h"
 #import "DriveConstants.h"
 #import "DriveHelperClass.h"
+#import "SugarSyncConstants.h"
+#import "SugarSyncClient.h"
+#import "SugarSyncHelper.h"
 
 static FolderChooseViewController *sharedInstance = nil;
 
@@ -41,7 +44,7 @@ static FolderChooseViewController *sharedInstance = nil;
 }
 
 @synthesize loadData,tbDownload,accountName,indexCount,boxFolderName,boxFolderId;
-
+@synthesize sugarFilesId,sugarFoldersList;
 @synthesize driveFoldersList,driveFiles,driveFilesId,ftpFolderName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -130,8 +133,9 @@ static FolderChooseViewController *sharedInstance = nil;
     else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
     {
         NSLog(@"Upload Files to sugar");
-        
-        
+        sugarFoldersList = [[NSMutableArray alloc]init];
+
+        [self listSugarSyncFiles];
     }
     
     //folderPath = @"/";
@@ -168,7 +172,11 @@ static FolderChooseViewController *sharedInstance = nil;
         [DetailViewController getSharedInstance].folderID = driveFilesId;
         
     }
-    
+    else if ([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
+    {
+        [DetailViewController getSharedInstance].folderID = sugarFilesId;
+        
+    }
 }
 -(BOOL)checkExpiredBoxToken
 {
@@ -392,6 +400,88 @@ static FolderChooseViewController *sharedInstance = nil;
     
 }
 
+#pragma mark - SugarSYnc Methods
+
+-(void)listSugarSyncFiles
+{
+    if(sugarFilesId)
+    {
+        NSString * str =[NSString stringWithFormat:@"%@",sugarFilesId];
+        NSLog(@"%@",str);
+        NSURL * url = [NSURL URLWithString:str];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
+         {
+             NSLog(@"collections count is %d",[theFolderContents count]);
+             for (int i =0;i<[theFolderContents count]; i++)
+             {
+                 
+                 NSLog(@"collections count is %@",[theFolderContents objectAtIndex:i]);
+                 
+                 if ([[theFolderContents objectAtIndex:i] isKindOfClass:[SugarSyncCollection class]]) {
+                     
+                     SugarSyncCollection * content = [theFolderContents objectAtIndex:i];
+                     NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                     
+                     [dic setObject:content.displayName                                                                        forKey:@"title"];
+                     [dic setObject:content.ref                                                                        forKey:@"reference"];
+                     [dic setObject:content.contents                                                                        forKey:@"contents"];
+                     [dic setObject:content forKey:@"SugarSyncType"];
+                     [sugarFoldersList addObject:dic];
+                }
+                 else
+                 {
+                     SugarSyncFile * content = [theFolderContents objectAtIndex:i];
+                     NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                     
+                     [dic setObject:content.displayName                                                                        forKey:@"title"];
+                     [dic setObject:content.ref                                                                        forKey:@"reference"];
+                     [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                     [dic setObject:content forKey:@"SugarSyncType"];
+                    
+                 }
+                 
+                 
+             }
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             [tbDownload reloadData];
+             
+         }];
+    
+    }
+    else
+    {
+        NSString * userid = [[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount] objectForKey:@"userid"];
+        NSString * urlString = [NSString stringWithFormat:@"https://api.sugarsync.com/user/%@/folders/contents?type=folder",userid];
+        NSURL * url = [NSURL URLWithString:urlString];
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [[SugarSyncClient getSharedInstance]getCollectionWithURL:url completionHandler:^(NSArray * aCollection,NSError *error)
+         {
+             NSLog(@"collections count is %d",[aCollection count]);
+             
+             for (int i =0;i<[aCollection count]; i++)
+             {
+                 SugarSyncCollection * coll = [aCollection objectAtIndex:i];
+                 
+                 NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                 
+                 [dic setObject:coll.displayName                                                                        forKey:@"title"];
+                 [dic setObject:coll.contents                                                                        forKey:@"contents"];
+                 [dic setObject:coll.ref                                                                        forKey:@"reference"];
+                 [dic setObject:coll forKey:@"SugarSyncType"];
+                 // [dic setObject:file.downloadUrl forKey:@"url"];
+                 [sugarFoldersList addObject:dic];
+                 
+             }
+             [MBProgressHUD hideHUDForView:self.view animated:YES];
+             [tbDownload reloadData];
+             
+         }];
+        
+    }
+    
+}
+
 
 
 #pragma mark - Dropbox Methods
@@ -511,7 +601,7 @@ static FolderChooseViewController *sharedInstance = nil;
     }
     else
     {
-        return [driveFoldersList count];
+        return [sugarFoldersList count];
         
     }
 }
@@ -563,7 +653,7 @@ static FolderChooseViewController *sharedInstance = nil;
     
     else  if([[[arrUseraccounts objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
     {
-        cell.textLabel.text=[[driveFoldersList objectAtIndex:indexPath.row] objectForKey:@"title"];
+        cell.textLabel.text=[[sugarFoldersList objectAtIndex:indexPath.row] objectForKey:@"title"];
         
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         cell.textLabel.textColor=[UIColor blackColor];
@@ -644,7 +734,7 @@ static FolderChooseViewController *sharedInstance = nil;
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
-        FolderChooseViewController.driveFilesId = [[driveFoldersList objectAtIndex:indexPath.row]objectForKey:@"id"];
+        FolderChooseViewController.sugarFilesId = [[sugarFoldersList objectAtIndex:indexPath.row]objectForKey:@"contents"];
         [self.navigationController pushViewController:FolderChooseViewController animated:YES];
         
         

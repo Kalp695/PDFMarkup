@@ -99,7 +99,9 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     //Sugarsync
     
     NSMutableArray * sugarSyncFilesItemsArray;
-
+    NSString * strUrl;
+    
+    
 }
 
 +(DropboxDownloadFileViewControlller*)getSharedInstance
@@ -223,6 +225,7 @@ NSString *wastepath = nil;
     {
         sugarSyncFiles = [[NSMutableArray alloc]init];
         sugarSyncFilePathArray = [[NSMutableArray alloc]init];
+        
         [self listSugarSyncFiles:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
     }
    }
@@ -831,6 +834,8 @@ NSString *wastepath = nil;
             [tbDownload reloadData];
 
         }];
+        
+        [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl = nil;
         
     }
     else
@@ -2098,6 +2103,7 @@ NSString *wastepath = nil;
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
             dropboxDownloadFileViewControlller.boxFolderId = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"id"];
+            NSLog(@"");
             dropboxDownloadFileViewControlller.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"name"];
             [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
             
@@ -2358,9 +2364,15 @@ NSString *wastepath = nil;
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
-         
+            
+            strUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"];
+            
+            NSLog(@"str url is %@",strUrl);
+            
             [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] ;
             [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncFolderUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"reference"] ;
+            
+            
             NSLog(@"sugarsync url is %@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl);
             [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
         }
@@ -2401,7 +2413,7 @@ NSString *wastepath = nil;
                     for (int i =0; i<[self.sugarSyncFilePathArray count]; i++)
                     {
                         
-                        if ([[[sugarSyncFiles objectAtIndex:indexPath.row]objectForKey:@"title"] isEqualToString:[[sugarSyncFilePathArray objectAtIndex:i]objectForKey:@"folderName"]]) {
+                        if ([[[sugarSyncFiles objectAtIndex:indexPath.row]objectForKey:@"title"] isEqualToString:[[sugarSyncFilePathArray objectAtIndex:i]objectForKey:@"title"]]) {
                             [self.sugarSyncFilePathArray removeObjectAtIndex:i];
                         }
                     }

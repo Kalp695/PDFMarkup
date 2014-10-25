@@ -35,6 +35,10 @@
 #import "SSZipArchive.h"
 #import "FTPManager.h"
 
+#import "SugarSyncConstants.h"
+#import "SugarSyncClient.h"
+#import "SugarSyncHelper.h"
+
 static NSString *const kKeychainItemName = @"Google Drive Quickstart";
 
 static DetailViewController *sharedInstance = nil;
@@ -1342,17 +1346,6 @@ static DetailViewController *sharedInstance = nil;
         if ([[[[[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
         {
             
-//            boxUploadOperationQueue = [NSOperationQueue new];
-//            NSInvocationOperation *flattenedFileOperation = [[NSInvocationOperation alloc] initWithTarget:self
-//                                                                                                             selector:@selector(flattenedFile)
-//                                                                                                               object:nil];
-//            
-//             // Add the operation to the queue and let it to be executed.
-//            
-//            [flattenedFileOperation setQueuePriority:NSOperationQueuePriorityVeryHigh];
-//            [boxUploadOperationQueue addOperation:flattenedFileOperation];
-            
-            
             
             NSLog(@"check uploading array %@",uploadingArray);
             [self flattenedFile];
@@ -1397,36 +1390,8 @@ static DetailViewController *sharedInstance = nil;
                 
             }
             
-           // if (strRootpath == nil) {
                 strRootpath = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfPath"];
 
-           // }
-            
-            /*
-            else
-            {
-                
-                if (issubfolder) {
-                    
-                    strRootpath = [NSString stringWithFormat:@"%@/%@",strRootpath,[[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"]];
-
-                }
-                else
-                {
-                    NSMutableArray *arrstrings = [[NSMutableArray alloc] initWithArray:[strRootpath componentsSeparatedByString:@"/"]];
-                    [arrstrings removeLastObject];
-                    
-                    NSString * result = [arrstrings componentsJoinedByString:@"/"];
-                    
-                    strRootpath = [NSString stringWithFormat:@"%@/%@",result,[[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"]];
-
-                    
-                }
-
-            }*/
-
-                
-            
 
           
                 [self uploadFolderToBox:0 :filename :boxParentId];
@@ -1564,7 +1529,65 @@ static DetailViewController *sharedInstance = nil;
     }
     else
     {
+        NSString * extension = @"pdf";
+        if ([[[[[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
+        {
+            
+            
+            NSLog(@"check uploading array %@",uploadingArray);
+            [self flattenedFile];
         
+            NSString * docfilepath = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfPath"];
+            NSString *myString = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"];
+            NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+            NSString * docfileName = [nameArray lastObject];
+            NSData *fileData = [NSData dataWithContentsOfFile:docfilepath];
+            
+            if (boxParentId == nil) {
+                boxParentId =[DetailViewController  getSharedInstance].folderID;
+            }
+        
+            if ([[uploadingArray objectAtIndex:0] objectForKey:@"folderID"] != nil) {
+                
+                boxParentId =[[uploadingArray objectAtIndex:0] objectForKey:@"folderID"];
+                
+            }
+            [self uploadFileToSugar:0 :docfileName :boxParentId :docfilepath :fileData];
+            
+            
+            
+        }
+        else
+        {
+            
+            NSString *myString = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"];
+            NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+            NSString * filename = [NSString stringWithFormat:@"%@",[nameArray lastObject]];
+            if (boxParentId == nil) {
+                boxParentId =[DetailViewController  getSharedInstance].folderID;
+            }
+            
+            if ([[uploadingArray objectAtIndex:0] objectForKey:@"folderID"] != nil) {
+                
+                boxParentId =[[uploadingArray objectAtIndex:0] objectForKey:@"folderID"];
+                
+            }
+            
+            strRootpath = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfPath"];
+            
+            
+            
+            [self uploadFolderToBox:0 :filename :boxParentId];
+            
+            
+        }
+        
+        while ([DownloadingSingletonClass getSharedInstance].sugarUpload == NO)
+        {
+            NSLog(@"thread is running .....");
+            [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        }
+
     }
 }
 -(void)showOnMainThread
@@ -1628,23 +1651,6 @@ static DetailViewController *sharedInstance = nil;
             }
         
     }
-    /*
-    uploadData =  [NSData dataWithData:fileData];
-        uploadFile = [[BRRequestUpload alloc] initWithDelegate:self];
-    
-    
-
-    if (!ftpFolderPath) {
-        ftpFolderPath = @"";
-    }
-    uploadFile.path =  docpath;
-    uploadFile.hostname =[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"];
-    uploadFile.username = [[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
-    uploadFile.password = [[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"password"];
-    
-    [uploadFile start];
-    
-    */
     
 }
 
@@ -1658,23 +1664,6 @@ static DetailViewController *sharedInstance = nil;
     
     folderNameNospace = name;
     NSLog(@"file path from shared instance is %@",[DetailViewController getSharedInstance].folderPath);
-     //   createDir = [[BRRequestCreateDirectory alloc] initWithDelegate:self];
-
-    
-    /*
-    createDir.hostname = [[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"];
-    if (!ftpFolderPath) {
-        ftpFolderPath = @"";
-    }
-    
-    
-    
-    createDir.path = docpath;
-    createDir.username = [[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"];
-    createDir.password = [[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"password"];
-    
-    [createDir start];
-    */
     
     FMServer* srv = [FMServer serverWithDestination:[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"]  username:[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"] password:[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"password"]];
     
@@ -1717,21 +1706,6 @@ static DetailViewController *sharedInstance = nil;
         
         NSLog(@"after file path is %@",strpath);
         
-        NSString *folderpath = nil;
-        //        if ([boxFolderPaths length]>0) {
-        //
-        //            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",strRootpath,strpath]];
-        //
-        //        }
-        //        else
-        //        {
-        //            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-        //
-        //        }
-        
-        // folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-        
-        //    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
         
         NSError *error;
         NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:strRootpath error:&error];
@@ -1912,20 +1886,7 @@ static DetailViewController *sharedInstance = nil;
         NSLog(@"after file path is %@",strpath);
         
         NSString *folderpath = nil;
-        //        if ([boxFolderPaths length]>0) {
-        //
-        //            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@/%@",strRootpath,strpath]];
-        //
-        //        }
-        //        else
-        //        {
-        //            folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-        //
-        //        }
         
-        // folderpath = [documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",strRootpath]];
-        
-        //    NSString *folderpath = [documentsDirectory stringByAppendingPathComponent:strpath];
         
         NSError *error;
         NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:strRootpath error:&error];
@@ -2224,8 +2185,6 @@ static DetailViewController *sharedInstance = nil;
         if ([[[arrJson objectAtIndex:0]objectForKey:@"message"]isEqualToString:@"Item with the same name already exists"]) {
             
             NSLog(@"already exists");
-        
-          
         }
         
         else
@@ -2461,6 +2420,7 @@ static DetailViewController *sharedInstance = nil;
         [uploadingArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
+        [DownloadingSingletonClass getSharedInstance].sugarUpload = YES;
         [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
         for (int i =0; i< [checkableArray count]; i++) {
             
@@ -2485,6 +2445,64 @@ static DetailViewController *sharedInstance = nil;
     [documentsCollectionView reloadData];
 
 }
+#pragma mark SugarSync Uploading
+
+-(void)uploadFileToSugar:(int)sender :(NSString *)fileName :(NSString *)parentId :(NSString *)filePath :(NSData *)data
+{
+    
+    buploading = true;
+    filecount++;
+    
+    NSLog(@"sender %d",sender);
+    NSURL * url = [NSURL URLWithString:parentId];
+    [[SugarSyncClient getSharedInstance]uploadFileDataWithURL:url fileData:data completionHandler:^(NSError *error)
+    {
+        if ([uploadingArray count]>0)
+        {
+            [self deletingFakePath];
+            [uploadingArray removeObjectAtIndex:0];
+        }
+        if ([uploadingArray count]>0)
+        {
+            [self uploadToFolder];
+        }
+        else
+        {
+            [self performSelector:@selector(closeBoxUploadControllerr) withObject:nil afterDelay:0];
+            
+        }
+
+        
+    }];
+
+    
+}
+
+-(void)uploadFolderToSugar:(int)sender :(NSString *)fileName :(NSString *)parentId
+{
+    
+    NSLog(@"folder ");
+    
+    bprocessing = true;
+    
+    NSString *strUploadpdfname = [[uploadingArray objectAtIndex:sender]objectForKey:@"PdfName"];
+    
+    if ([[arrLocalFilepaths objectForKey:[[uploadingArray objectAtIndex:sender]objectForKey:@"PdfPath"]] length]>0) {
+        
+        
+        strpdfname = [arrLocalFilepaths objectForKey:[[uploadingArray objectAtIndex:sender]objectForKey:@"PdfPath"]];
+    }
+    if ([strpdfname length]>0) {
+        
+        strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
+        
+        
+    }
+    
+    
+}
+
+
 #pragma mark - Upload to Drive
 
 -(void)uploadPdfToDrive:(NSData *)fileContent :(NSString *)fileName  :(NSString *)parentId :(NSString *)docFilePath
@@ -3887,8 +3905,8 @@ static DetailViewController *sharedInstance = nil;
         }
         else if([[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"AccountType"]isEqualToString:@"sugarsync"])
         {
-            nameLabel.text=[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"email"];
-            imageView.image = [UIImage imageNamed:@"sugar_sync.png"];
+            nameLabel.text=[[arrUseraccounts objectAtIndex:indexPath.row]objectForKey:@"name"];
+            imageView.image = [UIImage imageNamed:@"SugarSync.png"];
             
         }
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
