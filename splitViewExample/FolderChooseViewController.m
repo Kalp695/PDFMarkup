@@ -409,8 +409,9 @@ static FolderChooseViewController *sharedInstance = nil;
         NSString * str =[NSString stringWithFormat:@"%@",sugarFilesId];
         NSLog(@"%@",str);
         NSURL * url = [NSURL URLWithString:str];
+        NSURL *aaNextURL = [url URLByAppendingPathComponent: @"contents"];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
+        [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:aaNextURL completionHandler:^(NSArray *theFolderContents,NSError *error)
          {
              NSLog(@"collections count is %d",[theFolderContents count]);
              for (int i =0;i<[theFolderContents count]; i++)
@@ -734,7 +735,11 @@ static FolderChooseViewController *sharedInstance = nil;
         
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
         FolderChooseViewController *FolderChooseViewController = [storyboard instantiateViewControllerWithIdentifier:@"FolderChooseViewController"];
-        FolderChooseViewController.sugarFilesId = [[sugarFoldersList objectAtIndex:indexPath.row]objectForKey:@"contents"];
+        FolderChooseViewController.sugarFilesId = [[sugarFoldersList objectAtIndex:indexPath.row]objectForKey:@"reference"];
+        FolderChooseViewController.boxFolderId = [[sugarFoldersList objectAtIndex:indexPath.row]objectForKey:@"reference"];
+        FolderChooseViewController.boxFolderName = [[folderItemsArray objectAtIndex:indexPath.row] objectForKey:@"title"];
+        [DetailViewController getSharedInstance].folderID=   boxFolderId;
+        [DetailViewController getSharedInstance].folderPath = [NSString stringWithFormat:@"%@/%@",[DetailViewController getSharedInstance].folderPath,boxFolderName];
         [self.navigationController pushViewController:FolderChooseViewController animated:YES];
         
         

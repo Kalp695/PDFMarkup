@@ -226,7 +226,7 @@ NSString *wastepath = nil;
         sugarSyncFiles = [[NSMutableArray alloc]init];
         sugarSyncFilePathArray = [[NSMutableArray alloc]init];
         
-        [self listSugarSyncFiles:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
+         [self listSugarSyncFiles:[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]];
     }
    }
 }
@@ -310,11 +310,13 @@ NSString *wastepath = nil;
         ftpFilePathsArray = [[NSMutableArray alloc]init];
         boxFilesItemsArray = [[NSMutableArray alloc]init];
     }
-    else
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
     {
         sugarSyncFiles = [[NSMutableArray alloc]init];
         sugarSyncFilePathArray = [[NSMutableArray alloc]init];
         sugarSyncFilesItemsArray = [[NSMutableArray alloc]init];
+        
+       
     }
     
     pdfValue = 0;
@@ -2365,7 +2367,7 @@ NSString *wastepath = nil;
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
             
-            strUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"];
+            strUrl = [NSString stringWithFormat:@"%@",[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"]];
             
             NSLog(@"str url is %@",strUrl);
             
@@ -3983,7 +3985,6 @@ NSString *wastepath = nil;
 {
     if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"dropbox"])
     {
-        
         DropboxManager *dbManager = [DropboxManager dbManager];
         [dbManager restClient].delegate = self;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -4428,26 +4429,72 @@ NSString *wastepath = nil;
             
             NSLog(@"Sugar Sync Type is %@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"SugarSyncType"]);
             
-            if ([[sugarSyncFilePathArray objectAtIndex:k] isKindOfClass:[SugarSyncCollection class]]) {
+            if ([[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"] isKindOfClass:[SugarSyncCollection class]]) {
                 newDirectoryName =tempString;
-                SugarSyncFolder * folder = [sugarSyncFilePathArray objectAtIndex:k];
-                [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
-                 {
-                     
-                 }];
+                
+                if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
+                {
+
+                    SugarSyncCollection * folder = [[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"] ;
+                    NSLog(@"%@",folder.displayName);
+                    [folder setValue:newDirectoryName forKey:@"displayName"];
+                    
+                    
+//                    [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
+//                     {
+//                         
+//                         NSLog(@"%@",error);
+//                         
+//                     }];
+                }
+                else
+                {
+                    newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+
+                    SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
+                    
+                    //NSLog(@"files is %@",files.displayName);
+                    
+                    [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                     {
+                         
+                     }];
+                }
+               
 
             }
             else
             {
-                newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
-                SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
-                
-                //NSLog(@"files is %@",files.displayName);
-                
-                [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
                 {
+                    SugarSyncFolder * folder = [[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"];
+                    NSLog(@"%@",folder.displayName);
+                    [folder setDisplayName:newDirectoryName];
+                    [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
+                     {
+                         
+                         
+                         
+                     }];
+                }
+                else
+                {
+                    newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
+
+                    SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
+                    //[files setDisplayName:newDirectoryName];
+
                     
-                }];
+                    [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                     {
+                         if (!error) {
+                             NSLog(@"rename Success");
+
+                         }
+                         
+                     }];
+                }
+               
             }
         }
         [self viewWillAppear:YES];
