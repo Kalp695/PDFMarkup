@@ -20,12 +20,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
+            timestampString = "436186419.372141"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4379"
-            endingLineNumber = "4379"
-            landmarkName = "-didSelectOnMainThread:"
+            startingLineNumber = "4365"
+            endingLineNumber = "4365"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -52,12 +52,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
+            timestampString = "436183110.526847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2684"
-            endingLineNumber = "2684"
-            landmarkName = "-uploadFolderToDrive:::"
+            startingLineNumber = "2672"
+            endingLineNumber = "2672"
+            landmarkName = "-uploadPdfToDrive::::"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -68,12 +68,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
+            timestampString = "436183110.526847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2730"
-            endingLineNumber = "2730"
-            landmarkName = "-uploadChildFoldersToDrive:"
+            startingLineNumber = "2718"
+            endingLineNumber = "2718"
+            landmarkName = "-uploadFolderToDrive:::"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -99,7 +99,7 @@
                   symbolName = "-[SugarSyncClient getFolderWithURL:completionHandler:]"
                   moduleName = "PDFMarkUP"
                   urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
-                  timestampString = "436119551.287355"
+                  timestampString = "436195140.372006"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "325"
@@ -113,7 +113,7 @@
                   symbolName = "__54-[SugarSyncClient getFolderWithURL:completionHandler:]_block_invoke"
                   moduleName = "PDFMarkUP"
                   urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
-                  timestampString = "436119551.287592"
+                  timestampString = "436195140.372368"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "326"
@@ -130,11 +130,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4108"
-            endingLineNumber = "4108"
+            startingLineNumber = "4105"
+            endingLineNumber = "4105"
             landmarkName = "-folder"
             landmarkType = "5">
          </BreakpointContent>
@@ -146,11 +146,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436119389.392901"
+            timestampString = "436195043.949456"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4746"
-            endingLineNumber = "4746"
+            startingLineNumber = "4756"
+            endingLineNumber = "4756"
             landmarkName = "-confirmDelete"
             landmarkType = "5">
          </BreakpointContent>
@@ -162,11 +162,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4390"
-            endingLineNumber = "4390"
+            startingLineNumber = "4387"
+            endingLineNumber = "4387"
             landmarkName = "-rename"
             landmarkType = "5">
          </BreakpointContent>
@@ -178,11 +178,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3166"
-            endingLineNumber = "3166"
+            startingLineNumber = "3163"
+            endingLineNumber = "3163"
             landmarkName = "-downloadFilesFromSugarSync::"
             landmarkType = "5">
          </BreakpointContent>
@@ -194,11 +194,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3010"
-            endingLineNumber = "3010"
+            startingLineNumber = "3007"
+            endingLineNumber = "3007"
             landmarkName = "-downloadFromSugarSync"
             landmarkType = "5">
          </BreakpointContent>
@@ -210,11 +210,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2970"
-            endingLineNumber = "2970"
+            startingLineNumber = "2967"
+            endingLineNumber = "2967"
             landmarkName = "-downloadFromSugarSync"
             landmarkType = "5">
          </BreakpointContent>
@@ -226,11 +226,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3054"
-            endingLineNumber = "3054"
+            startingLineNumber = "3051"
+            endingLineNumber = "3051"
             landmarkName = "-downloadFoldersFromSugarSync:"
             landmarkType = "5">
          </BreakpointContent>
@@ -242,11 +242,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3103"
-            endingLineNumber = "3103"
+            startingLineNumber = "3100"
+            endingLineNumber = "3100"
             landmarkName = "-downloadChildSugarFiles:"
             landmarkType = "5">
          </BreakpointContent>
@@ -258,11 +258,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3230"
-            endingLineNumber = "3230"
+            startingLineNumber = "3227"
+            endingLineNumber = "3227"
             landmarkName = "-closeSugarSyncControllerr"
             landmarkType = "5">
          </BreakpointContent>
@@ -274,11 +274,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2987"
-            endingLineNumber = "2987"
+            startingLineNumber = "2984"
+            endingLineNumber = "2984"
             landmarkName = "-downloadFromSugarSync"
             landmarkType = "5">
          </BreakpointContent>
@@ -290,11 +290,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "3196"
-            endingLineNumber = "3196"
+            startingLineNumber = "3193"
+            endingLineNumber = "3193"
             landmarkName = "-downloadFilesFromSugarSync::"
             landmarkType = "5">
          </BreakpointContent>
@@ -306,11 +306,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2092"
-            endingLineNumber = "2092"
+            startingLineNumber = "2096"
+            endingLineNumber = "2096"
             landmarkName = "-tableView:didSelectRowAtIndexPath:"
             landmarkType = "5">
          </BreakpointContent>
@@ -322,11 +322,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436187833.016567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "784"
-            endingLineNumber = "784"
+            startingLineNumber = "786"
+            endingLineNumber = "786"
             landmarkName = "-listSugarSyncFiles:"
             landmarkType = "5">
          </BreakpointContent>
@@ -338,7 +338,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436088570.064279"
+            timestampString = "436183110.526847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1522"
@@ -386,11 +386,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
+            timestampString = "436183110.526847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2433"
-            endingLineNumber = "2433"
+            startingLineNumber = "2429"
+            endingLineNumber = "2429"
             landmarkName = "-uploadFileToSugar:::::"
             landmarkType = "5">
          </BreakpointContent>
@@ -402,11 +402,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4142"
-            endingLineNumber = "4142"
+            startingLineNumber = "4139"
+            endingLineNumber = "4139"
             landmarkName = "-folder"
             landmarkType = "5">
          </BreakpointContent>
@@ -418,11 +418,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436113175.824769"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4148"
-            endingLineNumber = "4148"
+            startingLineNumber = "4145"
+            endingLineNumber = "4145"
             landmarkName = "-folder"
             landmarkType = "5">
          </BreakpointContent>
@@ -434,44 +434,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
+            timestampString = "436183110.526847"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2472"
-            endingLineNumber = "2472"
+            startingLineNumber = "2468"
+            endingLineNumber = "2468"
             landmarkName = "-uploadFolderToSugar:::"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2441"
-            endingLineNumber = "2441"
-            landmarkName = "-uploadFileToSugar:::::"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "splitViewExample/DetailViewController.m"
-            timestampString = "436111042.879092"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2446"
-            endingLineNumber = "2446"
-            landmarkName = "-uploadFileToSugar:::::"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -498,11 +466,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436114149.364161"
+            timestampString = "436191013.06391"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4428"
-            endingLineNumber = "4428"
+            startingLineNumber = "4425"
+            endingLineNumber = "4425"
             landmarkName = "-rename"
             landmarkType = "5">
          </BreakpointContent>
@@ -514,11 +482,229 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
-            timestampString = "436119075.531728"
+            timestampString = "436191321.717459"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "4468"
-            endingLineNumber = "4468"
+            startingLineNumber = "4467"
+            endingLineNumber = "4467"
+            landmarkName = "-rename"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182532.523218"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "934"
+            endingLineNumber = "934"
+            landmarkName = "-getResource:resourceKey:requiredXMLResponse:completionHandler:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SugarSyncClient getResource:resourceKey:requiredXMLResponse:completionHandler:]"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.405445"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "934"
+                  endingLineNumber = "934"
+                  offsetFromSymbolStart = "102">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__81-[SugarSyncClient getResource:resourceKey:requiredXMLResponse:completionHandler:]_block_invoke"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.405733"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "935"
+                  endingLineNumber = "935"
+                  offsetFromSymbolStart = "42">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182534.681608"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "956"
+            endingLineNumber = "956"
+            landmarkName = "-getResource:resourceKey:userHeaders:completionHandler:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SugarSyncClient getResource:resourceKey:userHeaders:completionHandler:]"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.407073"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "956"
+                  endingLineNumber = "956"
+                  offsetFromSymbolStart = "102">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__73-[SugarSyncClient getResource:resourceKey:userHeaders:completionHandler:]_block_invoke"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.407267"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "957"
+                  endingLineNumber = "957"
+                  offsetFromSymbolStart = "33">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182550.587479"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1003"
+            endingLineNumber = "1003"
+            landmarkName = "-updateResource:atLocation:resourceKey:completionHandler:"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "-[SugarSyncClient updateResource:atLocation:resourceKey:completionHandler:]"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.408448"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1003"
+                  endingLineNumber = "1003"
+                  offsetFromSymbolStart = "102">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__75-[SugarSyncClient updateResource:atLocation:resourceKey:completionHandler:]_block_invoke"
+                  moduleName = "PDFMarkUP"
+                  urlString = "file:///Users/istore/Documents/PDF/PDFMarkup/splitViewExample/Private/SugarSyncClient.m"
+                  timestampString = "436195140.408735"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "1004"
+                  endingLineNumber = "1004"
+                  offsetFromSymbolStart = "30">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182565.623725"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1145"
+            endingLineNumber = "1145"
+            landmarkName = "-errorMessageForCode:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182569.604021"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1180"
+            endingLineNumber = "1180"
+            landmarkName = "-logError:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/Private/SugarSyncClient.m"
+            timestampString = "436182571.210463"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1185"
+            endingLineNumber = "1185"
+            landmarkName = "-logErrorWithHttpResponse:responseData:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DetailViewController.m"
+            timestampString = "436183110.526847"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1580"
+            endingLineNumber = "1580"
+            landmarkName = "-uploadToFolder"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "splitViewExample/DropboxDownloadFileViewControlller.m"
+            timestampString = "436194651.71028"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "4483"
+            endingLineNumber = "4483"
             landmarkName = "-rename"
             landmarkType = "5">
          </BreakpointContent>

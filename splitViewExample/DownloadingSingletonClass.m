@@ -21,6 +21,8 @@ static DownloadingSingletonClass *sharedInstance = nil;
 @synthesize dropBoxUpload;
 @synthesize boxUpload;
 @synthesize sugarDownload;
+@synthesize sugarSyncClassFiles;
+@synthesize sugarSyncIndex;
 
 +(DownloadingSingletonClass*)getSharedInstance{
     if (!sharedInstance) {

@@ -29,4 +29,8 @@
 @property(atomic,assign,readwrite) BOOL ftpUpload;
 @property(atomic,assign,readwrite) BOOL sugarUpload;
 
+//Sugarsync
+@property(atomic,retain) NSArray * sugarSyncClassFiles;
+@property(atomic,assign,readwrite) int sugarSyncIndex;
+
 @end

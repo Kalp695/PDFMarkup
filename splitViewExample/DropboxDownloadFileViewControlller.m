@@ -112,6 +112,8 @@ static DropboxDownloadFileViewControlller *sharedInstance = nil;
     }
     return sharedInstance;
 }
+@synthesize sugarUrl;
+
 
 @synthesize tbDownload;
 @synthesize loadData;
@@ -782,14 +784,16 @@ NSString *wastepath = nil;
 #pragma mark sugarsync
 -(void)listSugarSyncFiles:(id)sugarSyncDetails
 {
-    if([DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl)
+    NSLog(@"sugar sync url is %@",boxFolderId);
+    if(boxFolderId)
     {
-        NSString * str =[NSString stringWithFormat:@"%@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl];
+        NSString * str =[NSString stringWithFormat:@"%@",boxFolderId];
         NSLog(@"%@",str);
         NSURL * url = [NSURL URLWithString:str];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
         {
+            [DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles = [[NSArray alloc]initWithArray:theFolderContents];
             NSLog(@"collections count is %d",[theFolderContents count]);
             for (int i =0;i<[theFolderContents count]; i++)
             {
@@ -2348,7 +2352,7 @@ NSString *wastepath = nil;
         }
         
     }
-    else
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
     {
         FolderItem* item = [arrmetadata objectAtIndex:indexPath.row];
         if (tableView.editing)
@@ -2366,16 +2370,9 @@ NSString *wastepath = nil;
         {
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]];
             DropboxDownloadFileViewControlller *dropboxDownloadFileViewControlller = [storyboard instantiateViewControllerWithIdentifier:@"DropboxDownloadFileViewControlller"];
-            
-            strUrl = [NSString stringWithFormat:@"%@",[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"]];
-            
-            NSLog(@"str url is %@",strUrl);
-            
+            dropboxDownloadFileViewControlller.boxFolderId = [[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"];
             [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"contents"] ;
             [DropboxDownloadFileViewControlller getSharedInstance].sugarSyncFolderUrl =[[sugarSyncFiles objectAtIndex:indexPath.row] objectForKey:@"reference"] ;
-            
-            
-            NSLog(@"sugarsync url is %@",[DropboxDownloadFileViewControlller getSharedInstance].sugarSyncUrl);
             [self.navigationController pushViewController:dropboxDownloadFileViewControlller animated:YES];
         }
         else
@@ -2425,7 +2422,7 @@ NSString *wastepath = nil;
         }
         
         NSLog(@"boxFilePathsArray array is %@",sugarSyncFilePathArray);
-        
+        [DownloadingSingletonClass getSharedInstance].sugarSyncIndex = indexPath.row ;
         if ([sugarSyncFilePathArray count]==1)
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"SingleFile" object:sugarSyncFilePathArray];
@@ -4426,10 +4423,11 @@ NSString *wastepath = nil;
         {
             
             NSString *newDirectoryName;
-            
+            NSLog(@"sdfgs %@",[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex]);
+
             NSLog(@"Sugar Sync Type is %@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"SugarSyncType"]);
             
-            if ([[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"] isKindOfClass:[SugarSyncCollection class]]) {
+            if ([[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex] isKindOfClass:[SugarSyncCollection class]]) {
                 newDirectoryName =tempString;
                 
                 if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
@@ -4465,6 +4463,9 @@ NSString *wastepath = nil;
             }
             else
             {
+                
+                NSLog(@"sdfgs %@",[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles);
+                
                 if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
                 {
                     SugarSyncFolder * folder = [[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"];
@@ -4481,11 +4482,20 @@ NSString *wastepath = nil;
                 {
                     newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
 
-                    SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
-                    //[files setDisplayName:newDirectoryName];
-
+                    SugarSyncCollectionFile * files = [[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
+                    NSLog(@"files is %@",files);
                     
-                    [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                    NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+                    [dic setObject:newDirectoryName forKey:@"displayName"];
+                    [dic setObject:files.ref forKey:@"ref"];
+                    [dic setObject:files.mediaType forKey:@"mediaType"];
+                    [dic setObject:files.lastModified forKey:@"lastModified"];
+                    [dic setObject:[NSString stringWithFormat:@"%ld",files.size] forKey:@"size"];
+                    [dic setObject:files.fileData forKey:@"fileData"];
+                    [dic setObject:[NSString stringWithFormat:@"%d",files.presentOnServer] forKey:@"onServer"];
+                    SugarSyncFile * file = [[SugarSyncFile alloc]init];
+                    
+                    [[SugarSyncClient getSharedInstance]updateFile:file completionHandler:^(SugarSyncFile * aFile,NSError *error)
                      {
                          if (!error) {
                              NSLog(@"rename Success");

@@ -434,11 +434,38 @@ static FolderChooseViewController *sharedInstance = nil;
                  {
                      SugarSyncFile * content = [theFolderContents objectAtIndex:i];
                      NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
-                     
-                     [dic setObject:content.displayName                                                                        forKey:@"title"];
-                     [dic setObject:content.ref                                                                        forKey:@"reference"];
-                     [dic setObject:content.fileData                                                                        forKey:@"contents"];
-                     [dic setObject:content forKey:@"SugarSyncType"];
+                     if (content.displayName) {
+                         [dic setObject:content.displayName                                                                        forKey:@"title"];
+                     }
+                     else
+                     {
+                         [dic setObject:@""                                                                        forKey:@"title"];
+
+                     }
+                     if (content.ref) {
+                          [dic setObject:content.ref                                                                        forKey:@"reference"];
+                     }
+                     else
+                     {
+                         [dic setObject:@""                                                                        forKey:@"reference"];
+                         
+                     }
+                     if (content.fileData) {
+                         [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                     }
+                     else
+                     {
+                         [dic setObject:@""                                                                        forKey:@"contents"];
+                         
+                     }
+                     if (content) {
+                         [dic setObject:content                                                                        forKey:@"SugarSyncType"];
+                     }
+                     else
+                     {
+                         [dic setObject:@""                                                                        forKey:@"SugarSyncType"];
+                         
+                     }
                     
                  }
                  

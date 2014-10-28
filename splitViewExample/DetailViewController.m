@@ -1520,6 +1520,8 @@ static DetailViewController *sharedInstance = nil;
     else
     {
         NSString * extension = @"pdf";
+        [DownloadingSingletonClass getSharedInstance].sugarUpload = NO;
+
         if ([[[[[uploadingArray objectAtIndex:0] objectForKey:@"PdfName"] pathExtension]lowercaseString] isEqualToString:[extension lowercaseString]])
         {
             
@@ -1530,7 +1532,7 @@ static DetailViewController *sharedInstance = nil;
             NSString *myString = [[uploadingArray objectAtIndex:0]objectForKey:@"PdfName"];
             NSArray *nameArray = [myString componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
             NSString * docfileName = [nameArray lastObject];
-            NSData *fileData = [NSData dataWithContentsOfFile:docfilepath];
+            NSData *fileData = [[NSData alloc]initWithContentsOfFile:docfilepath];
             
             if (boxParentId == nil) {
                 boxParentId =[DetailViewController  getSharedInstance].folderID;
@@ -1545,7 +1547,6 @@ static DetailViewController *sharedInstance = nil;
             NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%@",boxParentId]];
             
             [self uploadFileToSugar:0 :docfileName :url :docfilepath :fileData];
-            
             
             
         }
@@ -1574,7 +1575,6 @@ static DetailViewController *sharedInstance = nil;
             
             
         }
-        
         while ([DownloadingSingletonClass getSharedInstance].sugarUpload == NO)
         {
             NSLog(@"thread is running .....");
@@ -1762,11 +1762,7 @@ static DetailViewController *sharedInstance = nil;
             
             
         }
-        
-        
-        
-        
-        
+ 
         
     }
     else
@@ -2401,7 +2397,6 @@ static DetailViewController *sharedInstance = nil;
         [uploadingArray removeAllObjects];
         [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         [DownloadingSingletonClass getSharedInstance].boxUpload = YES;
-        [DownloadingSingletonClass getSharedInstance].sugarUpload = YES;
         [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
         for (int i =0; i< [checkableArray count]; i++) {
             
@@ -2434,7 +2429,7 @@ static DetailViewController *sharedInstance = nil;
     buploading = true;
     filecount++;
     
-    NSLog(@"sender %d",sender);
+    NSLog(@"uploading file details %@ , %@, %@ ,%d",fileName,parentId,filePath,[data length]);
     
     [[SugarSyncClient getSharedInstance]createFileNamed:fileName mediaType:@"application/pdf" parentFolderURL:parentId completionHandler:^(NSURL * newFileUrl,NSError * error)
     {
@@ -2455,7 +2450,7 @@ static DetailViewController *sharedInstance = nil;
              }
              else
              {
-                 [self performSelector:@selector(closeBoxUploadControllerr) withObject:nil afterDelay:0];
+                 [self performSelector:@selector(closeSugarUploadControllerr) withObject:nil afterDelay:0];
                  
              }
 
@@ -2463,7 +2458,6 @@ static DetailViewController *sharedInstance = nil;
 
     }];
 
-    
 }
 
 -(void)uploadFolderToSugar:(int)sender :(NSString *)fileName :(NSURL *)parentId
@@ -2483,7 +2477,6 @@ static DetailViewController *sharedInstance = nil;
     if ([strpdfname length]>0) {
         
         strUploadpdfname = [strUploadpdfname stringByReplacingOccurrencesOfString:strpdfname withString:@""];
-        
         
     }
     
@@ -2577,12 +2570,61 @@ static DetailViewController *sharedInstance = nil;
              
              NSLog(@"check the  arrrrrrrrrrry %@",boxUploadingArray);
              
-             [self performSelector:@selector(closeBoxUploadControllerr) withObject:nil afterDelay:0];
+             [self performSelector:@selector(closeSugarUploadControllerr) withObject:nil afterDelay:0];
              
              
          }
          
      }];
+}
+-(void)closeSugarUploadControllerr
+{
+    if ([boxUploadingArray count]>0)
+    {
+        [uploadingArray removeAllObjects];
+        //  boxFilePath = root;
+        for (int k = 0; k<[boxUploadingArray count]; k++)
+        {
+            NSLog(@"%d",[boxUploadingArray count]);
+            NSString *   sfolderName =  [[boxUploadingArray objectAtIndex:k]objectForKey:@"PdfName"];
+            NSString *    sfolderPath =  [[boxUploadingArray objectAtIndex:k]objectForKey:@"PdfPath"];
+            NSString *    sboxid =  [[boxUploadingArray objectAtIndex:k]objectForKey:@"folderID"];
+            
+            
+            NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
+            [dic setObject:sboxid forKey:@"folderID"];
+            [dic setObject:sfolderName forKey:@"PdfName"];
+            [dic setObject:sfolderPath forKey:@"PdfPath"];
+            [uploadingArray addObject:dic];
+            
+        }
+        [boxUploadingArray removeAllObjects];
+        issubfolder = TRUE;
+        [self uploadToFolder];
+        
+    }
+    if ([uploadingArray count]==0 && [boxUploadingArray count]==0)
+    {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [documentsTableView setEditing:NO];
+        editBarButton.title = @"Edit";
+        boxParentId = nil;
+        boxFolderPaths = nil;
+        [DetailViewController  getSharedInstance].folderID = nil;
+        [uploadingArray removeAllObjects];
+        [DownloadingSingletonClass getSharedInstance].sugarUpload = YES;
+        for (int i =0; i< [checkableArray count]; i++) {
+            
+            Item *item = (Item *)[checkableArray objectAtIndex:i];
+            item.isChecked = NO;
+            
+        }
+        
+        strRootpath = nil;
+        [self performSelectorOnMainThread:@selector(uploadCompleted) withObject:nil waitUntilDone:NO];
+
+    }
+    
 }
 
 
@@ -4113,7 +4155,6 @@ static DetailViewController *sharedInstance = nil;
                     {
                         dropboxDownloadFileViewControlller.loadData = [NSString stringWithFormat:@"%@",[documenmtsArray objectAtIndex:indexPath.row]];
                         
-                        
                     }
                     appDel = (AppDelegate *)[[UIApplication sharedApplication] delegate];
                     
@@ -4135,7 +4176,6 @@ static DetailViewController *sharedInstance = nil;
                     [self.navigationController presentViewController:navController animated:YES completion:nil];
                 }
             }
-            
             
         }
         
