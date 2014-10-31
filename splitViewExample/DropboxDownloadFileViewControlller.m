@@ -35,6 +35,7 @@ NSString * folderDocpath;
 #import "SugarSyncClient.h"
 #import "SugarSyncHelper.h"
 #import "KeychainItemWrapper.h"
+#import <FTPKit/FTPKit.h>
 
 static DropboxDownloadFileViewControlller *sharedInstance = nil;
 
@@ -791,6 +792,8 @@ NSString *wastepath = nil;
         NSLog(@"%@",str);
         NSURL * url = [NSURL URLWithString:str];
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        
+       
         [[SugarSyncClient getSharedInstance]getFolderContentsWithURL:url completionHandler:^(NSArray *theFolderContents,NSError *error)
         {
             [DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles = [[NSArray alloc]initWithArray:theFolderContents];
@@ -805,9 +808,9 @@ NSString *wastepath = nil;
                     SugarSyncCollection * content = [theFolderContents objectAtIndex:i];
                     NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
             
-                    [dic setObject:content.displayName                                                                        forKey:@"title"];
-                    [dic setObject:content.ref                                                                        forKey:@"reference"];
-                    [dic setObject:content.contents                                                                        forKey:@"contents"];
+                    [dic setObject:content.displayName forKey:@"title"];
+                    [dic setObject:content.ref forKey:@"reference"];
+                    [dic setObject:content.contents forKey:@"contents"];
                     [dic setObject:content forKey:@"SugarSyncType"];
                     [sugarSyncFiles addObject:dic];
                     FolderItem *item = [[FolderItem alloc] init];
@@ -819,9 +822,9 @@ NSString *wastepath = nil;
                     SugarSyncFile * content = [theFolderContents objectAtIndex:i];
                     NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
                     
-                    [dic setObject:content.displayName                                                                        forKey:@"title"];
-                    [dic setObject:content.ref                                                                        forKey:@"reference"];
-                    [dic setObject:content.fileData                                                                        forKey:@"contents"];
+                    [dic setObject:content.displayName forKey:@"title"];
+                    [dic setObject:content.ref forKey:@"reference"];
+                    [dic setObject:content.fileData forKey:@"contents"];
                     [dic setObject:content forKey:@"SugarSyncType"];
                     NSString * str = @"pdf";
                     if ([[[content.displayName pathExtension]lowercaseString] isEqualToString:str ]) {
@@ -833,9 +836,9 @@ NSString *wastepath = nil;
 
                 }
                 
-                [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
 
             }
+            [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
             [MBProgressHUD hideHUDForView:self.view animated:YES];
             [tbDownload reloadData];
 
@@ -852,6 +855,8 @@ NSString *wastepath = nil;
         [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         [[SugarSyncClient getSharedInstance]getCollectionWithURL:url completionHandler:^(NSArray * aCollection,NSError *error)
          {
+             [DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles = [[NSArray alloc]initWithArray:aCollection];
+
              NSLog(@"collections count is %d",[aCollection count]);
              
              for (int i =0;i<[aCollection count]; i++)
@@ -860,9 +865,9 @@ NSString *wastepath = nil;
                  
                  NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
                  
-                 [dic setObject:coll.displayName                                                                        forKey:@"title"];
-                 [dic setObject:coll.contents                                                                        forKey:@"contents"];
-                 [dic setObject:coll.ref                                                                        forKey:@"reference"];
+                 [dic setObject:coll.displayName forKey:@"title"];
+                 [dic setObject:coll.contents forKey:@"contents"];
+                 [dic setObject:coll.ref forKey:@"reference"];
                  [dic setObject:coll forKey:@"SugarSyncType"];
                  // [dic setObject:file.downloadUrl forKey:@"url"];
                  [sugarSyncFiles addObject:dic];
@@ -870,9 +875,9 @@ NSString *wastepath = nil;
                  FolderItem *item = [[FolderItem alloc] init];
                  item.isChecked = NO;
                  [arrmetadata addObject:item];
-                 [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
                  
              }
+             [self performSelectorOnMainThread:@selector(post)withObject:nil waitUntilDone:NO];
              [MBProgressHUD hideHUDForView:self.view animated:YES];
              [tbDownload reloadData];
              
@@ -4282,7 +4287,7 @@ NSString *wastepath = nil;
 
 -(void)renameFolder
 {
-    //[[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RenameClick" object:nil];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rename"
                                                     message:@"Enter New name"
                                                    delegate:self
@@ -4410,20 +4415,67 @@ NSString *wastepath = nil;
             }
         }];
         
-        
-        
         [tbDownload setEditing:NO];
         editButton.title = @"Edit";
         [boxFilePathsArray removeAllObjects];
     }
-  
+    else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"ftp"])
+    {
+        NSLog(@"arr user acnts %@",[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index]);
+        NSLog(@"path is %@",[AppDelegate sharedInstance].ftpDownloadpath);
+        NSString *newDirectoryName;
+        NSString * host = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"host"];
+        NSString * name = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"name"];
+        NSString * pswd = [[arrUseraccounts objectAtIndex:[DropboxDownloadFileViewControlller getSharedInstance].index] objectForKey:@"password"];
+        
+        FTPClient *client = [FTPClient clientWithHost:host port:21 username:name password:pswd];
+        
+        NSString*fname = [[ftpFilePathsArray objectAtIndex:0] objectForKey:@"folderName"];
+        
+        NSArray *nameArray = [fname componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]];
+        NSString * docfileName = [nameArray lastObject];
+        if ([[docfileName pathExtension]isEqualToString:@""])
+        {
+            newDirectoryName =[NSString stringWithFormat:@"%@%@",[AppDelegate sharedInstance].ftpDownloadpath,tempString];
+        }
+        else
+        {
+            newDirectoryName = [NSString stringWithFormat:@"%@%@.pdf",[AppDelegate sharedInstance].ftpDownloadpath,tempString];
+        }
+        NSString * originalName = [NSString stringWithFormat:@"%@%@",[AppDelegate sharedInstance].ftpDownloadpath,docfileName];
+        // making the call asynchronous;
+        [client renamePath:originalName to:newDirectoryName success:^(void) {
+              // Success!
+            
+            NSLog(@"successfully renamed %@",docfileName);
+            [arrmetadata removeAllObjects];
+            [self viewWillAppear:YES];
+            [tbDownload reloadData];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            
+        } failure:^(NSError *error) {
+            // Display an error...
+            
+            NSLog(@"Failed to renamed");
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+
+            
+        }];
+        [tbDownload setEditing:NO];
+        editButton.title = @"Edit";
+        [boxFilePathsArray removeAllObjects];
+
+    }
     else if ([[DropboxDownloadFileViewControlller getSharedInstance].accountStatus isEqualToString:@"sugarsync"])
     {
         for (int k =0; k < [sugarSyncFilePathArray count]; k++)
         {
-            
+              NSLog(@"sdfgs %@",[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex]);
+        
             NSString *newDirectoryName;
-            NSLog(@"sdfgs %@",[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex]);
+          
 
             NSLog(@"Sugar Sync Type is %@",[[sugarSyncFilePathArray objectAtIndex:k]objectForKey:@"SugarSyncType"]);
             
@@ -4432,31 +4484,60 @@ NSString *wastepath = nil;
                 
                 if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
                 {
+                    
+                    SugarSyncCollection * collection =[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
+                    NSURL * url = collection.ref;
+                    newDirectoryName = [NSString stringWithFormat:@"%@",tempString];
+                    
+                    [[SugarSyncClient getSharedInstance]getFolderWithURL:url completionHandler:^(SugarSyncFolder *aFolder,NSError *error)
+                     {
+                         aFolder.displayName = newDirectoryName;
+                         [[SugarSyncClient getSharedInstance]updateFolder:aFolder completionHandler:^(NSError * error)
+                          {
+                              if (!error) {
+                                  [arrmetadata removeAllObjects];
+                                  [self viewWillAppear:YES];
+                                  [tbDownload reloadData];
+                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+                                  [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                  NSLog(@"rename Success");
+                                  [DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles = nil;
+                                  [sugarSyncFilePathArray removeAllObjects];
+                              }
+                              
+                          }];
+                         
+                     }];
 
-                    SugarSyncCollection * folder = [[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"] ;
-                    NSLog(@"%@",folder.displayName);
-                    [folder setValue:newDirectoryName forKey:@"displayName"];
                     
-                    
-//                    [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
-//                     {
-//                         
-//                         NSLog(@"%@",error);
-//                         
-//                     }];
+        
                 }
                 else
                 {
                     newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
-
-                    SugarSyncFile * files = [sugarSyncFilePathArray objectAtIndex:k];
+                    SugarSyncCollection * collection =[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
+                    NSURL * url = collection.ref;
+                    newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
                     
-                    //NSLog(@"files is %@",files.displayName);
-                    
-                    [[SugarSyncClient getSharedInstance]updateFile:files completionHandler:^(SugarSyncFile * aFile,NSError *error)
-                     {
-                         
-                     }];
+                    [[SugarSyncClient getSharedInstance]getFileWithURL:url completionHandler:^(SugarSyncFile *aFile,NSError *error) {
+                        
+                        NSLog(@"<<<<<<< check folder %@",aFile);
+                        aFile.displayName = newDirectoryName;
+                        [[SugarSyncClient getSharedInstance]updateFile:aFile completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                         {
+                             if (!error) {
+                                 [arrmetadata removeAllObjects];
+                                 [self viewWillAppear:YES];
+                                 [tbDownload reloadData];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSLog(@"rename Success");
+                                 
+                             }
+                             
+                         }];
+                        
+                    }];
                 }
                
 
@@ -4468,49 +4549,62 @@ NSString *wastepath = nil;
                 
                 if ([[[[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"title"] pathExtension]isEqualToString:@""])
                 {
-                    SugarSyncFolder * folder = [[sugarSyncFilePathArray objectAtIndex:k] objectForKey:@"SugarSyncType"];
-                    NSLog(@"%@",folder.displayName);
-                    [folder setDisplayName:newDirectoryName];
-                    [[SugarSyncClient getSharedInstance]updateFolder:folder completionHandler:^(NSError * error)
-                     {
-                         
-                         
-                         
-                     }];
+                    SugarSyncCollection * collection =[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
+                    NSURL * url = collection.ref;
+                    newDirectoryName = [NSString stringWithFormat:@"%@",tempString];
+
+                    [[SugarSyncClient getSharedInstance]getFolderWithURL:url completionHandler:^(SugarSyncFolder *aFolder,NSError *error)
+                    {
+                        aFolder.displayName = newDirectoryName;
+                        [[SugarSyncClient getSharedInstance]updateFolder:aFolder completionHandler:^(NSError * error)
+                         {
+                             if (!error) {
+                                 [arrmetadata removeAllObjects];
+                                 [self viewWillAppear:YES];
+                                 [tbDownload reloadData];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSLog(@"rename Success");
+                                 
+                             }
+
+                         }];
+                        
+                    }];
+                  
                 }
                 else
                 {
+                    SugarSyncCollectionFile * collection =[[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
+                    NSURL * url = collection.ref;
                     newDirectoryName = [NSString stringWithFormat:@"%@.pdf",tempString];
-
-                    SugarSyncCollectionFile * files = [[DownloadingSingletonClass getSharedInstance].sugarSyncClassFiles objectAtIndex:[DownloadingSingletonClass getSharedInstance].sugarSyncIndex];
-                    NSLog(@"files is %@",files);
                     
-                    NSMutableDictionary * dic = [[NSMutableDictionary alloc]init];
-                    [dic setObject:newDirectoryName forKey:@"displayName"];
-                    [dic setObject:files.ref forKey:@"ref"];
-                    [dic setObject:files.mediaType forKey:@"mediaType"];
-                    [dic setObject:files.lastModified forKey:@"lastModified"];
-                    [dic setObject:[NSString stringWithFormat:@"%ld",files.size] forKey:@"size"];
-                    [dic setObject:files.fileData forKey:@"fileData"];
-                    [dic setObject:[NSString stringWithFormat:@"%d",files.presentOnServer] forKey:@"onServer"];
-                    SugarSyncFile * file = [[SugarSyncFile alloc]init];
+                    [[SugarSyncClient getSharedInstance]getFileWithURL:url completionHandler:^(SugarSyncFile *aFile,NSError *error) {
+                        
+                        NSLog(@"<<<<<<< check folder %@",aFile);
+                        aFile.displayName = newDirectoryName;
+                        [[SugarSyncClient getSharedInstance]updateFile:aFile completionHandler:^(SugarSyncFile * aFile,NSError *error)
+                         {
+                             if (!error) {
+                                 [arrmetadata removeAllObjects];
+                                 [self viewWillAppear:YES];
+                                 [tbDownload reloadData];
+                                 [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
+                                 [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                 NSLog(@"rename Success");
+                                 
+                             }
+                             
+                         }];
+                        
+                    }];
                     
-                    [[SugarSyncClient getSharedInstance]updateFile:file completionHandler:^(SugarSyncFile * aFile,NSError *error)
-                     {
-                         if (!error) {
-                             NSLog(@"rename Success");
-
-                         }
-                         
-                     }];
+                    
+                    
                 }
                
             }
         }
-        [self viewWillAppear:YES];
-        [tbDownload reloadData];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"DropboxRenameSuccess" object:self userInfo:nil];
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [tbDownload setEditing:NO];
         editButton.title = @"Edit";
         [sugarSyncFilePathArray removeAllObjects];
@@ -4572,8 +4666,8 @@ NSString *wastepath = nil;
                 completionBlock(nil, error);
             }
         }];
-    
 }
+
 -(void)updateFileWithService:(GTLServiceDrive *)service
                       fileId:(NSString *)fileId
                     newTitle:(NSString *)newTitle

@@ -166,6 +166,7 @@
 		18B84EFB199D345E00F9E383 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFA199D345E00F9E383 /* CFNetwork.framework */; };
 		18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18B84EFC199D346600F9E383 /* MobileCoreServices.framework */; };
 		18BEF3EC19B60F5E00EFF819 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18BEF3EB19B60F5E00EFF819 /* Main.storyboard */; };
+		18BFE66A1A03EF60000202B7 /* libFTPKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18BFE6641A03EF2F000202B7 /* libFTPKit.a */; };
 		18CD36EA19ADB3EE006EB8CE /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 18CD36E919ADB3EE006EB8CE /* blue.png */; };
 		18CFBD59198CBB370062DA5B /* DocumentChooseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */; };
 		18F2E58A19DC3DCE0071A604 /* SugarSyncHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 18F2E58919DC3DCE0071A604 /* SugarSyncHelper.m */; };
@@ -347,6 +348,27 @@
 			remoteGlobalIDString = E470433A16D41DC500FED29A;
 			remoteInfo = BoxSDK;
 		};
+		18BFE6631A03EF2F000202B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F27BA1CE1802FE7E00584A9E;
+			remoteInfo = FTPKit;
+		};
+		18BFE6651A03EF2F000202B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 07F23C4818CA4C43002BDF93;
+			remoteInfo = "FTPKit Tests";
+		};
+		18BFE6671A03EF43000202B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = F27BA1CD1802FE7E00584A9E;
+			remoteInfo = FTPKit;
+		};
 		658EF44819797D5600E6FA0A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 658EF41719797D5600E6FA0A /* Project object */;
@@ -367,6 +389,7 @@
 		184C0949197CF1B100740DD0 /* AddAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddAccountViewController.h; sourceTree = "<group>"; };
 		184C094A197CF1B100740DD0 /* AddAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddAccountViewController.m; sourceTree = "<group>"; };
 		186D58DE1982ADB0007D0C48 /* email.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = email.png; sourceTree = "<group>"; };
+		1870062E1A0398B70023678A /* libFTPKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libFTPKit.a; path = "../../../Desktop/FTPKit-master/build/Debug-iphoneos/libFTPKit.a"; sourceTree = "<group>"; };
 		1871BD6819C17A020069ED17 /* KeychainItemWrapperr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapperr.h; sourceTree = "<group>"; };
 		1871BD6919C17A020069ED17 /* KeychainItemWrapperr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapperr.m; sourceTree = "<group>"; };
 		1871BDA919C1EA7F0069ED17 /* grid-normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "grid-normal.png"; sourceTree = "<group>"; };
@@ -631,6 +654,7 @@
 		18B84EFA199D345E00F9E383 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		18B84EFC199D346600F9E383 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		18BEF3EB19B60F5E00EFF819 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FTPKit.xcodeproj; path = "../../../../Desktop/FTPKit-master/FTPKit.xcodeproj"; sourceTree = "<group>"; };
 		18CD36E919ADB3EE006EB8CE /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue.png; sourceTree = "<group>"; };
 		18CFBD57198CBB370062DA5B /* DocumentChooseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentChooseViewController.h; sourceTree = "<group>"; };
 		18CFBD58198CBB370062DA5B /* DocumentChooseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentChooseViewController.m; sourceTree = "<group>"; };
@@ -949,6 +973,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18BFE66A1A03EF60000202B7 /* libFTPKit.a in Frameworks */,
 				18B84EFD199D346600F9E383 /* MobileCoreServices.framework in Frameworks */,
 				18AF4E4E19AF2BF000E26E42 /* libxml2.dylib in Frameworks */,
 				184AC04F19ACFD0000F9C9F1 /* libBoxSDK.a in Frameworks */,
@@ -1271,8 +1296,9 @@
 		18AF4EAB19AF716100E26E42 /* FTP */ = {
 			isa = PBXGroup;
 			children = (
-				18A35FC519D9A4C600042633 /* FTPManager.m */,
+				18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */,
 				18A35FC619D9A4C600042633 /* FTPManager.h */,
+				18A35FC519D9A4C600042633 /* FTPManager.m */,
 				1888F6F719B2E8D100DBC547 /* FTPLoginViewController.h */,
 				1888F6F819B2E8D100DBC547 /* FTPLoginViewController.m */,
 				1888F70119B301D700DBC547 /* FTP.h */,
@@ -1483,6 +1509,15 @@
 				1836507919862C3F00D2D157 /* CollectionViewCell.m */,
 			);
 			name = "Table view classes";
+			sourceTree = "<group>";
+		};
+		18BFE65B1A03EF2F000202B7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				18BFE6641A03EF2F000202B7 /* libFTPKit.a */,
+				18BFE6661A03EF2F000202B7 /* FTPKit Tests.xctest */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		18FE905619B1F9B60042CB15 /* BlackRaccoon */ = {
@@ -2002,6 +2037,7 @@
 		658EF42119797D5600E6FA0A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1870062E1A0398B70023678A /* libFTPKit.a */,
 				18AF4E4D19AF2BF000E26E42 /* libxml2.dylib */,
 				65745CC519ABD4FA00A94D4F /* BoxSDK */,
 				18B84EFC199D346600F9E383 /* MobileCoreServices.framework */,
@@ -2188,6 +2224,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				18BFE6681A03EF43000202B7 /* PBXTargetDependency */,
 				184AC04E19ACFCF700F9C9F1 /* PBXTargetDependency */,
 			);
 			name = PDFMarkUP;
@@ -2244,6 +2281,10 @@
 					ProductGroup = 184AC03C19ACFC6500F9C9F1 /* Products */;
 					ProjectRef = 184AC03B19ACFC6500F9C9F1 /* BoxSDK.xcodeproj */;
 				},
+				{
+					ProductGroup = 18BFE65B1A03EF2F000202B7 /* Products */;
+					ProjectRef = 18BFE65A1A03EF2F000202B7 /* FTPKit.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -2287,6 +2328,20 @@
 			fileType = wrapper.cfbundle;
 			path = BoxCocoaSDKTests.octest;
 			remoteRef = 184AC04B19ACFC6500F9C9F1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		18BFE6641A03EF2F000202B7 /* libFTPKit.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFTPKit.a;
+			remoteRef = 18BFE6631A03EF2F000202B7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		18BFE6661A03EF2F000202B7 /* FTPKit Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "FTPKit Tests.xctest";
+			remoteRef = 18BFE6651A03EF2F000202B7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -2611,6 +2666,11 @@
 			name = BoxSDK;
 			targetProxy = 184AC04D19ACFCF700F9C9F1 /* PBXContainerItemProxy */;
 		};
+		18BFE6681A03EF43000202B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FTPKit;
+			targetProxy = 18BFE6671A03EF43000202B7 /* PBXContainerItemProxy */;
+		};
 		658EF44919797D5600E6FA0A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 658EF41E19797D5600E6FA0A /* PDFMarkUP */;
@@ -2766,6 +2826,10 @@
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/istore/Desktop/FTPKit-master/build/Debug-iphoneos",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2804,6 +2868,10 @@
 				);
 				INFOPLIST_FILE = "splitViewExample/PDFMarkUP-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"/Users/istore/Desktop/FTPKit-master/build/Debug-iphoneos",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",

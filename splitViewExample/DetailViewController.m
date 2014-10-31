@@ -182,31 +182,31 @@ static DetailViewController *sharedInstance = nil;
     else if ([accountInfo isEqualToString:@"DropBox"])
     {
   
-       [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
+       [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.6];
 
     }
     else if ([accountInfo isEqualToString:@"box"])
     {
         
         [AppDelegate sharedInstance].popStatus = NO;
-        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.6];
 
         
     }
     else if ([accountInfo isEqualToString:@"google"])
     {
-        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.6];
         
     }
     else if ([accountInfo isEqualToString:@"sugarsync"])
     {
-        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.6];
         
     }
     else if ([accountInfo isEqualToString:@"ftp"])
     {
         
-        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.3];
+        [self performSelector:@selector(performPushOnMainthread) withObject:nil afterDelay:0.6];
                 
         
     }
@@ -1606,16 +1606,12 @@ static DetailViewController *sharedInstance = nil;
     NSString *strfakepath = [[[arrStrings valueForKey:@"description"] componentsJoinedByString:@"/"] stringByReplacingOccurrencesOfString:loadData withString:@""];
     
     
-    
     FMServer* srv = [FMServer serverWithDestination:[[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"host"] stringByAppendingPathComponent:strfakepath] username:[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"name"] password:[[uploadingUserAcntsArray objectAtIndex:[FolderChooseViewController getSharedInstance].indexCount]objectForKey:@"password"]];
     
     
     succeeded = [man uploadData:fileData withFileName:fileName toServer:srv];
-    if (succeeded) {
-        
-        
-            
-            
+    if (succeeded)
+    {
             if ([uploadingArray count]>0)
             {
                 [self deletingFakePath];
